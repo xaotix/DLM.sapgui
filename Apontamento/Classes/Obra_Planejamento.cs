@@ -1,0 +1,286 @@
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Media;
+
+
+namespace DLM.painel
+{
+
+    public class Obras_Planejamento : OBRA_PLAN
+    {
+        public new List<PLAN_ETAPA> etapas { get; set; }
+        public List<OBRA_PLAN> obras { get; set; } = new List<OBRA_PLAN>();
+        public Obras_Planejamento()
+        {
+
+        }
+        public Obras_Planejamento(List<OBRA_PLAN> Obras, string contrato = "", string nome = "")
+        {
+
+            if (Obras.Count == 0) { return; }
+
+            this.obras = Obras;
+
+            this.pep = $"{this.obras.Count} Obras";
+            this.Titulo.CHAVE = contrato;
+            this.Titulo.DESCRICAO = nome;
+
+            this.engenharia_cronograma = Obras.Max(x => x.engenharia_cronograma);
+            this.engenharia_liberacao = Obras.Max(x => x.engenharia_cronograma);
+            this.etapas_qtd = Obras.Sum(x => x.etapas_qtd);
+            this.pedidos_qtd = Obras.Sum(x => x.pedidos_qtd);
+            this.fabrica_cronograma = Obras.Max(x => x.fabrica_cronograma);
+
+            this.nome = Obras.Count() + " OBRAS";
+
+            this.peso_planejado = Math.Round(Obras.Sum(x => x.peso_planejado));
+            this.peso_produzido = Math.Round(Obras.Sum(x => x.peso_produzido));
+            this.peso_embarcado = Math.Round(Obras.Sum(x => x.peso_embarcado));
+            this.peso_montado = Math.Round(Obras.Sum(x => x.peso_montado));
+
+            this.total_embarcado = Obras.Sum(x => x.total_embarcado) / Obras.Count();
+            this.total_fabricado = Obras.Sum(x => x.total_fabricado) / Obras.Count();
+            this.liberado_engenharia = Obras.Sum(x => x.liberado_engenharia) / Obras.Count();
+            this.total_montado = Obras.Sum(x => x.total_montado) / Obras.Count();
+
+            this.ultima_edicao = Obras.Min(x => x.ultima_edicao);
+
+            this.dados_montagem = true;
+
+            this.criado = Obras.Min(x => x.criado);
+
+            this.montagem_inicio = Obras.Min(x => x.montagem_inicio);
+            this.montagem_fim = Obras.Max(x => x.montagem_fim);
+
+            this.ultima_consulta_sap = Obras.Max(x => x.ultima_consulta_sap);
+
+
+            this.efim = obras.Max(x => x.efim);
+            this.eini = obras.Min(x => x.eini);
+            this.eng_base_st = obras.Sum(x => x.eng_base_st) / obras.Count;
+
+
+            this.ffim = obras.Max(x => x.ffim);
+            this.fini = obras.Min(x => x.fini);
+            this.fab_base_st = obras.Sum(x => x.fab_base_st) / obras.Count;
+
+
+            this.lfim = obras.Max(x => x.lfim);
+            this.lini = obras.Min(x => x.lini);
+            this.log_base_st = obras.Sum(x => x.log_base_st) / obras.Count;
+
+            this.mfim = obras.Max(x => x.lfim);
+            this.mini = obras.Min(x => x.lini);
+            this.mon_base_st = obras.Sum(x => x.mon_base_st) / obras.Count;
+
+
+            this.engenharia_previsto = Obras.Sum(x => x.engenharia_previsto) / Obras.Count();
+            this.fabrica_previsto = Obras.Sum(x => x.fabrica_previsto) / Obras.Count();
+            this.embarque_previsto = Obras.Sum(x => x.embarque_previsto) / Obras.Count();
+            this.montagem_previsto = Obras.Sum(x => x.montagem_previsto) / Obras.Count();
+
+
+            this.atraso_embarque = Obras.Sum(x => x.atraso_embarque);
+            this.atraso_engenharia = Obras.Sum(x => x.atraso_engenharia);
+            this.atraso_fabrica = Obras.Sum(x => x.atraso_fabrica);
+            this.atraso_montagem = Obras.Sum(x => x.atraso_montagem);
+
+            this.id_montagem = 1;
+
+            this.resumo_pecas = new Resumo_Pecas(Obras.Select(x => x.resumo_pecas).ToList());
+
+            this.status_montagem = "EM ANDAMENTO";
+
+            if(nome!="")
+            {
+                this.nome = nome;
+            }
+        }
+    }
+    public class OBRA_PLAN : PLAN_BASE
+    {
+        public ImageSource Imagem
+        {
+            get
+            {
+                return imagem;
+            }
+        }
+        public OBRA_PLAN Clonar()
+        {
+            return new OBRA_PLAN(this.L);
+        }
+        public bool finalizado { get; set; } = false;
+
+        public string chave_pedido { get; private set; } = "";
+        public long id_montagem { get; set; } = 0;
+    
+
+
+        public Telerik.Windows.Controls.Map.Location Location
+        {
+            get
+            {
+                return new Telerik.Windows.Controls.Map.Location(latitude, longitude) { Description = this.nome };
+            }
+        }
+        public double dias
+        {
+            get
+            {
+                var dt = DateTime.Now;
+                var ts = ultima_consulta_sap;
+                return Conexoes.Utilz.Double((dt - ts).TotalDays,2);
+            }
+        }
+        public override string ToString()
+        {
+            return descricao;
+        }
+
+        private List<string> _pedidos_clean { get; set; }
+        public List<string> pedidos_clean
+        {
+            get
+            {
+                if (_pedidos_clean == null)
+                {
+                    if (this.contrato == "")
+                    {
+                        return new List<string>();
+                    }
+                    _pedidos_clean = DLM.painel.Consultas.GetPedidosClean(new List<string> {this.contrato },false);
+
+
+                }
+                return _pedidos_clean;
+            }
+        }
+        public List<PLAN_PEDIDO> pedidos
+        {
+            get
+            {
+                return GetPedidos();
+            }
+        }
+
+        public string contrato_completo
+        {
+            get
+            {
+                return this.setor_atividade + "-" + this.contrato;
+            }
+        }
+
+        public string nome { get; set; } = "";
+        public double latitude { get; private set; } = 0;
+        public double longitude { get; private set; } = 0;
+
+        public int etapas_qtd { get; set; } = 0;
+        public int pedidos_qtd { get; set; } = 0;
+
+
+
+        private List<Conexoes.MSAP_Pedido> _Pedidos_Eng { get; set; }
+        public List<Conexoes.MSAP_Pedido> pedidos_eng
+        {
+            get
+            {
+                if (_Pedidos_Eng == null)
+                {
+                    _Pedidos_Eng = DLM.painel.Vars.Obras.GetPedidos(contrato);
+                }
+                return _Pedidos_Eng;
+            }
+        }
+
+        private List<Conexoes.MSAP_PEP> _peps_eng { get; set; }
+        public List<Conexoes.MSAP_PEP> peps_eng
+        {
+            get
+            {
+                if (_peps_eng == null)
+                {
+                    _peps_eng = pedidos_eng.SelectMany(x => x.GetPEPs()).OrderBy(x => x.Codigo).ToList();
+                }
+                return _peps_eng;
+            }
+        }
+
+
+
+        public OBRA_PLAN(string pedido_principal)
+        {
+            this.pep = pedido_principal.Replace(".C00", ".P").Replace(".P00", "").Replace(".G00", "");
+            this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");
+        }
+        public OBRA_PLAN()
+        {
+
+        }
+        public OBRA_PLAN(DLM.db.Linha L)
+        {
+            this.L = L;
+            string pedido_principal = L.Get("pedido_principal").ToString();
+            this.pep = pedido_principal.Replace(".C00", ".P").Replace(".P00","").Replace(".G00","");
+            this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");
+            this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
+            this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();
+            this.etapas_qtd = L.Get("etapas").Int();
+            this.pedidos_qtd = L.Get("pedidos").Int();
+            this.fabrica_cronograma = L.Get("fabrica_cronograma").Data();
+            this.latitude = L.Get("latitude").Double(8);
+            this.longitude = L.Get("longitude").Double(8);
+            this.nome = L.Get("nome").ToString();
+            this.peso_embarcado = L.Get("peso_embarcado").Double();
+            this.peso_planejado = L.Get("peso_planejado").Double();
+            this.peso_produzido = L.Get("peso_produzido").Double();
+            this.total_embarcado = L.Get("total_embarcado").Double();
+            this.total_fabricado = L.Get("total_produzido").Double();
+            this.liberado_engenharia = L.Get("liberado_engenharia").Double();
+            this.peso_montado = L.Get("peso_montado").Double();
+            this.total_montado = L.Get("total_montado").Double();
+            this.ultima_edicao = L.Get("ultima_atualizacao").Data();
+
+            this.dados_montagem = L.Get("total_montado").ToString() != "";
+
+            this.montagem_inicio = L.Get("montagem_inicio").Data();
+            this.montagem_fim = L.Get("montagem_fim").Data();
+
+            this.ultima_consulta_sap = L.Get("ultima_consulta_sap").Data();
+
+
+
+            this.engenharia_previsto = L.Get("es").Double();
+            this.fabrica_previsto = L.Get("fs").Double();
+            this.embarque_previsto = L.Get("ls").Double();
+            this.montagem_previsto = L.Get("ms").Double();
+
+
+            this.atraso_embarque = L.Get("atraso_embarque").Int();
+            this.atraso_engenharia = L.Get("atraso_engenharia").Int();
+            this.atraso_fabrica = L.Get("atraso_fabrica").Int();
+            this.atraso_montagem = L.Get("atraso_montagem").Int();
+
+            this.id_montagem = L.Get("id_montagem").Int();
+            this.status_montagem = L.Get("status_montagem").ToString();
+
+            this.criado = L.Get("criado").Data();
+
+            DateTime mont = L.Get("update_montagem").Data();
+            if (mont > Conexoes.Utilz.Calendario.DataDummy())
+            {
+                this.update_montagem = "Montagem: " + mont.ToShortDateString();
+            }
+
+            this.finalizado = (L.Get("finalizado").ToString().ToUpper() == "X");
+
+        }
+    }
+}

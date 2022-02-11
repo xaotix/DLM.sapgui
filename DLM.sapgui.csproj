@@ -1,0 +1,278 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FC4E509A-7355-4B61-A5E0-A41F9C56EB2A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DLM.sapgui</RootNamespace>
+    <AssemblyName>DLM.sapgui</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\DLLS\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Biblioteca_Daniel">
+      <HintPath>..\..\DLLS\Biblioteca_Daniel.dll</HintPath>
+    </Reference>
+    <Reference Include="Calculos">
+      <HintPath>..\..\DLLS\Calculos.dll</HintPath>
+    </Reference>
+    <Reference Include="clipper_library">
+      <HintPath>..\..\DLLS\clipper_library.dll</HintPath>
+    </Reference>
+    <Reference Include="Comum">
+      <HintPath>..\..\DLLS\Comum.dll</HintPath>
+    </Reference>
+    <Reference Include="Conexoes">
+      <HintPath>..\..\DLLS\Conexoes.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetZip">
+      <HintPath>..\..\DLLS\DotNetZip.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.5.2.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="ExplorerPLM">
+      <HintPath>..\..\DLLS\ExplorerPLM.exe</HintPath>
+    </Reference>
+    <Reference Include="FluentFTP">
+      <HintPath>..\..\DLLS\FluentFTP.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\..\DLLS\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniProfiler">
+      <HintPath>..\..\DLLS\MiniProfiler.dll</HintPath>
+    </Reference>
+    <Reference Include="mysql.data">
+      <HintPath>..\..\DLLS\mysql.data.dll</HintPath>
+    </Reference>
+    <Reference Include="netDxf">
+      <HintPath>..\..\DLLS\netDxf.dll</HintPath>
+    </Reference>
+    <Reference Include="netDxfMBS">
+      <HintPath>..\..\DLLS\netDxfMBS.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="RfcsSAP">
+      <HintPath>..\..\DLLS\RfcsSAP.dll</HintPath>
+    </Reference>
+    <Reference Include="rscp4n">
+      <HintPath>..\..\DLLS\rscp4n.dll</HintPath>
+    </Reference>
+    <Reference Include="sapnco, Version=3.0.0.42, Culture=neutral, PublicKeyToken=50436dca5c7f7d23, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\sapnco.dll</HintPath>
+    </Reference>
+    <Reference Include="sapnco_utils, Version=3.0.0.42, Culture=neutral, PublicKeyToken=50436dca5c7f7d23, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\sapnco_utils.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Presentation" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TecnoUtilz">
+      <HintPath>..\..\DLLS\TecnoUtilz.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls, Version=2017.2.503.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLLS\Telerik.Windows.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Data, Version=2017.2.503.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLLS\Telerik.Windows.Controls.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.DataVisualization, Version=2017.2.503.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLLS\Telerik.Windows.Controls.DataVisualization.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLLS\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLLS\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLLS\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLLS\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLLS\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DLLS\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Apontamento\Classes\Avanco_Pecas.cs" />
+    <Compile Include="Apontamento\Classes\Etapa_Planejamento.cs" />
+    <Compile Include="Apontamento\Classes\Obra_Planejamento.cs" />
+    <Compile Include="Apontamento\Classes\Obra_PMP.cs" />
+    <Compile Include="Apontamento\Classes\Orcamento_Obra.cs" />
+    <Compile Include="Apontamento\Classes\Peca_Planejamento.cs" />
+    <Compile Include="Apontamento\Classes\Pedido_Planejamento.cs" />
+    <Compile Include="Apontamento\Classes\PEP_Planejamento.cs" />
+    <Compile Include="Apontamento\Classes\Resultado_Economico.cs" />
+    <Compile Include="Apontamento\Classes\SubEtapa_Planejamento.cs" />
+    <Compile Include="Apontamento\Classes_Base\Colunas.cs" />
+    <Compile Include="Apontamento\Classes_Base\Data_Meta.cs" />
+    <Compile Include="Apontamento\Classes_Base\Descricao_PEP.cs" />
+    <Compile Include="Apontamento\Classes_Base\Outras_Classes.cs" />
+    <Compile Include="Apontamento\Classes_Base\PLAN_BASE.cs" />
+    <Compile Include="Apontamento\Classes_Base\StatusSAP_Planejamento.cs" />
+    <Compile Include="Apontamento\Funcoes\Buffer.cs" />
+    <Compile Include="Apontamento\Funcoes\Classificadores.cs" />
+    <Compile Include="Apontamento\Funcoes\Consultas.cs" />
+    <Compile Include="Apontamento\Funcoes\RelatoriosExcel.cs" />
+    <Compile Include="Apontamento\Funcoes\Vars.cs" />
+    <Compile Include="Classes\CJ20N_No.cs" />
+    <Compile Include="Classes_Base\ZPP0112.cs" />
+    <Compile Include="Classes_Base_FI\FolhaMargem.cs" />
+    <Compile Include="Classes_Base_FI\Funcoes.cs" />
+    <Compile Include="Classes_Base_FI\Resultado_Economico.cs" />
+    <Compile Include="Enumeradores.cs" />
+    <Compile Include="Funcoes\CargaExcel.cs" />
+    <Compile Include="Classes_Base\CJI3.cs" />
+    <Compile Include="Classes_Base\Datas.cs" />
+    <Compile Include="Classes_Base\ZPP0100.cs" />
+    <Compile Include="Classes_Base\FAGLL03.cs" />
+    <Compile Include="Funcoes\Funcoes.cs" />
+    <Compile Include="Classes_Base\ZPP0066N.cs" />
+    <Compile Include="Classes_Base\ZCONTRATOS.cs" />
+    <Compile Include="Classes\ConexaoSAP.cs" />
+    <Compile Include="Classes\PEPConsultaSAP.cs" />
+    <Compile Include="Classes_Base\ZPMP.cs" />
+    <Compile Include="Funcoes\Vars.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Funcoes\Consultas.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="SAPFEWSELib">
+      <Guid>{5EA428A0-F2B8-45E7-99FA-0E994E82B5BC}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="SapROTWr">
+      <Guid>{E2779C61-F87E-4038-98A0-1D9E71334706}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="IMPRIMIR.vbs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IMPRIMIR2.vbs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IMPRIMIR_FAGLL03.VBS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="IMPRIMIR_ZPMP.vbs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Resources\montagem_32x32_vermelho.png" />
+    <Resource Include="Resources\montagem_32x32_verde.png" />
+    <Resource Include="Resources\montagem_32x32_trancada.png" />
+    <Resource Include="Resources\montagem_32x32_laranja.png" />
+    <Resource Include="Resources\montagem_32x32_cinza.png" />
+    <Resource Include="Resources\montagem_32x32_azul.png" />
+    <Resource Include="Resources\montagem_32x32.png" />
+    <Resource Include="Resources\montagem.png" />
+    <Resource Include="Resources\fabrica_32x32_vermelho.png" />
+    <Resource Include="Resources\fabrica_32x32_verde.png" />
+    <Resource Include="Resources\fabrica_32x32_laranja.png" />
+    <Resource Include="Resources\fabrica_32x32_azul.png" />
+    <Resource Include="Resources\fabrica_32x32.png" />
+    <Resource Include="Resources\fabrica.png" />
+    <Resource Include="Resources\engenharia_32x32_vermelho.png" />
+    <Resource Include="Resources\engenharia_32x32_verde.png" />
+    <Resource Include="Resources\engenharia_32x32_laranja.png" />
+    <Resource Include="Resources\engenharia_32x32_azul.png" />
+    <Resource Include="Resources\engenharia_32x32.png" />
+    <Resource Include="Resources\engenharia.png" />
+    <Resource Include="Resources\embarque_32x32_vermelho.png" />
+    <Resource Include="Resources\embarque_32x32_verde.png" />
+    <Resource Include="Resources\embarque_32x32_laranja.png" />
+    <Resource Include="Resources\embarque_32x32_azul.png" />
+    <Resource Include="Resources\embarque_32x32.png" />
+    <Resource Include="Resources\embarque.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
