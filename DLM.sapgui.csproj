@@ -173,7 +173,6 @@
     <Compile Include="Classes\CJ20N_No.cs" />
     <Compile Include="Classes_Base\ZPP0112.cs" />
     <Compile Include="Classes_Base_FI\FolhaMargem.cs" />
-    <Compile Include="Classes_Base_FI\Funcoes.cs" />
     <Compile Include="Classes_Base_FI\Resultado_Economico.cs" />
     <Compile Include="Enumeradores.cs" />
     <Compile Include="Funcoes\CargaExcel.cs" />
