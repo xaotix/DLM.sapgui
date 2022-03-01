@@ -82,8 +82,8 @@ namespace DLM.painel
                 if (Tipo == Tipo_Meta.Engenharia)
                 {
                     this.SubEtapas = this.SubEtapas.OrderBy(x => x.engenharia_cronograma).ToList().FindAll(x => x.engenharia_cronograma >= f0 && x.engenharia_cronograma <= f0_fim);
-                    var subs_real = this.SubEtapas.FindAll(x => ((x.data_transsap <= f0_fim && x.data_transsap > min_data )| (x.engenharia_liberacao <= f0_fim && x.engenharia_liberacao > min_data))  && x.liberado_engenharia > valor_considerar_finalizado).FindAll(x => this.SubEtapas.Find(y => y.pep == x.pep) != null);
-                    var desvio = lista.FindAll(x => x.data_transsap <= f0_fim && x.data_transsap >= f0).FindAll(x => subs_real.Find(y => y.pep == x.pep) == null);
+                    var subs_real = this.SubEtapas.FindAll(x =>  (x.engenharia_liberacao <= f0_fim && x.engenharia_liberacao > min_data)  && x.liberado_engenharia > valor_considerar_finalizado).FindAll(x => this.SubEtapas.Find(y => y.pep == x.pep) != null);
+                    var desvio = lista.FindAll(x => x.engenharia_liberacao <= f0_fim && x.engenharia_liberacao >= f0).FindAll(x => subs_real.Find(y => y.pep == x.pep) == null);
 
               
 
