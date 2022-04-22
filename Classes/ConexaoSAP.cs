@@ -328,7 +328,7 @@ namespace DLM.sapgui
             if (!DLM.painel.Consultas.MatarExcel(false)) { return new List<FAGLL03>(); }
             if (this.Codigo.Length < 3) { return new List<FAGLL03>(); }
             var arquivo = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Vars.FAGLL03ARQ;
-          var peps =  Conexoes.DBases.GetDB().Consulta($"select pr.pep as pep from {Cfg.Init.db_comum}.pep_planejamento as pr where pr.pep like '%{Codigo.Replace("*", "")}% '").Linhas.Select(x=>x.Get("pep").ToString()).ToList();
+          var peps =  Conexoes.DBases.GetDB().Consulta($"SELECT pr.pep as pep from {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} as pr where pr.pep like '%{Codigo.Replace("*", "")}% '").Linhas.Select(x=>x.Get("pep").ToString()).ToList();
 
 
 

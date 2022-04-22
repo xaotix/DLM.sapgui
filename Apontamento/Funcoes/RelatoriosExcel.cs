@@ -1904,7 +1904,7 @@ public class Relatorios
             var w = Conexoes.Utilz.Wait(10, "Consultando logística...");
 
 
-            var Pecas = Conexoes.DBases.GetDB().Consulta($"SELECT * FROM {Cfg.Init.tb_painel_de_obras2}.pecas AS pr WHERE pr.pep LIKE '%{contrato}%'").Linhas;
+            var Pecas = Conexoes.DBases.GetDB().Consulta($"SELECT * FROM {Cfg.Init.db_painel_de_obras2}.{Cfg.Init.tb_pecas} AS pr WHERE pr.pep LIKE '%{contrato}%'").Linhas;
 
             try
             {

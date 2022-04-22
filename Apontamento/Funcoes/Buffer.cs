@@ -89,7 +89,7 @@ namespace DLM.painel
             if (_Esquemas == null | recarregar)
             {
                 _Esquemas = new List<Esquema_Pintura>();
-                var s = Conexoes.DBases.GetDB().Consulta(Cfg.Init.db_comum, "esquemas");
+                var s = Conexoes.DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_esquemas);
                 foreach (var ss in s.Linhas)
                 {
                     _Esquemas.Add(new Esquema_Pintura(Conexoes.DBases.GetDB(), ss));
@@ -195,7 +195,7 @@ namespace DLM.painel
         {
             if (_Titulos_Pedidos != null) { return _Titulos_Pedidos; }
             _Titulos_Pedidos = new List<Titulo_Planejamento>();
-            var lista_fab = Conexoes.DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, "titulos_pedidos");
+            var lista_fab = Conexoes.DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
             ConcurrentBag<Titulo_Planejamento> retorno = new ConcurrentBag<Titulo_Planejamento>();
             List<Task> Tarefas = new List<Task>();
             foreach (var s in lista_fab.Linhas)
@@ -206,7 +206,7 @@ namespace DLM.painel
             _Titulos_Pedidos.AddRange(retorno);
 
             
-            var lista_orcamento = Conexoes.DBases.GetDB_Orcamento().Consulta(Cfg.Init.db_orcamento, "pmp_orc_resumo");
+            var lista_orcamento = Conexoes.DBases.GetDB_Orcamento().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_resumo);
 
             foreach (var s in lista_orcamento.Linhas)
             {
@@ -224,7 +224,7 @@ namespace DLM.painel
             if (_Status == null)
             {
                 _Status = new List<StatusSAP_Planejamento>();
-                var lista_log = Conexoes.DBases.GetDB().Consulta(Cfg.Init.db_comum, "status_sap");
+                var lista_log = Conexoes.DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_status_sap);
                 foreach (var t in lista_log.Linhas)
                 {
                     _Status.Add(new StatusSAP_Planejamento(t));

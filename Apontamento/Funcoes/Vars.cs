@@ -65,7 +65,7 @@ namespace DLM.painel
                 if(_Descricoes_PEP==null)
                 {
                     _Descricoes_PEP = new List<Descricao_PEP>();
-                    var lista_log = Conexoes.DBases.GetDB_Orcamento().Consulta(Cfg.Init.db_orcamento, "de_para_orc_pla");
+                    var lista_log = Conexoes.DBases.GetDB_Orcamento().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_de_para_orc_pla);
                     foreach(var s in lista_log.Linhas)
                     {
                         _Descricoes_PEP.Add(new Descricao_PEP(s));
