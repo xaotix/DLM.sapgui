@@ -1,5 +1,6 @@
 ﻿using Conexoes;
 using DLM.sapgui;
+using DLM.vars;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -804,11 +805,11 @@ namespace DLM.painel
 
             if (this.id > 0)
             {
-                Conexoes.DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", this.id.ToString()) }, l.Celulas, "comum", "esquemas");
+                Conexoes.DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", this.id.ToString()) }, l.Celulas, Cfg.Init.db_comum, "esquemas");
             }
             else
             {
-                this.id = (int)Conexoes.DBases.GetDB().Cadastro(l.Celulas, "comum", "esquemas");
+                this.id = (int)Conexoes.DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, "esquemas");
             }
         }
 

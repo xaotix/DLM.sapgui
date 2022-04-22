@@ -1,4 +1,5 @@
-﻿using OfficeOpenXml.Drawing.Chart;
+﻿using DLM.vars;
+using OfficeOpenXml.Drawing.Chart;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1678,7 +1679,7 @@ public class Relatorios
                 if(pc.contrato.Length>0)
                 {
                     
-                Conexoes.DBases.GetDB().Consulta($"delete from " +
+                Conexoes.DBases.GetDB().Comando($"delete from " +
                     $"painel_de_obras2.pecas WHERE " +
                     $"painel_de_obras2.pecas.pep LIKE '%{pc.contrato}%'");
                 }
@@ -1902,9 +1903,8 @@ public class Relatorios
             }
             var w = Conexoes.Utilz.Wait(10, "Consultando logística...");
 
-            string comando = $"SELECT * FROM painel_de_obras2.pecas AS pr WHERE pr.pep LIKE '%{contrato}%'";
 
-            var Pecas = Conexoes.DBases.GetDB().Consulta(comando).Linhas;
+            var Pecas = Conexoes.DBases.GetDB().Consulta($"SELECT * FROM {Cfg.Init.tb_painel_de_obras2}.pecas AS pr WHERE pr.pep LIKE '%{contrato}%'").Linhas;
 
             try
             {

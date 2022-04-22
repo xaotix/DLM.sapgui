@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using System.Xml.Serialization;
 using DLM.sapgui;
+using DLM.vars;
 
 namespace DLM.painel
 {
@@ -93,7 +94,7 @@ namespace DLM.painel
         {
             if(this.id>0)
             {
-                Conexoes.DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", this.id) }, GetLinha().Celulas, "comum", "resultado_economico_header");
+                Conexoes.DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", this.id) }, GetLinha().Celulas, Cfg.Init.db_comum, "resultado_economico_header");
             }
             Update_Resultado_Economico();
         }

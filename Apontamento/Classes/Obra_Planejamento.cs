@@ -14,7 +14,7 @@ namespace DLM.painel
 
     public class Obras_Planejamento : OBRA_PLAN
     {
-        public new List<PLAN_ETAPA> etapas { get; set; }
+        public List<PLAN_ETAPA> etapas { get; set; }
         public List<OBRA_PLAN> obras { get; set; } = new List<OBRA_PLAN>();
         public Obras_Planejamento()
         {

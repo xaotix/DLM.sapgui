@@ -1,5 +1,5 @@
 ﻿using DLM.painel;
-using DLM.painel;
+using DLM.vars;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -169,13 +169,13 @@ namespace DLM.sapgui
         {
             List<DLM.painel.Peca_Planejamento> Retorno = new List<DLM.painel.Peca_Planejamento>();
 
-            //string comando = "select substr(pr.pep,-24,17) as pep, count(pr.pep) as pcs from comum.zpmp_producao as pr where pr.pep like '$P$%' and pr.material like '31%' group by substr(pr.pep,-24,17) order by count(pr.pep) desc".Replace("$P$",Pedido).Replace("*","");
             //19/06/2020 - aumentei o filtro para pegar a subetapa. serão mais consultas, no entanto evita os erros.
-            string comando = "select left(pr.pep,17) as pep, count(pr.pep) as pcs from comum.zpmp_producao as pr where pr.pep like '%$P$%' and pr.material like '31%' group by left(pr.pep,17) order by count(pr.pep) desc".Replace("$P$",Pedido).Replace("*","");
-            var t = Conexoes.DBases.GetDB().Consulta(comando).Linhas.Select(x => x.Get("pep").ToString()).ToList();
-            var w = Conexoes.Utilz.Wait(t.Count, Pedido + " ZPPCOOISN"); 
+          
+            var consulta = Conexoes.DBases.GetDB().Consulta($"select left(pr.pep,17) as pep, count(pr.pep) as pcs from {Cfg.Init.db_comum}.zpmp_producao as pr where pr.pep like '%{Pedido}% ' and pr.material like '31%' group by left(pr.pep,17) order by count(pr.pep) desc".Replace("*", ""));
+            var peps = consulta.Linhas.Select(x => x.Get("pep").ToString()).ToList(); 
+            var w = Conexoes.Utilz.Wait(peps.Count, Pedido + " ZPPCOOISN"); 
             w.somaProgresso();
-            foreach (var s in t)
+            foreach (var s in peps)
             {
             var pecas = DLM.painel.Consultas.GetPecasReal(new List<string> { s }).ToList();
                 if(pecas.Count>0)
@@ -528,7 +528,7 @@ namespace DLM.sapgui
                         linhas.Add(new DLM.db.Linha(valores));
                     }
                 }
-                var ok = Conexoes.DBases.GetDB().Cadastro(linhas, "comum", "zppcooisn");
+                var ok = Conexoes.DBases.GetDB().Cadastro(linhas, Cfg.Init.db_comum, "zppcooisn");
             }
         }
 

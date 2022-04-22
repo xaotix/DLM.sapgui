@@ -1,5 +1,6 @@
 ﻿using Conexoes;
 using DLM.sapgui;
+using DLM.vars;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -256,7 +257,7 @@ namespace DLM.painel
                 {
                     _logistica = new List<Logistica_Planejamento>();
 
-                    var lista_log = Conexoes.DBases.GetDB().Consulta($"select *  from comum.zpp0066n_logistica where comum.zpp0066n_logistica.pep ='{this.pep}' and comum.zpp0066n_logistica.material = '{this.material}'".Replace("$P$", this.pep));
+                    var lista_log = Conexoes.DBases.GetDB().Consulta($"select *  from {Cfg.Init.db_comum}.zpp0066n_logistica as pr where pr.pep ='{pep}' and pr.material = '{material}'");
                     foreach (var t in lista_log.Linhas)
                     {
                         this._logistica.Add(new Logistica_Planejamento(this, t));

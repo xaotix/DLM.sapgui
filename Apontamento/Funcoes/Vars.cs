@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLM.vars;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -64,7 +65,7 @@ namespace DLM.painel
                 if(_Descricoes_PEP==null)
                 {
                     _Descricoes_PEP = new List<Descricao_PEP>();
-                    var lista_log = Conexoes.DBases.GetDB_Orcamento().Consulta("select *  from intell_orcamento_new.de_para_orc_pla");
+                    var lista_log = Conexoes.DBases.GetDB_Orcamento().Consulta(Cfg.Init.db_orcamento, "de_para_orc_pla");
                     foreach(var s in lista_log.Linhas)
                     {
                         _Descricoes_PEP.Add(new Descricao_PEP(s));
