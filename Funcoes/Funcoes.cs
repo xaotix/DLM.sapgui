@@ -1,4 +1,5 @@
-﻿using DLM.painel;
+﻿using Conexoes;
+using DLM.painel;
 using DLM.vars;
 using System;
 using System.Collections.Generic;
@@ -28,10 +29,10 @@ namespace DLM.sapgui
                     CON = sap.ZCONTRATOS(ST, destino, ST.Replace(".", "").Replace("*", "") + Vars.ZCONTRATOSARQ);
                     if (CON)
                     {
-                        Conexoes.DBases.GetDB().Comando(
-                            $"delete from " +
-                            $"{Cfg.Init.db_comum}.zcontratos_notas_fiscais where " +
-                            $"{Cfg.Init.db_comum}.zcontratos_notas_fiscais.Elemento_PEP like '%$C$%'".Replace("$C$", ST));
+                        DBases.GetDB().Comando(
+                            $"DELETE FROM " +
+                            $"{Cfg.Init.db_comum}.{Cfg.Init.tb_zcontratos_notas_fiscais} where " +
+                            $"{Cfg.Init.db_comum}.{Cfg.Init.tb_zcontratos_notas_fiscais}.Elemento_PEP like '%{ST}% '");
                         DLM.painel.Consultas.MatarExcel(false);
                         List<ZCONTRATOS> notas =  CargaExcel.ZCONTRATO(destino + arnome);
                        var ok = Conexoes.DBases.GetDB().Cadastro(notas.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "zcontratos_notas_fiscais");

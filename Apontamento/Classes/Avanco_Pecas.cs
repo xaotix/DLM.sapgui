@@ -1,4 +1,5 @@
-﻿using DLM.vars;
+﻿using Conexoes;
+using DLM.vars;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace DLM.painel
             {
                 return;
             }
-            Conexoes.DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, "avanco_pecas");
+            DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, "avanco_pecas");
         }
         public string pep { get; set; } = "";
         public string predio { get; set; } = "";

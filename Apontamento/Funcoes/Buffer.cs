@@ -206,7 +206,7 @@ namespace DLM.painel
             _Titulos_Pedidos.AddRange(retorno);
 
             
-            var lista_orcamento = Conexoes.DBases.GetDB_Orcamento().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_resumo);
+            var lista_orcamento = Conexoes.DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_resumo);
 
             foreach (var s in lista_orcamento.Linhas)
             {

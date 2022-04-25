@@ -709,7 +709,7 @@ namespace DLM.painel
                     if (codigos.Count == 1)
                     {
                         this.codigo = codigos[0];
-                    this.Bobina = Conexoes.DBases.GetBancoRM().GetBobina(this.codigo);
+                    this.Bobina = DBases.GetBancoRM().GetBobina(this.codigo);
                         if (this.Bobina == null)
                         {
                             this.Bobina = new Conexoes.Bobina();
@@ -805,11 +805,11 @@ namespace DLM.painel
 
             if (this.id > 0)
             {
-                Conexoes.DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", this.id.ToString()) }, l.Celulas, Cfg.Init.db_comum, "esquemas");
+                DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", this.id.ToString()) }, l.Celulas, Cfg.Init.db_comum, "esquemas");
             }
             else
             {
-                this.id = (int)Conexoes.DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, "esquemas");
+                this.id = (int)DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, "esquemas");
             }
         }
 

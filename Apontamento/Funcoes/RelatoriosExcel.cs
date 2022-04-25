@@ -1,4 +1,5 @@
-﻿using DLM.vars;
+﻿using Conexoes;
+using DLM.vars;
 using OfficeOpenXml.Drawing.Chart;
 using System;
 using System.Collections.Generic;
@@ -1679,7 +1680,7 @@ public class Relatorios
                 if(pc.contrato.Length>0)
                 {
                     
-                Conexoes.DBases.GetDB().Comando($"delete from " +
+                DBases.GetDB().Comando($"delete from " +
                     $"painel_de_obras2.pecas WHERE " +
                     $"painel_de_obras2.pecas.pep LIKE '%{pc.contrato}%'");
                 }
@@ -1839,7 +1840,7 @@ public class Relatorios
                         }
                     }
 
-                    Conexoes.DBases.GetDB().Cadastro(linhas, "painel_de_obras2", "pecas");
+                    DBases.GetDB().Cadastro(linhas, "painel_de_obras2", "pecas");
                 }
 
             }

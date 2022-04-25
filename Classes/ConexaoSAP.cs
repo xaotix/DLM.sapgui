@@ -1,4 +1,5 @@
-﻿using DLM.painel;
+﻿using Conexoes;
+using DLM.painel;
 using DLM.vars;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace DLM.sapgui
         }
         public string GravarTitulos()
         {
-            var db = Conexoes.DBases.GetDB().Clonar();
+            var db = DBases.GetDB().Clonar();
             if(this.Contrato=="")
             {
                 return "Contrato em branco";
@@ -83,7 +84,7 @@ namespace DLM.sapgui
             var peps = Funcoes.converter(this.PEPsConsultaSAP);
             DLM.painel.Consultas.Apagar_peps(this.Contrato);
 
-            Conexoes.DBases.GetDB().Cadastro(peps.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, "pep_planejamento");
+            DBases.GetDB().Cadastro(peps.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, "pep_planejamento");
         }
         public string Contrato
         {
@@ -165,9 +166,9 @@ namespace DLM.sapgui
                 if(_Destino==null)
                 {
                     _Destino = Conexoes.Utilz.CriarPasta(Vars.Raiz, "SAP");
-                    if(Conexoes.DBases.GetUserAtual().ma!="")
+                    if(DBases.GetUserAtual().ma!="")
                     {
-                    _Destino = Conexoes.Utilz.CriarPasta(Vars.Raiz, Conexoes.DBases.GetUserAtual().ma);
+                    _Destino = Conexoes.Utilz.CriarPasta(Vars.Raiz, DBases.GetUserAtual().ma);
                     }
                     _Destino = Conexoes.Utilz.CriarPasta(_Destino, DateTime.Now.ToShortDateString().Replace(@"/","-").Replace(@"\","-"));
                 }
@@ -214,7 +215,7 @@ namespace DLM.sapgui
             }
             if(zpmp)
             {
-            Conexoes.DBases.GetDB().Comando($"delete from " +
+            DBases.GetDB().Comando($"delete from " +
                 $"{Cfg.Init.db_comum}.zpmp_producao where " +
                 $"{Cfg.Init.db_comum}.zpmp_producao.pep like '" + this.Codigo.Replace("*", "") + "%'");
 
@@ -222,18 +223,18 @@ namespace DLM.sapgui
             if(zpp0066n)
             {
 
-            Conexoes.DBases.GetDB().Comando($"delete from " +
+            DBases.GetDB().Comando($"delete from " +
                 $"{Cfg.Init.db_comum}.zpp0066n_logistica where " +
                 $"{Cfg.Init.db_comum}.zpp0066n_logistica.pep like '" + this.Codigo.Replace("*", "") + "%'");
             }
             if (zpp0100)
             {
-                Conexoes.DBases.GetDB().Comando($"delete from " +
+                DBases.GetDB().Comando($"delete from " +
                     $"{Cfg.Init.db_comum}.zpp0100_embarques where " +
                     $"{Cfg.Init.db_comum}.zpp0100_embarques.Elemento_PEP like '" + this.Codigo.Replace("*", "") + "%'");
             }
 
-            Conexoes.DBases.GetDB().Comando($"delete from " +
+            DBases.GetDB().Comando($"delete from " +
                $"{Cfg.Init.db_comum}.cn47n where " +
                $"{Cfg.Init.db_comum}.cn47n.pep like '" + this.Codigo.Replace("*", "") + "%'");
         }
@@ -289,7 +290,7 @@ namespace DLM.sapgui
 
         public void GravarMateriais()
         {
-            var con = Conexoes.DBases.GetDB().Clonar();
+            var con = DBases.GetDB().Clonar();
 
             if (this.Codigo.Length > 10 && (this.Producao.Count > 0 | this.Logistica.Count > 0 | this.Embarque.Count > 0))
             {
@@ -328,7 +329,7 @@ namespace DLM.sapgui
             if (!DLM.painel.Consultas.MatarExcel(false)) { return new List<FAGLL03>(); }
             if (this.Codigo.Length < 3) { return new List<FAGLL03>(); }
             var arquivo = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Vars.FAGLL03ARQ;
-          var peps =  Conexoes.DBases.GetDB().Consulta($"SELECT pr.pep as pep from {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} as pr where pr.pep like '%{Codigo.Replace("*", "")}% '").Linhas.Select(x=>x.Get("pep").ToString()).ToList();
+          var peps =  DBases.GetDB().Consulta($"SELECT pr.pep as pep from {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} as pr where pr.pep like '%{Codigo.Replace("*", "")}% '").Linhas.Select(x=>x.Get("pep").ToString()).ToList();
 
 
 
@@ -336,7 +337,7 @@ namespace DLM.sapgui
 
             if(salvar && peps.Count>0)
             {
-                Conexoes.DBases.GetDB().Comando($"delete from " +
+                DBases.GetDB().Comando($"delete from " +
                     $"{Cfg.Init.db_comum}.fagll03 where " +
                     $"{Cfg.Init.db_comum}.fagll03.Pedido like '%$C$%'".Replace("$C$", Codigo.Replace("*", "")));
 
@@ -361,7 +362,7 @@ namespace DLM.sapgui
             if (salvar)
             {
                 w.SetProgresso(0, this.fagll03.Count, "FAGLL03 - 2/2 - Salvando...");
-                var ok = Conexoes.DBases.GetDB().Cadastro(this.fagll03.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "fagll03");
+                var ok = DBases.GetDB().Cadastro(this.fagll03.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "fagll03");
               
             }
 
@@ -382,11 +383,11 @@ namespace DLM.sapgui
                 this.cji3 = CargaExcel.CJI3(this.Destino + arq0100);
                 if (salvar)
                 {
-                    Conexoes.DBases.GetDB().Comando($"delete from " +
+                    DBases.GetDB().Comando($"delete from " +
                         $"{Cfg.Init.db_comum}.cji3 where " +
                         $"{Cfg.Init.db_comum}.cji3.Elemento_PEP like '%$C$%'".Replace("$C$", Codigo.Replace("*","")));
                     var w = Conexoes.Utilz.Wait(this.cji3.Count, "Salvando...");                     
-                    var ok = Conexoes.DBases.GetDB().Cadastro(this.cji3.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "cji3");
+                    var ok = DBases.GetDB().Cadastro(this.cji3.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "cji3");
                     w.Close();
                 }
             }
@@ -404,10 +405,10 @@ namespace DLM.sapgui
                 this.ZPP0112 = CargaExcel.ZPP0112(this.Destino + ARQ);
                 if (salvar)
                 {
-                    Conexoes.DBases.GetDB().Clonar().Comando($"delete from {Cfg.Init.db_comum}.zpp0112 where {Cfg.Init.db_comum}.zpp0112.Elemento_PEP like '%{pedido}% '");
+                    DBases.GetDB().Clonar().Comando($"delete from {Cfg.Init.db_comum}.zpp0112 where {Cfg.Init.db_comum}.zpp0112.Elemento_PEP like '%{pedido}% '");
                     var w = Conexoes.Utilz.Wait(this.ZPP0112.Count, "Salvando..."); 
                     w.Show();
-                    var ok = Conexoes.DBases.GetDB().Cadastro(this.ZPP0112.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, "zpp0112");
+                    var ok = DBases.GetDB().Cadastro(this.ZPP0112.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, "zpp0112");
                     w.Close();
                 }
             }
