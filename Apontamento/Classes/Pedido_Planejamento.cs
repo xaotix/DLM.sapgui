@@ -99,7 +99,7 @@ namespace DLM.painel
 
             this.ultima_consulta_sap = L.Get("ultima_consulta_sap").Data();
 
-            this.nome = L.Get("nome").ToString();
+            this.nome = L["Nome"].Valor;
 
             this.montagem_engenheiro = L.Get("montagem_engenheiro").ToString();
 
@@ -111,7 +111,7 @@ namespace DLM.painel
             this.atraso_montagem = L.Get("atraso_montagem").Int();
             this.id_montagem = L.Get("id_montagem").Int();
 
-            this.nome = L.Get("nome").ToString();
+            this.nome = L["Nome"].Valor;
 
             this.status_montagem = L.Get("status_montagem").ToString();
 

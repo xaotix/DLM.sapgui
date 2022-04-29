@@ -237,7 +237,7 @@ namespace DLM.painel
             this.fabrica_cronograma = L.Get("fabrica_cronograma").Data();
             this.latitude = L.Get("latitude").Double(8);
             this.longitude = L.Get("longitude").Double(8);
-            this.nome = L.Get("nome").ToString();
+            this.nome = L["Nome"].Valor;
             this.peso_embarcado = L.Get("peso_embarcado").Double();
             this.peso_planejado = L.Get("peso_planejado").Double();
             this.peso_produzido = L.Get("peso_produzido").Double();

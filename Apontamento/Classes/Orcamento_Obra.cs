@@ -89,7 +89,7 @@ namespace DLM.painel
         public Subetapa_Orcamento(DLM.db.Linha l)
         {
             this.L = l;
-            this.id_obra = l.Get("id_obra").Int();
+            this.id_obra = l["id_obra"].Int();
             this.pep = l.Get("pep").ToString();
             this.peso_planejado = l.Get("peso_total").Double();
             this.quantidade = l.Get("quantidade").Int();
@@ -136,7 +136,7 @@ namespace DLM.painel
         public Etapa_Orcamento(DLM.db.Linha l)
         {
             this.L = l;
-            this.id_obra = l.Get("id_obra").Int();
+            this.id_obra = l["id_obra"].Int();
             this.pep = l.Get("pep").ToString();
             this.peso_planejado = l.Get("peso_total").Double();
             this.quantidade = l.Get("quantidade").Double();
@@ -155,7 +155,7 @@ namespace DLM.painel
         {
             this.L = l;
 
-            this.id_obra = l.Get("id_obra").Int();
+            this.id_obra = l["id_obra"].Int();
             this.pep = l.Get("pep").ToString();
             this.pep_inicial = l.Get("pep_inicial").ToString();
             this.centro = l.Get("centro").ToString();
@@ -256,7 +256,7 @@ namespace DLM.painel
         public Pedido_Orcamento(DLM.db.Linha l, Tipo_Material tipo)
         {
             this.L = l;
-            this.id_obra = l.Get("id_obra").Int();
+            this.id_obra = l["id_obra"].Int();
             this.numerocontrato = l.Get("numerocontrato").ToString();
             this.revisao = l.Get("revisao").ToString();
             this.Titulo.DESCRICAO = l.Get("descricao").ToString();

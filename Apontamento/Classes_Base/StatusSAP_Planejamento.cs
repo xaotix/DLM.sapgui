@@ -17,7 +17,7 @@ namespace DLM.painel
         }
         public StatusSAP_Planejamento(DLM.db.Linha L)
         {
-            this.id = L.Get("id").Int();
+            this.id = L["id"].Int();
             this.descricao = L.Get("descricao").ToString();
             this.status = L.Get("status").ToString();
         }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using System.Xml.Serialization;
+using Conexoes;
 using DLM.sapgui;
 using DLM.vars;
 
@@ -302,7 +303,7 @@ namespace DLM.painel
         public Resultado_Economico_Header(DLM.db.Linha l)
         {
             this.l = l;
-            this.id = this.l.Get("id").Int();
+            this.id = this.l["id"].Int();
             this.Pedido = this.l.Get("pep").ToString();
             this.descricao = this.l.Get("descricao").ToString();
 
@@ -316,7 +317,7 @@ namespace DLM.painel
             this.comercial = this.l.Get("comercial").Double();
             this.suporte_producao = this.l.Get("suporte_producao").Double();
 
-            this.ultima_edicao = this.l.Get("ultima_edicao").Data();
+            this.ultima_edicao = this.l["ultima_edicao"].Data();
             this.criado = this.l.Get("criado").Data();
             this.user = this.l.Get("user").ToString();
         }

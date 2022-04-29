@@ -494,17 +494,17 @@ namespace DLM.painel
             /*realizado*/
             var resultado = DBases.GetDB().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_zcontratos_notas_fiscais} as pr where pr.Elemento_PEP like '%{Pedido}% ' and pr.Situacao = 'FATURADA' and pr.Devolucoes = '' and Receita = 'SIM'");
             var fab = resultado.Linhas.FindAll(x => 
-            x.Get("Elemento_PEP").ToString().Contains(".F2")
-            |x.Get("Elemento_PEP").ToString().Contains(".F3")
-            |x.Get("Elemento_PEP").ToString().Contains(".F4")
-            |x.Get("Elemento_PEP").ToString().Contains(".FO")
+             x["Elemento_PEP"].Valor.Contains(".F2")
+            |x["Elemento_PEP"].Valor.Contains(".F3")
+            |x["Elemento_PEP"].Valor.Contains(".F4")
+            |x["Elemento_PEP"].Valor.Contains(".FO")
             ).ToList();
             var eng = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").ToString().Contains(".EN")).ToList();
             var mo = resultado.Linhas.FindAll(x =>
-             x.Get("Elemento_PEP").ToString().Contains(".MO")
-            |x.Get("Elemento_PEP").ToString().Contains(".EQ")
-            |x.Get("Elemento_PEP").ToString().Contains(".SU")
-            |x.Get("Elemento_PEP").ToString().Contains(".EP")
+             x["Elemento_PEP"].Valor.Contains(".MO")
+            |x["Elemento_PEP"].Valor.Contains(".EQ")
+            |x["Elemento_PEP"].Valor.Contains(".SU")
+            |x["Elemento_PEP"].Valor.Contains(".EP")
             ).ToList();
 
             foreach(var f in fab)
@@ -1002,7 +1002,7 @@ namespace DLM.painel
                 var folha = Get.FolhaMargem(xml);
                 if(folha!=null)
                 {
-                    folha.id = ss.Get("id").Int();
+                    folha.id = ss["id"].Int();
                     retorno.Add(folha);
                 }
             }
@@ -1065,7 +1065,7 @@ namespace DLM.painel
                 var resultado = Get.Resultado_Economico(xml);
                 if (resultado != null)
                 {
-                    resultado.ultima_edicao = ss.Get("ultima_edicao").Data();
+                    resultado.ultima_edicao = ss["ultima_edicao"].Data();
                     retorno.Add(resultado);
                 }
             }
@@ -2464,7 +2464,7 @@ namespace DLM.painel
             if (_pedidos_clean == null | reset)
             {
                 var s = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_pedidos_clean);
-                _pedidos_clean = s.Linhas.Select(x => x.Get("pedido").ToString()).ToList();
+                _pedidos_clean = s.Linhas.Select(x => x["pedido"].Valor).ToList();
             }
             List<string> retorno = new List<string>();
             foreach(var s in contratos.Distinct().ToList().FindAll(x=>x.Length>5))

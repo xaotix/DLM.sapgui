@@ -109,7 +109,7 @@ namespace DLM.painel
             this.fabrica_previsto = L.Get("fabrica_previsto").Double();
             this.montagem_previsto = L.Get("montagem_previsto").Double();
             this.peso_montado = L.Get("peso_montado").Double();
-            this.ultima_edicao = L.Get("ultima_edicao").Data();
+            this.ultima_edicao = L["ultima_edicao"].Data();
             this.peps_qtd = L.Get("pep_fabrica").Int();
 
             this.dados_montagem = L.Get("total_montado").ToString() != "";

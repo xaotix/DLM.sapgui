@@ -532,7 +532,7 @@ namespace DLM.painel
 
                 /*porcentagens*/
 
-                this.ultima_edicao = peca.Get("ultima_edicao").Data();
+                this.ultima_edicao = peca["ultima_edicao"].Data();
                 this.pep_cooisn = peca.Get("pep_cooisn").ToString();
                 this.centro = peca.Get("centro").ToString();
 
@@ -585,7 +585,7 @@ namespace DLM.painel
                 this.texto_breve = peca.Get("descricao").ToString();
                 this.tipo_aco = peca.Get("tipo_aco").ToString();
                 this.TIPO_DE_PINTURA = peca.Get("tratamento").ToString();
-                this.ultima_edicao = peca.Get("ultima_edicao").Data();
+                this.ultima_edicao = peca["ultima_edicao"].Data();
                 this.centro = peca.Get("unidade_fabril").ToString();
                 this.codigo_materia_prima_sap = peca.Get("materia_prima").ToString();
 
@@ -620,7 +620,7 @@ namespace DLM.painel
             this.peso_embarcado = qtd_embarcada * this.peso_unitario;
             this.qtd_produzida = (int)Math.Round(peso_produzido / peso_unitario);
 
-            this.ultima_edicao = peca.Get("ultima_edicao").Data();
+            this.ultima_edicao = peca["ultima_edicao"].Data();
 
             this.DENOMINDSTAND = peca.Get("DENOMINDSTAND").ToString();
             this.DESENHO_1 = peca.Get("DESENHO_1").ToString();

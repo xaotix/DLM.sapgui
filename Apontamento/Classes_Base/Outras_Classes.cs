@@ -303,7 +303,7 @@ namespace DLM.painel
             this.telefone = l.Get("telefone").ToString();
             this.placa = l.Get("placa").ToString();
             this.motorista = l.Get("motorista").ToString();
-            this.observacoes = l.Get("observacoes").ToString();
+            this.observacoes = l["observacoes"].Valor;
 
             this.subetapa = Conexoes.Utilz.PEP.Get.Subetapa(this.pep, true);
 
@@ -848,7 +848,7 @@ namespace DLM.painel
         public Esquema_Pintura(DLM.db.Banco banco, DLM.db.Linha l)
             {
                 this.l = l;
-                this.id = l.Get("id").Int();
+                this.id = l["id"].Int();
 
 
                 this.CODIGO_ESQUEMA = l.Get("CODIGO_ESQUEMA").ToString();

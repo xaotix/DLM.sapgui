@@ -1963,7 +1963,7 @@ public class Relatorios
                         pecas_aba_excel.Cells[l0 + l, c0 + 9].Value = pc.Get("placa").ToString(); //placa
                         pecas_aba_excel.Cells[l0 + l, c0 + 10].Value = pc.Get("motorista").ToString(); //motorista
                         pecas_aba_excel.Cells[l0 + l, c0 + 11].Value = pc.Get("marca").ToString(); //marca
-                        pecas_aba_excel.Cells[l0 + l, c0 + 12].Value = pc.Get("observacoes").ToString(); //observações
+                        pecas_aba_excel.Cells[l0 + l, c0 + 12].Value = pc["observacoes"].Valor; //observações
                         pecas_aba_excel.Cells[l0 + l, c0 + 13].Value = qtd; //qtd
                         pecas_aba_excel.Cells[l0 + l, c0 + 14].Value = qtd_fabricada; //qtd fabricada
                         //pecas_aba_excel.Cells[l0 + l, c0 + 15].Value = pc.qtd_necessaria; //quantidade total necessária

@@ -265,12 +265,12 @@ namespace DLM.painel
             if (carrega_id)
             {
 
-            this.id = L.Get("id").Int();
+            this.id = L["id"].Int();
             }
             this.id_status_pedido = L.Get("id_status_pedido").Int();
             this.id_status_pep = L.Get("id_status_pedido").Int();
 
-            this.observacoes = L.Get("observacoes").ToString();
+            this.observacoes = L["observacoes"].Valor;
             this.pep = L.Get("pep").ToString();
             this.pep_engenharia = L.Get("pep_engenharia").ToString();
 
