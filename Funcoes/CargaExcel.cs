@@ -170,8 +170,10 @@ namespace DLM.sapgui
             List<DLM.painel.Peca_Planejamento> Retorno = new List<DLM.painel.Peca_Planejamento>();
 
             //19/06/2020 - aumentei o filtro para pegar a subetapa. serão mais consultas, no entanto evita os erros.
-          
-            var consulta = Conexoes.DBases.GetDB().Consulta($"SELECT left(pr.pep,17) as pep, count(pr.pep) as pcs from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpmp_producao} as pr where pr.pep like '%{Pedido}% ' and pr.material like '31%' group by left(pr.pep,17) order by count(pr.pep) desc".Replace("*", ""));
+            /*12/05/2022 - mudei a chamada para um procedure.*/
+            var chamada = $"call comum.zpp_cooisn_get_qtd_pc('{Pedido.Replace("*","").Replace(" ","")}')";
+            //var consulta = Conexoes.DBases.GetDB().Consulta($"SELECT left(pr.pep,17) as pep, count(pr.pep) as pcs from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpmp_producao} as pr where pr.pep like '%{Pedido}%' and pr.material like '31%' group by left(pr.pep,17) order by count(pr.pep) desc".Replace("*", ""));
+            var consulta = Conexoes.DBases.GetDB().Consulta(chamada);
             var peps = consulta.Linhas.Select(x => x.Get("pep").ToString()).ToList(); 
             var w = Conexoes.Utilz.Wait(peps.Count, Pedido + " ZPPCOOISN"); 
             w.somaProgresso();
