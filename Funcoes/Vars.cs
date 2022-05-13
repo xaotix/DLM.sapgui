@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLM.vars;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,13 +22,13 @@ namespace DLM.sapgui
         public static string ZPP066NARQ { get; set; } = "ZPP0066N.xlsx";
         public static string CN47NARQ { get; set; } = "CN47N.xlsx";
         public static string Raiz { get; set; } = System.Windows.Forms.Application.StartupPath + @"\";
-        public static string SetupUser { get; set; } = Raiz + "setup.user.cfg";
-        public static string SCRIPT_IMPRESSAO { get; set; } = Raiz + "IMPRIMIR.VBS";
-        public static string SCRIPT_IMPRESSAO_FAGLL03 { get; set; } = Raiz + "IMPRIMIR_FAGLL03.VBS";
-        public static string SCRIPT_IMPRESSAO2 { get; set; } = Raiz + "IMPRIMIR2.VBS";
-        public static string SCRIPT_IMPRESSAO_ZPMP { get; set; } = Raiz + "IMPRIMIR_ZPMP.VBS";
-        public static string SCRIPT_IMPRESSAO_tmp { get; set; } = Raiz + "Script1.vbs";
-        public static string TEMPLATE_SAIDA { get; set; } = Raiz + "TEMPLATE_PLANEJAMENTO.xlsx";
+        public static string SetupUser { get; set; } = Cfg.Init.Raiz_APP + "setup.user.cfg";
+        public static string SCRIPT_IMPRESSAO { get; set; } = Cfg.Init.Raiz_APP + "IMPRIMIR.VBS";
+        public static string SCRIPT_IMPRESSAO_FAGLL03 { get; set; } = Cfg.Init.Raiz_APP + "IMPRIMIR_FAGLL03.VBS";
+        public static string SCRIPT_IMPRESSAO2 { get; set; } = Cfg.Init.Raiz_APP + "IMPRIMIR2.VBS";
+        public static string SCRIPT_IMPRESSAO_ZPMP { get; set; } = Cfg.Init.Raiz_APP + "IMPRIMIR_ZPMP.VBS";
+        public static string SCRIPT_IMPRESSAO_tmp { get; set; } = Cfg.Init.Raiz_AppData + "Script1.vbs";
+        public static string TEMPLATE_SAIDA { get; set; } = Cfg.Init.Raiz_APP + "TEMPLATE_PLANEJAMENTO.xlsx";
 
     }
 }

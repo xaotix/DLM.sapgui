@@ -1681,8 +1681,8 @@ public class Relatorios
                 {
                     
                 DBases.GetDB().Comando($"delete from " +
-                    $"painel_de_obras2.pecas WHERE " +
-                    $"painel_de_obras2.pecas.pep LIKE '%{pc.contrato}%'");
+                    $"{Cfg.Init.db_painel_de_obras2}.pecas WHERE " +
+                    $"{Cfg.Init.db_painel_de_obras2}.pecas.pep LIKE '%{pc.contrato}%'");
                 }
             }
             try
@@ -1718,9 +1718,6 @@ public class Relatorios
 
                         foreach (var p in Pecas.OrderBy(x => x.pep))
                         {
-                            double dif = (l / (double)tot) * 100;
-                            double qtd_fabr = p.qtd_produzida;
-
                             if (p.logistica.Count == 0)
                             {
                                 try
@@ -1735,6 +1732,24 @@ public class Relatorios
                             }
                             else
                             {
+                                var qtd_a_embarcar = p.qtd_necessaria - p.logistica.FindAll(x => x.carga_confirmada).Sum(x => x.quantidade);
+                                var qtd_a_fabricar = p.qtd_necessaria - p.qtd_produzida;
+                                var qtd_a_embarcar_produzida = p.qtd_produzida - (p.qtd_embarcada > 0 ? p.qtd_embarcada : 0);
+                                var qtd_fab = qtd_a_fabricar <= 0 ? qtd_a_embarcar : qtd_a_embarcar_produzida;
+
+                                var resto = p.qtd_necessaria - p.logistica.FindAll(x => x.carga_confirmada).Sum(x => x.quantidade);
+                                if (resto < 0)
+                                {
+                                    resto = 0;
+                                }
+
+                                if (qtd_a_embarcar > 0)
+                                {
+                                    AddLinha(l0, l, c0, mindia, pecas_aba_excel, p, new Logistica_Planejamento(), resto, qtd_fab, qtd_a_embarcar, qtd_fab * p.peso_unitario, 0, p.peso_unitario * qtd_a_embarcar);
+                                    l++;
+                                }
+
+                               
                                 foreach (var t in p.logistica.FindAll(x=>x.carga_confirmada))
                                 {
                                     try
@@ -1744,9 +1759,6 @@ public class Relatorios
                                         double peso_parcial_necessario = t.peca.peso_necessario / t.peca.qtd_necessaria * t.quantidade;
                                         AddLinha(l0, l, c0, mindia, pecas_aba_excel,p, t, t.quantidade,t.quantidade,0, peso_parcial_fabricado, peso_embarcado, peso_parcial_necessario);
                                         l++;
-
-
-
                                     }
                                     catch (Exception)
                                     {
@@ -1755,28 +1767,11 @@ public class Relatorios
                                     }
                                 }
                             }
-
-                            var qtd_a_embarcar = p.qtd_necessaria - p.logistica.FindAll(x => x.carga_confirmada).Sum(x => x.quantidade);
-                            var qtd_a_fabricar = p.qtd_necessaria - p.qtd_produzida;
-                            var qtd_a_embarcar_produzida = p.qtd_produzida - (p.qtd_embarcada>0?p.qtd_embarcada:0);
-                            var qtd_fab = qtd_a_fabricar <= 0 ? qtd_a_embarcar : qtd_a_embarcar_produzida;
-
-                            if (qtd_a_embarcar>0)
-                            {
-                                AddLinha(l0, l, c0, mindia, pecas_aba_excel, p, new Logistica_Planejamento(), qtd_a_embarcar, qtd_fab, qtd_a_embarcar, qtd_fab * p.peso_unitario, 0, p.peso_unitario * qtd_a_embarcar);
-                                l++;
-                            }
-
-                            if (dif - at > 2)
-                            {
-                                w.SetProgresso(l, tot);
-                                at = dif;
-                            }
+                            w.somaProgresso();
                         }
                         pck.SaveAs(new FileInfo(Destino));
                         if (abrir)
                         {
-
                             Process.Start(Destino);
                         }
                     }
@@ -1788,9 +1783,6 @@ public class Relatorios
                     List<DLM.db.Linha> linhas = new List<DLM.db.Linha>();
                     foreach (var p in Pecas.OrderBy(x => x.pep))
                     {
-                        double dif = (l / (double)tot) * 100;
-                        double qtd_fabr = p.qtd_produzida;
-
                         if (p.logistica.Count == 0)
                         {
                             try
@@ -1806,6 +1798,22 @@ public class Relatorios
                         }
                         else
                         {
+                            var qtd_a_embarcar = p.qtd_necessaria - p.logistica.FindAll(x => x.carga_confirmada).Sum(x => x.quantidade);
+                            var qtd_a_fabricar = p.qtd_necessaria - p.qtd_produzida;
+                            var qtd_a_embarcar_produzida = p.qtd_produzida - (p.qtd_embarcada > 0 ? p.qtd_embarcada : 0);
+                            var qtd_fab = qtd_a_fabricar <= 0 ? qtd_a_embarcar : qtd_a_embarcar_produzida;
+
+                            var resto = p.qtd_necessaria - p.logistica.FindAll(x => x.carga_confirmada).Sum(x => x.quantidade);
+                            if(resto<0)
+                            {
+                                resto = 0;
+                            }
+
+                            if (qtd_a_embarcar > 0)
+                            {
+                                DLM.db.Linha ldb = GetLinhaDB(mindia, new Logistica_Planejamento() { peca = p }, resto, qtd_fab, 0, qtd_a_embarcar);
+                                linhas.Add(ldb);
+                            }
                             foreach (var t in p.logistica.FindAll(x => x.carga_confirmada))
                             {
                                 try
@@ -1822,25 +1830,10 @@ public class Relatorios
                             }
                         }
 
-                        var qtd_a_embarcar = p.qtd_necessaria - p.logistica.FindAll(x => x.carga_confirmada).Sum(x => x.quantidade);
-                        var qtd_a_fabricar = p.qtd_necessaria - p.qtd_produzida;
-                        var qtd_a_embarcar_produzida = p.qtd_produzida - (p.qtd_embarcada>0?p.qtd_embarcada:0);
-                        var qtd_fab = qtd_a_fabricar <= 0 ? qtd_a_embarcar : qtd_a_embarcar_produzida;
-
-                        if (qtd_a_embarcar > 0)
-                        {
-                            DLM.db.Linha ldb = GetLinhaDB(mindia, new Logistica_Planejamento() { peca = p }, qtd_a_embarcar,qtd_fab, 0, qtd_a_embarcar);
-                            linhas.Add(ldb);
-                        }
-
-                        if (dif - at > 2)
-                        {
-                            w.SetProgresso(l, tot);
-                            at = dif;
-                        }
+                        w.somaProgresso();
                     }
 
-                    DBases.GetDB().Cadastro(linhas, "painel_de_obras2", "pecas");
+                    DBases.GetDB().Cadastro(linhas, Cfg.Init.db_painel_de_obras2, "pecas");
                 }
 
             }

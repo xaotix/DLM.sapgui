@@ -2489,7 +2489,7 @@ namespace DLM.painel
  
         public static void LimparCOOISN(string chave)
         {
-            DBases.GetDB().Comando($"delete from {Cfg.Init.db_comum}.zppcooisn as pr where pr.pep like '" + chave.Replace("*", "") + "%'");
+            DBases.GetDB().Comando($"delete from {Cfg.Init.db_comum}.zppcooisn where comum.zppcooisn.pep like '%{chave}%'");
         }
         public static bool MatarExcel(bool confirmar = false)
         {
