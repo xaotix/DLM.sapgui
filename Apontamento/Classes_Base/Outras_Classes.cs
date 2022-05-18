@@ -591,7 +591,7 @@ namespace DLM.painel
             this.pecas = pecas;
             if (this.pecas.Count > 0)
             {
-                var ss = DLM.painel.Vars.Descricoes_PEP.Find(x => x.PEP == pecas[0].subetapa && x.FAB == pecas[0].unidade);
+                var ss = DBases.GetDbOrc().Get_PEP_FERT().Find(x => x.PEP == pecas[0].subetapa && x.FAB == pecas[0].unidade);
                 this.descricao = pecas[0].subetapa + "." + pecas[0].unidade;
                 if (ss != null)
                 {

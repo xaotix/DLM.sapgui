@@ -59,21 +59,8 @@ namespace DLM.painel
 
 
 
-        private  static List<Descricao_PEP> _Descricoes_PEP { get; set; }
-        public static List<Descricao_PEP> Descricoes_PEP { get
-            {
-                if(_Descricoes_PEP==null)
-                {
-                    _Descricoes_PEP = new List<Descricao_PEP>();
-                    var lista_log = Conexoes.DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_de_para_orc_pla);
-                    foreach(var s in lista_log.Linhas)
-                    {
-                        _Descricoes_PEP.Add(new Descricao_PEP(s));
-                    }
-                }
-                return _Descricoes_PEP;
-            }
-        }
+
+
 
 
         public static string args { get; set; } = "";

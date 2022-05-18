@@ -17,9 +17,9 @@ namespace DLM.painel
         }
         public Descricao_PEP(DLM.db.Linha l)
         {
-            this.PEP = l.Get("PEP").ToString();
-            this.FAB = l.Get("FAB").ToString();
-            this.DESC = l.Get("DESC").ToString();
+            this.PEP =  l["PEP"].Valor;
+            this.FAB =  l["FAB"].Valor;
+            this.DESC = l["DESC"].Valor;
         }
     }
 }
