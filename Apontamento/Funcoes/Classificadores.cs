@@ -9,7 +9,7 @@ namespace DLM.painel
     public class Classificadores
     {
        
-        public static List<Tipos_Pintura> GetPinturas(List<Peca_Planejamento> Pecas)
+        public static List<Tipos_Pintura> GetPinturas(List<PLAN_PECA> Pecas)
         {
             List<Tipos_Pintura> pinturas = new List<Tipos_Pintura>();
             var s = Pecas.FindAll(x => x.superficie > 0).FindAll(x => x.TIPO_DE_PINTURA != "").Select(x => x.esq_de_pintura + " - " + x.TIPO_DE_PINTURA).Distinct().ToList();
@@ -20,7 +20,7 @@ namespace DLM.painel
             }
             return pinturas;
         }
-        public static List<Resumo_SubEtapa> GetResumoSubEtapa(List<Peca_Planejamento> Pecas)
+        public static List<Resumo_SubEtapa> GetResumoSubEtapa(List<PLAN_PECA> Pecas)
         {
             List<DLM.painel.Resumo_SubEtapa> grupos = new List<DLM.painel.Resumo_SubEtapa>();
 
@@ -32,7 +32,7 @@ namespace DLM.painel
             }
             return grupos;
         }
-        public static List<Unidade_fabril> GetUnidadesFabris(List<Peca_Planejamento> Pecas)
+        public static List<Unidade_fabril> GetUnidadesFabris(List<PLAN_PECA> Pecas)
         {
             List<DLM.painel.Unidade_fabril> grupos = new List<DLM.painel.Unidade_fabril>();
             var s = Pecas.Select(x => x.centro).Distinct().ToList();
@@ -43,7 +43,7 @@ namespace DLM.painel
             }
             return grupos;
         }
-        public static List<Grupo_Mercadoria> GetGrupo_Mercadorias(List<Peca_Planejamento> pecas, bool filtro_pep =false)
+        public static List<Grupo_Mercadoria> GetGrupo_Mercadorias(List<PLAN_PECA> pecas, bool filtro_pep =false)
         {
             List<Grupo_Mercadoria> retorno = new List<Grupo_Mercadoria>();
          
@@ -82,7 +82,7 @@ namespace DLM.painel
             return retorno;
         }
 
-        public static List<Materia_Prima> GetMateriaPrima(List<Peca_Planejamento> Pecas,bool separar_cortes = true)
+        public static List<Materia_Prima> GetMateriaPrima(List<PLAN_PECA> Pecas,bool separar_cortes = true)
         {
             List<Materia_Prima> retorno = new List<Materia_Prima>();
             var codigos = Pecas.Select(x => x.chave_material).Distinct().ToList().FindAll(x => x != "");
@@ -106,7 +106,7 @@ namespace DLM.painel
             return retorno;
         }
 
-        public static List<Viga> GetVigas(List<Peca_Planejamento> Pecas)
+        public static List<Viga> GetVigas(List<PLAN_PECA> Pecas)
         {
             List<Viga> retorno = new List<Viga>();
             var pcs = Pecas.FindAll(x => x.grupo_mercadoria.Contains("VIGA") |x.grupo_mercadoria.Contains("PERFIL SOLDADO") | x.grupo_mercadoria.Contains("PERFIL LAMINADO"));

@@ -9,8 +9,6 @@ namespace DLM.painel
 {
     public class PLAN_ETAPA : PLAN_BASE
     {
-       
-       
         public override string ToString()
         {
             return descricao;

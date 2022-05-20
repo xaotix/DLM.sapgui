@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DLM.painel
 {
 
-    public class Base_Orcamento : PLAN_BASE
+    public class ORC_BASE : PLAN_BASE
     {
         public void GetDatas()
         {
@@ -23,6 +23,9 @@ namespace DLM.painel
 
             this.montagem_cronograma_inicio = L.Get("mi").Data();
             this.montagem_cronograma = L.Get("mf").Data();
+
+            this.mi_s = L.Get("mi_s").Data();
+            this.mf_s = L.Get("mf_s").Data();
         }
 
 
@@ -45,8 +48,8 @@ namespace DLM.painel
             return this.pep + "[" + this.peso_planejado + "]";
         }
         public Tipo_Material tipo { get; set; } = Tipo_Material.Orçamento;
-        private List<Peca_Planejamento> _pecas { get; set; }
-        public List<Peca_Planejamento> GetPecasPMP()
+        private List<PLAN_PECA> _pecas { get; set; }
+        public List<PLAN_PECA> GetPecasPMP()
         {
             if (_pecas == null)
             {
@@ -60,16 +63,16 @@ namespace DLM.painel
         public string centro { get; set; } = "";
         public double quantidade { get; set; } = 0;
 
-        public Base_Orcamento()
+        public ORC_BASE()
         {
 
         }
     }
-    public class Subetapa_Orcamento : Base_Orcamento
+    public class ORC_SUB : ORC_BASE
     {
-        private List<PEP_Orcamento> _peps { get; set; }
+        private List<ORC_PEP> _peps { get; set; }
 
-        public List<PEP_Orcamento> peps
+        public List<ORC_PEP> peps
         {
             get
             {
@@ -81,12 +84,12 @@ namespace DLM.painel
             }
         }
 
-        public Subetapa_Orcamento()
+        public ORC_SUB()
         {
 
         }
 
-        public Subetapa_Orcamento(DLM.db.Linha l)
+        public ORC_SUB(DLM.db.Linha l)
         {
             this.L = l;
             this.id_obra = l["id_obra"].Int();
@@ -96,11 +99,11 @@ namespace DLM.painel
         }
     }
 
-    public class Etapa_Orcamento : Base_Orcamento
+    public class ORC_ETP : ORC_BASE
     {
-        private List<PEP_Orcamento> _peps { get; set; }
+        private List<ORC_PEP> _peps { get; set; }
 
-        public List<PEP_Orcamento> peps
+        public List<ORC_PEP> peps
         {
             get
             {
@@ -111,13 +114,13 @@ namespace DLM.painel
                 return _peps;
             }
         }
-        public void Set(List<Subetapa_Orcamento> subs)
+        public void Set(List<ORC_SUB> subs)
         {
             this._subetapas = subs.FindAll(x => x.pep.StartsWith(this.pep));
         }
 
-        private List<Subetapa_Orcamento> _subetapas { get; set; }
-        public List<Subetapa_Orcamento> subetapas
+        private List<ORC_SUB> _subetapas { get; set; }
+        public List<ORC_SUB> subetapas
         {
             get
             {
@@ -129,11 +132,11 @@ namespace DLM.painel
             }
         }
 
-        public Etapa_Orcamento()
+        public ORC_ETP()
         {
 
         }
-        public Etapa_Orcamento(DLM.db.Linha l)
+        public ORC_ETP(DLM.db.Linha l)
         {
             this.L = l;
             this.id_obra = l["id_obra"].Int();
@@ -144,14 +147,14 @@ namespace DLM.painel
         }
     }
 
-    public class PEP_Orcamento :Base_Orcamento
+    public class ORC_PEP :ORC_BASE
     {
         public string pep_inicial { get; set; } = "";
-        public PEP_Orcamento()
+        public ORC_PEP()
         {
 
         }
-        public PEP_Orcamento(DLM.db.Linha l)
+        public ORC_PEP(DLM.db.Linha l)
         {
             this.L = l;
 
@@ -167,15 +170,15 @@ namespace DLM.painel
         }
     }
 
-    public class Pacote_Orcamento
+    public class ORC_PCK
     {
         public override string ToString()
         {
             return arquivo;
         }
         private List<string> peps_str { get; set; } = new List<string>();
-        public Pedido_Orcamento pedido { get; set; } = new Pedido_Orcamento();
-        public List<PEP_Orcamento> peps
+        public ORC_PED pedido { get; set; } = new ORC_PED();
+        public List<ORC_PEP> peps
         {
             get
             {
@@ -183,7 +186,7 @@ namespace DLM.painel
             }
         }
         public string arquivo { get; set; } = "";
-        public Pacote_Orcamento(string arquivo, List<string> peps, Pedido_Orcamento pedido)
+        public ORC_PCK(string arquivo, List<string> peps, ORC_PED pedido)
         {
             this.arquivo = arquivo;
             this.peps_str = peps;
@@ -191,12 +194,12 @@ namespace DLM.painel
         }
     }
 
-   public  class Pedido_Orcamento : Base_Orcamento
+   public  class ORC_PED : ORC_BASE
     {
 
-        public List<Pacote_Orcamento> pacotes { get; set; } = new List<Pacote_Orcamento>();
-        private List<PEP_Orcamento> _peps { get; set; }
-        public List<PEP_Orcamento> peps
+        public List<ORC_PCK> pacotes { get; set; } = new List<ORC_PCK>();
+        private List<ORC_PEP> _peps { get; set; }
+        public List<ORC_PEP> peps
         {
             get
             {
@@ -207,8 +210,8 @@ namespace DLM.painel
                 return _peps;
             }
         }
-        private List<Subetapa_Orcamento> _subetapas { get; set; }
-        public List<Subetapa_Orcamento> subetapas
+        private List<ORC_SUB> _subetapas { get; set; }
+        public List<ORC_SUB> subetapas
         {
             get
             {
@@ -227,9 +230,9 @@ namespace DLM.painel
             }
         }
 
-        private List<Etapa_Orcamento> _etapas { get; set; }
+        private List<ORC_ETP> _etapas { get; set; }
 
-        public List<Etapa_Orcamento> Getetapas_orcamento()
+        public List<ORC_ETP> Getetapas_orcamento()
         {
             if (_etapas == null)
             {
@@ -243,7 +246,7 @@ namespace DLM.painel
         public double peso_realizado { get; set; } = 0;
         public int arquivos { get; set; } = 0;
 
-        public Pedido_Orcamento()
+        public ORC_PED()
         {
 
         }
@@ -253,7 +256,7 @@ namespace DLM.painel
         }
 
         public DateTime criacao { get; set; } = new DateTime();
-        public Pedido_Orcamento(DLM.db.Linha l, Tipo_Material tipo)
+        public ORC_PED(DLM.db.Linha l, Tipo_Material tipo)
         {
             this.L = l;
             this.id_obra = l["id_obra"].Int();

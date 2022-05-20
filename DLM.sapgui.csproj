@@ -160,15 +160,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apontamento\Classes\Avanco_Pecas.cs" />
-    <Compile Include="Apontamento\Classes\Etapa_Planejamento.cs" />
-    <Compile Include="Apontamento\Classes\Obra_Planejamento.cs" />
+    <Compile Include="Apontamento\Classes\Base_Orcamento.cs" />
     <Compile Include="Apontamento\Classes\Obra_PMP.cs" />
-    <Compile Include="Apontamento\Classes\Orcamento_Obra.cs" />
-    <Compile Include="Apontamento\Classes\Peca_Planejamento.cs" />
-    <Compile Include="Apontamento\Classes\Pedido_Planejamento.cs" />
-    <Compile Include="Apontamento\Classes\PEP_Planejamento.cs" />
+    <Compile Include="Apontamento\Classes\PLAN_ETAPA.cs" />
+    <Compile Include="Apontamento\Classes\PLAN_OBRA.cs" />
+    <Compile Include="Apontamento\Classes\PLAN_PECA.cs" />
+    <Compile Include="Apontamento\Classes\PLAN_PEDIDO.cs" />
+    <Compile Include="Apontamento\Classes\PLAN_PEP.cs" />
+    <Compile Include="Apontamento\Classes\PLAN_SUB_ETAPA.cs" />
     <Compile Include="Apontamento\Classes\Resultado_Economico.cs" />
-    <Compile Include="Apontamento\Classes\SubEtapa_Planejamento.cs" />
     <Compile Include="Apontamento\Classes_Base\Colunas.cs" />
     <Compile Include="Apontamento\Classes_Base\Data_Meta.cs" />
     <Compile Include="Apontamento\Classes_Base\Descricao_PEP.cs" />

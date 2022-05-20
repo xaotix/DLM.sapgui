@@ -34,10 +34,10 @@ namespace DLM.painel
             }
         }
         private List<PLAN_ETAPA> _etapas { get; set; } = new List<PLAN_ETAPA>();
-        private List<PEP_PLAN> _peps { get; set; } = new List<PEP_PLAN>();
+        private List<PLAN_PEP> _peps { get; set; } = new List<PLAN_PEP>();
         private List<PLAN_SUB_ETAPA> _subetapas { get; set; } = new List<PLAN_SUB_ETAPA>();
         private List<PLAN_PEDIDO> _pedidos { get; set; } = new List<PLAN_PEDIDO>();
-        private List<Peca_Planejamento> _pecas { get; set; } = new List<Peca_Planejamento>();
+        private List<PLAN_PECA> _pecas { get; set; } = new List<PLAN_PECA>();
 
         public List<PLAN_PEDIDO> GetPedidos()
         {
@@ -98,7 +98,7 @@ namespace DLM.painel
             }
             return _subetapas;
         }
-        public List<PEP_PLAN> GetPeps()
+        public List<PLAN_PEP> GetPeps()
         {
             if (_peps.Count == 0 && this.pep.Length > 3)
             {
@@ -116,7 +116,7 @@ namespace DLM.painel
 
             return _peps;
         }
-        public List<Peca_Planejamento> GetPecas(bool reset = false)
+        public List<PLAN_PECA> GetPecas(bool reset = false)
         {
             if ((_pecas.Count == 0 | reset) && this.pep.Length > 3)
             {
@@ -142,9 +142,9 @@ namespace DLM.painel
             this._pedidos = new List<PLAN_PEDIDO>();
             this._pedidos.AddRange(lista.FindAll(x => x.pep.ToUpper().Contains(this.pep)));
         }
-        public void Set(List<Peca_Planejamento> lista)
+        public void Set(List<PLAN_PECA> lista)
         {
-            this._pecas = new List<Peca_Planejamento>();
+            this._pecas = new List<PLAN_PECA>();
             this._pecas.AddRange(lista.FindAll(x => x.pep.ToUpper().StartsWith(this.pep)));
             if (this.carregou_etapas)
             {
@@ -187,9 +187,9 @@ namespace DLM.painel
             this._subetapas = new List<PLAN_SUB_ETAPA>();
             this._subetapas.AddRange(lista.FindAll(x => x.pep.ToUpper().StartsWith(this.pep)));
         }
-        public void Set(List<PEP_PLAN> lista)
+        public void Set(List<PLAN_PEP> lista)
         {
-            this._peps = new List<PEP_PLAN>();
+            this._peps = new List<PLAN_PEP>();
             this._peps.AddRange(lista.FindAll(x => x.pep.StartsWith(this.pep)));
         }
 
@@ -269,6 +269,9 @@ namespace DLM.painel
         public DateTime engenharia_liberacao { get; set; } = new DateTime();
         public DateTime montagem_inicio { get; set; } = new DateTime();
         public DateTime montagem_fim { get; set; } = new DateTime();
+
+        public DateTime mi_s { get; set; } = new DateTime();
+        public DateTime mf_s { get; set; } = new DateTime();
         public double logistica_previsto
         {
             get
@@ -356,11 +359,11 @@ namespace DLM.painel
                 {
                     return Conexoes.BufferImagem._lock;
                 }
-                if (this is Obras_Planejamento)
+                if (this is PLAN_OBRAS)
                 {
                     return Conexoes.BufferImagem.folder_new;
                 }
-                else if (this is OBRA_PLAN)
+                else if (this is PLAN_OBRA)
                 {
                     return Conexoes.BufferImagem.folder_red;
                 }

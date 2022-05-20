@@ -17,7 +17,7 @@ namespace DLM.painel
             if(_logistica_st==null)
             {
 
-                List<DLM.painel.Peca_Planejamento> pcs = new List<DLM.painel.Peca_Planejamento>();
+                List<DLM.painel.PLAN_PECA> pcs = new List<DLM.painel.PLAN_PECA>();
 
                 _logistica_st = DLM.painel.Consultas.GetLogistica(null, this.GetPecas(), out pcs);
             }
@@ -71,7 +71,7 @@ namespace DLM.painel
         public int etapas_qtd { get; private set; } = 0;
         public int pedidos { get; private set; } = 0;
 
-        public PLAN_PEDIDO(DLM.db.Linha L, OBRA_PLAN contrato)
+        public PLAN_PEDIDO(DLM.db.Linha L, PLAN_OBRA contrato)
         {
             this.pep = L.Get("pedido").ToString();
             this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();

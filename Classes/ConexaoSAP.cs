@@ -98,8 +98,8 @@ namespace DLM.sapgui
             }
         }
 
-        private List<DLM.painel.PEP_PLAN> _PEPs { get; set; }
-        public List<DLM.painel.PEP_PLAN> PEPs
+        private List<DLM.painel.PLAN_PEP> _PEPs { get; set; }
+        public List<DLM.painel.PLAN_PEP> PEPs
         {
             get
             {
@@ -111,7 +111,7 @@ namespace DLM.sapgui
             }
         }
 
-        public List<DLM.painel.PEP_PLAN> CarregarPEPS()
+        public List<DLM.painel.PLAN_PEP> CarregarPEPS()
         {
             return DLM.painel.Consultas.GetPeps(new List<string> { this.Codigo });
         }

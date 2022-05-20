@@ -111,10 +111,10 @@ namespace DLM.sapgui
             }
             return _pedidos;
         }
-        public static List<PEP_PLAN> converter(List<PEPConsultaSAP> origem/*, bool consultar_existentes = false*/)
+        public static List<PLAN_PEP> converter(List<PEPConsultaSAP> origem/*, bool consultar_existentes = false*/)
         {
             var PEPS_DUMP = origem.Select(x =>
-            new PEP_PLAN()
+            new PLAN_PEP()
             {
                 //banco = Conexoes.DBases.GetDB(),
 
@@ -148,7 +148,7 @@ namespace DLM.sapgui
                 /*14/11/18*/
 
             }).ToList();
-            List<PEP_PLAN> RETORNO = new List<PEP_PLAN>();
+            List<PLAN_PEP> RETORNO = new List<PLAN_PEP>();
             RETORNO.AddRange(PEPS_DUMP);
 
             

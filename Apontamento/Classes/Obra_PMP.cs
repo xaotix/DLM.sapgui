@@ -429,7 +429,7 @@ namespace DLM.painel
             }
         }
 
-        public List<Peca_Planejamento> Getpecas()
+        public List<PLAN_PECA> Getpecas()
         {
           return Obra.Getpecas().FindAll(x => x.Tipo == tipo).FindAll(x => x.pep.StartsWith(this.pep));
         }
@@ -486,14 +486,14 @@ namespace DLM.painel
             }
         }
         public Pedido_PMP Obra { get; set; } = new Pedido_PMP();
-        public PEP_Orcamento Orcamento { get; set; } = new PEP_Orcamento();
-        public PEP_Orcamento Consolidada { get; set; } = new PEP_Orcamento();
-        public PEP_PLAN Real { get; set; } = new PEP_PLAN();
+        public ORC_PEP Orcamento { get; set; } = new ORC_PEP();
+        public ORC_PEP Consolidada { get; set; } = new ORC_PEP();
+        public PLAN_PEP Real { get; set; } = new PLAN_PEP();
         public PEP_PMP()
         {
 
         }
-        public PEP_PMP(Pedido_PMP obra, PEP_PLAN real, PEP_Orcamento orcamento, PEP_Orcamento consolidada)
+        public PEP_PMP(Pedido_PMP obra, PLAN_PEP real, ORC_PEP orcamento, ORC_PEP consolidada)
         {
             this.Obra = obra;
 
@@ -766,7 +766,7 @@ namespace DLM.painel
             }
         }
 
-        public List<Peca_Planejamento> Getpecas()
+        public List<PLAN_PECA> Getpecas()
         {
             return Getpeps().SelectMany(x => x.Getpecas()).ToList();
         }
@@ -803,11 +803,11 @@ namespace DLM.painel
         }
 
         public Pedido_PMP Obra { get; set; } = new Pedido_PMP();
-        public Subetapa_Orcamento Orcamento { get; set; } = new Subetapa_Orcamento();
-        public Subetapa_Orcamento Consolidada { get; set; } = new Subetapa_Orcamento();
+        public ORC_SUB Orcamento { get; set; } = new ORC_SUB();
+        public ORC_SUB Consolidada { get; set; } = new ORC_SUB();
         public PLAN_SUB_ETAPA Real { get; set; } = new PLAN_SUB_ETAPA();
 
-        public SubEtapa_PMP(Pedido_PMP obra, PLAN_SUB_ETAPA real, Subetapa_Orcamento orcamento, Subetapa_Orcamento consolidada)
+        public SubEtapa_PMP(Pedido_PMP obra, PLAN_SUB_ETAPA real, ORC_SUB orcamento, ORC_SUB consolidada)
         {
             this.Obra = obra;
             if(real!=null)
@@ -1109,11 +1109,11 @@ namespace DLM.painel
 
 
         public Pedido_PMP Obra { get; set; } = new Pedido_PMP();
-        public Etapa_Orcamento Orcamento { get; set; } = new Etapa_Orcamento();
-        public Etapa_Orcamento Consolidada { get; set; } = new Etapa_Orcamento();
+        public ORC_ETP Orcamento { get; set; } = new ORC_ETP();
+        public ORC_ETP Consolidada { get; set; } = new ORC_ETP();
         public PLAN_ETAPA Real { get; set; } = new PLAN_ETAPA();
 
-        public Etapa_PMP(Pedido_PMP obra, PLAN_ETAPA real, Etapa_Orcamento orcamento , Etapa_Orcamento consolidada)
+        public Etapa_PMP(Pedido_PMP obra, PLAN_ETAPA real, ORC_ETP orcamento , ORC_ETP consolidada)
         {
             this.Obra = obra;
             if (real != null)
@@ -1525,9 +1525,9 @@ namespace DLM.painel
             }
             return _peps;
         }
-        public void Set(List<Peca_Planejamento> pecas)
+        public void Set(List<PLAN_PECA> pecas)
         {
-            this._pecas = new List<Peca_Planejamento>();
+            this._pecas = new List<PLAN_PECA>();
             this._pecas.AddRange(pecas.FindAll(x => x.pep.StartsWith(this.pep)));
         }
         public void Set(List<SubEtapa_PMP> pecas)
@@ -1545,8 +1545,8 @@ namespace DLM.painel
             this._etapas = new List<Etapa_PMP>();
             this._etapas.AddRange(pecas.FindAll(x => x.pep.StartsWith(this.pep)));
         }
-        private List<Peca_Planejamento> _pecas { get; set; }
-        public List<Peca_Planejamento> Getpecas()
+        private List<PLAN_PECA> _pecas { get; set; }
+        public List<PLAN_PECA> Getpecas()
         {
             if (_pecas == null)
             {
@@ -1555,9 +1555,9 @@ namespace DLM.painel
             return _pecas;
         }
         public PLAN_PEDIDO Real { get; set; } = new PLAN_PEDIDO();
-        public Pedido_Orcamento Orcamento { get; set; } = new Pedido_Orcamento();
-        public Pedido_Orcamento Consolidada { get; set; } = new Pedido_Orcamento();
-        public Pedido_PMP(PLAN_PEDIDO real, Pedido_Orcamento orcamento, Pedido_Orcamento consolidado)
+        public ORC_PED Orcamento { get; set; } = new ORC_PED();
+        public ORC_PED Consolidada { get; set; } = new ORC_PED();
+        public Pedido_PMP(PLAN_PEDIDO real, ORC_PED orcamento, ORC_PED consolidado)
         {
         
             if (real != null)
@@ -1653,9 +1653,9 @@ namespace DLM.painel
         private List<SubEtapa_PMP> _subetapas { get; set; }
         private List<PEP_PMP> _peps { get; set; }
 
-        private List<Peca_Planejamento> _pecas { get; set; }
+        private List<PLAN_PECA> _pecas { get; set; }
 
-        public List<Peca_Planejamento> GetPecas()
+        public List<PLAN_PECA> GetPecas()
         {
             if(_pecas ==null)
             {

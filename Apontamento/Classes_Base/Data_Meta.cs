@@ -103,7 +103,7 @@ namespace DLM.painel
 
 
                     var avanco_previsto = total.OrderBy(x => x.engenharia_cronograma).ToList().FindAll(x => x.engenharia_cronograma <= f0_fim).ToList();
-                    var avanco_total_realizado = total.FindAll(x => x.data_transsap <= f0_fim && x.data_transsap > min_data && x.liberado_engenharia > valor_considerar_finalizado);
+                    var avanco_total_realizado = total.FindAll(x => x.engenharia_liberacao <= f0_fim && x.engenharia_liberacao > min_data && x.liberado_engenharia > valor_considerar_finalizado);
                     var avanco_realizado = avanco_total_realizado.FindAll(x => avanco_previsto.Find(y => y.pep == x.pep) != null);
                     var avanco_realizado_nao_previsto = avanco_total_realizado.FindAll(x => avanco_previsto.Find(y => y.pep == x.pep) == null);
 

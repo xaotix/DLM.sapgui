@@ -671,7 +671,7 @@ public class Relatorios
                 }
             }
         }
-        public static bool Exportar_Datas_Fabrica(List<PEP_PLAN> peps, string descricao, string pedido = "", string local = "", bool abrir = false, bool gerar_pendentes = false, string Destino = null)
+        public static bool Exportar_Datas_Fabrica(List<PLAN_PEP> peps, string descricao, string pedido = "", string local = "", bool abrir = false, bool gerar_pendentes = false, string Destino = null)
         {
   
             if (!File.Exists(Vars.TEMPLATE_DATAS_FABRICA))
@@ -1151,7 +1151,7 @@ public class Relatorios
             RelatorioAvanco(item.GetPecas(), pecas? item.GetSubEtapas():new List<PLAN_SUB_ETAPA>(), Destino, abrir);
             return File.Exists(Destino);
         }
-        public static bool RelatorioAvanco(List<Peca_Planejamento> PECAS, List<PLAN_SUB_ETAPA> subetapas = null,string Destino = "", bool abrir = true)
+        public static bool RelatorioAvanco(List<PLAN_PECA> PECAS, List<PLAN_SUB_ETAPA> subetapas = null,string Destino = "", bool abrir = true)
         {
             if (PECAS.Count == 0 && subetapas == null)
             {
@@ -1340,18 +1340,18 @@ public class Relatorios
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 17].Value = t.montagem_cronograma > mindia ? t.montagem_cronograma.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 18].Value = t.ultima_consulta_sap > mindia ? t.ultima_consulta_sap.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 19].Value = t.Montagem_Balanco ? "X" : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 20].Value = t.data_transsap > mindia ? t.data_transsap.ToShortDateString() : "";
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 20].Value = t.data_transsap > mindia ? t.data_transsap.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 21].Value = t.engenharia_liberacao > mindia ? t.engenharia_liberacao.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 22].Value = t.resumo_pecas.inicio > mindia ? t.resumo_pecas.inicio.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 23].Value = t.resumo_pecas.fim > mindia ? t.resumo_pecas.fim.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 24].Value = t.update_montagem.ToUpper().Replace("MONTAGEM: ","");
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 25].Value = t.engenharia_projetista;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 26].Value = t.engenharia_calculista;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 27].Value = t.engenharia_responsavel;
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 25].Value = t.engenharia_projetista;
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 26].Value = t.engenharia_calculista;
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 27].Value = t.engenharia_responsavel;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 28].Value = t.montagem_engenheiro;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 29].Value = t.almox_comprado ? "X" : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 30].Value = t.almox_comprado_data > mindia ? t.almox_comprado_data.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 31].Value = t.almox_comprado_user;
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 29].Value = t.almox_comprado ? "X" : "";
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 30].Value = t.almox_comprado_data > mindia ? t.almox_comprado_data.ToShortDateString() : "";
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 31].Value = t.almox_comprado_user;
 
                             }
                             catch (Exception)
@@ -1613,7 +1613,7 @@ public class Relatorios
 
             return true;
         }
-        public static bool ExportarEmbarque(List<Peca_Planejamento> Pecas, bool abrir = false, List<Logistica_Planejamento> log = null, string Destino = null, bool enviar_dbase = false, bool gera_excel = true)
+        public static bool ExportarEmbarque(List<PLAN_PECA> Pecas, bool abrir = false, List<Logistica_Planejamento> log = null, string Destino = null, bool enviar_dbase = false, bool gera_excel = true)
         {
             if (Pecas.Count == 0)
             {
@@ -1664,7 +1664,7 @@ public class Relatorios
             string pedido = string.Join(", ", Pecas.Select(x => x.contrato).Distinct().ToList());
           
             var w = Conexoes.Utilz.Wait(10,$"Logística...{Pecas.Count} Peças do(s) pedido(s) {pedido}");
-            List<Peca_Planejamento> orfas = new List<Peca_Planejamento>();
+            List<PLAN_PECA> orfas = new List<PLAN_PECA>();
             if (log==null && Pecas.Count>0)
             {
                
@@ -2023,7 +2023,7 @@ public class Relatorios
 
             return true;
         }
-        private static void AddLinha(int l0, int l, int c0, DateTime mindia, OfficeOpenXml.ExcelWorksheet pecas_aba_excel, Peca_Planejamento peca, Logistica_Planejamento logistica, double qtd_necessaria, double qtd_fabricada, double qtd_a_embarcar, double peso_parcial_fabricado, double peso_embarcado, double peso_parcial_necessario)
+        private static void AddLinha(int l0, int l, int c0, DateTime mindia, OfficeOpenXml.ExcelWorksheet pecas_aba_excel, PLAN_PECA peca, Logistica_Planejamento logistica, double qtd_necessaria, double qtd_fabricada, double qtd_a_embarcar, double peso_parcial_fabricado, double peso_embarcado, double peso_parcial_necessario)
         {
             pecas_aba_excel.Cells[l0 + l, c0 + 0].Value = peca.pep;
             pecas_aba_excel.Cells[l0 + l, c0 + 1].Value = peca.centro;
@@ -2164,7 +2164,7 @@ public class Relatorios
                 return false;
             }
 
-          List<Peca_Planejamento>  PECAS = new List<Peca_Planejamento>();
+          List<PLAN_PECA>  PECAS = new List<PLAN_PECA>();
             List<Titulo_Planejamento> peds_peps = new List<Titulo_Planejamento>();
 
             if (gerar_pecas && gerar_subetapas)
@@ -2378,14 +2378,14 @@ public class Relatorios
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 18].Value = t.mf > mindia ? t.mf.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 19].Value = t.Real.ultima_consulta_sap > mindia ? t.Real.ultima_consulta_sap.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 20].Value = t.Real.Montagem_Balanco ? "X" : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 21].Value = t.Real.data_transsap > mindia ? t.Real.data_transsap.ToShortDateString() : "";
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 21].Value = t.Real.data_transsap > mindia ? t.Real.data_transsap.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 22].Value = t.Real.engenharia_liberacao > mindia ? t.Real.engenharia_liberacao.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 23].Value = t.Real.resumo_pecas.inicio > mindia ? t.Real.resumo_pecas.inicio.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 24].Value = t.Real.resumo_pecas.fim > mindia ? t.Real.resumo_pecas.fim.ToShortDateString() : "";
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 25].Value = t.Real.update_montagem.ToUpper().Replace(" ","").Replace("MONTAGEM:","");
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 26].Value = t.Real.engenharia_projetista;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 27].Value = t.Real.engenharia_calculista;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 28].Value = t.Real.engenharia_responsavel;
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 26].Value = t.Real.engenharia_projetista;
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 27].Value = t.Real.engenharia_calculista;
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 28].Value = t.Real.engenharia_responsavel;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 29].Value = t.Real.montagem_engenheiro;
 
 

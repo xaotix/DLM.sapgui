@@ -165,9 +165,9 @@ namespace DLM.sapgui
 
             return retorno.ToList().FindAll(x=>x.Material!="").ToList();
         }
-        public static List<DLM.painel.Peca_Planejamento> ZPPCOOISN(string destino,string Pedido, bool buffer = false)
+        public static List<DLM.painel.PLAN_PECA> ZPPCOOISN(string destino,string Pedido, bool buffer = false)
         {
-            List<DLM.painel.Peca_Planejamento> Retorno = new List<DLM.painel.Peca_Planejamento>();
+            List<DLM.painel.PLAN_PECA> Retorno = new List<DLM.painel.PLAN_PECA>();
 
             //19/06/2020 - aumentei o filtro para pegar a subetapa. serão mais consultas, no entanto evita os erros.
             /*12/05/2022 - mudei a chamada para um procedure.*/
@@ -191,7 +191,7 @@ namespace DLM.sapgui
             w.Close();
             return Retorno;
         }
-        private static void ZPPCOOISN(string dest, string Pedido, List<DLM.painel.Peca_Planejamento> retorno, bool buffer = false)
+        private static void ZPPCOOISN(string dest, string Pedido, List<DLM.painel.PLAN_PECA> retorno, bool buffer = false)
         {
             if (dest != "")
             {
@@ -297,7 +297,7 @@ namespace DLM.sapgui
             }
             return ret;
         }
-        private static void Carregar_ZPPCOOISN_Layout(string Pedido, List<Peca_Planejamento> pecas = null, string dest = null, string arq = null)
+        private static void Carregar_ZPPCOOISN_Layout(string Pedido, List<PLAN_PECA> pecas = null, string dest = null, string arq = null)
         {
             if (Pedido.Length < 6) { return; }
             if (dest == null) { dest = Conexoes.Utilz.CriarPasta(System.Windows.Forms.Application.StartupPath, "SAP"); }

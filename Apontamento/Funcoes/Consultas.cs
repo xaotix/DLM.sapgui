@@ -99,8 +99,8 @@ namespace DLM.painel
             }
             List<Pedido_PMP> retorno = new List<Pedido_PMP>();
             List<PLAN_PEDIDO> reais = Consultas.GetPedidos(new List<string> { pedido });
-            List<Pedido_Orcamento> cons = new List<Pedido_Orcamento>();
-            List<Pedido_Orcamento> orcs = new List<Pedido_Orcamento>();
+            List<ORC_PED> cons = new List<ORC_PED>();
+            List<ORC_PED> orcs = new List<ORC_PED>();
 
             if (consolidacao)
             {
@@ -395,10 +395,10 @@ namespace DLM.painel
                     #region peso
                     /*Pesos - Previsto e Realizado*/
                     var dt_eng = etapa.Real.engenharia_liberacao;
-                    if(dt_eng< new DateTime(2001,01,01))
-                    {
-                        dt_eng = etapa.Real.data_transsap;
-                    }
+                    //if(dt_eng< new DateTime(2001,01,01))
+                    //{
+                    //    dt_eng = etapa.Real.data_transsap;
+                    //}
                     if (dt_eng < Conexoes.Utilz.Calendario.DataDummy() && etapa.ef<=DateTime.Now)
                     {
                         dt_eng = etapa.ef;
@@ -794,9 +794,9 @@ namespace DLM.painel
 
             }
         }
-        public static List<Pedido_Orcamento> GetObrasPGO( bool consolidadas = false)
+        public static List<ORC_PED> GetObrasPGO( bool consolidadas = false)
         {
-            List<Pedido_Orcamento> retorno = new List<Pedido_Orcamento>();
+            List<ORC_PED> retorno = new List<ORC_PED>();
             string tab = $"{Cfg.Init.db_orcamento}.pmp_orc_resumo";
             if(consolidadas)
             {
@@ -805,7 +805,7 @@ namespace DLM.painel
             var s = DBases.GetDBPGO().Consulta($"SELECT * from {tab}");
             foreach(var p in s.Linhas)
             {
-                var ped = new Pedido_Orcamento(p, consolidadas ? Tipo_Material.Consolidado : Tipo_Material.Orçamento);
+                var ped = new ORC_PED(p, consolidadas ? Tipo_Material.Consolidado : Tipo_Material.Orçamento);
                 if(!consolidadas)
                 {
                     ped.GetDatas();
@@ -826,17 +826,17 @@ namespace DLM.painel
                     foreach (var arq in arqs)
                     {
                         var peps = pcks.FindAll(x => x.Get("arquivo").Valor == arq).Select(x => x.Get("pep").Valor).Distinct().ToList();
-                        pedido.pacotes.Add(new Pacote_Orcamento(arq, peps, pedido));
+                        pedido.pacotes.Add(new ORC_PCK(arq, peps, pedido));
                     }
 
                 }
             }
             return retorno;
         }
-        public static List<Pedido_Orcamento> GetObrasPGO(string chave,bool consolidadas = false, bool consolidadas_x_real = false)
+        public static List<ORC_PED> GetObrasPGO(string chave,bool consolidadas = false, bool consolidadas_x_real = false)
         {
-            if (chave.Length < 5) { return new List<Pedido_Orcamento>(); }
-            List<Pedido_Orcamento> retorno = new List<Pedido_Orcamento>();
+            if (chave.Length < 5) { return new List<ORC_PED>(); }
+            List<ORC_PED> retorno = new List<ORC_PED>();
             string tab = $"{Cfg.Init.db_orcamento}.pmp_orc_resumo as pr";
             if (consolidadas)
             {
@@ -849,7 +849,7 @@ namespace DLM.painel
             var s = DBases.GetDBPGO().Consulta($"SELECT * from {tab} where pr.pedido like '%{chave}% '");
             foreach (var p in s.Linhas)
             {
-                var ped = new Pedido_Orcamento(p, consolidadas ? Tipo_Material.Consolidado : Tipo_Material.Orçamento);
+                var ped = new ORC_PED(p, consolidadas ? Tipo_Material.Consolidado : Tipo_Material.Orçamento);
                 if (!consolidadas)
                 {
                     ped.GetDatas();
@@ -867,16 +867,16 @@ namespace DLM.painel
                     foreach (var arq in arqs)
                     {
                         var peps = pcks.FindAll(x => x.Get("arquivo").Valor == arq).Select(x => x.Get("pep").Valor).Distinct().ToList();
-                        pedido.pacotes.Add(new Pacote_Orcamento(arq, peps, pedido));
+                        pedido.pacotes.Add(new ORC_PCK(arq, peps, pedido));
                     }
 
                 }
             }
             return retorno;
         }
-        public static List<Peca_Planejamento> GetPecasPMP(List<Pedido_PMP> pedidos)
+        public static List<PLAN_PECA> GetPecasPMP(List<Pedido_PMP> pedidos)
         {
-            List<Peca_Planejamento> retorno = new List<Peca_Planejamento>();
+            List<PLAN_PECA> retorno = new List<PLAN_PECA>();
             List<string> reais = pedidos.FindAll(x => x.Material_REAL).Select(x=>x.pep).Distinct().ToList();
             List<string> orcamentos = pedidos.FindAll(x => x.Material_ORC).Select(x => x.pep).Distinct().ToList();
             List<string> consolidadas = pedidos.FindAll(x => x.Material_CONS).Select(x => x.pep).Distinct().ToList();
@@ -932,13 +932,13 @@ namespace DLM.painel
             w.Close();
             return retorno;
         }
-        public static List<Peca_Planejamento> GetPecasPGO(List<string> pedido, int max_pacote, bool consolidada = false)
+        public static List<PLAN_PECA> GetPecasPGO(List<string> pedido, int max_pacote, bool consolidada = false)
         {
             if(pedido.Count==0)
             {
-                return new List<Peca_Planejamento>();
+                return new List<PLAN_PECA>();
             }
-            List<Peca_Planejamento> retorno = new List<Peca_Planejamento>();
+            List<PLAN_PECA> retorno = new List<PLAN_PECA>();
             var sub_lista = quebrar_lista(pedido, max_pacote);
             var w = Conexoes.Utilz.Wait(sub_lista.Count, "Procurando Peças ..." + (consolidada ? "(2/3 - Consolidadas)" : "(3/3 - Orcamentos)"));
             w.Show();
@@ -950,9 +950,9 @@ namespace DLM.painel
             w.Close();
             return retorno;
         }
-        private static List<Peca_Planejamento> GetPecasPGOF(List<string> pedido, bool consolidada = false)
+        private static List<PLAN_PECA> GetPecasPGOF(List<string> pedido, bool consolidada = false)
         {
-            List<Peca_Planejamento> retorno = new List<Peca_Planejamento>();
+            List<PLAN_PECA> retorno = new List<PLAN_PECA>();
 
             string tab = "pmp_orc";
             if (consolidada)
@@ -964,7 +964,7 @@ namespace DLM.painel
             pedido = pedido.Select(x => x.Replace("*", "").Replace(" ", "")).ToList().FindAll(x => x != "");
             if (pedido.Count == 0)
             {
-                return new List<Peca_Planejamento>();
+                return new List<PLAN_PECA>();
             }
             for (int i = 0; i < pedido.Count; i++)
             {
@@ -981,7 +981,7 @@ namespace DLM.painel
             var s = DBases.GetDBPGO().Consulta($"SELECT * from {Cfg.Init.db_orcamento}.{tab} as prod where {chave}");
             foreach (var ss in s.Linhas)
             {
-                Peca_Planejamento pc = new Peca_Planejamento(ss, true);
+                PLAN_PECA pc = new PLAN_PECA(ss, true);
 
                 if (consolidada)
                 {
@@ -1072,11 +1072,11 @@ namespace DLM.painel
 
             return retorno;
         }
-        public static List<Etapa_Orcamento> GetEtapasPGO(List<string> pedidos, bool consolidada = false)
+        public static List<ORC_ETP> GetEtapasPGO(List<string> pedidos, bool consolidada = false)
         {
 
             string chave_pedidos = "";
-            List<Etapa_Orcamento> retorno = new List<Etapa_Orcamento>();
+            List<ORC_ETP> retorno = new List<ORC_ETP>();
             string tab = "pmp_orc_etapas";
             if (consolidada)
             {
@@ -1094,7 +1094,7 @@ namespace DLM.painel
             var s = DBases.GetDBPGO().Consulta(chave_pedidos);
             foreach (var ss in s.Linhas)
             {
-                Etapa_Orcamento pc = new Etapa_Orcamento(ss);
+                ORC_ETP pc = new ORC_ETP(ss);
                 if(!consolidada)
                 {
                     pc.GetDatas();
@@ -1110,9 +1110,9 @@ namespace DLM.painel
             }
             return retorno;
         }
-        public static List<Subetapa_Orcamento> GetSubEtapasPGO(List<string> pedidos, bool consolidada = false)
+        public static List<ORC_SUB> GetSubEtapasPGO(List<string> pedidos, bool consolidada = false)
         {
-            List<Subetapa_Orcamento> retorno = new List<Subetapa_Orcamento>();
+            List<ORC_SUB> retorno = new List<ORC_SUB>();
             string tab = "pmp_orc_sub_etapas";
             if (consolidada)
             {
@@ -1128,7 +1128,7 @@ namespace DLM.painel
             var s = DBases.GetDBPGO().Consulta(chave_pedidos);
             foreach (var ss in s.Linhas)
             {
-                Subetapa_Orcamento pc = new Subetapa_Orcamento(ss);
+                ORC_SUB pc = new ORC_SUB(ss);
                 if (!consolidada)
                 {
                     pc.GetDatas();
@@ -1144,10 +1144,10 @@ namespace DLM.painel
             }
             return retorno;
         }
-        public static List<PEP_Orcamento> GetPEPsPGO(List<string> pedidos, bool consolidada = false)
+        public static List<ORC_PEP> GetPEPsPGO(List<string> pedidos, bool consolidada = false)
         {
 
-            List<PEP_Orcamento> retorno = new List<PEP_Orcamento>();
+            List<ORC_PEP> retorno = new List<ORC_PEP>();
             string tab = "pmp_orc_peps";
             if(consolidada)
             {
@@ -1168,7 +1168,7 @@ namespace DLM.painel
 
             foreach (var ss in s.Linhas)
             {
-                PEP_Orcamento pc = new PEP_Orcamento(ss);
+                ORC_PEP pc = new ORC_PEP(ss);
                 if(!consolidada)
                 {
                     pc.GetDatas();
@@ -1266,24 +1266,24 @@ namespace DLM.painel
                 $"{Cfg.Init.db_comum}.{Cfg.Init.tb_obras_planejamento_copia} where " +
                 $"{Cfg.Init.db_comum}.{Cfg.Init.tb_obras_planejamento_copia}.pedido_principal like '%{contrato_ou_pedido}%'");
             DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.pedidos_planejamento_copia where " +
-                $"{Cfg.Init.db_comum}.pedidos_planejamento_copia.pedido like '%{contrato_ou_pedido}%'");
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_pedidos_planejamento_copia} where " +
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_pedidos_planejamento_copia}.pedido like '%{contrato_ou_pedido}%'");
             DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.pep_planejamento_m_copia where " +
-                $"{Cfg.Init.db_comum}.pep_planejamento_m_copia.pep like '%{contrato_ou_pedido}%'");
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento_m_copia} where " +
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento_m_copia}.pep like '%{contrato_ou_pedido}%'");
 
             DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.resumo_pecas_obra_copia where " +
-                $"{Cfg.Init.db_comum}.resumo_pecas_obra_copia.pep like '%{contrato_ou_pedido}%'");
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_obra_copia} where " +
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_obra_copia}.pep like '%{contrato_ou_pedido}%'");
             DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.resumo_pecas_pedido_copia where " +
-                $"{Cfg.Init.db_comum}.resumo_pecas_pedido_copia.pep like '%{contrato_ou_pedido}%'");
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pedido_copia} where " +
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pedido_copia}.pep like '%{contrato_ou_pedido}%'");
             DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.resumo_pecas_pep_copia where " +
-                $"{Cfg.Init.db_comum}.resumo_pecas_pep_copia.pep like '%{contrato_ou_pedido}%'");
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_copia} where " +
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_copia}.pep like '%{contrato_ou_pedido}%'");
             DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.resumo_pecas_pep_fabrica_copia where " +
-                $"{Cfg.Init.db_comum}.resumo_pecas_pep_fabrica_copia.pep like '%{contrato_ou_pedido}%'");
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_fabrica_copia} where " +
+                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_fabrica_copia}.pep like '%{contrato_ou_pedido}%'");
             
             DBases.GetDB().Comando($"delete from " +
                 $"{Cfg.Init.db_painel_de_obras2}.pecas where " +
@@ -1319,8 +1319,8 @@ namespace DLM.painel
 
             if (Tipo == Tipo_Meta.Engenharia)
             {
-                var datas = lista.Select(x => x.data_transsap).ToList().FindAll(x => x > min_sistema).ToList();
-                datas.AddRange(lista.Select(x => x.engenharia_cronograma_inicio).ToList().FindAll(x => x > min_sistema).ToList());
+                var datas = lista.Select(x => x.engenharia_cronograma_inicio).ToList().FindAll(x => x > min_sistema).ToList();
+
                 datas.AddRange(lista.Select(x => x.engenharia_cronograma).ToList().FindAll(x => x > min_sistema).ToList());
                 if (datas.Count > 0)
                 {
@@ -1453,7 +1453,7 @@ namespace DLM.painel
 
             }
         }
-        public static List<Peca_Planejamento> getResumo_Grupo_Mercadoria(DateTime ini, DateTime fim)
+        public static List<PLAN_PECA> getResumo_Grupo_Mercadoria(DateTime ini, DateTime fim)
         {
 
             string consulta1 = "select " +
@@ -1465,11 +1465,11 @@ namespace DLM.painel
             consulta1 = consulta1.Replace("$ini$", ini.ToShortDateString()).Replace("$fim$", fim.ToShortDateString());
 
             var lista_fab = DBases.GetDB().Consulta(consulta1);
-            ConcurrentBag<Peca_Planejamento> retorno = new ConcurrentBag<Peca_Planejamento>();
+            ConcurrentBag<PLAN_PECA> retorno = new ConcurrentBag<PLAN_PECA>();
             List<Task> Tarefas = new List<Task>();
             foreach (var s in lista_fab.Linhas)
             {
-                Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new Peca_Planejamento(s,new List<DLM.db.Linha>()))));
+                Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new PLAN_PECA(s,new List<DLM.db.Linha>()))));
             }
             Task.WaitAll(Tarefas.ToArray());
 
@@ -1479,7 +1479,7 @@ namespace DLM.painel
         private static List<Resumo_Pecas> _resumo_pecas_pedido { get; set; }
         private static List<Resumo_Pecas> _resumo_pecas_peps { get; set; }
         private static List<Resumo_Pecas> _resumo_pecas_subetapas { get; set; }
-        private static List<OBRA_PLAN> _obras { get; set; }
+        private static List<PLAN_OBRA> _obras { get; set; }
         private static List<PLAN_PEDIDO> _pedidos { get; set; }
         private static List<Titulo_Planejamento> _titulos_etapas { get; set; }
         private static List<Titulo_Planejamento> _titulos_subetapas { get; set; }
@@ -1684,20 +1684,20 @@ namespace DLM.painel
 
 
 
-        public static List<OBRA_PLAN> GetObras(bool copia, bool reset)
+        public static List<PLAN_OBRA> GetObras(bool copia, bool reset)
         {
 
             if(_obras==null | reset)
             {
-                _obras = new List<OBRA_PLAN>();
-                var s = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, (copia ? Cfg.Init.tb_obras_planejamento_copia :Cfg.Init.tb_obras_planejamento));
+                _obras = new List<PLAN_OBRA>();
+                var consulta = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, (copia ? Cfg.Init.tb_obras_planejamento_copia :Cfg.Init.tb_obras_planejamento));
                 List<Task> Tarefas = new List<Task>();
 
-                ConcurrentBag<OBRA_PLAN> lista = new ConcurrentBag<OBRA_PLAN>();
+                ConcurrentBag<PLAN_OBRA> lista = new ConcurrentBag<PLAN_OBRA>();
 
-                foreach (var t in s.Linhas)
+                foreach (var t in consulta.Linhas)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() => lista.Add(new OBRA_PLAN(t))));
+                    Tarefas.Add(Task.Factory.StartNew(() => lista.Add(new PLAN_OBRA(t))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
                 Tarefas.Clear();
@@ -1734,7 +1734,7 @@ namespace DLM.painel
             }
             return _obras;
         }
-        public static void CopiarViewParaDbase(string contrato, bool embarques)
+        public static void CopiarViewParaDbase(string contrato, bool embarques = true)
         {
             contrato = contrato.Replace(" ", "").Replace("*", "");
             if (contrato.Length < 4) { return; }
@@ -1759,7 +1759,6 @@ namespace DLM.painel
 
             Consultas.ApagarCopiaViews(contrato);
 
-
             DBases.GetDB().Cadastro(peps.Linhas,Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento_m_copia);
             DBases.GetDB().Cadastro(contratos.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_obras_planejamento_copia);
             DBases.GetDB().Cadastro(pedidos.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia);
@@ -1768,18 +1767,13 @@ namespace DLM.painel
             DBases.GetDB().Cadastro(resumo_pecas_pep.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia);
             DBases.GetDB().Cadastro(resumo_pecas_pep_fabrica.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia);
 
-
-
-
             if (embarques)
             {
                 var pcs = Consultas.GetPecasReal(new List<string> { contrato });
                 DLM.painel.Relatorios.ExportarEmbarque(pcs, false, null, null, true, false);
             }
-
-
         }
-        public static List<OBRA_PLAN> GetObras(List<string> contrato, bool copia, bool reset)
+        public static List<PLAN_OBRA> GetObras(List<string> contrato, bool copia, bool reset)
         {
             contrato = contrato.Distinct().ToList().FindAll(x => x.Length > 0);
             if (contrato.Count == 0)
@@ -1787,7 +1781,7 @@ namespace DLM.painel
                 return GetObras(copia, reset);
             }
 
-            List<OBRA_PLAN> retorno = new List<OBRA_PLAN>();
+            List<PLAN_OBRA> retorno = new List<PLAN_OBRA>();
             foreach (var s in contrato)
             {
                 retorno.AddRange(GetObras(copia,reset).FindAll(x => x.pep.Contains(s)));
@@ -1809,7 +1803,7 @@ namespace DLM.painel
             List<Task> Tarefas = new List<Task>();
             foreach (var t in s.Linhas)
             {
-                lista.Add(new PLAN_PEDIDO(t, new OBRA_PLAN()));
+                lista.Add(new PLAN_PEDIDO(t, new PLAN_OBRA()));
             }
             Task.WaitAll(Tarefas.ToArray());
             _pedidos.AddRange(lista);
@@ -1988,9 +1982,9 @@ namespace DLM.painel
 
             return _subetapas;
         }
-        public static List<PEP_PLAN> GetPeps(List<string> chaves)
+        public static List<PLAN_PEP> GetPeps(List<string> chaves)
         {
-            List<PEP_PLAN> retorno = new List<PEP_PLAN>();
+            List<PLAN_PEP> retorno = new List<PLAN_PEP>();
 
             string tabela = $"{Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento}";
             var sub = quebrar_lista(chaves, 300);
@@ -2021,13 +2015,13 @@ namespace DLM.painel
 
                 var s = DBases.GetDB().Consulta(comando);
 
-                ConcurrentBag<PEP_PLAN> lista = new ConcurrentBag<PEP_PLAN>();
+                ConcurrentBag<PLAN_PEP> lista = new ConcurrentBag<PLAN_PEP>();
                 foreach (var ts in DLM.painel.Consultas.quebrar_lista(s.Linhas, 300))
                 {
                     List<Task> Tarefas = new List<Task>();
                     foreach (var t in ts)
                     {
-                        Tarefas.Add(Task.Factory.StartNew(() => lista.Add(new PEP_PLAN(t))));
+                        Tarefas.Add(Task.Factory.StartNew(() => lista.Add(new PLAN_PEP(t))));
                     }
                     Task.WaitAll(Tarefas.ToArray());
                     Tarefas.Clear();
@@ -2058,9 +2052,9 @@ namespace DLM.painel
             return retorno;
         }
 
-        public static List<Logistica_Planejamento> GetLogistica(List<string> pedidos, List<Peca_Planejamento> pecas, out List<Peca_Planejamento> orfas)
+        public static List<Logistica_Planejamento> GetLogistica(List<string> pedidos, List<PLAN_PECA> pecas, out List<PLAN_PECA> orfas)
         {
-            orfas = new List<Peca_Planejamento>();
+            orfas = new List<PLAN_PECA>();
             if(pedidos==null && pecas == null)
             {
                 return new List<Logistica_Planejamento>();
@@ -2078,13 +2072,13 @@ namespace DLM.painel
             List<Logistica_Planejamento> retorno = new List<Logistica_Planejamento>();
             var sub = quebrar_lista(pedidos, 50);
 
-            ConcurrentBag<Peca_Planejamento> orfs = new ConcurrentBag<Peca_Planejamento>();
+            ConcurrentBag<PLAN_PECA> orfs = new ConcurrentBag<PLAN_PECA>();
             List<Task> Tarefas = new List<Task>();
             foreach (var t in sub)
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
-                    List<Peca_Planejamento> orrfas = new List<Peca_Planejamento>();
+                    List<PLAN_PECA> orrfas = new List<PLAN_PECA>();
                     retorno.AddRange(getLogisticaF(t, pecas,out orrfas));
                     foreach(var o in orrfas)
                     {
@@ -2104,11 +2098,11 @@ namespace DLM.painel
 
             return retorno.FindAll(x=>x.peca!=null);
         }
-        public static List<Peca_Planejamento> GetPecasReal(List<string> pedidos,int max_pacote = 10)
+        public static List<PLAN_PECA> GetPecasReal(List<string> pedidos,int max_pacote = 10)
         {
             pedidos = pedidos.FindAll(x => x.Length > 5).Distinct().ToList();
-            if (pedidos.Count == 0) { return new List<Peca_Planejamento>(); }
-            List<Peca_Planejamento> retorno = new List<Peca_Planejamento>();
+            if (pedidos.Count == 0) { return new List<PLAN_PECA>(); }
+            List<PLAN_PECA> retorno = new List<PLAN_PECA>();
             var pacote_pedidos = quebrar_lista(pedidos, max_pacote);
 
 
@@ -2153,7 +2147,7 @@ namespace DLM.painel
 
             return retorno;
         }
-        public static List<Peca_Planejamento> GetPecasReal(List<PLAN_SUB_ETAPA> subetapas)
+        public static List<PLAN_PECA> GetPecasReal(List<PLAN_SUB_ETAPA> subetapas)
         {
             var subs_sem_pecas = subetapas.FindAll(x => !x.carregou_pecas).ToList();
            var pcs = DLM.painel.Consultas.GetPecasReal(subs_sem_pecas.Select(x => x.subetapa).Distinct().ToList());
@@ -2178,9 +2172,9 @@ namespace DLM.painel
             }
             return _bobinas;
         }
-        private static List<Logistica_Planejamento> getLogisticaF(List<string> pedido, List<Peca_Planejamento> pecas, out List<Peca_Planejamento> orfas)
+        private static List<Logistica_Planejamento> getLogisticaF(List<string> pedido, List<PLAN_PECA> pecas, out List<PLAN_PECA> orfas)
         {
-            orfas = new List<Peca_Planejamento>();
+            orfas = new List<PLAN_PECA>();
             if(pecas == null)
             {
                 pecas = GetPecasReal(pedido);
@@ -2240,11 +2234,11 @@ namespace DLM.painel
             var sem_peca = retorn.FindAll(x => x.peca == null).ToList();
 
             var grp_sem_peca = sem_peca.GroupBy(x => x.pep + "/" + x.material + "/" + x.desenho).ToList().Select(x=> x.ToList()).ToList();
-            List<Peca_Planejamento> pcas_orfas = new List<Peca_Planejamento>();
+            List<PLAN_PECA> pcas_orfas = new List<PLAN_PECA>();
             foreach(var s in grp_sem_peca)
             {
                 var fils = s.ToList();
-                var pc = new Peca_Planejamento(fils[0]);
+                var pc = new PLAN_PECA(fils[0]);
                 pc.SetLogistica(fils);
                 
                 orfas.Add(pc);
@@ -2298,13 +2292,13 @@ namespace DLM.painel
                 }
             }
         }
-        private static List<Peca_Planejamento> getPecasF(List<string> pedido, string material = null)
+        private static List<PLAN_PECA> getPecasF(List<string> pedido, string material = null)
         {
             string chave = "";
             pedido = pedido.Select(x => x.Replace("*", "").Replace(" ", "")).ToList().FindAll(x => x !="");
             if(pedido.Count==0)
             {
-                return new List<Peca_Planejamento>();
+                return new List<PLAN_PECA>();
             }
             for (int i = 0; i < pedido.Count; i++)
             {
@@ -2387,7 +2381,7 @@ namespace DLM.painel
                 $" from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0100_embarques} as prod where ($P$) and prod.St_Conf_ = '@5Y@'".Replace("$P$", chave.Replace("pep", "Elemento_PEP"));
             var lista_fab = dbase.Consulta(consulta);
             var lista_zpp0100 = dbase.Clonar().Consulta(consulta_emb);
-            ConcurrentBag <Peca_Planejamento> retorno = new ConcurrentBag<Peca_Planejamento>();
+            ConcurrentBag <PLAN_PECA> retorno = new ConcurrentBag<PLAN_PECA>();
             /*quebra da consulta em sub_consultas*/
             var sub_max = lista_fab.Linhas.quebrar_lista(maximo);
             List<Task> Tarefas = new List<Task>();
@@ -2396,7 +2390,7 @@ namespace DLM.painel
             {
                 foreach (var s in ss)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new Peca_Planejamento(s))));
+                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new PLAN_PECA(s))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
                 Tarefas.Clear();
@@ -2456,7 +2450,7 @@ namespace DLM.painel
 
             return new SolidColorBrush(Colors.LightBlue) { Opacity = opacidade };
         }
-        public static List<OBRA_PLAN> BufferObrasPesquisa { get; set; } = new List<OBRA_PLAN>();
+        public static List<PLAN_OBRA> BufferObrasPesquisa { get; set; } = new List<PLAN_OBRA>();
 
         private static List<string> _pedidos_clean { get; set; }
         public static List<string> GetPedidosClean(List<string> contratos, bool reset)
@@ -2528,7 +2522,7 @@ namespace DLM.painel
             }
             return true;
         }
-        public static void setResumos(List<PEP_PLAN> peps)
+        public static void setResumos(List<PLAN_PEP> peps)
         {
             peps = peps.OrderBy(x => x.pep).ToList();
             List<string> contratos = peps.Select(x => x.Contrato_Completo).Distinct().ToList();

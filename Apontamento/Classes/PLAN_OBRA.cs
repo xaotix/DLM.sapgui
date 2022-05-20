@@ -12,15 +12,15 @@ using System.Windows.Media;
 namespace DLM.painel
 {
 
-    public class Obras_Planejamento : OBRA_PLAN
+    public class PLAN_OBRAS : PLAN_OBRA
     {
         public List<PLAN_ETAPA> etapas { get; set; }
-        public List<OBRA_PLAN> obras { get; set; } = new List<OBRA_PLAN>();
-        public Obras_Planejamento()
+        public List<PLAN_OBRA> obras { get; set; } = new List<PLAN_OBRA>();
+        public PLAN_OBRAS()
         {
 
         }
-        public Obras_Planejamento(List<OBRA_PLAN> Obras, string contrato = "", string nome = "")
+        public PLAN_OBRAS(List<PLAN_OBRA> Obras, string contrato = "", string nome = "")
         {
 
             if (Obras.Count == 0) { return; }
@@ -103,7 +103,7 @@ namespace DLM.painel
             }
         }
     }
-    public class OBRA_PLAN : PLAN_BASE
+    public class PLAN_OBRA : PLAN_BASE
     {
         public ImageSource Imagem
         {
@@ -112,9 +112,9 @@ namespace DLM.painel
                 return imagem;
             }
         }
-        public OBRA_PLAN Clonar()
+        public PLAN_OBRA Clonar()
         {
-            return new OBRA_PLAN(this.L);
+            return new PLAN_OBRA(this.L);
         }
         public bool finalizado { get; set; } = false;
 
@@ -215,16 +215,16 @@ namespace DLM.painel
 
 
 
-        public OBRA_PLAN(string pedido_principal)
+        public PLAN_OBRA(string pedido_principal)
         {
             this.pep = pedido_principal.Replace(".C00", ".P").Replace(".P00", "").Replace(".G00", "");
             this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");
         }
-        public OBRA_PLAN()
+        public PLAN_OBRA()
         {
 
         }
-        public OBRA_PLAN(DLM.db.Linha L)
+        public PLAN_OBRA(DLM.db.Linha L)
         {
             this.L = L;
             string pedido_principal = L.Get("pedido_principal").ToString();

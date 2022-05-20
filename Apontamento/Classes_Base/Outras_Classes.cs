@@ -202,8 +202,8 @@ namespace DLM.painel
 
         public Tipo_Embarque Tipo_Embarque { get; set; } = Tipo_Embarque.ZPP0066N;
         
-        private Peca_Planejamento _peca { get; set; } = new Peca_Planejamento();
-        public Peca_Planejamento peca
+        private PLAN_PECA _peca { get; set; } = new PLAN_PECA();
+        public PLAN_PECA peca
         {
             get
             {
@@ -242,13 +242,13 @@ namespace DLM.painel
         {
 
         }
-        public Logistica_Planejamento(Peca_Planejamento peca, DLM.db.Linha l)
+        public Logistica_Planejamento(PLAN_PECA peca, DLM.db.Linha l)
         {
             this.peca = peca;
             GetDados(l);
 
         }
-        public Logistica_Planejamento(List<Peca_Planejamento> pecas, DLM.db.Linha l, Tipo_Embarque tipo)
+        public Logistica_Planejamento(List<PLAN_PECA> pecas, DLM.db.Linha l, Tipo_Embarque tipo)
         {
             this.Tipo_Embarque = tipo;
 
@@ -442,11 +442,11 @@ namespace DLM.painel
         {
             return descricao + " - " + Peso_Total + " Kg";
         }
-        public List<Peca_Planejamento> pecas { get; set; } = new List<Peca_Planejamento>();
+        public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
         public double Peso_Total { get; set; } = 0;
         public string descricao { get; set; } = "";
         public string centro { get; set; } = "";
-        public Grupo_Mercadoria(List<Peca_Planejamento> pecas)
+        public Grupo_Mercadoria(List<PLAN_PECA> pecas)
         {
             this.pecas = pecas;
             if (this.pecas.Count > 0)
@@ -517,9 +517,9 @@ namespace DLM.painel
         public DateTime inicio { get; set; } = new DateTime();
         public DateTime fim { get; set; } = new DateTime();
 
-        private List<Peca_Planejamento> _pecas { get; set; }
+        private List<PLAN_PECA> _pecas { get; set; }
 
-        public List<Peca_Planejamento> GetPecas()
+        public List<PLAN_PECA> GetPecas()
         {
             if (_pecas == null)
             {
@@ -582,11 +582,11 @@ namespace DLM.painel
         {
             return descricao + " - " + Peso_Total + " Kg";
         }
-        public List<Peca_Planejamento> pecas { get; set; } = new List<Peca_Planejamento>();
+        public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
         public double Peso_Total { get; set; } = 0;
         public double quantidade { get; set; } = 0;
         public string descricao { get; set; } = "";
-        public Resumo_SubEtapa(List<Peca_Planejamento> pecas)
+        public Resumo_SubEtapa(List<PLAN_PECA> pecas)
         {
             this.pecas = pecas;
             if (this.pecas.Count > 0)
@@ -609,11 +609,11 @@ namespace DLM.painel
         {
             return Esquema.ToString() + " - " + Superficie + "m²";
         }
-        public List<Peca_Planejamento> pecas { get; set; } = new List<Peca_Planejamento>();
+        public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
 
         public double Superficie { get; set; } = 0;
         public double comprimento_total { get; set; } = 0;
-        public Tipos_Pintura(List<Peca_Planejamento> pecas)
+        public Tipos_Pintura(List<PLAN_PECA> pecas)
         {
             this.pecas = pecas;
             if (this.pecas.Count > 0)
@@ -638,14 +638,14 @@ namespace DLM.painel
                 return grupo_mercadoria + " - " + this.complexidade;
             }
         }
-        public List<Peca_Planejamento> pecas { get; set; } = new List<Peca_Planejamento>();
+        public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
         public string complexidade { get; set; } = "";
         public string grupo_mercadoria { get; set; } = "";
         public double peso_total { get; set; } = 0;
         public double comprimento_total { get; set; } = 0;
         public double quantidade { get; set; } = 0;
         public int furacoes { get; set; } = 0;
-        public Viga(List<Peca_Planejamento> pecas)
+        public Viga(List<PLAN_PECA> pecas)
         {
             this.pecas = pecas;
             this.peso_total = pecas.Sum(x => x.peso_necessario);
@@ -666,7 +666,7 @@ namespace DLM.painel
             {
                 return "#" + this.espessura + (this.corte > 0 ? (" - " + this.corte) : "") + (this.codigo != "" ? (" - " + this.codigo) : "");
             }
-            public List<Peca_Planejamento> pecas { get; set; } = new List<Peca_Planejamento>();
+            public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
 
             public double peso_total { get; set; } = 0;
             public double comprimento_total { get; set; } = 0;
@@ -680,7 +680,7 @@ namespace DLM.painel
 
             public Conexoes.Bobina Bobina { get; set; } = new Conexoes.Bobina();
 
-            public Materia_Prima(List<Peca_Planejamento> pecas)
+            public Materia_Prima(List<PLAN_PECA> pecas)
             {
                 this.pecas = pecas;
                 if (pecas.Count > 0)
@@ -730,10 +730,10 @@ namespace DLM.painel
             {
                 return descricao + " - " + Peso_Total + " Kg";
             }
-            public List<Peca_Planejamento> pecas { get; set; } = new List<Peca_Planejamento>();
+            public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
             public double Peso_Total { get; set; } = 0;
             public string descricao { get; set; } = "";
-            public Unidade_fabril(List<Peca_Planejamento> pecas)
+            public Unidade_fabril(List<PLAN_PECA> pecas)
             {
                 this.pecas = pecas;
                 if (this.pecas.Count > 0)

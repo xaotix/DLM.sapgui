@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DLM.painel
 {
-    public class PEP_PLAN :PLAN_BASE
+    public class PLAN_PEP :PLAN_BASE
     {
         public string fabrica
         {
@@ -417,13 +417,13 @@ namespace DLM.painel
 
             return l;
         }
-        public PEP_PLAN(DLM.db.Linha L)
+        public PLAN_PEP(DLM.db.Linha L)
         {
             //this.banco = banco;
             this.L = L;
             Ler(true);
         }
-        public PEP_PLAN(List<Peca_Planejamento> pecas, string observacoes, string descricao)
+        public PLAN_PEP(List<PLAN_PECA> pecas, string observacoes, string descricao)
         {
             this.Set(pecas);
             this.observacoes = observacoes;
@@ -434,7 +434,7 @@ namespace DLM.painel
             //this.banco = Conexoes.DBases.GetDB();
         }
 
-        public PEP_PLAN()
+        public PLAN_PEP()
         {
 
         }

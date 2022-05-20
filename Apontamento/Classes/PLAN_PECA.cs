@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace DLM.painel
 {
-    public class Peca_Planejamento
+    public class PLAN_PECA
     {
         public Tipo_Embarque Tipo_Embarque { get; set; } = Tipo_Embarque.ZPP0100;
        public void SetStatusByZPP0100(List<DLM.db.Linha> linhas)
@@ -489,7 +489,7 @@ namespace DLM.painel
 
 
 
-        public Peca_Planejamento(DLM.db.Linha peca, bool orcamento = false)
+        public PLAN_PECA(DLM.db.Linha peca, bool orcamento = false)
         {
             if (!orcamento)
             {
@@ -591,7 +591,7 @@ namespace DLM.painel
 
             }
         }
-        public Peca_Planejamento(DLM.db.Linha peca, List<DLM.db.Linha> logistica)
+        public PLAN_PECA(DLM.db.Linha peca, List<DLM.db.Linha> logistica)
         {
             this.Tipo = Tipo_Material.Real;
             this.pep = peca.Get("pep").ToString();
@@ -694,12 +694,12 @@ namespace DLM.painel
            
         }
 
-        public Peca_Planejamento()
+        public PLAN_PECA()
         {
 
         }
 
-        public Peca_Planejamento(Logistica_Planejamento ps)
+        public PLAN_PECA(Logistica_Planejamento ps)
         {
             this.centro = ps.centro;
             this.pep = ps.pep;
