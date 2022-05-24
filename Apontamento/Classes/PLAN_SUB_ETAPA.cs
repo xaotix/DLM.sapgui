@@ -10,27 +10,6 @@ namespace DLM.painel
 {
     public class PLAN_SUB_ETAPA : PLAN_BASE
     {
-        //public bool projeto_existe
-        //{
-        //    get
-        //    {
-        //        return Directory.Exists(this.engenharia_endereco);
-        //    }
-        //}
-        //public ImageSource imagem_projeto
-        //{
-        //    get
-        //    {
-        //        if (projeto_existe)
-        //        {
-        //            return Conexoes.BufferImagem.folder_green;
-        //        }
-        //        else
-        //        {
-        //            return Conexoes.BufferImagem.folder_grey;
-        //        }
-        //    }
-        //}
         public override string ToString()
         {
             return descricao;

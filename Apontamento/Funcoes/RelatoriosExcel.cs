@@ -1679,10 +1679,7 @@ public class Relatorios
                
                 if(pc.contrato.Length>0)
                 {
-                    
-                DBases.GetDB().Comando($"delete from " +
-                    $"{Cfg.Init.db_painel_de_obras2}.pecas WHERE " +
-                    $"{Cfg.Init.db_painel_de_obras2}.pecas.pep LIKE '%{pc.contrato}%'");
+                    DBases.GetDB().Apagar("pep", $"%{pc.contrato}%", Cfg.Init.db_painel_de_obras2, "pecas", true);     
                 }
             }
             try
@@ -2356,37 +2353,35 @@ public class Relatorios
                                 {
                                     ped = new Titulo_Planejamento();
                                 }
+                                var L = l0 + l;
 
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 0].Value = t.contrato;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 1].Value = ped.DESCRICAO;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 2].Value = t.pedido;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 3].Value = t.pep;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 4].Value = t.tipo.ToString();
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 5].Value = t.Real.resumo_pecas.etapa_bloqueada ? 1 : 0;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 6].Value = t.peso;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 7].Value = t.Real.liberado_engenharia / 100;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 8].Value = t.total_fabricado / 100;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 9].Value = t.total_embarcado / 100;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 10].Value = t.Real.total_montado / 100;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 11].Value = t.ei > mindia ? t.ei.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 12].Value = t.ef > mindia ? t.ef.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 13].Value = t.fi > mindia ? t.fi.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 14].Value = t.ff > mindia ? t.ff.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 15].Value = t.li > mindia ? t.li.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 16].Value = t.lf > mindia ? t.lf.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 17].Value = t.mi > mindia ? t.mi.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 18].Value = t.mf > mindia ? t.mf.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 19].Value = t.Real.ultima_consulta_sap > mindia ? t.Real.ultima_consulta_sap.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 20].Value = t.Real.Montagem_Balanco ? "X" : "";
-                                //subetapas_aba_excel.Cells[l0 + l, c0 + 21].Value = t.Real.data_transsap > mindia ? t.Real.data_transsap.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 22].Value = t.Real.engenharia_liberacao > mindia ? t.Real.engenharia_liberacao.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 23].Value = t.Real.resumo_pecas.inicio > mindia ? t.Real.resumo_pecas.inicio.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 24].Value = t.Real.resumo_pecas.fim > mindia ? t.Real.resumo_pecas.fim.ToShortDateString() : "";
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 25].Value = t.Real.update_montagem.ToUpper().Replace(" ","").Replace("MONTAGEM:","");
-                                //subetapas_aba_excel.Cells[l0 + l, c0 + 26].Value = t.Real.engenharia_projetista;
-                                //subetapas_aba_excel.Cells[l0 + l, c0 + 27].Value = t.Real.engenharia_calculista;
-                                //subetapas_aba_excel.Cells[l0 + l, c0 + 28].Value = t.Real.engenharia_responsavel;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 29].Value = t.Real.montagem_engenheiro;
+
+                                subetapas_aba_excel.Cells[$"A{L}"].Value = t.contrato;
+                                subetapas_aba_excel.Cells[$"B{L}"].Value = ped.DESCRICAO;
+                                subetapas_aba_excel.Cells[$"C{L}"].Value = t.pedido;
+                                subetapas_aba_excel.Cells[$"D{L}"].Value = t.pep;
+                                subetapas_aba_excel.Cells[$"E{L}"].Value = t.tipo.ToString();
+                                subetapas_aba_excel.Cells[$"F{L}"].Value = t.Real.resumo_pecas.etapa_bloqueada ? 1 : 0;
+                                subetapas_aba_excel.Cells[$"G{L}"].Value = t.peso;
+                                subetapas_aba_excel.Cells[$"H{L}"].Value = t.Real.liberado_engenharia / 100;
+                                subetapas_aba_excel.Cells[$"I{L}"].Value = t.total_fabricado / 100;
+                                subetapas_aba_excel.Cells[$"J{L}"].Value = t.total_embarcado / 100;
+                                subetapas_aba_excel.Cells[$"K{L}"].Value = t.Real.total_montado / 100;
+                                subetapas_aba_excel.Cells[$"L{L}"].Value = t.ei > mindia ? t.ei.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"M{L}"].Value = t.ef > mindia ? t.ef.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"N{L}"].Value = t.fi > mindia ? t.fi.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"O{L}"].Value = t.ff > mindia ? t.ff.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"P{L}"].Value = t.li > mindia ? t.li.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"Q{L}"].Value = t.lf > mindia ? t.lf.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"R{L}"].Value = t.mi_s > mindia ? t.mi.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"S{L}"].Value = t.mf_s > mindia ? t.mf.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"T{L}"].Value = t.mi > mindia ? t.mf.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"U{L}"].Value = t.mf > mindia ? t.mf.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"V{L}"].Value = t.Real.ultima_consulta_sap > mindia ? t.Real.ultima_consulta_sap.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"W{L}"].Value = t.Real.resumo_pecas.inicio > mindia ? t.Real.resumo_pecas.inicio.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"X{L}"].Value = t.Real.resumo_pecas.fim > mindia ? t.Real.resumo_pecas.fim.ToShortDateString() : "";
+                                subetapas_aba_excel.Cells[$"Y{L}"].Value = t.Real.update_montagem.ToUpper().Replace(" ","").Replace("MONTAGEM:","");
+                                subetapas_aba_excel.Cells[$"Z{L}"].Value = t.Real.montagem_engenheiro;
 
 
                             }
@@ -2573,10 +2568,9 @@ public class Relatorios
 
 
                     /*AVANÇO FÁBRICA*/
-                    if(gerar_avanco)
+                    if (gerar_avanco)
                     {
-                    gravar_avanco_fabrica(subetapas.FindAll(x => x.Material_REAL).Select(x => x.Real).ToList(), avanco_fabrica, descricoes);
-
+                        gravar_avanco_fabrica(subetapas.FindAll(x => x.Material_REAL).Select(x => x.Real).ToList(), avanco_fabrica, descricoes);
                     }
 
                     /*ESCONDE ABAS*/

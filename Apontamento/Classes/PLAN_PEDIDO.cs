@@ -141,10 +141,6 @@ namespace DLM.painel
             {
                 this.nome = desc[1];
             }
-
-
-
         }
-
     }
 }

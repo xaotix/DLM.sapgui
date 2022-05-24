@@ -60,15 +60,13 @@ namespace DLM.painel
                 return;
             }
 
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.resultado_economico_header where " +
-                $"{Cfg.Init.db_comum}.resultado_economico_header.pep like '%$C$%'".Replace("$C$", resultado.Pedido));
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.resultado_economico where " +
-                $"{Cfg.Init.db_comum}.resultado_economico.pep like '%$C$%'".Replace("$C$", resultado.Pedido));
+            DBases.GetDB().Apagar("pep", $"%{resultado.Pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico_header, true);
+            DBases.GetDB().Apagar("pep", $"%{resultado.Pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico, true);
 
-            DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, "resultado_economico");
-            DBases.GetDB().Cadastro(l2.Celulas, Cfg.Init.db_comum, "resultado_economico_header");
+
+
+            DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico);
+            DBases.GetDB().Cadastro(l2.Celulas, Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico_header);
 
 
         }
@@ -697,14 +695,12 @@ namespace DLM.painel
             {
                 return;
             }
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.folhamargem where " +
-                $"{Cfg.Init.db_comum}.folhamargem.pep like '%$C$%'".Replace("$C$", pedido));
+            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_folhamargem, true);
             DLM.db.Linha l = new DLM.db.Linha();
             l.Add("pep", pedido);
 
             l.Add("dados", folha.RetornaSerializado());
-            DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, "folhamargem");
+            DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, Cfg.Init.tb_folhamargem);
         }
 
         public class   Get
@@ -788,10 +784,7 @@ namespace DLM.painel
         {
             if(contrato.Length>5)
             {
-                DBases.GetDB().Comando($"delete from " +
-                    $"{Cfg.Init.db_comum}.pep_planejamento where " +
-                    $"{Cfg.Init.db_comum}.pep_planejamento.pep like '%$C$.%'".Replace("$C$", contrato));
-
+                DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento, true);
             }
         }
         public static List<ORC_PED> GetObrasPGO( bool consolidadas = false)
@@ -1196,59 +1189,26 @@ namespace DLM.painel
             {
                 return;
             }
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0066n_logistica, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn, true);
+            DBases.GetDB().Apagar("CHAVE", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, true);
+            DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zcontratos_notas_fiscais, true);
+            DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_folhamargem, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico_header, true);
+            DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, true);
+            DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_fagll03, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_avanco_pecas, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n, true);
 
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.pep_planejamento where " +
-                $"{Cfg.Init.db_comum}.pep_planejamento.pep like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.zpmp_producao where " +
-                $"{Cfg.Init.db_comum}.zpmp_producao.pep like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.zpp0066n_logistica where " +
-                $"{Cfg.Init.db_comum}.zpp0066n_logistica.pep like '%{contrato_ou_pedido}%'");
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_datas, true);
 
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.zppcooisn where " +
-                $"{Cfg.Init.db_comum}.zppcooisn.pep like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.titulos_planejamento where " +
-                $"{Cfg.Init.db_comum}.titulos_planejamento.CHAVE like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.zcontratos_notas_fiscais where " +
-                $"{Cfg.Init.db_comum}.zcontratos_notas_fiscais.Elemento_PEP like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.zpp0100_embarques where " +
-                $"{Cfg.Init.db_comum}.zpp0100_embarques.Elemento_PEP like '%{contrato_ou_pedido}%'");
 
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.folhamargem where " +
-                $"{Cfg.Init.db_comum}.folhamargem.pep like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.resultado_economico where " +
-                $"{Cfg.Init.db_comum}.resultado_economico.pep like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.resultado_economico_header where " +
-                $"{Cfg.Init.db_comum}.resultado_economico_header.pep like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.cji3 where " +
-                $"{Cfg.Init.db_comum}.cji3.Elemento_PEP like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete " +
-                $"from {Cfg.Init.db_comum}.fagll03 where " +
-                $"{Cfg.Init.db_comum}.fagll03.Elemento_PEP like '%{contrato_ou_pedido}%'");
-
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.avanco_pecas where " +
-                $"{Cfg.Init.db_comum}.avanco_pecas.pep like '%{contrato_ou_pedido}%'");
-
-            DBases.GetDBPGO().Comando($"delete from " +
-                $"{Cfg.Init.db_orcamento}.{Cfg.Init.tb_pmp_orc_consolidada} where " +
-                $"{Cfg.Init.db_orcamento}.{Cfg.Init.tb_pmp_orc_consolidada}.pep like '%{contrato_ou_pedido}%'");
-            DBases.GetDBPGO().Comando($"delete from " +
-                $"{Cfg.Init.db_orcamento}.pmp_orc where " +
-                $"{Cfg.Init.db_orcamento}.pmp_orc.pep like '%{contrato_ou_pedido}%'");
-            DBases.GetDBPGO().Comando($"delete from " +
-                $"{Cfg.Init.db_orcamento}.pmp_orc_datas where " +
-                $"{Cfg.Init.db_orcamento}.pmp_orc_datas.pep like '%{contrato_ou_pedido}%'");
 
 
             ApagarCopiaViews(contrato_ou_pedido);
@@ -1262,32 +1222,15 @@ namespace DLM.painel
             {
                 return;
             }
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_obras_planejamento_copia} where " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_obras_planejamento_copia}.pedido_principal like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_pedidos_planejamento_copia} where " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_pedidos_planejamento_copia}.pedido like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento_m_copia} where " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento_m_copia}.pep like '%{contrato_ou_pedido}%'");
-
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_obra_copia} where " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_obra_copia}.pep like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pedido_copia} where " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pedido_copia}.pep like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_copia} where " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_copia}.pep like '%{contrato_ou_pedido}%'");
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_fabrica_copia} where " +
-                $"{Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_fabrica_copia}.pep like '%{contrato_ou_pedido}%'");
-            
-            DBases.GetDB().Comando($"delete from " +
-                $"{Cfg.Init.db_painel_de_obras2}.pecas where " +
-                $"{Cfg.Init.db_painel_de_obras2}.pecas.pep like '%{contrato_ou_pedido}%'");
+            DBases.GetDB().Apagar("pedido_principal", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pmp_orc_datas, true);
+            DBases.GetDB().Apagar("pedido", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento_m_copia, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_obra_copia, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia, true);
+            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_painel_de_obras2, "pecas", true);
+        
         }
 
         public static List<StatusSAP_Planejamento> GetStatus(List<string> descricoes)
@@ -1749,8 +1692,8 @@ namespace DLM.painel
             DLM.db.Tabela resumo_pecas_pep_fabrica = new DLM.db.Tabela();
             List<Task> Tarefas = new List<Task>();
             Tarefas.Add(Task.Factory.StartNew(() => peps = DBases.GetDB().Clonar().Consulta($"call {Cfg.Init.db_comum}.getpeps('{contrato}')")));
-            Tarefas.Add(Task.Factory.StartNew(() => pedidos = DBases.GetDB().Clonar().Consulta($"CALL {Cfg.Init.db_comum}.getpedidos({contrato})")));
-            Tarefas.Add(Task.Factory.StartNew(() => contratos = DBases.GetDB().Clonar().Consulta($"CALL {Cfg.Init.db_comum}.getobras({contrato})")));
+            Tarefas.Add(Task.Factory.StartNew(() => pedidos = DBases.GetDB().Clonar().Consulta($"call {Cfg.Init.db_comum}.getpedidos({contrato})")));
+            Tarefas.Add(Task.Factory.StartNew(() => contratos = DBases.GetDB().Clonar().Consulta($"call {Cfg.Init.db_comum}.getobras({contrato})")));
             Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_obra = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_obra} as pr where pr.pep like '%{contrato}%'")));
             Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pedido = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pedido} as pr where pr.pep like '%{contrato}%'")));
             Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pep = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep} as pr where pr.pep like '%{contrato}%'")));
@@ -1928,7 +1871,7 @@ namespace DLM.painel
 
             foreach (var pedido in consultas)
             {
-                chave_pedidos = chave_pedidos + (chave_pedidos != "" ? " or " : $"select *  from {Cfg.Init.db_comum}.pep_planejamento_m_copia as pr where ") + $" pr.pep like '%{pedido}%'";
+                chave_pedidos = chave_pedidos + (chave_pedidos != "" ? " or " : $"select *  from {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento_m_copia} as pr where ") + $" pr.pep like '%{pedido}%'";
             }
 
 
@@ -2483,7 +2426,7 @@ namespace DLM.painel
  
         public static void LimparCOOISN(string chave)
         {
-            DBases.GetDB().Comando($"delete from {Cfg.Init.db_comum}.zppcooisn where comum.zppcooisn.pep like '%{chave}%'");
+            DBases.GetDB().Apagar("pep", $"%{chave}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn, true);
         }
         public static bool MatarExcel(bool confirmar = false)
         {
@@ -2555,25 +2498,16 @@ namespace DLM.painel
             }
         }
 
-        public static List<PLAN_SUB_ETAPA> GetSubEtapasPorDataMontagem(DateTime inicio, DateTime fim, string pedido)
+        public static List<PLAN_SUB_ETAPA> GetSubEtapasPorDataMontagem(DateTime dt_ini, DateTime dt_fim, string pedido)
         {
-            string comando = ($"select *  from {Cfg.Init.db_comum}.pep_planejamento_m_copia where " +
-                $"({Cfg.Init.db_comum}.pep_planejamento_m_copia.mf <= $P$ and " +
-                $"{Cfg.Init.db_comum}.pep_planejamento_m_copia.mi >= $Q$)" +
-                $"or ({Cfg.Init.db_comum}.pep_planejamento_m_copia.montagem_fim <= $P$ and " +
-                $"{Cfg.Init.db_comum}.pep_planejamento_m_copia.montagem_inicio >= $Q$)" +
+            var fim = $"str_to_date('{dt_fim.ToShortDateString()}', '%d/%m/%Y')";
+            var ini = $"str_to_date('{dt_ini.ToShortDateString()}', '%d/%m/%Y'))";
+            string comando = ($"select *  from {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento_m_copia} as pr where " +
+                $"((pr.mf <= {fim} and pr.mi >= {ini}) or (pr.montagem_fim <= {fim} and pr.montagem_inicio >= {ini}))" +
                 $" and " +
-                $"{Cfg.Init.db_comum}.pep_planejamento_m_copia.pep like '%$PED$%'")
-                .Replace("$P$", "str_to_date('$DT$', '%d/%m/%Y')")
-                .Replace("$DT$", fim.ToShortDateString())
-                .Replace("$Q$", "str_to_date('$DT2$', '%d/%m/%Y')")
-                .Replace("$DT2$", inicio.ToShortDateString())
-
-                 .Replace("$PED$", pedido)
-                ;
+                $"pr.pep like '%{pedido}% '");
             var s = DBases.GetDB().Consulta(comando);
 
-            //List<Task> Tarefas = new List<Task>();
 
             ConcurrentBag<PLAN_SUB_ETAPA> lista = new ConcurrentBag<PLAN_SUB_ETAPA>();
             var t = new List<PLAN_SUB_ETAPA>();

@@ -685,6 +685,42 @@ namespace DLM.painel
                 }
             }
         }
+        public DateTime mi_s
+        {
+            get
+            {
+                if (tipo == Tipo_Material.Consolidado | tipo == Tipo_Material.Real)
+                {
+                    return Real.mi_s;
+                }
+                else if (tipo == Tipo_Material.Orçamento)
+                {
+                    return Orcamento.montagem_cronograma_inicio;
+                }
+                else
+                {
+                    return new DateTime();
+                }
+            }
+        }
+        public DateTime mf_s
+        {
+            get
+            {
+                if (tipo == Tipo_Material.Consolidado | tipo == Tipo_Material.Real)
+                {
+                    return Real.mf_s;
+                }
+                else if (tipo == Tipo_Material.Orçamento)
+                {
+                    return Orcamento.montagem_cronograma_inicio;
+                }
+                else
+                {
+                    return new DateTime();
+                }
+            }
+        }
         public DateTime mf
         {
             get
