@@ -17,6 +17,7 @@ using System.Xml.Serialization;
 using Conexoes;
 using DLM.sapgui;
 using DLM.vars;
+using DLM.db;
 
 namespace DLM.painel
 {
@@ -111,14 +112,14 @@ namespace DLM.painel
             }
 
             var contratos = reais.Select(x => x.pedido).Distinct().ToList();
-            contratos.AddRange(orcs.Select(x => x.pep).Distinct().ToList());
-            contratos.AddRange(cons.Select(x => x.pep).Distinct().ToList());
+            contratos.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
+            contratos.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
             contratos = contratos.OrderBy(x => x).Distinct().ToList();
             foreach (var ct in contratos)
             {
                 var real = reais.Find(x => x.pedido == ct);
-                var orc = orcs.Find(x => x.pep == ct);
-                var con = cons.Find(x => x.pep == ct);
+                var orc = orcs.Find(x => x.PEP == ct);
+                var con = cons.Find(x => x.PEP == ct);
                 if (real != null | orc != null | con != null)
                 {
                     retorno.Add(new Pedido_PMP(real, orc, con));
@@ -197,9 +198,9 @@ namespace DLM.painel
             foreach(var etapa in etapas.ToList())
             {
                 DLM.sapgui.Lancamento eng = new DLM.sapgui.Lancamento();
-                eng.ano = etapa.ef.Year;
-                eng.mes = etapa.ef.Month;
-                eng.dia = etapa.ef.Day;
+                eng.ano = ((DateTime)etapa.ef).Year;
+                eng.mes = ((DateTime)etapa.ef).Month;
+                eng.dia = ((DateTime)etapa.ef).Day;
                 eng.peso = etapa.Consolidada.peso_planejado;
                 eng.peso_total_previsto = peso_total_previsto;
                 eng.descricao = etapa.pep;
@@ -209,9 +210,9 @@ namespace DLM.painel
                 eng.previsto = eng.valor_maximo_previsto * eng.porcentagem_previsto;
 
                 DLM.sapgui.Lancamento fab = new DLM.sapgui.Lancamento();
-                fab.ano = etapa.ff.Year;
-                fab.mes = etapa.ff.Month;
-                fab.dia = etapa.ff.Day;
+                fab.ano = ((DateTime)etapa.ff).Year;
+                fab.mes = ((DateTime)etapa.ff).Month;
+                fab.dia = ((DateTime)etapa.ff).Day;
                 fab.peso = etapa.Consolidada.peso_planejado;
                 fab.peso_total_previsto = peso_total_previsto;
                 fab.descricao = etapa.pep;
@@ -221,9 +222,9 @@ namespace DLM.painel
                 fab.previsto = fab.valor_maximo_previsto * fab.porcentagem_previsto;
 
                 DLM.sapgui.Lancamento log = new DLM.sapgui.Lancamento();
-                log.ano = etapa.lf.Year;
-                log.mes = etapa.lf.Month;
-                log.dia = etapa.lf.Month;
+                log.ano = ((DateTime)etapa.lf).Year;
+                log.mes = ((DateTime)etapa.lf).Month;
+                log.dia = ((DateTime)etapa.lf).Month;
                 log.peso = etapa.Consolidada.peso_planejado;
                 log.peso_total_previsto = peso_total_previsto;
                 log.descricao = etapa.pep;
@@ -233,15 +234,15 @@ namespace DLM.painel
                 log.previsto = log.valor_maximo_previsto * log.porcentagem_previsto;
 
                 DLM.sapgui.Lancamento mon = new DLM.sapgui.Lancamento();
-                mon.ano = etapa.mf.Year;
-                mon.mes = etapa.mf.Month;
-                mon.dia = etapa.mf.Month;
+                mon.ano = ((DateTime)etapa.mf).Year;
+                mon.mes = ((DateTime)etapa.mf).Month;
+                mon.dia = ((DateTime)etapa.mf).Month;
 
                 if (mon.ano < 2005)
                 {
-                    mon.ano = etapa.lf.Year;
-                    mon.mes = etapa.lf.AddDays(4).Month;
-                    mon.dia = etapa.lf.AddDays(4).Day;
+                    mon.ano = ((DateTime)etapa.lf).Year;
+                    mon.mes = ((DateTime)etapa.lf).AddDays(4).Month;
+                    mon.dia = ((DateTime)etapa.lf).AddDays(4).Day;
                 }
 
                 mon.peso = etapa.Consolidada.peso_planejado;
@@ -392,27 +393,27 @@ namespace DLM.painel
                 {
                     #region peso
                     /*Pesos - Previsto e Realizado*/
-                    var dt_eng = etapa.Real.engenharia_liberacao;
+                    var dt_eng = (DateTime)etapa.Real.engenharia_liberacao;
                     //if(dt_eng< new DateTime(2001,01,01))
                     //{
                     //    dt_eng = etapa.Real.data_transsap;
                     //}
                     if (dt_eng < Conexoes.Utilz.Calendario.DataDummy() && etapa.ef<=DateTime.Now)
                     {
-                        dt_eng = etapa.ef;
+                        dt_eng = (DateTime)etapa.ef;
                     }
-                    var dt_fab = etapa.Real.resumo_pecas.fim;
+                    var dt_fab = (DateTime)etapa.Real.resumo_pecas.Fim;
                     if (dt_fab < Conexoes.Utilz.Calendario.DataDummy() && etapa.ff <= DateTime.Now)
                     {
-                        dt_fab = etapa.ff;
+                        dt_fab = (DateTime)etapa.ff;
                     }
                     if (dt_fab < Conexoes.Utilz.Calendario.DataDummy() && etapa.fi <= DateTime.Now)
                     {
-                        dt_fab = etapa.fi;
+                        dt_fab = (DateTime)etapa.fi;
                     }
                     if (dt_fab < Conexoes.Utilz.Calendario.DataDummy())
                     {
-                        dt_fab = etapa.Real.ultima_edicao;
+                        dt_fab = (DateTime)etapa.Real.ultima_edicao;
                     }
                     var dt_emb = dt_fab.AddDays(3);
 
@@ -803,7 +804,7 @@ namespace DLM.painel
                 {
                     ped.GetDatas();
                 }
-                if(ped.pep.Length>0)
+                if(ped.PEP.Length>0)
                 {
                 retorno.Add(ped);
                 }
@@ -814,7 +815,7 @@ namespace DLM.painel
                 var pacotes = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada_arquivos_peps).Linhas;
                foreach(var pedido in retorno)
                 {
-                    var pcks = pacotes.FindAll(x => x.Get("pedido").Valor == pedido.pep);
+                    var pcks = pacotes.FindAll(x => x.Get("pedido").Valor == pedido.PEP);
                     var arqs = pcks.Select(x => x.Get("arquivo").Valor).Distinct().ToList();
                     foreach (var arq in arqs)
                     {
@@ -855,7 +856,7 @@ namespace DLM.painel
                 var pacotes = DBases.GetDBPGO().Consulta($"SELECT * from {Cfg.Init.db_orcamento}.{Cfg.Init.tb_pmp_orc_consolidada_arquivos_peps} where pr.pedido like '%{chave}% '").Linhas;
                 foreach (var pedido in retorno)
                 {
-                    var pcks = pacotes.FindAll(x => x.Get("pedido").Valor == pedido.pep);
+                    var pcks = pacotes.FindAll(x => x.Get("pedido").Valor == pedido.PEP);
                     var arqs = pcks.Select(x => x.Get("arquivo").Valor).Distinct().ToList();
                     foreach (var arq in arqs)
                     {
@@ -916,7 +917,7 @@ namespace DLM.painel
             retorno.AddRange(reais_pecas);
             retorno.AddRange(cons_pecas);
             retorno.AddRange(orc_pecas);
-            retorno = retorno.OrderBy(x => x.pep).ToList();
+            retorno = retorno.OrderBy(x => x.PEP).ToList();
             foreach (var ped in pedidos)
             {
                 ped.Set(retorno);
@@ -1103,6 +1104,32 @@ namespace DLM.painel
             }
             return retorno;
         }
+        public enum Tipo_ZPP0100_Resumo
+        {
+            Subetapa,
+            PEP,
+        }
+
+        public static List<ZPP0100_Resumo> GetResumoEmbarquesPEP(List<string> pedidos, Tipo_ZPP0100_Resumo tipo)
+        {
+            string tabela = "zpp0100_peps";
+            if(tipo == Tipo_ZPP0100_Resumo.Subetapa)
+            {
+                tabela = "zpp0100_subetapas";
+            }
+
+            var comando = Conexoes.DBases.GetDB().Consulta(pedidos.Select(x=> new Celula("pep", x)).ToList(),false, Cfg.Init.db_comum, tabela,"or");
+
+            List<ZPP0100_Resumo> retorno = new List<ZPP0100_Resumo>();
+            foreach(var p in comando.Linhas)
+            {
+                retorno.Add(new ZPP0100_Resumo(p));
+            }
+
+            return retorno;
+        }
+
+
         public static List<ORC_SUB> GetSubEtapasPGO(List<string> pedidos, bool consolidada = false)
         {
             List<ORC_SUB> retorno = new List<ORC_SUB>();
@@ -1267,8 +1294,8 @@ namespace DLM.painel
                 datas.AddRange(lista.Select(x => x.engenharia_cronograma).ToList().FindAll(x => x > min_sistema).ToList());
                 if (datas.Count > 0)
                 {
-                    DateTime inicio = datas.Min();
-                    DateTime fim = datas.Max();
+                    DateTime inicio = (DateTime)datas.Min();
+                    DateTime fim = (DateTime)datas.Max();
                     fim = new DateTime(fim.Year, fim.Month, DateTime.DaysInMonth(fim.Year, fim.Month));
                     DateTime f0 = new DateTime(inicio.Year, inicio.Month, 01);
                     f0 = GetRanges(lista, range, Tipo,Filtro, retorno, fim, f0);
@@ -1279,14 +1306,14 @@ namespace DLM.painel
             }
             else if (Tipo == Tipo_Meta.Fabrica)
             {
-                var datas = lista.Select(x => x.resumo_pecas.fim).ToList().FindAll(x => x > min_sistema).ToList();
-                datas.AddRange(lista.Select(x => x.resumo_pecas.inicio).ToList().FindAll(x => x > min_sistema).ToList());
+                var datas = lista.Select(x => x.resumo_pecas.Fim).ToList().FindAll(x => x > min_sistema).ToList();
+                datas.AddRange(lista.Select(x => x.resumo_pecas.Inicio).ToList().FindAll(x => x > min_sistema).ToList());
                 datas.AddRange(lista.Select(x => x.fabrica_cronograma_inicio).ToList().FindAll(x => x > min_sistema).ToList());
                 datas.AddRange(lista.Select(x => x.fabrica_cronograma).ToList().FindAll(x => x > min_sistema).ToList());
                 if (datas.Count > 0)
                 {
-                    DateTime inicio = datas.Min();
-                    DateTime fim = datas.Max();
+                    DateTime inicio = (DateTime)datas.Min();
+                    DateTime fim = (DateTime)datas.Max();
                     fim = new DateTime(fim.Year, fim.Month, DateTime.DaysInMonth(fim.Year, fim.Month));
                     DateTime f0 = new DateTime(inicio.Year, inicio.Month, 01);
                     f0 = GetRanges(lista, range, Tipo,Filtro, retorno, fim, f0);
@@ -1416,7 +1443,7 @@ namespace DLM.painel
             }
             Task.WaitAll(Tarefas.ToArray());
 
-            return retorno.OrderBy(x => x.pep + "-" + x.grupo_mercadoria).ToList().FindAll(x=>x.peso_necessario>0);
+            return retorno.OrderBy(x => x.PEP + "-" + x.grupo_mercadoria).ToList().FindAll(x=>x.peso_necessario>0);
         }
         public static List<Resumo_Pecas> _resumo_pecas_obras { get; set; }
         private static List<Resumo_Pecas> _resumo_pecas_pedido { get; set; }
@@ -1654,14 +1681,14 @@ namespace DLM.painel
                 {
                     Tarefas.Add(Task.Factory.StartNew(() =>
                     {
-                        var t0 = lista_resumos.Find(x => x.pep == t.pep);
+                        var t0 = lista_resumos.Find(x => x.pep == t.PEP);
                         if (t0 != null)
                         {
                             t.resumo_pecas = t0;
                         }
                         t.Set(titulos, true);
 
-                        db.Tabela igual = st_base.Filtrar("pep", t.pep, true);
+                        db.Tabela igual = st_base.Filtrar("pep", t.PEP, true);
                         if (igual.Count > 0)
                         {
                             t.SetBase(igual.Linhas.First());
@@ -1727,9 +1754,9 @@ namespace DLM.painel
             List<PLAN_OBRA> retorno = new List<PLAN_OBRA>();
             foreach (var s in contrato)
             {
-                retorno.AddRange(GetObras(copia,reset).FindAll(x => x.pep.Contains(s)));
+                retorno.AddRange(GetObras(copia,reset).FindAll(x => x.PEP.Contains(s)));
             }
-            retorno = retorno.GroupBy(x => x.pep).Select(x => x.First()).ToList();
+            retorno = retorno.GroupBy(x => x.PEP).Select(x => x.First()).ToList();
 
             return retorno;
         }
@@ -1766,14 +1793,14 @@ namespace DLM.painel
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
-                    var t0 = lista_resumos.Find(x => x.pep == t.pep);
+                    var t0 = lista_resumos.Find(x => x.pep == t.PEP);
                     if (t0 != null)
                     {
                         t.resumo_pecas = t0;
                     }
                     t.Set(titulos, false);
 
-                    var igual = st_base.Filtrar("pep", t.pep, true);
+                    var igual = st_base.Filtrar("pep", t.PEP, true);
                     if (igual.Count > 0)
                     {
                         t.SetBase(igual.Linhas.First());
@@ -1801,9 +1828,9 @@ namespace DLM.painel
             List<PLAN_PEDIDO> pedidos = new List<PLAN_PEDIDO>();
             foreach(var s in contrato)
             {
-                pedidos.AddRange(GetPedidos().FindAll(x => x.pep.Contains(s.Replace("%","").Replace("*",""))));
+                pedidos.AddRange(GetPedidos().FindAll(x => x.PEP.Contains(s.Replace("%","").Replace("*",""))));
             }
-            pedidos = pedidos.GroupBy(x => x.pep).Select(x => x.First()).ToList();
+            pedidos = pedidos.GroupBy(x => x.PEP).Select(x => x.First()).ToList();
 
             return pedidos;
         }
@@ -1830,7 +1857,7 @@ namespace DLM.painel
                    
                     t.Set(titulos, false);
 
-                    var igual = st_base.Filtrar("pep", t.pep.ToUpper().TrimEnd(".P00".ToCharArray()), true);
+                    var igual = st_base.Filtrar("pep", t.PEP.ToUpper().TrimEnd(".P00".ToCharArray()), true);
                     if (igual.Count > 0)
                     {
                         t.SetBase(igual.Linhas.First());
@@ -1861,8 +1888,8 @@ namespace DLM.painel
             List<string> consultas = new List<string>();
             foreach (var pedido in pedidos)
             {
-                var ss = Buffer_Subetapas.FindAll(x => x.pep.Contains(pedido.Replace("*", "")));
-                _subetapas.AddRange(ss.FindAll(x => _subetapas.Find(y => y.pep == x.pep) == null));
+                var ss = Buffer_Subetapas.FindAll(x => x.PEP.Contains(pedido.Replace("*", "")));
+                _subetapas.AddRange(ss.FindAll(x => _subetapas.Find(y => y.PEP == x.PEP) == null));
                 if (ss.Count == 0)
                 {
                     consultas.Add(pedido);
@@ -1905,14 +1932,14 @@ namespace DLM.painel
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
-                    var t0 = lista_resumos.Find(x => x.pep == t.pep);
+                    var t0 = lista_resumos.Find(x => x.pep == t.PEP);
                     if (t0 != null)
                     {
                         t.resumo_pecas = t0;
                     }
                     t.Set(titulos, false);
 
-                    var igual = st_base.Filtrar("pep", t.pep.ToUpper().TrimEnd(".P00".ToCharArray()), true);
+                    var igual = st_base.Filtrar("pep", t.PEP.ToUpper().TrimEnd(".P00".ToCharArray()), true);
                     if (igual.Count > 0)
                     {
                         t.SetBase(igual.Linhas.First());
@@ -1984,7 +2011,7 @@ namespace DLM.painel
             var st_base = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_00_pep);
             foreach (var p in retorno)
             {
-                var igual = st_base.Filtrar("pep", p.pep, true);
+                var igual = st_base.Filtrar("pep", p.PEP, true);
                 if (igual.Count > 0)
                 {
                     p.SetBase(igual.Linhas.First());
@@ -2163,9 +2190,9 @@ namespace DLM.painel
 
             for (int i = 0; i < pecas.Count; i++)
             {
-                if (pecas[i].pep.Length>0 && pecas[i].material!="")
+                if (pecas[i].PEP.Length>0 && pecas[i].material!="")
                 {
-                    var logs = retorno.ToList().FindAll(x => x.pep == pecas[i].pep && x.material == pecas[i].material);
+                    var logs = retorno.ToList().FindAll(x => x.pep == pecas[i].PEP && x.material == pecas[i].material);
                     pecas[i].SetLogistica(logs);
                 }
                 else
@@ -2347,7 +2374,7 @@ namespace DLM.painel
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
                     var querys = pep.ToList();
-                    var pcs = retorno.ToList().FindAll(x => Conexoes.Utilz.PEP.Get.Subetapa(x.pep, true) == pep.Key);
+                    var pcs = retorno.ToList().FindAll(x => Conexoes.Utilz.PEP.Get.Subetapa(x.PEP, true) == pep.Key);
                     foreach (var pc in pcs)
                     {
                         pc.SetStatusByZPP0100(querys);
@@ -2360,7 +2387,7 @@ namespace DLM.painel
 
            
 
-            return retorno.OrderBy(x => x.pep + "-" + x.desenho).ToList();
+            return retorno.OrderBy(x => x.PEP + "-" + x.desenho).ToList();
         }
         public static SolidColorBrush getCor(double previsto,double realizado, double opacidade = 1)
         {
@@ -2467,7 +2494,7 @@ namespace DLM.painel
         }
         public static void setResumos(List<PLAN_PEP> peps)
         {
-            peps = peps.OrderBy(x => x.pep).ToList();
+            peps = peps.OrderBy(x => x.PEP).ToList();
             List<string> contratos = peps.Select(x => x.Contrato_Completo).Distinct().ToList();
             var resumos = Consultas.getresumo_pecas_peps(contratos);
 
@@ -2477,11 +2504,11 @@ namespace DLM.painel
          
                 foreach(var p in pps)
                 {
-                    var pep = resumos.Find(x => x.pep == p.pep);
+                    var pep = resumos.Find(x => x.pep == p.PEP);
                     if(pep == null)
                     {
                         var peps_sistema = resumos.FindAll(x => x.subetapa == p.subetapa);
-                        var status_outros = peps_sistema.FindAll(y=> pps.Find(x=>x.pep == y.pep) ==null);
+                        var status_outros = peps_sistema.FindAll(y=> pps.Find(x=>x.PEP == y.pep) ==null);
                         if(status_outros.Count>0)
                         {
                             p.resumo_pecas = status_outros[0];
@@ -2521,7 +2548,7 @@ namespace DLM.painel
             }
             //Task.WaitAll(Tarefas.ToArray());
 
-            return lista.ToList().OrderBy(x => x.pep).ToList();
+            return lista.ToList().OrderBy(x => x.PEP).ToList();
         }
         public static List<List<List<T>>> quebrar_lista<T>(this List<List<T>> locations, int maximo = 30)
         {

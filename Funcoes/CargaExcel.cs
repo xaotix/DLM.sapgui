@@ -346,7 +346,7 @@ namespace DLM.sapgui
 
                     var curr = listacooisn.FindAll(x => tl.material.ToString() == x[0].ToString()
                     |
-                    (tl.marca == x[18].ToString() && tl.pep == x[18].ToString())
+                    (tl.marca == x[18].ToString() && tl.PEP == x[18].ToString())
                     );
                     //ordena pela operação
                     curr = curr.OrderBy(x => x[18].ToString()).ToList();
@@ -525,7 +525,7 @@ namespace DLM.sapgui
                         }
 
                         valores.Add(new DLM.db.Celula("material", tl.material));
-                        valores.Add(new DLM.db.Celula("pep", tl.pep));
+                        valores.Add(new DLM.db.Celula("pep", tl.PEP));
 
                         linhas.Add(new DLM.db.Linha(valores));
                     }

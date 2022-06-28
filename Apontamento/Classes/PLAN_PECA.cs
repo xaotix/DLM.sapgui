@@ -107,7 +107,7 @@ namespace DLM.painel
             var retorno = new List<DLM.db.Celula>();
             retorno.AddRange(valores);
             retorno.Add(new DLM.db.Celula("material", this.material));
-            retorno.Add(new DLM.db.Celula("pep", this.pep));
+            retorno.Add(new DLM.db.Celula("pep", this.PEP));
             return retorno;
         }
 
@@ -116,9 +116,9 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length >= 24)
+                if (PEP.Length >= 24)
                 {
-                    return pep.Substring(22, 2);
+                    return PEP.Substring(22, 2);
                 }
                 return "";
             }
@@ -179,15 +179,15 @@ namespace DLM.painel
         public string TIPO_DE_PINTURA { get; private set; } = "";
         public string ULTIMO_STATUS { get; private set; } = "";
 
-        public DateTime inicio { get; set; } = new DateTime();
-        public DateTime fim { get; set; } = new DateTime();
+        public DateTime? inicio { get; set; } = new DateTime();
+        public DateTime? fim { get; set; } = new DateTime();
         public string subetapa
         {
             get
             {
-                if (pep.Length >= 21)
+                if (PEP.Length >= 21)
                 {
-                    return pep.Substring(18, 3);
+                    return PEP.Substring(18, 3);
                 }
                 return "";
             }
@@ -196,9 +196,9 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length >= 21)
+                if (PEP.Length >= 21)
                 {
-                    return pep.Substring(14, 3);
+                    return PEP.Substring(14, 3);
                 }
                 return "";
             }
@@ -207,9 +207,9 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length >= 12)
+                if (PEP.Length >= 12)
                 {
-                    return pep.Substring(3, 6);
+                    return PEP.Substring(3, 6);
                 }
                 return "";
             }
@@ -218,9 +218,9 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length >= 12)
+                if (PEP.Length >= 12)
                 {
-                    return pep.Substring(10, 3);
+                    return PEP.Substring(10, 3);
                 }
                 return "";
             }
@@ -230,16 +230,16 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length >= 13)
+                if (PEP.Length >= 13)
                 {
-                    return pep.Substring(0, 13) + (this.Tipo == Tipo_Material.Orçamento ? ".PGO" : "");
+                    return PEP.Substring(0, 13) + (this.Tipo == Tipo_Material.Orçamento ? ".PGO" : "");
                 }
                 return "";
             }
         }
         public override string ToString()
         {
-            return this.pep + "/" + this.desenho + "/" + this.material + " - [N: " + qtd_necessaria + "]" + "[F: " + qtd_produzida + "[E: " + qtd_embarcada + "]";
+            return this.PEP + "/" + this.desenho + "/" + this.material + " - [N: " + qtd_necessaria + "]" + "[F: " + qtd_produzida + "[E: " + qtd_embarcada + "]";
         }
 
         public double qtd_necessaria { get; private set; } = 0;
@@ -257,7 +257,7 @@ namespace DLM.painel
                 {
                     _logistica = new List<Logistica_Planejamento>();
 
-                    var lista_log = Conexoes.DBases.GetDB().Consulta($"SELECT *  from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0066n_logistica} as pr where pr.pep ='{pep}' and pr.material = '{material}'");
+                    var lista_log = Conexoes.DBases.GetDB().Consulta($"SELECT *  from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0066n_logistica} as pr where pr.pep ='{PEP}' and pr.material = '{material}'");
                     foreach (var t in lista_log.Linhas)
                     {
                         this._logistica.Add(new Logistica_Planejamento(this, t));
@@ -303,7 +303,7 @@ namespace DLM.painel
                 _desenho = value;
             }
         }
-        public string pep { get; private set; } = "";
+        public string PEP { get; private set; } = "";
         public string pep_cooisn { get; private set; } = "";
         public string material { get; private set; } = "";
         public string texto_breve { get; private set; } = "";
@@ -495,7 +495,7 @@ namespace DLM.painel
             {
                 this.Tipo = Tipo_Material.Real;
                 this.material = peca.Get("material").ToString();
-                this.pep = peca.Get("pep").ToString();
+                this.PEP = peca.Get("pep").ToString();
                 this.texto_breve = peca.Get("texto_breve").ToString();
                 this.peso_unitario = peca.Get("peso_unitario").Double();
                 this.peso_necessario = peca.Get("peso_necessario").Double();
@@ -575,7 +575,7 @@ namespace DLM.painel
                 this.furacoes = peca.Get("furos").Int();
                 this.grupo_mercadoria = peca.Get("grupo_mercadoria").ToString();
                 this.material = peca.Get("marca").ToString();
-                this.pep = peca.Get("pep").ToString();
+                this.PEP = peca.Get("pep").ToString();
                 this.pep_cooisn = peca.Get("pep").ToString();
                 this.qtd_necessaria = peca.Get("quantidade").Double();
                 this.peso_unitario = peca.Get("peso").Double();
@@ -594,7 +594,7 @@ namespace DLM.painel
         public PLAN_PECA(DLM.db.Linha peca, List<DLM.db.Linha> logistica)
         {
             this.Tipo = Tipo_Material.Real;
-            this.pep = peca.Get("pep").ToString();
+            this.PEP = peca.Get("pep").ToString();
             this.material = peca.Get("material").ToString();
             this.texto_breve = peca.Get("texto_breve").ToString();
             this.grupo_mercadoria = peca.Get("grupo_mercadoria").ToString();
@@ -702,7 +702,7 @@ namespace DLM.painel
         public PLAN_PECA(Logistica_Planejamento ps)
         {
             this.centro = ps.centro;
-            this.pep = ps.pep;
+            this.PEP = ps.pep;
             this.material = ps.material;
             this.desenho = ps.desenho;
             this.texto_breve = ps.descricao;

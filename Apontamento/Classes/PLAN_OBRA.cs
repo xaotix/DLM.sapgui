@@ -27,7 +27,7 @@ namespace DLM.painel
 
             this.obras = Obras;
 
-            this.pep = $"{this.obras.Count} Obras";
+            this.PEP = $"{this.obras.Count} Obras";
             this.Titulo.CHAVE = contrato;
             this.Titulo.DESCRICAO = nome;
 
@@ -135,7 +135,7 @@ namespace DLM.painel
             get
             {
                 var dt = DateTime.Now;
-                var ts = ultima_consulta_sap;
+                var ts = (DateTime)ultima_consulta_sap;
                 return Conexoes.Utilz.Double((dt - ts).TotalDays,2);
             }
         }
@@ -217,7 +217,7 @@ namespace DLM.painel
 
         public PLAN_OBRA(string pedido_principal)
         {
-            this.pep = pedido_principal.Replace(".C00", ".P").Replace(".P00", "").Replace(".G00", "");
+            this.PEP = pedido_principal.Replace(".C00", ".P").Replace(".P00", "").Replace(".G00", "");
             this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");
         }
         public PLAN_OBRA()
@@ -228,7 +228,7 @@ namespace DLM.painel
         {
             this.L = L;
             string pedido_principal = L.Get("pedido_principal").ToString();
-            this.pep = pedido_principal.Replace(".C00", ".P").Replace(".P00","").Replace(".G00","");
+            this.PEP = pedido_principal.Replace(".C00", ".P").Replace(".P00","").Replace(".G00","");
             this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");
             this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
             this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();

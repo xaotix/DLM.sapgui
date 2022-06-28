@@ -49,13 +49,13 @@ namespace DLM.painel
          
             if (filtro_pep)
             {
-                var peps = pecas.Select(x => x.pep).Distinct().ToList().OrderBy(x => x).ToList();
+                var peps = pecas.Select(x => x.PEP).Distinct().ToList().OrderBy(x => x).ToList();
 
               
 
                 foreach (var pep in peps)
                 {
-                    var pecaspep = pecas.FindAll(x => x.pep == pep).ToList();
+                    var pecaspep = pecas.FindAll(x => x.PEP == pep).ToList();
 
 
 

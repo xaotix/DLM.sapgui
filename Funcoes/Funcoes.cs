@@ -115,7 +115,7 @@ namespace DLM.sapgui
             {
                 //banco = Conexoes.DBases.GetDB(),
 
-                pep = x.Codigo,
+                PEP = x.Codigo,
                 pep_engenharia = x.Engenharia.PEP.Codigo,
                 peso_planejado = x.Peso_Planejado,
                 peso_produzido = x.Peso_Produzido,

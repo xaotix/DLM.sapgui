@@ -37,7 +37,7 @@ namespace DLM.painel
             get
             {
                 var dt = DateTime.Now;
-                var ts = ultima_consulta_sap;
+                var ts = (DateTime)ultima_consulta_sap;
                 return Conexoes.Utilz.Int((dt - ts).TotalDays);
             }
         }
@@ -73,7 +73,7 @@ namespace DLM.painel
 
         public PLAN_PEDIDO(DLM.db.Linha L, PLAN_OBRA contrato)
         {
-            this.pep = L.Get("pedido").ToString();
+            this.PEP = L.Get("pedido").ToString();
             this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
             this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();
             this.etapas_qtd = L.Get("etapas").Int();
@@ -134,7 +134,7 @@ namespace DLM.painel
             var ped = ls.Find(x => x[0].Contains("PROJETO"));
             if(ped!=null)
             {
-                this.pep = ped[1];
+                this.PEP = ped[1];
             }
             var desc = ls.Find(x => x[0].Contains("VTEXT"));
             if (desc != null)

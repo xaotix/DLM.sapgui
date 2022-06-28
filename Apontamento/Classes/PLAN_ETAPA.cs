@@ -20,24 +20,24 @@ namespace DLM.painel
             List<string> pep = new List<string>();
             if (atraso_engenharia)
             {
-                pep.AddRange(this.subetapas.FindAll(x => x.atraso_engenharia > 0).Select(x => x.pep));
+                pep.AddRange(this.subetapas.FindAll(x => x.atraso_engenharia > 0).Select(x => x.PEP));
             }
             if (atraso_fabrica)
             {
-                pep.AddRange(this.subetapas.FindAll(x => x.atraso_fabrica > 0).Select(x => x.pep));
+                pep.AddRange(this.subetapas.FindAll(x => x.atraso_fabrica > 0).Select(x => x.PEP));
             }
             if (atraso_embarque)
             {
-                pep.AddRange(this.subetapas.FindAll(x => x.atraso_embarque > 0).Select(x => x.pep));
+                pep.AddRange(this.subetapas.FindAll(x => x.atraso_embarque > 0).Select(x => x.PEP));
             }
             if (atraso_montagem)
             {
-                pep.AddRange(this.subetapas.FindAll(x => x.atraso_montagem > 0).Select(x => x.pep));
+                pep.AddRange(this.subetapas.FindAll(x => x.atraso_montagem > 0).Select(x => x.PEP));
             }
             pep = pep.Distinct().ToList();
             foreach (var p in pep)
             {
-                retorno.AddRange(this.subetapas.FindAll(x => x.pep == p));
+                retorno.AddRange(this.subetapas.FindAll(x => x.PEP == p));
             }
             return retorno;
         }
@@ -46,7 +46,7 @@ namespace DLM.painel
         {
             get
             {
-                return (montagem_cronograma - engenharia_cronograma_inicio).TotalDays;
+                return ((DateTime)montagem_cronograma - (DateTime)engenharia_cronograma_inicio).TotalDays;
             }
         }
         public PLAN_ETAPA()
@@ -56,10 +56,10 @@ namespace DLM.painel
         public PLAN_ETAPA(List<PLAN_SUB_ETAPA> subetapas)
         {
             this.subetapas_com_chumbacao = subetapas;
-            this.subetapas = subetapas_com_chumbacao.FindAll(x => !x.pep.Contains(".10A")).ToList();
+            this.subetapas = subetapas_com_chumbacao.FindAll(x => !x.PEP.Contains(".10A")).ToList();
             if (this.subetapas.Count > 0)
             {
-                this.pep = this.subetapas[0].etapa;
+                this.PEP = this.subetapas[0].etapa;
                 this.engenharia_cronograma = this.subetapas.Max(x => x.engenharia_cronograma);
                 this.fabrica_cronograma = this.subetapas.Max(x => x.fabrica_cronograma);
                 this.logistica_cronograma = this.subetapas.Max(x => x.logistica_cronograma);
@@ -125,16 +125,16 @@ namespace DLM.painel
                 this.resumo_pecas.etapa_bloqueada = (this.subetapas.FindAll(x => x.resumo_pecas.etapa_bloqueada).Count == this.subetapas.Count);
 
                 var MIN = Conexoes.Utilz.Calendario.DataDummy();
-                var D0 = this.subetapas.Select(X => X.resumo_pecas.inicio).ToList().FindAll(X => X > MIN).OrderBy(x => x);
-                var D1 = this.subetapas.Select(X => X.resumo_pecas.fim).ToList().FindAll(X => X > MIN).OrderBy(x => x);
+                var D0 = this.subetapas.Select(X => X.resumo_pecas.Inicio).ToList().FindAll(X => X > MIN).OrderBy(x => x);
+                var D1 = this.subetapas.Select(X => X.resumo_pecas.Fim).ToList().FindAll(X => X > MIN).OrderBy(x => x);
 
                 if (D0.Count() > 0)
                 {
-                    this.resumo_pecas.inicio = D0.First();
+                    this.resumo_pecas.Inicio = D0.First();
                 }
                 if (D1.Count() > 0)
                 {
-                    this.resumo_pecas.fim = D1.Last();
+                    this.resumo_pecas.Fim = D1.Last();
                 }
 
                 var apontamentos = this.subetapas.FindAll(x => x.update_montagem != "").Distinct().ToList().Select(x => Conexoes.Extensoes.Data(x.update_montagem.ToUpper().Replace(" ", "").Replace("MONTAGEM:", "")));

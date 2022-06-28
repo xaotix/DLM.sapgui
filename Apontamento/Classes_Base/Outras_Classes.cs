@@ -44,8 +44,8 @@ namespace DLM.painel
     public class Atraso_Planejamento
     {
         public string pep { get; set; } = "";
-        public DateTime data_inicio { get; set; } = new DateTime();
-        public DateTime data_fim { get; set; } = new DateTime();
+        public DateTime? data_inicio { get; set; } = new DateTime();
+        public DateTime? data_fim { get; set; } = new DateTime();
         public double previsto { get; set; } = 0;
         public double atual { get; set; } = 0;
         public double peso { get; set; } = 0;
@@ -58,7 +58,7 @@ namespace DLM.painel
             this.fase = subetapa;
             this.setor = setor;
             this.peso = this.fase.peso_planejado;
-            this.pep = subetapa.pep;
+            this.pep = subetapa.PEP;
 
             switch (setor)
             {
@@ -181,6 +181,41 @@ namespace DLM.painel
 
         }
     }
+
+    public class ZPP0100_Resumo
+    {
+        public override string ToString()
+        {
+            return this.PEP;
+        }
+        public db.Linha L { get; private set; } = new db.Linha();
+        public string PEP { get; set; } = "";
+        public double Necessario { get; set; } = 0;
+        public double Embarcado { get; set; } = 0;
+        public double Porcentagem_Embarcado
+        {
+           get
+            {
+                if(Peso_Necessario > 0)
+                {
+                    return Peso_Embarcado / Peso_Necessario;
+                }
+                return 0;
+            }
+        }
+        public double Peso_Necessario { get; set; } = 0;
+        public double Peso_Embarcado { get; set; } = 0;
+        public ZPP0100_Resumo(db.Linha L)
+        {
+            this.CopiarVars(L);
+        }
+        public ZPP0100_Resumo()
+        {
+
+        }
+    }
+
+
 
     public class Logistica_Planejamento
     {
@@ -453,7 +488,7 @@ namespace DLM.painel
             {
                 this.descricao = pecas[0].grupo_mercadoria;
                 this.centro = pecas[0].centro;
-                this.pep = pecas[0].pep;
+                this.pep = pecas[0].PEP;
                 this.pedido_completo = pecas[0].pedido_completo;
             }
             this.Peso_Total = Math.Round(pecas.Sum(x => x.peso_unitario * x.qtd_necessaria), 4);
@@ -514,8 +549,8 @@ namespace DLM.painel
         public int fases { get; set; } = 0;
         public int subfases { get; set; } = 0;
 
-        public DateTime inicio { get; set; } = new DateTime();
-        public DateTime fim { get; set; } = new DateTime();
+        public DateTime? Inicio { get; set; } = new DateTime();
+        public DateTime? Fim { get; set; } = new DateTime();
 
         private List<PLAN_PECA> _pecas { get; set; }
 
@@ -538,8 +573,8 @@ namespace DLM.painel
             this.qtd_embarcada = L.Get("qtd_embarcada").Double();
             this.fases = L.Get("fases").Int();
             this.subfases = L.Get("subfases").Int();
-            this.inicio = L.Get("inicio").Data();
-            this.fim = L.Get("fim").Data();
+            this.Inicio = L.Get("inicio").Data();
+            this.Fim = L.Get("fim").Data();
             this.status_usuario_pep = L.Get("status_usuario_pep").ToString();
             this.etapa_bloqueada = L.Get("etapa_bloqueada").Boolean();
             this.status_sistema_pep = L.Get("status_sistema_pep").ToString();
@@ -561,8 +596,8 @@ namespace DLM.painel
         {
             if (lista.Count == 0) { return; }
             this.fases = lista.Sum(x => x.fases);
-            this.fim = lista.Max(x => x.fim);
-            this.inicio = lista.Min(x => x.inicio);
+            this.Fim = lista.Max(x => x.Fim);
+            this.Inicio = lista.Min(x => x.Inicio);
             this.pep = "Resumo";
             this.peso_necessario = lista.Sum(x => x.peso_necessario);
             this.qtd_embarcada = lista.Sum(x => x.qtd_embarcada);
@@ -570,8 +605,8 @@ namespace DLM.painel
             this.qtd_produzida = lista.Sum(x => x.qtd_produzida);
             this.subfases = lista.Sum(x => x.subfases);
 
-            this.inicio = lista.Min(x => x.inicio);
-            this.fim = lista.Max(x => x.fim);
+            this.Inicio = lista.Min(x => x.Inicio);
+            this.Fim = lista.Max(x => x.Fim);
 
         }
     }

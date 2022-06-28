@@ -33,9 +33,9 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length >= 24)
+                if (PEP.Length >= 24)
                 {
-                    return pep.Substring(22, 2);
+                    return PEP.Substring(22, 2);
                 }
                 return "";
             }
@@ -45,7 +45,7 @@ namespace DLM.painel
 
         public override string ToString()
         {
-            return this.pep + "[" + this.peso_planejado + "]";
+            return this.PEP + "[" + this.peso_planejado + "]";
         }
         public Tipo_Material tipo { get; set; } = Tipo_Material.Orçamento;
         private List<PLAN_PECA> _pecas { get; set; }
@@ -53,7 +53,7 @@ namespace DLM.painel
         {
             if (_pecas == null)
             {
-                _pecas = DLM.painel.Consultas.GetPecasPGO(new List<string> { this.pep },10, tipo == Tipo_Material.Consolidado);
+                _pecas = DLM.painel.Consultas.GetPecasPGO(new List<string> { this.PEP },10, tipo == Tipo_Material.Consolidado);
             }
             return _pecas;
         }
@@ -78,7 +78,7 @@ namespace DLM.painel
             {
                if(_peps==null)
                 {
-                    _peps = Consultas.GetPEPsPGO(new List<string> { this.pep });
+                    _peps = Consultas.GetPEPsPGO(new List<string> { this.PEP });
                 }
                 return _peps;
             }
@@ -93,7 +93,7 @@ namespace DLM.painel
         {
             this.L = l;
             this.id_obra = l["id_obra"].Int();
-            this.pep = l.Get("pep").ToString();
+            this.PEP = l.Get("pep").ToString();
             this.peso_planejado = l.Get("peso_total").Double();
             this.quantidade = l.Get("quantidade").Int();
         }
@@ -109,14 +109,14 @@ namespace DLM.painel
             {
                 if (_peps == null)
                 {
-                    _peps = Consultas.GetPEPsPGO(new List<string> { this.pep });
+                    _peps = Consultas.GetPEPsPGO(new List<string> { this.PEP });
                 }
                 return _peps;
             }
         }
         public void Set(List<ORC_SUB> subs)
         {
-            this._subetapas = subs.FindAll(x => x.pep.StartsWith(this.pep));
+            this._subetapas = subs.FindAll(x => x.PEP.StartsWith(this.PEP));
         }
 
         private List<ORC_SUB> _subetapas { get; set; }
@@ -126,7 +126,7 @@ namespace DLM.painel
             {
                 if(_subetapas==null)
                 {
-                    _subetapas = Consultas.GetSubEtapasPGO(new List<string> { this.pep });
+                    _subetapas = Consultas.GetSubEtapasPGO(new List<string> { this.PEP });
                 }
                 return _subetapas;
             }
@@ -140,7 +140,7 @@ namespace DLM.painel
         {
             this.L = l;
             this.id_obra = l["id_obra"].Int();
-            this.pep = l.Get("pep").ToString();
+            this.PEP = l.Get("pep").ToString();
             this.peso_planejado = l.Get("peso_total").Double();
             this.quantidade = l.Get("quantidade").Double();
         
@@ -159,7 +159,7 @@ namespace DLM.painel
             this.L = l;
 
             this.id_obra = l["id_obra"].Int();
-            this.pep = l.Get("pep").ToString();
+            this.PEP = l.Get("pep").ToString();
             this.pep_inicial = l.Get("pep_inicial").ToString();
             this.centro = l.Get("centro").ToString();
             this.peso_planejado = l.Get("peso_total").Double();
@@ -182,7 +182,7 @@ namespace DLM.painel
         {
             get
             {
-                return this.pedido.peps.FindAll(x => peps_str.Find(y => y == x.pep) != null);
+                return this.pedido.GetPEPs().FindAll(x => peps_str.Find(y => y == x.PEP) != null);
             }
         }
         public string arquivo { get; set; } = "";
@@ -199,35 +199,31 @@ namespace DLM.painel
 
         public List<ORC_PCK> pacotes { get; set; } = new List<ORC_PCK>();
         private List<ORC_PEP> _peps { get; set; }
-        public List<ORC_PEP> peps
+
+        public List<ORC_PEP> GetPEPs()
         {
-            get
+            if (_peps == null)
             {
-                if (_peps == null)
-                {
-                    _peps = Consultas.GetPEPsPGO(new List<string> { this.pep }, this.tipo == Tipo_Material.Consolidado);
-                }
-                return _peps;
+                _peps = Consultas.GetPEPsPGO(new List<string> { this.PEP }, this.tipo == Tipo_Material.Consolidado);
             }
+            return _peps;
         }
         private List<ORC_SUB> _subetapas { get; set; }
-        public List<ORC_SUB> subetapas
+
+        public List<ORC_SUB> GetSubetapas()
         {
-            get
+            if (_subetapas == null)
             {
-                if (_subetapas == null)
+                _subetapas = Consultas.GetSubEtapasPGO(new List<string> { this.PEP }, this.tipo == Tipo_Material.Consolidado);
+                if (this._etapas != null)
                 {
-                    _subetapas = Consultas.GetSubEtapasPGO(new List<string> { this.pep }, this.tipo == Tipo_Material.Consolidado);
-                    if(this._etapas!=null)
+                    foreach (var t in this._etapas)
                     {
-                        foreach(var t in this._etapas)
-                        {
-                            t.Set(_subetapas);
-                        }
+                        t.Set(_subetapas);
                     }
                 }
-                return _subetapas;
             }
+            return _subetapas;
         }
 
         private List<ORC_ETP> _etapas { get; set; }
@@ -236,7 +232,7 @@ namespace DLM.painel
         {
             if (_etapas == null)
             {
-                _etapas = DLM.painel.Consultas.GetEtapasPGO(new List<string> { this.pep }, this.tipo == Tipo_Material.Consolidado);
+                _etapas = DLM.painel.Consultas.GetEtapasPGO(new List<string> { this.PEP }, this.tipo == Tipo_Material.Consolidado);
             }
             return _etapas;
         }
@@ -252,7 +248,7 @@ namespace DLM.painel
         }
         public override string ToString()
         {
-            return "[PGO] - [" + this.pep + "] - " + this.descricao + " [" + this.numerocontrato + "." + this.revisao + "]";
+            return "[PGO] - [" + this.PEP + "] - " + this.descricao + " [" + this.numerocontrato + "." + this.revisao + "]";
         }
 
         public DateTime criacao { get; set; } = new DateTime();
@@ -263,7 +259,7 @@ namespace DLM.painel
             this.numerocontrato = l.Get("numerocontrato").ToString();
             this.revisao = l.Get("revisao").ToString();
             this.Titulo.DESCRICAO = l.Get("descricao").ToString();
-            this.pep = l.Get("pedido").ToString().ToString();
+            this.PEP = l.Get("pedido").ToString().ToString();
             this.quantidade = l.Get("quantidade").Double();
             this.peso_planejado = l.Get("peso_total").Double();
 

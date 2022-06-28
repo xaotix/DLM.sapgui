@@ -35,7 +35,7 @@ namespace DLM.painel
         }
         public PLAN_SUB_ETAPA(DLM.db.Linha L, List<PLAN_PEP> peps)
         {
-            this.pep = L.Get("pep").ToString();
+            this.PEP = L.Get("pep").ToString();
 
 
             if (peps != null && this.carregou_pecas)
@@ -91,12 +91,12 @@ namespace DLM.painel
 
             if (this.logistica_cronograma_inicio == new DateTime() && this.logistica_cronograma != new DateTime())
             {
-                this.logistica_cronograma_inicio = this.fabrica_cronograma.AddDays(2);
+                this.logistica_cronograma_inicio = ((DateTime)this.fabrica_cronograma).AddDays(2);
             }
 
             if (this.montagem_cronograma_inicio == new DateTime() && this.montagem_cronograma != new DateTime())
             {
-                this.montagem_cronograma_inicio = this.logistica_cronograma.AddDays(2);
+                this.montagem_cronograma_inicio = ((DateTime)this.logistica_cronograma).AddDays(2);
             }
 
             this.resumo = L.Get("descricao").ToString();

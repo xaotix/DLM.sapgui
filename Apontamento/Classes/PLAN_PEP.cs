@@ -17,16 +17,16 @@ namespace DLM.painel
         {
             get
             {
-                if(this.pep.Length>2)
+                if(this.PEP.Length>2)
                 {
-                    return this.pep.Substring(this.pep.Length - 2, 2);
+                    return this.PEP.Substring(this.PEP.Length - 2, 2);
                 }
                 return "";
             }
         }
         public override string ToString()
         {
-            return pep;
+            return PEP;
         }
         public long id { get; set; } = -1;
         public long id_status_pep { get; set; } = -1;
@@ -74,7 +74,7 @@ namespace DLM.painel
                 {
                     return "FINALIZADO";
                 }
-                else if(pep.Contains(".FO"))
+                else if(PEP.Contains(".FO"))
                 {
                     return "TELHA EM OBRA";
                 }
@@ -215,9 +215,9 @@ namespace DLM.painel
         {
             get
             {
-                if(pep.Length>13)
+                if(PEP.Length>13)
                 {
-                    return pep.Substring(0, 13);
+                    return PEP.Substring(0, 13);
                 }
                 return "";
             }
@@ -226,9 +226,9 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length > 9)
+                if (PEP.Length > 9)
                 {
-                    return pep.Substring(3, 6);
+                    return PEP.Substring(3, 6);
                 }
                 return "";
             }
@@ -238,9 +238,9 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length > 9)
+                if (PEP.Length > 9)
                 {
-                    return pep.Substring(0, 9);
+                    return PEP.Substring(0, 9);
                 }
                 return "";
             }
@@ -271,7 +271,7 @@ namespace DLM.painel
             this.id_status_pep = L.Get("id_status_pedido").Int();
 
             this.observacoes = L["observacoes"].Valor;
-            this.pep = L.Get("pep").ToString();
+            this.PEP = L.Get("pep").ToString();
             this.pep_engenharia = L.Get("pep_engenharia").ToString();
 
             this.peso_embarcado = L.Get("peso_embarcado").Double(6);
@@ -284,7 +284,7 @@ namespace DLM.painel
             this.status = L.Get("status").ToString();
 
 
-            this.Titulo = new Titulo_Planejamento() { CHAVE = this.pep, DESCRICAO = this.descricao };
+            this.Titulo = new Titulo_Planejamento() { CHAVE = this.PEP, DESCRICAO = this.descricao };
 
         }
         public DLM.db.Linha GetLinha()
@@ -294,7 +294,7 @@ namespace DLM.painel
 
             l.Add("id_status_pep", id_status_pep);
             l.Add("id_status_pedido", id_status_pedido);
-            l.Add("pep", pep);
+            l.Add("pep", PEP);
             l.Add("pep_engenharia", pep_engenharia);
 
             l.Add("peso_planejado", Math.Round(peso_planejado, 3));
@@ -429,7 +429,7 @@ namespace DLM.painel
             this.observacoes = observacoes;
             if(pecas.Count>0)
             {
-                this.pep = pecas[0].pep;
+                this.PEP = pecas[0].PEP;
             }
             //this.banco = Conexoes.DBases.GetDB();
         }

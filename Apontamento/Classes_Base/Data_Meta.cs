@@ -82,13 +82,13 @@ namespace DLM.painel
                 if (Tipo == Tipo_Meta.Engenharia)
                 {
                     this.SubEtapas = this.SubEtapas.OrderBy(x => x.engenharia_cronograma).ToList().FindAll(x => x.engenharia_cronograma >= f0 && x.engenharia_cronograma <= f0_fim);
-                    var subs_real = this.SubEtapas.FindAll(x =>  (x.engenharia_liberacao <= f0_fim && x.engenharia_liberacao > min_data)  && x.liberado_engenharia > valor_considerar_finalizado).FindAll(x => this.SubEtapas.Find(y => y.pep == x.pep) != null);
-                    var desvio = lista.FindAll(x => x.engenharia_liberacao <= f0_fim && x.engenharia_liberacao >= f0).FindAll(x => subs_real.Find(y => y.pep == x.pep) == null);
+                    var subs_real = this.SubEtapas.FindAll(x =>  (x.engenharia_liberacao <= f0_fim && x.engenharia_liberacao > min_data)  && x.liberado_engenharia > valor_considerar_finalizado).FindAll(x => this.SubEtapas.Find(y => y.PEP == x.PEP) != null);
+                    var desvio = lista.FindAll(x => x.engenharia_liberacao <= f0_fim && x.engenharia_liberacao >= f0).FindAll(x => subs_real.Find(y => y.PEP == x.PEP) == null);
 
               
 
-                    var desvio_adiantamento = desvio.FindAll(x => x.engenharia_cronograma >= f0_fim).FindAll(x => subs_real.Find(y => y.pep == x.pep) == null);
-                    var desvio_atrasos = desvio.FindAll(x => x.engenharia_cronograma < f0_fim).FindAll(x => subs_real.Find(y => y.pep == x.pep) == null);
+                    var desvio_adiantamento = desvio.FindAll(x => x.engenharia_cronograma >= f0_fim).FindAll(x => subs_real.Find(y => y.PEP == x.PEP) == null);
+                    var desvio_atrasos = desvio.FindAll(x => x.engenharia_cronograma < f0_fim).FindAll(x => subs_real.Find(y => y.PEP == x.PEP) == null);
 
 
                     var finalizado_sem_data = this.SubEtapas.FindAll(x => x.liberado_engenharia > valor_considerar_finalizado && x.engenharia_liberacao < min_data);
@@ -104,8 +104,8 @@ namespace DLM.painel
 
                     var avanco_previsto = total.OrderBy(x => x.engenharia_cronograma).ToList().FindAll(x => x.engenharia_cronograma <= f0_fim).ToList();
                     var avanco_total_realizado = total.FindAll(x => x.engenharia_liberacao <= f0_fim && x.engenharia_liberacao > min_data && x.liberado_engenharia > valor_considerar_finalizado);
-                    var avanco_realizado = avanco_total_realizado.FindAll(x => avanco_previsto.Find(y => y.pep == x.pep) != null);
-                    var avanco_realizado_nao_previsto = avanco_total_realizado.FindAll(x => avanco_previsto.Find(y => y.pep == x.pep) == null);
+                    var avanco_realizado = avanco_total_realizado.FindAll(x => avanco_previsto.Find(y => y.PEP == x.PEP) != null);
+                    var avanco_realizado_nao_previsto = avanco_total_realizado.FindAll(x => avanco_previsto.Find(y => y.PEP == x.PEP) == null);
 
 
                     this.Avanco_Previsto = new Valor_Meta(avanco_previsto, "Avanço Previsto", f0_fim);
@@ -116,14 +116,14 @@ namespace DLM.painel
                 {
 
                     this.SubEtapas = this.SubEtapas.OrderBy(x => x.fabrica_cronograma).ToList().FindAll(x => x.fabrica_cronograma >= f0 && x.fabrica_cronograma <= f0_fim);
-                    var subs_real = this.SubEtapas.FindAll(x => x.resumo_pecas.fim <= f0_fim && x.resumo_pecas.fim > min_data && x.total_fabricado > valor_considerar_finalizado).FindAll(x => this.SubEtapas.Find(y => y.pep == x.pep) != null);
-                    var desvio = lista.FindAll(x => x.resumo_pecas.fim <= f0_fim && x.resumo_pecas.fim >= f0 && x.resumo_pecas.fim <= f0_fim && x.total_fabricado > valor_considerar_finalizado).FindAll(x => subs_real.Find(y => y.pep == x.pep) == null);
-                    var finalizado_sem_data = this.SubEtapas.FindAll(x => x.total_fabricado > valor_considerar_finalizado && x.resumo_pecas.fim < min_data);
+                    var subs_real = this.SubEtapas.FindAll(x => x.resumo_pecas.Fim <= f0_fim && x.resumo_pecas.Fim > min_data && x.total_fabricado > valor_considerar_finalizado).FindAll(x => this.SubEtapas.Find(y => y.PEP == x.PEP) != null);
+                    var desvio = lista.FindAll(x => x.resumo_pecas.Fim <= f0_fim && x.resumo_pecas.Fim >= f0 && x.resumo_pecas.Fim <= f0_fim && x.total_fabricado > valor_considerar_finalizado).FindAll(x => subs_real.Find(y => y.PEP == x.PEP) == null);
+                    var finalizado_sem_data = this.SubEtapas.FindAll(x => x.total_fabricado > valor_considerar_finalizado && x.resumo_pecas.Fim < min_data);
                     this.Data_Inicio = f0;
                     this.Data_Fim = f0_fim;
 
-                    var desvio_adiantamento = desvio.FindAll(x => x.fabrica_cronograma >= f0_fim).FindAll(x => subs_real.Find(y => y.pep == x.pep) == null);
-                    var desvio_atrasos = desvio.FindAll(x => x.fabrica_cronograma < f0_fim).FindAll(x => subs_real.Find(y => y.pep == x.pep) == null);
+                    var desvio_adiantamento = desvio.FindAll(x => x.fabrica_cronograma >= f0_fim).FindAll(x => subs_real.Find(y => y.PEP == x.PEP) == null);
+                    var desvio_atrasos = desvio.FindAll(x => x.fabrica_cronograma < f0_fim).FindAll(x => subs_real.Find(y => y.PEP == x.PEP) == null);
 
                     this.Nao_Previsto = new Valor_Meta(desvio_adiantamento, "Adiantamentos", f0_fim);
                     this.Nao_Previsto_Atrasos = new Valor_Meta(desvio_atrasos, "Atrasos", f0_fim);
@@ -134,9 +134,9 @@ namespace DLM.painel
 
 
                     var avanco_previsto = total.OrderBy(x => x.fabrica_cronograma).ToList().FindAll(x => x.fabrica_cronograma <= f0_fim);
-                    var avanco_total_realizado = total.FindAll(x => x.resumo_pecas.fim <= f0_fim && x.resumo_pecas.fim > min_data && x.total_fabricado > valor_considerar_finalizado);
-                    var avanco_realizado = avanco_total_realizado.FindAll(x => avanco_previsto.Find(y => y.pep == x.pep) != null);
-                    var avanco_realizado_nao_previsto = avanco_total_realizado.FindAll(x => avanco_previsto.Find(y => y.pep == x.pep) == null);
+                    var avanco_total_realizado = total.FindAll(x => x.resumo_pecas.Fim <= f0_fim && x.resumo_pecas.Fim > min_data && x.total_fabricado > valor_considerar_finalizado);
+                    var avanco_realizado = avanco_total_realizado.FindAll(x => avanco_previsto.Find(y => y.PEP == x.PEP) != null);
+                    var avanco_realizado_nao_previsto = avanco_total_realizado.FindAll(x => avanco_previsto.Find(y => y.PEP == x.PEP) == null);
 
 
                     this.Avanco_Previsto = new Valor_Meta(avanco_previsto, "Avanço Previsto", f0_fim);

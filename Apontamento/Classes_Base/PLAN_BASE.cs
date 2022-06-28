@@ -30,7 +30,7 @@ namespace DLM.painel
         {
             get
             {
-                return this.pep + (this.Titulo.DESCRICAO != "" ? (" - " + this.Titulo.DESCRICAO) : "");
+                return this.PEP + (this.Titulo.DESCRICAO != "" ? (" - " + this.Titulo.DESCRICAO) : "");
             }
         }
         private List<PLAN_ETAPA> _etapas { get; set; } = new List<PLAN_ETAPA>();
@@ -41,7 +41,7 @@ namespace DLM.painel
 
         public List<PLAN_PEDIDO> GetPedidos()
         {
-            if (_pedidos.Count == 0 && this.pep.Length > 3)
+            if (_pedidos.Count == 0 && this.PEP.Length > 3)
             {
                 _pedidos = DLM.painel.Consultas.GetPedidos(new List<string> { this.contrato });
 
@@ -57,9 +57,9 @@ namespace DLM.painel
         }
         public List<PLAN_ETAPA> Getetapas()
         {
-            if (_etapas.Count == 0 && this.pep.Length > 3)
+            if (_etapas.Count == 0 && this.PEP.Length > 3)
             {
-                _etapas = Consultas.GetEtapas(new List<string> { this.pep });
+                _etapas = Consultas.GetEtapas(new List<string> { this.PEP });
 
                 if (carregou_pecas)
                 {
@@ -75,7 +75,7 @@ namespace DLM.painel
         }
         public List<PLAN_SUB_ETAPA> GetSubEtapas()
         {
-            if (_subetapas.Count == 0 && this.pep.Length > 3)
+            if (_subetapas.Count == 0 && this.PEP.Length > 3)
             {
                 _subetapas = new List<PLAN_SUB_ETAPA>();
                 _subetapas.AddRange(this.Getetapas().SelectMany(x => x.subetapas_com_chumbacao).ToList());
@@ -100,9 +100,9 @@ namespace DLM.painel
         }
         public List<PLAN_PEP> GetPeps()
         {
-            if (_peps.Count == 0 && this.pep.Length > 3)
+            if (_peps.Count == 0 && this.PEP.Length > 3)
             {
-                _peps = Consultas.GetPeps(new List<string> { this.pep });
+                _peps = Consultas.GetPeps(new List<string> { this.PEP });
             }
 
 
@@ -118,9 +118,9 @@ namespace DLM.painel
         }
         public List<PLAN_PECA> GetPecas(bool reset = false)
         {
-            if ((_pecas.Count == 0 | reset) && this.pep.Length > 3)
+            if ((_pecas.Count == 0 | reset) && this.PEP.Length > 3)
             {
-                _pecas = Consultas.GetPecasReal(new List<string> { this.pep });
+                _pecas = Consultas.GetPecasReal(new List<string> { this.PEP });
             }
 
 
@@ -134,18 +134,18 @@ namespace DLM.painel
             }
             else
             {
-                this.Titulo = titulos.Find(x => x.CHAVE == this.pep);
+                this.Titulo = titulos.Find(x => x.CHAVE == this.PEP);
             }
         }
         public void Set(List<PLAN_PEDIDO> lista)
         {
             this._pedidos = new List<PLAN_PEDIDO>();
-            this._pedidos.AddRange(lista.FindAll(x => x.pep.ToUpper().Contains(this.pep)));
+            this._pedidos.AddRange(lista.FindAll(x => x.PEP.ToUpper().Contains(this.PEP)));
         }
         public void Set(List<PLAN_PECA> lista)
         {
             this._pecas = new List<PLAN_PECA>();
-            this._pecas.AddRange(lista.FindAll(x => x.pep.ToUpper().StartsWith(this.pep)));
+            this._pecas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsWith(this.PEP)));
             if (this.carregou_etapas)
             {
                 foreach (var et in this.Getetapas())
@@ -180,17 +180,17 @@ namespace DLM.painel
         public void Set(List<PLAN_ETAPA> lista)
         {
             this._etapas = new List<PLAN_ETAPA>();
-            this._etapas.AddRange(lista.FindAll(x => x.pep.ToUpper().StartsWith(this.pep)));
+            this._etapas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsWith(this.PEP)));
         }
         public void Set(List<PLAN_SUB_ETAPA> lista)
         {
             this._subetapas = new List<PLAN_SUB_ETAPA>();
-            this._subetapas.AddRange(lista.FindAll(x => x.pep.ToUpper().StartsWith(this.pep)));
+            this._subetapas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsWith(this.PEP)));
         }
         public void Set(List<PLAN_PEP> lista)
         {
             this._peps = new List<PLAN_PEP>();
-            this._peps.AddRange(lista.FindAll(x => x.pep.StartsWith(this.pep)));
+            this._peps.AddRange(lista.FindAll(x => x.PEP.StartsWith(this.PEP)));
         }
 
         public bool carregou_etapas
@@ -233,45 +233,45 @@ namespace DLM.painel
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.Setor_Atividade(this.pep);
+                return Conexoes.Utilz.PEP.Get.Setor_Atividade(this.PEP);
             }
         }
         public string etapa
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.Etapa(this.pep, true);
+                return Conexoes.Utilz.PEP.Get.Etapa(this.PEP, true);
             }
         }
         public string subetapa
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.Subetapa(this.pep, true);
+                return Conexoes.Utilz.PEP.Get.Subetapa(this.PEP, true);
             }
         }
         public string contrato
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.Contrato(this.pep);
+                return Conexoes.Utilz.PEP.Get.Contrato(this.PEP);
             }
         }
         public string pedido
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.Pedido(this.pep, true);
+                return Conexoes.Utilz.PEP.Get.Pedido(this.PEP, true);
             }
         }
-        public DateTime ultima_edicao { get; set; } = new DateTime();
-        public DateTime criado { get; set; } = new DateTime();
-        public DateTime engenharia_liberacao { get; set; } = new DateTime();
-        public DateTime montagem_inicio { get; set; } = new DateTime();
-        public DateTime montagem_fim { get; set; } = new DateTime();
+        public DateTime? ultima_edicao { get; set; } = new DateTime();
+        public DateTime? criado { get; set; } = new DateTime();
+        public DateTime? engenharia_liberacao { get; set; } = new DateTime();
+        public DateTime? montagem_inicio { get; set; } = new DateTime();
+        public DateTime? montagem_fim { get; set; } = new DateTime();
 
-        public DateTime mi_s { get; set; } = new DateTime();
-        public DateTime mf_s { get; set; } = new DateTime();
+        public DateTime? mi_s { get; set; } = new DateTime();
+        public DateTime? mf_s { get; set; } = new DateTime();
         public double logistica_previsto
         {
             get
@@ -389,7 +389,7 @@ namespace DLM.painel
 
             }
         }
-        public string pep { get; set; } = "";
+        public string PEP { get; set; } = "";
         public System.Windows.Visibility montagem_visivel
         {
             get
@@ -416,7 +416,7 @@ namespace DLM.painel
         {
             get
             {
-                return pep.Contains("-90");
+                return PEP.Contains("-90");
             }
         }
         public string update_montagem { get; set; } = "";
@@ -425,7 +425,7 @@ namespace DLM.painel
         {
             get
             {
-                if (_Titulo == null) { _Titulo = new Titulo_Planejamento() { CHAVE = this.pep }; }
+                if (_Titulo == null) { _Titulo = new Titulo_Planejamento() { CHAVE = this.PEP }; }
                 return _Titulo;
             }
             set
@@ -457,16 +457,16 @@ namespace DLM.painel
             return ps;
         }
 
-        private DateTime _engenharia_cronograma { get; set; } = new DateTime();
-        private DateTime _fabrica_cronograma { get; set; } = new DateTime();
-        private DateTime _logistica_cronograma { get; set; } = new DateTime();
-        private DateTime _montagem_cronograma { get; set; } = new DateTime();
-        private DateTime _engenharia_cronograma_inicio { get; set; } = new DateTime();
-        private DateTime _fabrica_cronograma_inicio { get; set; } = new DateTime();
-        private DateTime _logistica_cronograma_inicio { get; set; } = new DateTime();
-        private DateTime _montagem_cronograma_inicio { get; set; } = new DateTime();
+        private DateTime? _engenharia_cronograma { get; set; } = new DateTime();
+        private DateTime? _fabrica_cronograma { get; set; } = new DateTime();
+        private DateTime? _logistica_cronograma { get; set; } = new DateTime();
+        private DateTime? _montagem_cronograma { get; set; } = new DateTime();
+        private DateTime? _engenharia_cronograma_inicio { get; set; } = new DateTime();
+        private DateTime? _fabrica_cronograma_inicio { get; set; } = new DateTime();
+        private DateTime? _logistica_cronograma_inicio { get; set; } = new DateTime();
+        private DateTime? _montagem_cronograma_inicio { get; set; } = new DateTime();
 
-        public DateTime engenharia_cronograma
+        public DateTime? engenharia_cronograma
         {
             get
             {
@@ -481,7 +481,7 @@ namespace DLM.painel
                 _engenharia_cronograma = value;
             }
         }
-        public DateTime fabrica_cronograma
+        public DateTime? fabrica_cronograma
         {
             get
             {
@@ -496,7 +496,7 @@ namespace DLM.painel
                 _fabrica_cronograma = value;
             }
         }
-        public DateTime logistica_cronograma
+        public DateTime? logistica_cronograma
         {
             get
             {
@@ -511,7 +511,7 @@ namespace DLM.painel
                 _logistica_cronograma = value;
             }
         }
-        public DateTime montagem_cronograma
+        public DateTime? montagem_cronograma
         {
             get
             {
@@ -526,7 +526,7 @@ namespace DLM.painel
                 _montagem_cronograma = value;
             }
         }
-        public DateTime engenharia_cronograma_inicio
+        public DateTime? engenharia_cronograma_inicio
         {
             get
             {
@@ -541,7 +541,7 @@ namespace DLM.painel
                 _engenharia_cronograma_inicio = value;
             }
         }
-        public DateTime fabrica_cronograma_inicio
+        public DateTime? fabrica_cronograma_inicio
         {
             get
             {
@@ -556,7 +556,7 @@ namespace DLM.painel
                 _fabrica_cronograma_inicio = value;
             }
         }
-        public DateTime logistica_cronograma_inicio
+        public DateTime? logistica_cronograma_inicio
         {
             get
             {
@@ -571,7 +571,7 @@ namespace DLM.painel
                 _logistica_cronograma_inicio = value;
             }
         }
-        public DateTime montagem_cronograma_inicio
+        public DateTime? montagem_cronograma_inicio
         {
             get
             {
@@ -586,14 +586,14 @@ namespace DLM.painel
                 _montagem_cronograma_inicio = value;
             }
         }
-        public DateTime eini { get; set; } = new DateTime();
-        public DateTime fini { get; set; } = new DateTime();
-        public DateTime lini { get; set; } = new DateTime();
-        public DateTime mini { get; set; } = new DateTime();
-        public DateTime efim { get; set; } = new DateTime();
-        public DateTime ffim { get; set; } = new DateTime();
-        public DateTime lfim { get; set; } = new DateTime();
-        public DateTime mfim { get; set; } = new DateTime();
+        public DateTime? eini { get; set; } = new DateTime();
+        public DateTime? fini { get; set; } = new DateTime();
+        public DateTime? lini { get; set; } = new DateTime();
+        public DateTime? mini { get; set; } = new DateTime();
+        public DateTime? efim { get; set; } = new DateTime();
+        public DateTime? ffim { get; set; } = new DateTime();
+        public DateTime? lfim { get; set; } = new DateTime();
+        public DateTime? mfim { get; set; } = new DateTime();
 
         private double _eng_base_st { get; set; } = 0;
         public double eng_base_st
@@ -651,7 +651,7 @@ namespace DLM.painel
         public bool cron_fab_show { get; set; } = true;
         public bool cron_log_show { get; set; } = true;
         public bool cron_mont_show { get; set; } = true;
-        public DateTime inicio_cronograma_filtro
+        public DateTime? inicio_cronograma_filtro
         {
             get
             {
@@ -663,7 +663,7 @@ namespace DLM.painel
                 return DateTime.Now.AddMonths(-3);
             }
         }
-        public DateTime fim_cronograma_filtro
+        public DateTime? fim_cronograma_filtro
         {
             get
             {
@@ -682,28 +682,28 @@ namespace DLM.painel
                 List<DateTime> retorno = new List<DateTime>();
                 if (cron_eng_show)
                 {
-                    retorno.Add(engenharia_cronograma);
-                    retorno.Add(engenharia_cronograma_inicio);
+                    retorno.Add((DateTime)engenharia_cronograma);
+                    retorno.Add((DateTime)engenharia_cronograma_inicio);
                 }
                 if (cron_fab_show)
                 {
-                    retorno.Add(fabrica_cronograma);
-                    retorno.Add(fabrica_cronograma_inicio);
+                    retorno.Add((DateTime)fabrica_cronograma);
+                    retorno.Add((DateTime)fabrica_cronograma_inicio);
                 }
                 if (cron_log_show)
                 {
-                    retorno.Add(logistica_cronograma);
-                    retorno.Add(logistica_cronograma_inicio);
+                    retorno.Add((DateTime)logistica_cronograma);
+                    retorno.Add((DateTime)logistica_cronograma_inicio);
                 }
                 if (cron_mont_show)
                 {
-                    retorno.Add(montagem_cronograma);
-                    retorno.Add(montagem_cronograma_inicio);
+                    retorno.Add((DateTime)montagem_cronograma);
+                    retorno.Add((DateTime)montagem_cronograma_inicio);
                 }
                 return retorno;
             }
         }
-        public DateTime inicio_cronograma
+        public DateTime? inicio_cronograma
         {
             get
             {
@@ -715,7 +715,7 @@ namespace DLM.painel
                 return DateTime.Now.AddMonths(-3);
             }
         }
-        public DateTime fim_cronograma
+        public DateTime? fim_cronograma
         {
             get
             {
@@ -727,12 +727,12 @@ namespace DLM.painel
                 return new DateTime();
             }
         }
-        public List<DateTime> datas_cronograma
+        public List<DateTime?> datas_cronograma
         {
             get
             {
 
-                return new List<DateTime>
+                return new List<DateTime?>
                 {
                     engenharia_cronograma,
                     engenharia_cronograma_inicio,
@@ -768,7 +768,7 @@ namespace DLM.painel
 
         }
         public bool dados_montagem { get; set; } = false;
-        public DateTime ultima_consulta_sap { get; set; } = new DateTime();
+        public DateTime? ultima_consulta_sap { get; set; } = new DateTime();
         public double peso_planejado { get; set; } = 0;
         public int atraso_engenharia { get; set; } = 0;
         public int atraso_fabrica { get; set; } = 0;

@@ -23,14 +23,14 @@ namespace DLM.painel
                 var orcs = Obras_PGO(recarregar);
                 var cons = Obras_PGO_Consolidadas( recarregar);
                 var contratos = reais.Select(x => x.pedido).Distinct().ToList();
-                contratos.AddRange(orcs.Select(x => x.pep).Distinct().ToList());
-                contratos.AddRange(cons.Select(x => x.pep).Distinct().ToList());
+                contratos.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
+                contratos.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
                 contratos = contratos.OrderBy(x => x).Distinct().ToList().FindAll(x=>x.Length>5).ToList();
                 foreach (var ct in contratos)
                 {
                     var real = reais.Find(x => x.pedido == ct);
-                    var orc = orcs.Find(x => x.pep == ct);
-                    var con = cons.Find(x => x.pep == ct);
+                    var orc = orcs.Find(x => x.PEP == ct);
+                    var con = cons.Find(x => x.PEP == ct);
                     if (real != null | orc != null | con != null)
                     {
                         _Obras_PMP.Add(new Pedido_PMP(real, orc, con));
