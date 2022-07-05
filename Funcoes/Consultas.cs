@@ -45,7 +45,7 @@ namespace DLM.sapgui
         }
         public GuiFrameWindow GetJanela()
         {
-            if (!this.carregar_sap()) { return null; }
+            if (!this.Carregar_sap()) { return null; }
             try
             {
                 return ((GuiFrameWindow)this.SessaoSAP.FindById("wnd[0]"));
@@ -129,7 +129,7 @@ namespace DLM.sapgui
         }
         
         /*ESSE CARA TENTA ABRIR UMA INSTÂNCIA PENDURADA NA GUI DO SAP*/
-        public bool carregar_sap()
+        public bool Carregar_sap()
         {
             try
             {
@@ -213,7 +213,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("CN47N");
@@ -319,7 +319,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     // session.findById("wnd[0]/tbar[0]/okcd").text = "cj20n"
                     this.SessaoSAP.StartTransaction("CJ20N");
@@ -569,7 +569,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
 
                     // session.findById("wnd[0]/mbar/menu[0]/menu[7]").select
@@ -616,7 +616,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
 
                     //'salvar
@@ -694,7 +694,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
 
                     //session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").selectContextMenuItem "CREATE_ACT_W"
@@ -768,7 +768,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     //tem que pegar os filhos antes de renomear, se não ele perde o vínculo
                     var filhos = no.Getfilhos();
@@ -989,7 +989,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     //session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").selectContextMenuItem "CREATE_WBS"
                     ((GuiTree)this.SessaoSAP.FindById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell")).SelectContextMenuItem("CREATE_WBS");
@@ -1133,7 +1133,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("zsd0031n");
@@ -1195,7 +1195,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPP0066N");
@@ -1253,7 +1253,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPP0066N");
@@ -1311,7 +1311,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPP0112");
@@ -1381,7 +1381,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPMP");
@@ -1442,7 +1442,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("zcontratos");
@@ -1499,7 +1499,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPPCOOISN");
@@ -1559,7 +1559,7 @@ namespace DLM.sapgui
                 {
                 File.Delete(destino + ARQUIVO);
                 }
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPP0100");
@@ -1607,7 +1607,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     Retornar();
                     Retornar();
@@ -1695,7 +1695,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.carregar_sap())
+                if (this.Carregar_sap())
                 {
                     Retornar();
                     Retornar();
