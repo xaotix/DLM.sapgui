@@ -1,4 +1,5 @@
-﻿using DLM.vars;
+﻿using Conexoes;
+using DLM.vars;
 using SAPFEWSELib;
 using System;
 using System.Collections.Generic;
@@ -1341,6 +1342,136 @@ namespace DLM.sapgui
                 return false;
             }
 
+        }
+
+
+        public DLM.db.Tabela CKM3N(string arquivo_input)
+        {
+            DLM.db.Tabela retorno = new db.Tabela();
+            try
+            {
+               
+               
+                if (this.Carregar_sap())
+                {
+                    Retornar();
+                   
+                    string destino = arquivo_input.GetPasta().CriarPasta("SAP");
+
+                    var lista = Conexoes.Utilz.Excel.GetTabela(arquivo_input);
+
+                    var materiais = lista.GetCelulas("material").FindAll(x=>x.Valor.Length>0);
+                    if(materiais.Count==0)
+                    {
+                        Conexoes.Utilz.Alerta($"Nenhum material encontrado no arquivo excel {arquivo_input}. O padrão das colunas deve ser: [Material] [Centro]");
+                        return new db.Tabela();
+                    }
+                    var de = Conexoes.Utilz.Selecao.SelecionarData(DateTime.Now,DateTime.Now.AddYears(-3), DateTime.Now, "Data de Início");
+                    var ate = Conexoes.Utilz.Selecao.SelecionarData(DateTime.Now, de, DateTime.Now, "Data Final");
+
+
+                    DateTime dmin = new DateTime(2001, 01, 01);
+
+                    if(de<=dmin| ate <=dmin)
+                    {
+                        Conexoes.Utilz.Alerta("Data inicial ou final inválida");
+                        return new db.Tabela();
+                    }
+
+                  if(!Conexoes.Utilz.Pergunta("Iniciar o processo?\nO programa fechará todas as instâncias de Excel e utilizará o SAP. Deixe o programa rodar e não mexa no computador."))
+                    {
+                        return new db.Tabela();
+                    }
+
+                    this.SessaoSAP.StartTransaction("CKM3N");
+                    foreach(var linha in lista.Linhas)
+                    {
+                        
+
+                        var material = linha.Get("material").Valor;
+                        var centro = linha.Get("centro").Valor;
+
+
+                   
+
+                        ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtMLKEY-MATNR")).Text = material;
+                        ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtMLKEY-WERKS_ML_PRODUCTIVE")).Text = centro;
+
+
+                        var data = new DateTime(de.Ticks);
+                
+
+                        while(data<=ate)
+                        {
+
+                            DLM.painel.Consultas.MatarExcel(false);
+
+                            string ano = data.Year.ToString();
+                            string mes = data.Month.ToString();
+
+                            string nome_excel = $"{material}.{centro}.{mes}.{ano}.CKM3N.xlsx";
+                            string arquivo = $"{destino}{nome_excel}";
+                            if (!arquivo.Apagar())
+                            {
+                                return retorno;
+                            }
+                   
+
+
+                            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txtMLKEY-POPER")).Text = mes.PadLeft(2,'0');
+                            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txtMLKEY-BDATJ")).Text = ano;
+                            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txtMLKEY-BDATJ")).SetFocus();
+
+                            ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[13]")).Press();
+
+                            var ctrl = this.SessaoSAP.FindById("wnd[0]/usr/cntlCONTAINER/shellcont/shell");
+                            var shellToolbarContextButton = ((GuiShell)ctrl);
+                            var btnToolbarContextButton = shellToolbarContextButton as GuiGridView;
+                            btnToolbarContextButton?.ContextMenu();
+                            btnToolbarContextButton?.SelectContextMenuItem("&XXL");
+
+
+                            ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[13]")).Press();
+                            ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
+                            ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_PATH")).Text = destino;
+                            ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = nome_excel;
+                            ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
+
+
+                            DLM.painel.Consultas.MatarExcel(false);
+
+                            if (arquivo.Existe())
+                            {
+                                var excel = Conexoes.Utilz.Excel.GetTabela(arquivo);
+                                foreach (var linha_tab in excel.Linhas)
+                                {
+                                    linha_tab.Celulas.Insert(0, new db.Celula("Centro", centro));
+                                    linha_tab.Celulas.Insert(0, new db.Celula("Material", material));
+                                    linha_tab.Celulas.Insert(0, new db.Celula("Mês", mes));
+                                    linha_tab.Celulas.Insert(0, new db.Celula("Ano", ano));
+
+                                    retorno.Linhas.Add(linha_tab);
+                                }
+                            }
+                            data = data.AddMonths(1);
+                        }
+
+                      
+
+                       
+                    }
+                    this.SessaoSAP.EndTransaction();
+                }
+                else
+                {
+                    //MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                }
+            }
+            catch (Exception ex)
+            {
+                Conexoes.Utilz.Alerta(ex);
+            }
+            return retorno;
         }
 
         private void Retornar()
