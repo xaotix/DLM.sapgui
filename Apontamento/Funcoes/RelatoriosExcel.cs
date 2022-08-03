@@ -1275,7 +1275,7 @@ public class Relatorios
                             pecas_aba_excel.Cells[l0 + l, c0 + 21].Value = t.ULTIMO_STATUS;
                             pecas_aba_excel.Cells[l0 + l, c0 + 22].Value = t.TIPO_DE_PINTURA;
                             pecas_aba_excel.Cells[l0 + l, c0 + 23].Value = t.esq_de_pintura;
-                            pecas_aba_excel.Cells[l0 + l, c0 + 24].Value = t.Esquema.descricao;
+                            pecas_aba_excel.Cells[l0 + l, c0 + 24].Value = t.Esquema.Getdescricao();
                             pecas_aba_excel.Cells[l0 + l, c0 + 25].Value = t.codigo_materia_prima_sap;
                             pecas_aba_excel.Cells[l0 + l, c0 + 26].Value = t.bobina.cor1;
                             pecas_aba_excel.Cells[l0 + l, c0 + 27].Value = t.bobina.cor2;
@@ -2069,7 +2069,7 @@ public class Relatorios
             pecas_aba_excel.Cells[l0 + l, c0 + 32].Value = peca.ULTIMO_STATUS;
             pecas_aba_excel.Cells[l0 + l, c0 + 33].Value = peca.TIPO_DE_PINTURA;
             pecas_aba_excel.Cells[l0 + l, c0 + 34].Value = peca.esq_de_pintura;
-            pecas_aba_excel.Cells[l0 + l, c0 + 35].Value = peca.Esquema.descricao;
+            pecas_aba_excel.Cells[l0 + l, c0 + 35].Value = peca.Esquema.Getdescricao();
             pecas_aba_excel.Cells[l0 + l, c0 + 36].Value = peca.bobina.SAP;
             pecas_aba_excel.Cells[l0 + l, c0 + 37].Value = peca.bobina.cor1;
             pecas_aba_excel.Cells[l0 + l, c0 + 38].Value = peca.bobina.cor2;
@@ -2117,7 +2117,7 @@ public class Relatorios
             ldb.Add("status_sap", t.peca.ULTIMO_STATUS);
             ldb.Add("pintura", t.peca.TIPO_DE_PINTURA);
             ldb.Add("esquema", t.peca.Esquema.CODIGO_ESQUEMA);
-            ldb.Add("esquema_desc", t.peca.Esquema.descricao);
+            ldb.Add("esquema_desc", t.peca.Esquema.Getdescricao());
             ldb.Add("bobina", t.peca.bobina.SAP);
             ldb.Add("face1", t.peca.bobina.cor1.Nome);
             ldb.Add("face2", t.peca.bobina.cor2.Nome);
@@ -2265,7 +2265,7 @@ public class Relatorios
                                         pecas_aba_excel.Cells[$"AF{L1}"].Value = peca.ULTIMO_STATUS;
                                         pecas_aba_excel.Cells[$"AG{L1}"].Value = peca.TIPO_DE_PINTURA;
                                         pecas_aba_excel.Cells[$"AH{L1}"].Value = peca.esq_de_pintura;
-                                        pecas_aba_excel.Cells[$"AI{L1}"].Value = peca.Esquema.descricao;
+                                        pecas_aba_excel.Cells[$"AI{L1}"].Value = peca.Esquema.Getdescricao();
                                         pecas_aba_excel.Cells[$"AJ{L1}"].Value = peca.codigo_materia_prima_sap;
                                         pecas_aba_excel.Cells[$"AK{L1}"].Value = peca.bobina.cor1;
                                         pecas_aba_excel.Cells[$"AL{L1}"].Value = peca.bobina.cor2;

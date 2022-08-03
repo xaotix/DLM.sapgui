@@ -1,4 +1,5 @@
 ﻿using Conexoes;
+using DLM.sap;
 using DLM.sapgui;
 using DLM.vars;
 using System;
@@ -35,16 +36,16 @@ namespace DLM.painel
         }
 
         public Tipo_Material Tipo { get; set; } = Tipo_Material.Real;
-        public Esquema_Pintura Esquema
+        public SAP_Esquema_Pintura Esquema
         {
             get
             {
-                var DUMMY = new Esquema_Pintura() { DESCRICAO_ESQUEMA = "", PINTURA = this.TIPO_DE_PINTURA };
+                var DUMMY = new SAP_Esquema_Pintura() { DESCRICAO_ESQUEMA = "", PINTURA = this.TIPO_DE_PINTURA };
                 if (this.TIPO_DE_PINTURA.ToUpper().Contains("SEM") | this.TIPO_DE_PINTURA.ToUpper().Contains("GALVANIZADO") | this.esq_de_pintura.Replace("0", "") == "" | this.TIPO_DE_PINTURA == "")
                 {
                     return DUMMY;
                 }
-                var t = DLM.painel.Buffer.GetEsquemas().Find(x => x.CODIGO_ESQUEMA == this.esq_de_pintura);
+                var t = Conexoes.DBases.GetEsquemas().Find(x => x.CODIGO_ESQUEMA == this.esq_de_pintura);
                 if (t != null)
                 {
                     return t;

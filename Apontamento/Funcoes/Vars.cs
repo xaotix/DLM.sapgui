@@ -11,39 +11,7 @@ namespace DLM.painel
 {
   public  class Vars
     {
-        public class Colunas
-        {
-            public class ESQUEMAS
-            {
-                public static int PINTURA = 1;
-                public static int LOCAL = 2;
-                public static int QTD_CARAC = 3;
-                public static int DESCRICAO_ESQUEMA = 4;
-                public static int CODIGO_ESQUEMA = 5;
-                public static int COR_1_DM = 6;
-                public static int TIPO_PIN_1_DM = 7;
-                public static int ID_TINTA = 8;
-                public static int COD_1_DM = 9;
-                public static int DILUENTE_1_DM = 10;
-                public static int DESCR_DILUENTE_1_DM = 11;
-                public static int MICRAS_1_DM = 12;
-                public static int COR_2_DM = 13;
-                public static int TIPO_PIN_2_DM = 14;
-                public static int ID_TINTA_2 = 15;
-                public static int COD_2_DM = 16;
-                public static int DILUENTE_2_DM = 17;
-                public static int DESCR_DILUENTE_2_DM = 18;
-                public static int MICRAS_2_DM = 19;
-                public static int COR_3_DM = 20;
-                public static int TIPO_PIN_3_DM = 21;
-                public static int ID_TINTA_3 = 22;
-                public static int COD_3_DM = 23;
-                public static int DILUENTE_3_DM = 24;
-                public static int DESCR_DILUENTE_3_DM = 25;
-                public static int MICRAS_3_DM = 26;
-                public static int TOTAL_COLUNAS = 26;
-            }
-        }
+
         public static string Raiz = System.Windows.Forms.Application.StartupPath + @"\";
         public static string SetupUser = Raiz + "setup.user.cfg";
         public static string TEMPLATE_SAIDA = Raiz + "TEMPLATE_PLANEJAMENTO.xlsx";

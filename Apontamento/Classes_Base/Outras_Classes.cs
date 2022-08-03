@@ -1,4 +1,5 @@
 ﻿using Conexoes;
+using DLM.sap;
 using DLM.sapgui;
 using DLM.vars;
 using System;
@@ -639,11 +640,11 @@ namespace DLM.painel
     }
     public class Tipos_Pintura
     {
-        public Esquema_Pintura Esquema { get; set; } = new Esquema_Pintura();
         public override string ToString()
         {
             return Esquema.ToString() + " - " + Superficie + "m²";
         }
+        public SAP_Esquema_Pintura Esquema { get; set; } = new SAP_Esquema_Pintura();
         public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
 
         public double Superficie { get; set; } = 0;
@@ -779,182 +780,6 @@ namespace DLM.painel
             }
         }
 
-        public class Esquema_Pintura
-        {
-            public override string ToString()
-            {
-                return descricao;
-            }
-            public string descricao
-            {
-                get
-                {
-                    var t = (this.DESCRICAO_ESQUEMA != "" ? this.DESCRICAO_ESQUEMA : this.CODIGO_ESQUEMA)
-                        .Replace("PINTURA", "")
-                        .Replace("ESQUEMA", "")
-                        .Replace("PINT", "")
-                        .Replace("PIN", "")
-                        .Replace("ESQ", "")
-                        .Replace("  ", " ");
-                    return (t.Replace("-", "").Replace(" ", "").Replace("0", "") != "" ? t : this.PINTURA).CortarString(40);
 
-                }
-            }
-            public DLM.db.Linha l { get; set; } = new DLM.db.Linha();
-
-            public long id { get; set; } = 0;
-            public string PINTURA { get; set; } = "";
-            public string LOCAL { get; set; } = "";
-            public string QTD_CARAC { get; set; } = "";
-            public string DESCRICAO_ESQUEMA { get; set; } = "Não Cadastrado";
-            public string CODIGO_ESQUEMA { get; set; } = "";
-            public string COR_1_DM { get; set; } = "";
-            public string TIPO_PIN_1_DM { get; set; } = "";
-            public string ID_TINTA { get; set; } = "";
-            public string COD_1_DM { get; set; } = "";
-            public string DILUENTE_1_DM { get; set; } = "";
-            public string DESCR_DILUENTE_1_DM { get; set; } = "";
-            public string MICRAS_1_DM { get; set; } = "";
-            public string COR_2_DM { get; set; } = "";
-            public string TIPO_PIN_2_DM { get; set; } = "";
-            public string ID_TINTA_2 { get; set; } = "";
-            public string COD_2_DM { get; set; } = "";
-            public string DILUENTE_2_DM { get; set; } = "";
-            public string DESCR_DILUENTE_2_DM { get; set; } = "";
-            public string MICRAS_2_DM { get; set; } = "";
-            public string COR_3_DM { get; set; } = "";
-            public string TIPO_PIN_3_DM { get; set; } = "";
-            public string ID_TINTA_3 { get; set; } = "";
-            public string COD_3_DM { get; set; } = "";
-            public string DILUENTE_3_DM { get; set; } = "";
-            public string DESCR_DILUENTE_3_DM { get; set; } = "";
-            public string MICRAS_3_DM { get; set; } = "";
-            public Esquema_Pintura()
-            {
-
-            }
-
-        public void Salvar()
-        {
-            DLM.db.Linha l = GetLinha();
-
-            if (this.id > 0)
-            {
-                DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", this.id.ToString()) }, l.Celulas, Cfg.Init.db_comum, "esquemas");
-            }
-            else
-            {
-                this.id = (int)DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, "esquemas");
-            }
-        }
-
-        public DLM.db.Linha GetLinha()
-        {
-            DLM.db.Linha l = new DLM.db.Linha();
-            l.Add("CODIGO_ESQUEMA", this.CODIGO_ESQUEMA);
-            l.Add("COD_1_DM", this.COD_1_DM);
-            l.Add("COD_2_DM", this.COD_2_DM);
-            l.Add("COD_3_DM", this.COD_3_DM);
-            l.Add("COR_1_DM", this.COR_1_DM);
-            l.Add("COR_2_DM", this.COR_2_DM);
-            l.Add("COR_3_DM", this.COR_3_DM);
-            l.Add("DESCRICAO_ESQUEMA", this.DESCRICAO_ESQUEMA);
-            l.Add("DESCR_DILUENTE_1_DM", this.DESCR_DILUENTE_1_DM);
-            l.Add("DESCR_DILUENTE_2_DM", this.DESCR_DILUENTE_2_DM);
-            l.Add("DESCR_DILUENTE_3_DM", this.DESCR_DILUENTE_3_DM);
-            l.Add("DILUENTE_1_DM", this.DILUENTE_1_DM);
-            l.Add("DILUENTE_2_DM", this.DILUENTE_2_DM);
-            l.Add("DILUENTE_3_DM", this.DILUENTE_3_DM);
-            l.Add("ID_TINTA", this.ID_TINTA);
-            l.Add("ID_TINTA_2", this.ID_TINTA_2);
-            l.Add("ID_TINTA_3", this.ID_TINTA_3);
-            l.Add("LOCAL", this.LOCAL);
-            l.Add("MICRAS_1_DM", this.MICRAS_1_DM);
-            l.Add("MICRAS_2_DM", this.MICRAS_2_DM);
-            l.Add("MICRAS_3_DM", this.MICRAS_3_DM);
-            l.Add("PINTURA", this.PINTURA);
-            l.Add("QTD_CARAC", this.QTD_CARAC);
-            l.Add("TIPO_PIN_1_DM", this.TIPO_PIN_1_DM);
-            l.Add("TIPO_PIN_2_DM", this.TIPO_PIN_2_DM);
-            l.Add("TIPO_PIN_3_DM", this.TIPO_PIN_3_DM);
-            return l;
-        }
-
-        public Esquema_Pintura(DLM.db.Banco banco, DLM.db.Linha l)
-            {
-                this.l = l;
-                this.id = l["id"].Int();
-
-
-                this.CODIGO_ESQUEMA = l.Get("CODIGO_ESQUEMA").ToString();
-                this.COD_1_DM = l.Get("COD_1_DM").ToString();
-                this.COD_2_DM = l.Get("COD_2_DM").ToString();
-                this.COD_3_DM = l.Get("COD_3_DM").ToString();
-                this.COR_1_DM = l.Get("COR_1_DM").ToString();
-                this.COR_2_DM = l.Get("COR_2_DM").ToString();
-                this.COR_3_DM = l.Get("COR_3_DM").ToString();
-                this.DESCRICAO_ESQUEMA = l.Get("DESCRICAO_ESQUEMA").ToString();
-                this.DESCR_DILUENTE_1_DM = l.Get("DESCR_DILUENTE_1_DM").ToString();
-                this.DESCR_DILUENTE_2_DM = l.Get("DESCR_DILUENTE_2_DM").ToString();
-                this.DESCR_DILUENTE_3_DM = l.Get("DESCR_DILUENTE_3_DM").ToString();
-                this.DILUENTE_1_DM = l.Get("DILUENTE_1_DM").ToString();
-                this.DILUENTE_2_DM = l.Get("DILUENTE_2_DM").ToString();
-                this.DILUENTE_3_DM = l.Get("DILUENTE_3_DM").ToString();
-                this.ID_TINTA = l.Get("ID_TINTA").ToString();
-                this.ID_TINTA_2 = l.Get("ID_TINTA_2").ToString();
-                this.ID_TINTA_3 = l.Get("ID_TINTA_3").ToString();
-                this.LOCAL = l.Get("LOCAL").ToString();
-                this.MICRAS_1_DM = l.Get("MICRAS_1_DM").ToString();
-                this.MICRAS_2_DM = l.Get("MICRAS_2_DM").ToString();
-                this.MICRAS_3_DM = l.Get("MICRAS_3_DM").ToString();
-                this.PINTURA = l.Get("PINTURA").ToString();
-                this.QTD_CARAC = l.Get("QTD_CARAC").ToString();
-                this.TIPO_PIN_1_DM = l.Get("TIPO_PIN_1_DM").ToString();
-                this.TIPO_PIN_2_DM = l.Get("TIPO_PIN_2_DM").ToString();
-                this.TIPO_PIN_3_DM = l.Get("TIPO_PIN_3_DM").ToString();
-
-            }
-
-
-            public Esquema_Pintura(DLM.db.Banco dbase, List<object> l)
-            {
-
-
-                try
-                {
-                    this.PINTURA = l[Vars.Colunas.ESQUEMAS.PINTURA].ToString();
-                    this.LOCAL = l[Vars.Colunas.ESQUEMAS.LOCAL].ToString();
-                    this.QTD_CARAC = l[Vars.Colunas.ESQUEMAS.QTD_CARAC].ToString();
-                    this.DESCRICAO_ESQUEMA = l[Vars.Colunas.ESQUEMAS.DESCRICAO_ESQUEMA].ToString();
-                    this.CODIGO_ESQUEMA = l[Vars.Colunas.ESQUEMAS.CODIGO_ESQUEMA].ToString();
-                    this.COR_1_DM = l[Vars.Colunas.ESQUEMAS.COR_1_DM].ToString();
-                    this.TIPO_PIN_1_DM = l[Vars.Colunas.ESQUEMAS.TIPO_PIN_1_DM].ToString();
-                    this.ID_TINTA = l[Vars.Colunas.ESQUEMAS.ID_TINTA].ToString();
-                    this.COD_1_DM = l[Vars.Colunas.ESQUEMAS.COD_1_DM].ToString();
-                    this.DILUENTE_1_DM = l[Vars.Colunas.ESQUEMAS.DILUENTE_1_DM].ToString();
-                    this.DESCR_DILUENTE_1_DM = l[Vars.Colunas.ESQUEMAS.DESCR_DILUENTE_1_DM].ToString();
-                    this.MICRAS_1_DM = l[Vars.Colunas.ESQUEMAS.MICRAS_1_DM].ToString();
-                    this.COR_2_DM = l[Vars.Colunas.ESQUEMAS.COR_2_DM].ToString();
-                    this.TIPO_PIN_2_DM = l[Vars.Colunas.ESQUEMAS.TIPO_PIN_2_DM].ToString();
-                    this.ID_TINTA_2 = l[Vars.Colunas.ESQUEMAS.ID_TINTA_2].ToString();
-                    this.COD_2_DM = l[Vars.Colunas.ESQUEMAS.COD_2_DM].ToString();
-                    this.DILUENTE_2_DM = l[Vars.Colunas.ESQUEMAS.DILUENTE_2_DM].ToString();
-                    this.DESCR_DILUENTE_2_DM = l[Vars.Colunas.ESQUEMAS.DESCR_DILUENTE_2_DM].ToString();
-                    this.MICRAS_2_DM = l[Vars.Colunas.ESQUEMAS.MICRAS_2_DM].ToString();
-                    this.COR_3_DM = l[Vars.Colunas.ESQUEMAS.COR_3_DM].ToString();
-                    this.TIPO_PIN_3_DM = l[Vars.Colunas.ESQUEMAS.TIPO_PIN_3_DM].ToString();
-                    this.ID_TINTA_3 = l[Vars.Colunas.ESQUEMAS.ID_TINTA_3].ToString();
-                    this.COD_3_DM = l[Vars.Colunas.ESQUEMAS.COD_3_DM].ToString();
-                    this.DILUENTE_3_DM = l[Vars.Colunas.ESQUEMAS.DILUENTE_3_DM].ToString();
-                    this.DESCR_DILUENTE_3_DM = l[Vars.Colunas.ESQUEMAS.DESCR_DILUENTE_3_DM].ToString();
-                    this.MICRAS_3_DM = l[Vars.Colunas.ESQUEMAS.MICRAS_3_DM].ToString();
-
-                }
-                catch (Exception)
-                {
-
-                }
-            }
-        }
     }
 

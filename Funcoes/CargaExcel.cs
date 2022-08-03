@@ -105,28 +105,7 @@ namespace DLM.sapgui
 
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
-        public static List<Esquema_Pintura> ESQUEMAS(string arquivo)
-        {
-            ConcurrentBag<Esquema_Pintura> retorno = new ConcurrentBag<Esquema_Pintura>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            var atuais = DLM.painel.Buffer.GetEsquemas();
 
-            foreach (var sub in t.Linhas.FindAll(x=>x.Count>=DLM.painel.Vars.Colunas.ESQUEMAS.TOTAL_COLUNAS))
-            {
-                DLM.painel.Esquema_Pintura pp = new Esquema_Pintura(Conexoes.DBases.GetDB(),sub);
-                var igual = atuais.Find(x => x.CODIGO_ESQUEMA == pp.CODIGO_ESQUEMA);
-                if(igual!=null)
-                {
-                    pp.id = igual.id;
-                }
-                if(pp.CODIGO_ESQUEMA.Length>=12 && Conexoes.Utilz.ESoNumero(pp.CODIGO_ESQUEMA))
-                {
-                    retorno.Add(pp);
-                }
-            }
-
-            return retorno.ToList();
-        }
         public static List<ZPMP> ZPMP(string arquivo)
         {
             ConcurrentBag<ZPMP> retorno = new ConcurrentBag<ZPMP>();
@@ -312,29 +291,29 @@ namespace DLM.sapgui
                 var arquivo = dest + arq;
                 var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
                 var listacooisn = t.Linhas.Select(x => new List<object> {
-                            /*0*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.MATERIAL].ToString(),
-                            /*1*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.DENOMINDSTAND].ToString(),
-                            /*2*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.DESENHO_1].ToString(),
-                            /*3*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.PINTURA_TIPO].ToString(),
-                            /*4*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.ELEMENTO_PEP].ToString(),
-                            /*5*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.DATA_APONTAMENTO].Data(),
-                            /*6*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.TXTBREVE_OPERACAO].ToString(),
-                            /*7*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.ESPESSURA].ToString(),
-                            /*8*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.CORTE].ToString(),
-                            /*9*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.COMPRIMENTO].ToString(),
-                            /*10*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.PINTURA_ESQUEMA].ToString(),
-                            /*11*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.PINTURA_SUPERFICIE].ToString(),
-                            /*12*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.FUROS].ToString(),
-                            /*13*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.MARCA].ToString(),
-                            /*14*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.OPERACAO].ToString(),
-                            /*15*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.ESPESSURA].ToString(),
-                            /*16*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.TIPO_DE_ACO].ToString(),
-                            /*17*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.MATERIA_PRIMA].ToString(),
-                            /*18*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.OPERACAO].ToString(),
-                            /*19*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.MARCA].ToString(),
-                            /*20*/TratarPEP(x[DLM.painel.Colunas.ZPPCOOISN_Layout.ELEMENTO_PEP].ToString()),
+                            /*0*/x[(int)TAB_ZPPCOOISN.MATERIAL].ToString(),
+                            /*1*/x[(int)TAB_ZPPCOOISN.DENOMINDSTAND].ToString(),
+                            /*2*/x[(int)TAB_ZPPCOOISN.DESENHO_1].ToString(),
+                            /*3*/x[(int)TAB_ZPPCOOISN.PINTURA_TIPO].ToString(),
+                            /*4*/x[(int)TAB_ZPPCOOISN.ELEMENTO_PEP].ToString(),
+                            /*5*/x[(int)TAB_ZPPCOOISN.DATA_APONTAMENTO].Data(),
+                            /*6*/x[(int)TAB_ZPPCOOISN.TXTBREVE_OPERACAO].ToString(),
+                            /*7*/x[(int)TAB_ZPPCOOISN.ESPESSURA].ToString(),
+                            /*8*/x[(int)TAB_ZPPCOOISN.CORTE].ToString(),
+                            /*9*/x[(int)TAB_ZPPCOOISN.COMPRIMENTO].ToString(),
+                            /*10*/x[(int)TAB_ZPPCOOISN.PINTURA_ESQUEMA].ToString(),
+                            /*11*/x[(int)TAB_ZPPCOOISN.PINTURA_SUPERFICIE].ToString(),
+                            /*12*/x[(int)TAB_ZPPCOOISN.FUROS].ToString(),
+                            /*13*/x[(int)TAB_ZPPCOOISN.MARCA].ToString(),
+                            /*14*/x[(int)TAB_ZPPCOOISN.OPERACAO].ToString(),
+                            /*15*/x[(int)TAB_ZPPCOOISN.ESPESSURA].ToString(),
+                            /*16*/x[(int)TAB_ZPPCOOISN.TIPO_DE_ACO].ToString(),
+                            /*17*/x[(int)TAB_ZPPCOOISN.MATERIA_PRIMA].ToString(),
+                            /*18*/x[(int)TAB_ZPPCOOISN.OPERACAO].ToString(),
+                            /*19*/x[(int)TAB_ZPPCOOISN.MARCA].ToString(),
+                            /*20*/TratarPEP(x[(int)TAB_ZPPCOOISN.ELEMENTO_PEP].ToString()),
                             /*21*/"",
-                            /*22*/x[DLM.painel.Colunas.ZPPCOOISN_Layout.DESENHO_2].ToString(),
+                            /*22*/x[(int)TAB_ZPPCOOISN.DESENHO_2].ToString(),
                         }).Distinct().ToList();
                 //w.SetProgresso(1, retorno.Count());
                 var min = Conexoes.Utilz.Calendario.DataDummy();

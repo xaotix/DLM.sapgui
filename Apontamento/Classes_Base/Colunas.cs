@@ -46,40 +46,7 @@ namespace DLM.painel
             public static int Denom_classe_custo { get; set; } = 11;
             public static int Documento_de_compras { get; set; } = 12;
         }
-        public class ZPPCOOISN_Layout
-        {
-            public static int ELEMENTO_PEP { get; set; } = 0;
-            public static int ORDEM { get; set; } = 1;
-            public static int MATERIAL { get; set; } = 2;
-            public static int OPERACAO { get; set; } = 3;
-            public static int TXTBREVE_OPERACAO { get; set; } = 4;
-            public static int SEQUENCIA { get; set; } = 5;
-            public static int MARCA { get; set; } = 6;
-            public static int COD_DA_POSICAO_DO_PROJETO { get; set; } = 7;
-            public static int CODIGO_AGRUPADOR { get; set; } = 8;
-            public static int DENOMINDSTAND { get; set; } = 9;
-            public static int DATA_CRIACAO_ORDEM { get; set; } = 10;
-            public static int DATA_APONTAMENTO { get; set; } = 11;
-            public static int QTD_APONT { get; set; } = 12;
-            public static int STATUS_DA_OPERACAO { get; set; } = 13;
-            public static int ESPESSURA { get; set; } = 14;
-            public static int CORTE { get; set; } = 15;
-            public static int COMPRIMENTO { get; set; } = 16;
-            public static int FUROS { get; set; } = 17;
-            public static int PINTURA_ESQUEMA { get; set; } = 18;
-            public static int PINTURA_TIPO { get; set; } = 19;
-            public static int PINTURA_SUPERFICIE { get; set; } = 20;
-            public static int SECAO_VARIAVEL { get; set; } = 21;
-            public static int F_EXTERNA { get; set; } = 22;
-            public static int F_INTERNA { get; set; } = 23;
-            public static int MATERIA_PRIMA { get; set; } = 24;
-            public static int OBSERVAÇÃO { get; set; } = 25;
-            public static int DOBRAS { get; set; } = 26;
-            public static int TIPO_DE_ACO { get; set; } = 27;
-            public static int DESENHO_1 { get; set; } = 28;
-            public static int DESENHO_2 { get; set; } = 29;
 
-        }
 
         public class ZPPCOOISN
         {

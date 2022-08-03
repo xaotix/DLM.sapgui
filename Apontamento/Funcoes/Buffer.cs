@@ -84,21 +84,8 @@ namespace DLM.painel
             Buffer.Pedidos();
             Buffer.ObrasPorSegmento();
         }
-        public static List<Esquema_Pintura> GetEsquemas(bool recarregar = false)
-        {
-            if (_Esquemas == null | recarregar)
-            {
-                _Esquemas = new List<Esquema_Pintura>();
-                var s = Conexoes.DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_esquemas);
-                foreach (var ss in s.Linhas)
-                {
-                    _Esquemas.Add(new Esquema_Pintura(Conexoes.DBases.GetDB(), ss));
-                }
-            }
-            return _Esquemas;
-        }
+
         private static List<PLAN_OBRA> _Garantias { get; set; }
-        private static List<Esquema_Pintura> _Esquemas { get; set; }
         private static List<PLAN_PEDIDO> _Pedidos { get; set; }
         private static List<PLAN_PEDIDO> _Pedidos_Principais { get; set; }
 
