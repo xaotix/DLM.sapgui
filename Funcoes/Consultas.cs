@@ -1344,166 +1344,164 @@ namespace DLM.sapgui
 
         }
 
-        public DLM.db.Tabela MB51(string arquivo)
+
+        /*ESSE CARA DÁ A MOVIMENTAÇÃO DE TINTAS DO ALMOX PARA A FÁBRICA*/
+        public DLM.db.Tabela MB51(DateTime de, DateTime ate)
         {
-            this.SessaoSAP.StartTransaction("MB51");
+
             DLM.db.Tabela retorno = new db.Tabela();
             DLM.painel.Consultas.MatarExcel(false);
 
-            /*
-               session.findById("wnd[0]/usr/ctxtWERKS-LOW").text = "1202"
-               session.findById("wnd[0]/usr/ctxtLGORT-LOW").text = "0010"
-               session.findById("wnd[0]/usr/ctxtBWART-LOW").text = "311"
-               session.findById("wnd[0]/usr/ctxtBUDAT-LOW").text = "01.07.2022"
-               session.findById("wnd[0]/usr/ctxtBUDAT-HIGH").text = "31.07.2022"
-               session.findById("wnd[0]/tbar[1]/btn[8]").press
-               session.findById("wnd[0]/tbar[1]/btn[48]").press
-             */
-            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtWERKS-LOW")).Text = "1202";
-            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtLGORT-LOW")).Text = "0010";
-            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtBWART-LOW")).Text = "311";
-            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtBUDAT-LOW")).Text = "01.07.2022";
-            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtBUDAT-HIGH")).Text = "31.07.2022";
+            var dt_de = $"{de.Day}.{de.Month}.{de.Year}";
+            var dt_ate = $"{ate.Day}.{ate.Month}.{ate.Year}";
+            string nome = $"MB51_{dt_de}_a_{dt_ate}.xlsx";
+            string arquivo = Conexoes.Utilz.CriarPasta(Cfg.Init.Raiz_AppData, "SAP") + nome;
+            string destino = Conexoes.Utilz.getPasta(arquivo);
+
+            if (arquivo.Existe())
+            {
+               if(!arquivo.Apagar())
+                {
+                    return retorno;
+                }
+            }
+            if (this.Carregar_sap())
+            {
+                this.Bloquear_Secao();
+                try
+                {
+
+                    this.SessaoSAP.StartTransaction("MB51");
+
+                    /*
+                       session.findById("wnd[0]/usr/ctxtWERKS-LOW").text = "1202"
+                       session.findById("wnd[0]/usr/ctxtLGORT-LOW").text = "0010"
+                       session.findById("wnd[0]/usr/ctxtBWART-LOW").text = "311"
+                       session.findById("wnd[0]/usr/ctxtBUDAT-LOW").text = "01.07.2022"
+                       session.findById("wnd[0]/usr/ctxtBUDAT-HIGH").text = "31.07.2022"
+                       session.findById("wnd[0]/tbar[1]/btn[8]").press
+                       session.findById("wnd[0]/tbar[1]/btn[48]").press
+                     */
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtWERKS-LOW")).Text = "1202";
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtLGORT-LOW")).Text = "0010";
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtBWART-LOW")).Text = "311";
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtBUDAT-LOW")).Text = dt_de;
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtBUDAT-HIGH")).Text = dt_ate;
 
 
 
-            ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
-            ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[48]")).Press();
+                    ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
+                    ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[48]")).Press();
 
 
-            this.SessaoSAP.EndTransaction();
+                    /*
+                     //Impressão
+                     session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").contextMenu
+                     session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell").selectContextMenuItem "&XXL"
+                     session.findById("wnd[1]/tbar[0]/btn[0]").press
+
+                     session.findById("wnd[1]/usr/ctxtDY_PATH").text = "N:\000 - Dev. Software\2022\2022.08.01 - Trabalho Superfície Pintura\"
+                     session.findById("wnd[1]/usr/ctxtDY_FILENAME").text = "mb51_2.xlsx"
+                     session.findById("wnd[1]/tbar[0]/btn[0]").press
+                     */
+
+                    var ctrl = this.SessaoSAP.FindById("wnd[0]/usr/cntlGRID1/shellcont/shell");
+                    var shellToolbarContextButton = ((GuiShell)ctrl);
+                    var btnToolbarContextButton = shellToolbarContextButton as GuiGridView;
+                    btnToolbarContextButton?.ContextMenu();
+                    btnToolbarContextButton?.SelectContextMenuItem("&XXL");
+                    ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
+
+
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_PATH")).Text = destino;
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = nome;
+                    ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
+
+                    this.SessaoSAP.EndTransaction();
+
+                    if (arquivo.Existe())
+                    {
+                        return Conexoes.Utilz.Excel.GetTabela(arquivo);
+                    }
+                }
+                catch (Exception)
+                {
+
+                    Conexoes.Utilz.Alerta($"Não foi possível rodar a transação MB51");
+
+                }
+                this.Desbloqueia_Secao();
+            }
+
+
             return retorno;
         }
-        public DLM.db.Tabela CKM3N(string arquivo_input)
+
+        public DLM.db.Tabela ZPPCOOISN(DateTime de, DateTime ate)
         {
+            var dt_de = $"{de.Day}.{de.Month}.{de.Year}";
+            var dt_ate = $"{ate.Day}.{ate.Month}.{ate.Year}";
+            string nome = $"ZPPCOOISN_{dt_de}_a_{dt_ate}.xlsx";
+            string arquivo = Conexoes.Utilz.CriarPasta(Cfg.Init.Raiz_AppData, "SAP") + nome;
+            string destino = Conexoes.Utilz.getPasta(arquivo);
+
             DLM.db.Tabela retorno = new db.Tabela();
+
+            DLM.painel.Consultas.MatarExcel(false);
+            if (arquivo.Existe())
+            {
+                if (!arquivo.Apagar())
+                {
+                    return retorno;
+                }
+            }
+
             try
             {
-               
-               
+                if (File.Exists(arquivo))
+                {
+                    File.Delete(arquivo);
+                }
                 if (this.Carregar_sap())
                 {
                     Retornar();
-                   
-                    string destino = arquivo_input.GetPasta().CriarPasta("SAP");
+                    this.SessaoSAP.StartTransaction("ZPPCOOISN");
 
-                    var lista = Conexoes.Utilz.Excel.GetTabela(arquivo_input);
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_PROJN-LOW")).Text ="";
+                    /*
+                        session.findById("wnd[0]/usr/ctxtS_BUDAT-LOW").text = "05.07.2022"
+                        session.findById("wnd[0]/usr/ctxtS_BUDAT-HIGH").text = "06.07.2022"
+                     */
+                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_BUDAT-LOW")).Text = dt_de;
+                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_BUDAT-HIGH")).Text = dt_ate;
+                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtP_VARI")).Text = "/SISTEMA";
 
-                    var materiais = lista.GetCelulas("material").FindAll(x=>x.Valor.Length>0);
-                    if(materiais.Count==0)
+                    ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
+
+
+                    ExportarExcel(destino, nome, Vars.SCRIPT_IMPRESSAO_ZPMP);
+                    if (!File.Exists(destino + nome))
                     {
-                        Conexoes.Utilz.Alerta($"Nenhum material encontrado no arquivo excel {arquivo_input}. O padrão das colunas deve ser: [Material] [Centro]");
-                        return new db.Tabela();
-                    }
-                    var de = Conexoes.Utilz.Selecao.SelecionarData(DateTime.Now,DateTime.Now.AddYears(-3), DateTime.Now, "Data de Início");
-                    var ate = Conexoes.Utilz.Selecao.SelecionarData(DateTime.Now, de, DateTime.Now, "Data Final");
-
-
-                    DateTime dmin = new DateTime(2001, 01, 01);
-
-                    if(de<=dmin| ate <=dmin)
-                    {
-                        Conexoes.Utilz.Alerta("Data inicial ou final inválida");
-                        return new db.Tabela();
+                        var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
+                        ExportaExcelNativo(destino, nome, ctrl);
                     }
 
-                  if(!Conexoes.Utilz.Pergunta("Iniciar o processo?\nO programa fechará todas as instâncias de Excel e utilizará o SAP. Deixe o programa rodar e não mexa no computador."))
-                    {
-                        return new db.Tabela();
-                    }
-
-                    this.SessaoSAP.StartTransaction("CKM3N");
-                    foreach(var linha in lista.Linhas)
-                    {
-                        
-
-                        var material = linha.Get("material").Valor;
-                        var centro = linha.Get("centro").Valor;
-
-
-                   
-
-                        ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtMLKEY-MATNR")).Text = material;
-                        ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtMLKEY-WERKS_ML_PRODUCTIVE")).Text = centro;
-
-
-                        var data = new DateTime(de.Ticks);
-                
-
-                        while(data<=ate)
-                        {
-
-                            DLM.painel.Consultas.MatarExcel(false);
-
-                            string ano = data.Year.ToString();
-                            string mes = data.Month.ToString();
-
-                            string nome_excel = $"{material}.{centro}.{mes}.{ano}.CKM3N.xlsx";
-                            string arquivo = $"{destino}{nome_excel}";
-                            if (!arquivo.Apagar())
-                            {
-                                return retorno;
-                            }
-                   
-
-
-                            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txtMLKEY-POPER")).Text = mes.PadLeft(2,'0');
-                            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txtMLKEY-BDATJ")).Text = ano;
-                            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txtMLKEY-BDATJ")).SetFocus();
-
-                            ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[13]")).Press();
-
-                            var ctrl = this.SessaoSAP.FindById("wnd[0]/usr/cntlCONTAINER/shellcont/shell");
-                            var shellToolbarContextButton = ((GuiShell)ctrl);
-                            var btnToolbarContextButton = shellToolbarContextButton as GuiGridView;
-                            btnToolbarContextButton?.ContextMenu();
-                            btnToolbarContextButton?.SelectContextMenuItem("&XXL");
-
-
-                            ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[13]")).Press();
-                            ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
-                            ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_PATH")).Text = destino;
-                            ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = nome_excel;
-                            ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
-
-
-                            DLM.painel.Consultas.MatarExcel(false);
-
-                            if (arquivo.Existe())
-                            {
-                                var excel = Conexoes.Utilz.Excel.GetTabela(arquivo);
-                                foreach (var linha_tab in excel.Linhas)
-                                {
-                                    linha_tab.Celulas.Insert(0, new db.Celula("Centro", centro));
-                                    linha_tab.Celulas.Insert(0, new db.Celula("Material", material));
-                                    linha_tab.Celulas.Insert(0, new db.Celula("Mês", mes));
-                                    linha_tab.Celulas.Insert(0, new db.Celula("Ano", ano));
-
-                                    retorno.Linhas.Add(linha_tab);
-                                }
-                            }
-                            data = data.AddMonths(1);
-                        }
-
-                      
-
-                       
-                    }
                     this.SessaoSAP.EndTransaction();
+                    return Conexoes.Utilz.Excel.GetTabela(arquivo);
+
                 }
-                else
-                {
-                    //MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                }
+
             }
             catch (Exception ex)
             {
-                Conexoes.Utilz.Alerta(ex);
+                Conexoes.Utilz.Alerta($"Não foi possível rodar a transação ZPPCOOISN");
             }
             return retorno;
         }
 
-        private void Retornar()
+
+
+        public void Retornar()
         {
             try
             {
@@ -1512,9 +1510,6 @@ namespace DLM.sapgui
                 {
                     ((GuiButton)st).Press();
                 }
-
-
-
 
             }
             catch (Exception)
