@@ -1344,7 +1344,36 @@ namespace DLM.sapgui
 
         }
 
+        public DLM.db.Tabela MB51(string arquivo)
+        {
+            this.SessaoSAP.StartTransaction("MB51");
+            DLM.db.Tabela retorno = new db.Tabela();
+            DLM.painel.Consultas.MatarExcel(false);
 
+            /*
+               session.findById("wnd[0]/usr/ctxtWERKS-LOW").text = "1202"
+               session.findById("wnd[0]/usr/ctxtLGORT-LOW").text = "0010"
+               session.findById("wnd[0]/usr/ctxtBWART-LOW").text = "311"
+               session.findById("wnd[0]/usr/ctxtBUDAT-LOW").text = "01.07.2022"
+               session.findById("wnd[0]/usr/ctxtBUDAT-HIGH").text = "31.07.2022"
+               session.findById("wnd[0]/tbar[1]/btn[8]").press
+               session.findById("wnd[0]/tbar[1]/btn[48]").press
+             */
+            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtWERKS-LOW")).Text = "1202";
+            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtLGORT-LOW")).Text = "0010";
+            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtBWART-LOW")).Text = "311";
+            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtBUDAT-LOW")).Text = "01.07.2022";
+            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtBUDAT-HIGH")).Text = "31.07.2022";
+
+
+
+            ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
+            ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[48]")).Press();
+
+
+            this.SessaoSAP.EndTransaction();
+            return retorno;
+        }
         public DLM.db.Tabela CKM3N(string arquivo_input)
         {
             DLM.db.Tabela retorno = new db.Tabela();
