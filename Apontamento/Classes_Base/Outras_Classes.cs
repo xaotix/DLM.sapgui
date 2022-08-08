@@ -644,7 +644,7 @@ namespace DLM.painel
         {
             return Esquema.ToString() + " - " + Superficie + "m²";
         }
-        public SAP_Esquema_Pintura Esquema { get; set; } = new SAP_Esquema_Pintura();
+        public SAP_ESQ_PIN Esquema { get; set; } = new SAP_ESQ_PIN();
         public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
 
         public double Superficie { get; set; } = 0;

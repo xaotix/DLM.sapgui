@@ -56,7 +56,7 @@ namespace DLM.sapgui
             }
             return null;
         }
-        public static bool autologin { get; set; } = false;
+        public static bool Autologin { get; set; } = false;
         public GuiSession SessaoSAP
         {
             get
@@ -97,7 +97,7 @@ namespace DLM.sapgui
 
         }
 
-        private void login(string myclient = "800", string mylogin = "ma1516", string mypass = "", string mylang = "PT")
+        private void Login(string myclient = "800", string mylogin = "ma1516", string mypass = "", string mylang = "PT")
         {
             GuiTextField client = (GuiTextField)this.SessaoSAP.ActiveWindow.FindByName("RSYST-MANDT", "GuiTextField");
             GuiTextField login = (GuiTextField)this.SessaoSAP.ActiveWindow.FindByName("RSYST-BNAME", "GuiTextField");
@@ -126,7 +126,7 @@ namespace DLM.sapgui
             Conexoes.Utilz.Matar("ConsultaAvanco.exe");
             Conexoes.Utilz.Matar("saplogon");
             this.openSap("PRODUCAO");
-            this.login("800", ma, senha, "PT");
+            this.Login("800", ma, senha, "PT");
         }
         
         /*ESSE CARA TENTA ABRIR UMA INSTÂNCIA PENDURADA NA GUI DO SAP*/
@@ -141,7 +141,7 @@ namespace DLM.sapgui
                     return true;
                     }
                 }
-                if(DLM.sapgui.Consulta.autologin)
+                if(DLM.sapgui.Consulta.Autologin)
                 {
                 Logar();
                 }
@@ -1242,7 +1242,6 @@ namespace DLM.sapgui
             }
 
         }
-
         /*ESSE CARA DÁ O AVANÇO DE LOGÍSTICA COM AS NOTAS FISCAIS*/
         public bool ZPP0066N_SemPerfil(string Pedido, string destino, string ARQUIVO, bool msgs = false)
         {
@@ -1301,7 +1300,6 @@ namespace DLM.sapgui
             }
 
         }
-
         /*ESSE CARA DÁ OS DADOS DO EMBARQUE ZPP0112*/
         public bool ZPP0112(string destino, string ARQUIVO, long min, long max)
         {
@@ -1343,8 +1341,6 @@ namespace DLM.sapgui
             }
 
         }
-
-
         /*ESSE CARA DÁ A MOVIMENTAÇÃO DE TINTAS DO ALMOX PARA A FÁBRICA*/
         public DLM.db.Tabela MB51(DateTime de, DateTime ate)
         {
@@ -1355,7 +1351,7 @@ namespace DLM.sapgui
             var dt_de = $"{de.Day}.{de.Month}.{de.Year}";
             var dt_ate = $"{ate.Day}.{ate.Month}.{ate.Year}";
             string nome = $"MB51_{dt_de}_a_{dt_ate}.xlsx";
-            string arquivo = Conexoes.Utilz.CriarPasta(Cfg.Init.Raiz_AppData, "SAP") + nome;
+            string arquivo = Cfg.Init.GetDestinoSAP_Excel() + nome;
             string destino = Conexoes.Utilz.getPasta(arquivo);
 
             if (arquivo.Existe())
@@ -1436,13 +1432,13 @@ namespace DLM.sapgui
 
             return retorno;
         }
-
+        /*ESSE CARA DÁ A MOVIMENTAÇÃO DE ORDENS DE PRODUÇÃO DE UM RANGE DE DATAS*/
         public DLM.db.Tabela ZPPCOOISN(DateTime de, DateTime ate)
         {
             var dt_de = $"{de.Day}.{de.Month}.{de.Year}";
             var dt_ate = $"{ate.Day}.{ate.Month}.{ate.Year}";
             string nome = $"ZPPCOOISN_{dt_de}_a_{dt_ate}.xlsx";
-            string arquivo = Conexoes.Utilz.CriarPasta(Cfg.Init.Raiz_AppData, "SAP") + nome;
+            string arquivo = Cfg.Init.GetDestinoSAP_Excel() + nome;
             string destino = Conexoes.Utilz.getPasta(arquivo);
 
             DLM.db.Tabela retorno = new db.Tabela();

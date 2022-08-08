@@ -18,12 +18,12 @@ namespace DLM.sapgui
         public bool ZSD0031N(string pedido)
         {
             string arquivo = pedido.Replace(".", "") + "_" + Vars.ZSD0031NARQ;
-            var con = Consulta.ZSD0031N(pedido, this.GetDestino(), arquivo);
+            var con = Consulta.ZSD0031N(pedido, Cfg.Init.GetDestinoSAP_Excel(), arquivo);
             if (con)
             {
-                if (File.Exists(this.GetDestino() + arquivo))
+                if (File.Exists(Cfg.Init.GetDestinoSAP_Excel() + arquivo))
                 {
-                    var folha = CargaExcel.ZSD0031N(this.GetDestino() + arquivo);
+                    var folha = CargaExcel.ZSD0031N(Cfg.Init.GetDestinoSAP_Excel() + arquivo);
                     folha.PEP = pedido;
                     if (folha.Carregado)
                     {
@@ -158,21 +158,7 @@ namespace DLM.sapgui
             }
         }
 
-        public string GetDestino()
-        {
-            if (_Destino == null)
-            {
-                _Destino = Conexoes.Utilz.CriarPasta(Cfg.Init.Raiz_AppData, "SAP");
-                if (DBases.GetUserAtual().ma != "")
-                {
-                    _Destino = Conexoes.Utilz.CriarPasta(Cfg.Init.Raiz_AppData, DBases.GetUserAtual().ma);
-                }
-                _Destino = Conexoes.Utilz.CriarPasta(_Destino, DateTime.Now.ToShortDateString().Replace(@"/", "-").Replace(@"\", "-"));
-            }
-            return _Destino;
-        }
 
-        private string _Destino { get; set; }
         public Consulta Consulta { get; private set; } = new Consulta();
         public string Codigo { get; private set; } = "";
         public List<ZPP0066N> Logistica { get; set; } = new List<ZPP0066N>();
@@ -332,11 +318,11 @@ namespace DLM.sapgui
          
             for (int i = 0; i < sub_lista.Count; i++)
             {
-                con = Consulta.FAGLL03(sub_lista[i], GetDestino(), i + "_" + arquivo);
+                con = Consulta.FAGLL03(sub_lista[i], Cfg.Init.GetDestinoSAP_Excel(), i + "_" + arquivo);
                 if (con)
                 {
                     DLM.painel.Consultas.MatarExcel(false);
-                    var CARGA = CargaExcel.FAGLL03(this.GetDestino() + i + "_" + arquivo, this.Codigo.Replace("*","").Replace("%",""));
+                    var CARGA = CargaExcel.FAGLL03(Cfg.Init.GetDestinoSAP_Excel() + i + "_" + arquivo, this.Codigo.Replace("*","").Replace("%",""));
                     this.fagll03.AddRange(CARGA);
                 }
                 w.somaProgresso();
@@ -361,10 +347,10 @@ namespace DLM.sapgui
             if (this.Codigo.Length < 3) { return new List<CJI3>(); }
             var arq0100 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Vars.CJI3ARQ;
 
-            if (Consulta.CJI3(this.Codigo, GetDestino(), arq0100))
+            if (Consulta.CJI3(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
             {
                 DLM.painel.Consultas.MatarExcel(false);
-                this.cji3 = CargaExcel.CJI3(this.GetDestino() + arq0100);
+                this.cji3 = CargaExcel.CJI3(Cfg.Init.GetDestinoSAP_Excel() + arq0100);
                 if (salvar)
                 {
                     DBases.GetDB().Apagar("Elemento_PEP", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, true);
@@ -381,10 +367,10 @@ namespace DLM.sapgui
             //if (this.Codigo.Length < 3) { return new List<ZPP0112>(); }
             var ARQ = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Vars.ZPP0112ARQ;
 
-            if (Consulta.ZPP0112(GetDestino(), ARQ, min, max))
+            if (Consulta.ZPP0112(Cfg.Init.GetDestinoSAP_Excel(), ARQ, min, max))
             {
                 DLM.painel.Consultas.MatarExcel(false);
-                this.ZPP0112 = CargaExcel.ZPP0112(this.GetDestino() + ARQ);
+                this.ZPP0112 = CargaExcel.ZPP0112(Cfg.Init.GetDestinoSAP_Excel() + ARQ);
                 if (salvar)
                 {
                     DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0112, true);
@@ -410,28 +396,28 @@ namespace DLM.sapgui
             {
                 if(sem_perfil)
                 {
-                    if (Consulta.ZPP0066N_SemPerfil(this.Codigo, GetDestino(), arq))
+                    if (Consulta.ZPP0066N_SemPerfil(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq))
                     {
                         DLM.painel.Consultas.MatarExcel(false);
-                        this.Logistica = CargaExcel.ZPP0066N(this.GetDestino() + arq, true);
+                        this.Logistica = CargaExcel.ZPP0066N(Cfg.Init.GetDestinoSAP_Excel() + arq, true);
                     }
                 }
                 else
                 {
-                    if (Consulta.ZPP0066N(this.Codigo, GetDestino(), arq))
+                    if (Consulta.ZPP0066N(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq))
                     {
                         DLM.painel.Consultas.MatarExcel(false);
-                        this.Logistica = CargaExcel.ZPP0066N(this.GetDestino() + arq, false);
+                        this.Logistica = CargaExcel.ZPP0066N(Cfg.Init.GetDestinoSAP_Excel() + arq, false);
                     }
                 }
             }
 
             if (ZPP0100)
             {
-                if (Consulta.ZPP0100(this.Codigo, GetDestino(), arq0100))
+                if (Consulta.ZPP0100(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
                 {
                     DLM.painel.Consultas.MatarExcel(false);
-                    this.Embarque = CargaExcel.ZPP0100(this.GetDestino() + arq0100);
+                    this.Embarque = CargaExcel.ZPP0100(Cfg.Init.GetDestinoSAP_Excel() + arq0100);
                 }
             }
 
@@ -446,9 +432,9 @@ namespace DLM.sapgui
         public bool SAP_Producao()
         {
              var arq = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Vars.ZPMPARQ;
-            if (Consulta.ZPMP(this.Codigo, GetDestino(),  arq))
+            if (Consulta.ZPMP(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(),  arq))
             {
-                this.Producao = CargaExcel.ZPMP(this.GetDestino() + arq);
+                this.Producao = CargaExcel.ZPMP(Cfg.Init.GetDestinoSAP_Excel() + arq);
                 return true;
             }
             return false;
@@ -457,9 +443,9 @@ namespace DLM.sapgui
         public bool SAP_Datas()
         {
             var arq = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Vars.CN47NARQ;
-            if (Consulta.CN47N(this.Codigo, this.GetDestino(), arq))
+            if (Consulta.CN47N(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq))
             {
-                this.Datas = CargaExcel.CN47N(this.GetDestino() + arq);
+                this.Datas = CargaExcel.CN47N(Cfg.Init.GetDestinoSAP_Excel() + arq);
                 return true;
             }
             return false;

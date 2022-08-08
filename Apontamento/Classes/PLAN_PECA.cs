@@ -36,24 +36,24 @@ namespace DLM.painel
         }
 
         public Tipo_Material Tipo { get; set; } = Tipo_Material.Real;
-        public SAP_Esquema_Pintura Esquema
+        public SAP_ESQ_PIN Esquema
         {
             get
             {
-                var DUMMY = new SAP_Esquema_Pintura() { DESCRICAO_ESQUEMA = "", PINTURA = this.TIPO_DE_PINTURA };
+                var DUMMY = new SAP_ESQ_PIN() { ESQUEMA_DESCR = "", PINTURA = this.TIPO_DE_PINTURA };
                 if (this.TIPO_DE_PINTURA.ToUpper().Contains("SEM") | this.TIPO_DE_PINTURA.ToUpper().Contains("GALVANIZADO") | this.esq_de_pintura.Replace("0", "") == "" | this.TIPO_DE_PINTURA == "")
                 {
                     return DUMMY;
                 }
-                var t = Conexoes.DBases.GetEsquemas().Find(x => x.CODIGO_ESQUEMA == this.esq_de_pintura);
+                var t = Conexoes.DBases.GetEsquemas().Find(x => x.ESQUEMA_COD == this.esq_de_pintura);
                 if (t != null)
                 {
                     return t;
                 }
                 else
                 {
-                    DUMMY.DESCRICAO_ESQUEMA = "Falta Cadastro";
-                    DUMMY.CODIGO_ESQUEMA = this.esq_de_pintura;
+                    DUMMY.ESQUEMA_DESCR = "Falta Cadastro";
+                    DUMMY.ESQUEMA_COD = this.esq_de_pintura;
                     return DUMMY;
                 }
 

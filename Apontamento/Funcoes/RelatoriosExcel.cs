@@ -2116,7 +2116,7 @@ public class Relatorios
             ldb.Add("atualizado_em", t.peca.ultima_edicao);
             ldb.Add("status_sap", t.peca.ULTIMO_STATUS);
             ldb.Add("pintura", t.peca.TIPO_DE_PINTURA);
-            ldb.Add("esquema", t.peca.Esquema.CODIGO_ESQUEMA);
+            ldb.Add("esquema", t.peca.Esquema.ESQUEMA_COD);
             ldb.Add("esquema_desc", t.peca.Esquema.Getdescricao());
             ldb.Add("bobina", t.peca.bobina.SAP);
             ldb.Add("face1", t.peca.bobina.cor1.Nome);
