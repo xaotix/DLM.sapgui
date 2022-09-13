@@ -431,7 +431,7 @@ namespace DLM.painel
             {
                 this.PEP = pecas[0].PEP;
             }
-            //this.banco = Conexoes.DBases.GetDB();
+            //this.banco = Conexoes.DBases.GetDBMySQL();
         }
 
         public PLAN_PEP()

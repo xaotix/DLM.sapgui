@@ -55,19 +55,19 @@ namespace DLM.painel
                 var id = ped.id;
                 if(id>0)
                 {
-                    DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", id) }, l.Celulas, Cfg.Init.db_comum, "resultado_economico");
-                    //DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", id) }, l2.Celulas, Cfg.Init.db_comum, "resultado_economico_header");
+                    DBases.GetDBMySQL().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", id) }, l.Celulas, Cfg.Init.db_comum, "resultado_economico");
+                    //DBases.GetDBMySQL().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", id) }, l2.Celulas, Cfg.Init.db_comum, "resultado_economico_header");
                 }
                 return;
             }
 
-            DBases.GetDB().Apagar("pep", $"%{resultado.Pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico_header, true);
-            DBases.GetDB().Apagar("pep", $"%{resultado.Pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{resultado.Pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico_header, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{resultado.Pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico, true);
 
 
 
-            DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico);
-            DBases.GetDB().Cadastro(l2.Celulas, Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico_header);
+            DBases.GetDBMySQL().Cadastro(l.Celulas, Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico);
+            DBases.GetDBMySQL().Cadastro(l2.Celulas, Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico_header);
 
 
         }
@@ -84,7 +84,7 @@ namespace DLM.painel
       
             if (resultado.id > 0)
             {
-                DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", resultado.id) }, l.Celulas, Cfg.Init.db_comum, "resultado_economico");
+                DBases.GetDBMySQL().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", resultado.id) }, l.Celulas, Cfg.Init.db_comum, "resultado_economico");
                 DLM.painel.Consultas.Salvar(resultado.GetResultado_Economico().FolhaMargem, resultado.Pedido);
                 resultado.Salvar();
             }
@@ -491,7 +491,7 @@ namespace DLM.painel
             List<DLM.sapgui.Lancamento> retorno = new List<DLM.sapgui.Lancamento>();
 
             /*realizado*/
-            var resultado = DBases.GetDB().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_zcontratos_notas_fiscais} as pr where pr.Elemento_PEP like '%{Pedido}% ' and pr.Situacao = 'FATURADA' and pr.Devolucoes = '' and Receita = 'SIM'");
+            var resultado = DBases.GetDBMySQL().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_zcontratos_notas_fiscais} as pr where pr.Elemento_PEP like '%{Pedido}% ' and pr.Situacao = 'FATURADA' and pr.Devolucoes = '' and Receita = 'SIM'");
             var fab = resultado.Linhas.FindAll(x => 
              x["Elemento_PEP"].Valor.Contains(".F2")
             |x["Elemento_PEP"].Valor.Contains(".F3")
@@ -542,7 +542,7 @@ namespace DLM.painel
 
             /*realizado*/
             /*adicionado filtro para remover itens 31 milhoes*/
-            var resultado = DBases.GetDB().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_cji3} as pr where pr.Elemento_PEP like '%{Pedido}% ' and pr.Classe_de_custo not like '31%'");
+            var resultado = DBases.GetDBMySQL().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_cji3} as pr where pr.Elemento_PEP like '%{Pedido}% ' and pr.Classe_de_custo not like '31%'");
 
             var mod_di = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").ToString().Contains(".MO")).ToList();
             var equipamentos = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").ToString().Contains(".EQ")).ToList();
@@ -602,7 +602,7 @@ namespace DLM.painel
             List<DLM.sapgui.Lancamento> retorno = new List<DLM.sapgui.Lancamento>();
 
             /*realizado*/
-            var resultado = DBases.GetDB().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_fagll03} as pr where pr.Elemento_PEP like '%{Pedido}% '");
+            var resultado = DBases.GetDBMySQL().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_fagll03} as pr where pr.Elemento_PEP like '%{Pedido}% '");
 
 
 
@@ -696,12 +696,12 @@ namespace DLM.painel
             {
                 return;
             }
-            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_folhamargem, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_folhamargem, true);
             DLM.db.Linha l = new DLM.db.Linha();
             l.Add("pep", pedido);
 
             l.Add("dados", folha.RetornaSerializado());
-            DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, Cfg.Init.tb_folhamargem);
+            DBases.GetDBMySQL().Cadastro(l.Celulas, Cfg.Init.db_comum, Cfg.Init.tb_folhamargem);
         }
 
         public class   Get
@@ -785,7 +785,7 @@ namespace DLM.painel
         {
             if(contrato.Length>5)
             {
-                DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento, true);
+                DBases.GetDBMySQL().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento, true);
             }
         }
         public static List<ORC_PED> GetObrasPGO( bool consolidadas = false)
@@ -989,7 +989,7 @@ namespace DLM.painel
         {
             List<DLM.sapgui.FolhaMargem> retorno = new List<DLM.sapgui.FolhaMargem>();
 
-            var s = DBases.GetDB().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_folhamargem} as pr where pr.pep like '%{ChavePesquisa}% '");
+            var s = DBases.GetDBMySQL().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_folhamargem} as pr where pr.pep like '%{ChavePesquisa}% '");
             foreach (var ss in s.Linhas)
             {
                 var xml = ss.Get("dados").ToString();
@@ -1040,7 +1040,7 @@ namespace DLM.painel
         {
             List<Resultado_Economico_Header> retorno = new List<Resultado_Economico_Header>();
 
-            var s = DBases.GetDB().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resultado_economico_header} as pr where pr.pep like '%{ChavePesquisa}% '");
+            var s = DBases.GetDBMySQL().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resultado_economico_header} as pr where pr.pep like '%{ChavePesquisa}% '");
             foreach (var ss in s.Linhas)
             {
                 retorno.Add(new Resultado_Economico_Header(ss));
@@ -1052,7 +1052,7 @@ namespace DLM.painel
         {
             List<Resultado_Economico> retorno = new List<Resultado_Economico>();
 
-            var s = DBases.GetDB().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resultado_economico} as pr where pr.pep like '%{ChavePesquisa}% '");
+            var s = DBases.GetDBMySQL().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resultado_economico} as pr where pr.pep like '%{ChavePesquisa}% '");
             foreach (var ss in s.Linhas)
             {
                 var xml = ss.Get("xml").ToString();
@@ -1118,7 +1118,7 @@ namespace DLM.painel
                 tabela = "zpp0100_subetapas";
             }
 
-            var comando = Conexoes.DBases.GetDB().Consulta(pedidos.Select(x=> new Celula("pep", x)).ToList(),false, Cfg.Init.db_comum, tabela,"or");
+            var comando = Conexoes.DBases.GetDBMySQL().Consulta(pedidos.Select(x=> new Celula("pep", x)).ToList(),false, Cfg.Init.db_comum, tabela,"or");
 
             List<ZPP0100_Resumo> retorno = new List<ZPP0100_Resumo>();
             foreach(var p in comando.Linhas)
@@ -1216,24 +1216,24 @@ namespace DLM.painel
             {
                 return;
             }
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0066n_logistica, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn, true);
-            DBases.GetDB().Apagar("CHAVE", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, true);
-            DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zcontratos_notas_fiscais, true);
-            DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_folhamargem, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico_header, true);
-            DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, true);
-            DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_fagll03, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_avanco_pecas, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0066n_logistica, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn, true);
+            DBases.GetDBMySQL().Apagar("CHAVE", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, true);
+            DBases.GetDBMySQL().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zcontratos_notas_fiscais, true);
+            DBases.GetDBMySQL().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_folhamargem, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico_header, true);
+            DBases.GetDBMySQL().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, true);
+            DBases.GetDBMySQL().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_fagll03, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_avanco_pecas, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n, true);
 
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_datas, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_datas, true);
 
 
 
@@ -1249,16 +1249,16 @@ namespace DLM.painel
             {
                 return;
             }
-            DBases.GetDB().Apagar("pedido_principal", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_datas, true);
-            DBases.GetDB().Apagar("pedido", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia, true);
-            DBases.GetDB().Apagar("pedido_principal", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_obras_planejamento_copia, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento_m_copia, true);
+            DBases.GetDBMySQL().Apagar("pedido_principal", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_datas, true);
+            DBases.GetDBMySQL().Apagar("pedido", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia, true);
+            DBases.GetDBMySQL().Apagar("pedido_principal", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_obras_planejamento_copia, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento_m_copia, true);
 
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_obra_copia, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia, true);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_painel_de_obras2, "pecas", true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_obra_copia, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_painel_de_obras2, "pecas", true);
         
         }
 
@@ -1436,7 +1436,7 @@ namespace DLM.painel
                 $"and str_to_date(pr.fim_engenharia_base, '%d/%m/%Y') <=str_to_date('$fim$', '%d/%m/%Y') group by pr.grupo_mercadoria, substr(pr.pep,-6,6)";
             consulta1 = consulta1.Replace("$ini$", ini.ToShortDateString()).Replace("$fim$", fim.ToShortDateString());
 
-            var lista_fab = DBases.GetDB().Consulta(consulta1);
+            var lista_fab = DBases.GetDBMySQL().Consulta(consulta1);
             ConcurrentBag<PLAN_PECA> retorno = new ConcurrentBag<PLAN_PECA>();
             List<Task> Tarefas = new List<Task>();
             foreach (var s in lista_fab.Linhas)
@@ -1465,7 +1465,7 @@ namespace DLM.painel
             {
                 _titulos_obras = new List<Titulo_Planejamento>();
 
-                var lista_fab = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_obras);
+                var lista_fab = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_obras);
                 ConcurrentBag<Titulo_Planejamento> retorno = new ConcurrentBag<Titulo_Planejamento>();
                 List<Task> Tarefas = new List<Task>();
                 foreach (var s in lista_fab.Linhas)
@@ -1486,7 +1486,7 @@ namespace DLM.painel
             {
                 _titulos_pedidos = new List<Titulo_Planejamento>();
 
-                var lista_fab = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
+                var lista_fab = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
                 ConcurrentBag<Titulo_Planejamento> retorno = new ConcurrentBag<Titulo_Planejamento>();
                 List<Task> Tarefas = new List<Task>();
                 foreach (var s in lista_fab.Linhas)
@@ -1507,7 +1507,7 @@ namespace DLM.painel
             {
                 _titulos_etapas = new List<Titulo_Planejamento>();
 
-                var lista_fab = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_etapas);
+                var lista_fab = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_etapas);
                 ConcurrentBag<Titulo_Planejamento> retorno = new ConcurrentBag<Titulo_Planejamento>();
                 List<Task> Tarefas = new List<Task>();
                 foreach (var s in lista_fab.Linhas)
@@ -1528,7 +1528,7 @@ namespace DLM.painel
             {
                 _titulos_subetapas = new List<Titulo_Planejamento>();
 
-                var lista_fab = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
+                var lista_fab = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
                 ConcurrentBag<Titulo_Planejamento> retorno = new ConcurrentBag<Titulo_Planejamento>();
                 List<Task> Tarefas = new List<Task>();
                 foreach (var s in lista_fab.Linhas)
@@ -1548,7 +1548,7 @@ namespace DLM.painel
            if(_resumo_pecas_obras == null)
             {
                 DLM.db.Tabela lista_fab = new DLM.db.Tabela();
-                lista_fab = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_obra_copia);
+                lista_fab = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_obra_copia);
 
                 ConcurrentBag<Resumo_Pecas> retorno = new ConcurrentBag<Resumo_Pecas>();
                 List<Task> Tarefas = new List<Task>();
@@ -1570,7 +1570,7 @@ namespace DLM.painel
                 try
                 {
                     _resumo_pecas_pedido = new List<Resumo_Pecas>();
-                    var lista_fab = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia);
+                    var lista_fab = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia);
                     foreach (var t in lista_fab.Linhas)
                     {
                         _resumo_pecas_pedido.Add(new Resumo_Pecas(t));
@@ -1590,7 +1590,7 @@ namespace DLM.painel
             if (_resumo_pecas_peps == null)
             {
                 _resumo_pecas_peps = new List<Resumo_Pecas>();
-                var lista_fab = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia);
+                var lista_fab = DBases.GetDBMySQL().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia);
                 ConcurrentBag<Resumo_Pecas> retorno = new ConcurrentBag<Resumo_Pecas>();
                 foreach (var t in DLM.painel.Consultas.quebrar_lista(lista_fab.Linhas, 300))
                 {
@@ -1611,7 +1611,7 @@ namespace DLM.painel
             if(_resumo_pecas_subetapas==null)
             {
                 _resumo_pecas_subetapas = new List<Resumo_Pecas>();
-                var lista_fab = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia);
+                var lista_fab = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia);
                 ConcurrentBag <Resumo_Pecas> retorno = new ConcurrentBag<Resumo_Pecas>();
                 foreach (var t in DLM.painel.Consultas.quebrar_lista(lista_fab.Linhas, 300))
                 {
@@ -1662,7 +1662,7 @@ namespace DLM.painel
             if(_obras==null | reset)
             {
                 _obras = new List<PLAN_OBRA>();
-                var consulta = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, (copia ? Cfg.Init.tb_obras_planejamento_copia :Cfg.Init.tb_obras_planejamento));
+                var consulta = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, (copia ? Cfg.Init.tb_obras_planejamento_copia :Cfg.Init.tb_obras_planejamento));
                 List<Task> Tarefas = new List<Task>();
 
                 ConcurrentBag<PLAN_OBRA> lista = new ConcurrentBag<PLAN_OBRA>();
@@ -1675,7 +1675,7 @@ namespace DLM.painel
                 Tarefas.Clear();
 
 
-                var st_base = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_04_obra);
+                var st_base = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_04_obra);
                 var titulos = GetTitulosObras();
                 var lista_resumos = Consultas.getresumo_pecas_obras();
 
@@ -1720,24 +1720,24 @@ namespace DLM.painel
             DLM.db.Tabela resumo_pecas_pep = new DLM.db.Tabela();
             DLM.db.Tabela resumo_pecas_pep_fabrica = new DLM.db.Tabela();
             List<Task> Tarefas = new List<Task>();
-            Tarefas.Add(Task.Factory.StartNew(() => peps = DBases.GetDB().Clonar().Consulta($"call {Cfg.Init.db_comum}.getpeps('{contrato}')")));
-            Tarefas.Add(Task.Factory.StartNew(() => pedidos = DBases.GetDB().Clonar().Consulta($"call {Cfg.Init.db_comum}.getpedidos({contrato})")));
-            Tarefas.Add(Task.Factory.StartNew(() => contratos = DBases.GetDB().Clonar().Consulta($"call {Cfg.Init.db_comum}.getobras({contrato})")));
-            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_obra = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_obra} as pr where pr.pep like '%{contrato}%'")));
-            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pedido = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pedido} as pr where pr.pep like '%{contrato}%'")));
-            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pep = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep} as pr where pr.pep like '%{contrato}%'")));
-            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pep_fabrica = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_fabrica} as pr where pr.pep like '%{contrato}%'")));
+            Tarefas.Add(Task.Factory.StartNew(() => peps = DBases.GetDBMySQL().Clonar().Consulta($"call {Cfg.Init.db_comum}.getpeps('{contrato}')")));
+            Tarefas.Add(Task.Factory.StartNew(() => pedidos = DBases.GetDBMySQL().Clonar().Consulta($"call {Cfg.Init.db_comum}.getpedidos({contrato})")));
+            Tarefas.Add(Task.Factory.StartNew(() => contratos = DBases.GetDBMySQL().Clonar().Consulta($"call {Cfg.Init.db_comum}.getobras({contrato})")));
+            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_obra = DBases.GetDBMySQL().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_obra} as pr where pr.pep like '%{contrato}%'")));
+            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pedido = DBases.GetDBMySQL().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pedido} as pr where pr.pep like '%{contrato}%'")));
+            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pep = DBases.GetDBMySQL().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep} as pr where pr.pep like '%{contrato}%'")));
+            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pep_fabrica = DBases.GetDBMySQL().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_fabrica} as pr where pr.pep like '%{contrato}%'")));
             Task.WaitAll(Tarefas.ToArray());
 
             Consultas.ApagarCopiaViews(contrato);
 
-            DBases.GetDB().Cadastro(peps.Linhas,Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento_m_copia);
-            DBases.GetDB().Cadastro(contratos.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_obras_planejamento_copia);
-            DBases.GetDB().Cadastro(pedidos.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia);
-            DBases.GetDB().Cadastro(resumo_pecas_obra.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_obra_copia);
-            DBases.GetDB().Cadastro(resumo_pecas_pedido.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia);
-            DBases.GetDB().Cadastro(resumo_pecas_pep.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia);
-            DBases.GetDB().Cadastro(resumo_pecas_pep_fabrica.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia);
+            DBases.GetDBMySQL().Cadastro(peps.Linhas,Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento_m_copia);
+            DBases.GetDBMySQL().Cadastro(contratos.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_obras_planejamento_copia);
+            DBases.GetDBMySQL().Cadastro(pedidos.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia);
+            DBases.GetDBMySQL().Cadastro(resumo_pecas_obra.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_obra_copia);
+            DBases.GetDBMySQL().Cadastro(resumo_pecas_pedido.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia);
+            DBases.GetDBMySQL().Cadastro(resumo_pecas_pep.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia);
+            DBases.GetDBMySQL().Cadastro(resumo_pecas_pep_fabrica.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia);
 
             if (embarques)
             {
@@ -1769,7 +1769,7 @@ namespace DLM.painel
             DLM.db.Tabela s = new DLM.db.Tabela();
             List<PLAN_PEDIDO> lista = new List<PLAN_PEDIDO>();
 
-            s = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia);
+            s = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia);
 
 
             List<Task> Tarefas = new List<Task>();
@@ -1787,7 +1787,7 @@ namespace DLM.painel
             }
 
             var titulos = GetTitulosPedidos();
-            var st_base = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_03_pedido);
+            var st_base = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_03_pedido);
             var lista_resumos = Consultas.getresumo_pecas_pedidos();
 
 
@@ -1847,7 +1847,7 @@ namespace DLM.painel
             }
 
             var titulos = GetTitulosEtapas();
-            var st_base = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_02_etapa);
+            var st_base = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_02_etapa);
            
 
             List<Task> Tarefas = new List<Task>();
@@ -1906,7 +1906,7 @@ namespace DLM.painel
 
 
 
-            var s = DBases.GetDB().Consulta(chave_pedidos.Replace("%%", "%"));
+            var s = DBases.GetDBMySQL().Consulta(chave_pedidos.Replace("%%", "%"));
             ConcurrentBag<PLAN_SUB_ETAPA> lista = new ConcurrentBag<PLAN_SUB_ETAPA>();
 
             List<Task> Tarefas = new List<Task>();
@@ -1926,7 +1926,7 @@ namespace DLM.painel
             _subetapas.AddRange(lista);
             _subetapas = _subetapas.OrderBy(x => x.subetapa).ToList();
             var lista_resumos = Consultas.getresumo_pecas_subetapas(pedidos);
-            var st_base = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_01_subetapa);
+            var st_base = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_01_subetapa);
             var titulos = GetTitulosSubEtapas();
 
 
@@ -1985,7 +1985,7 @@ namespace DLM.painel
 
                 string comando = $"select *  from {tabela} where {chave}";
 
-                var s = DBases.GetDB().Consulta(comando);
+                var s = DBases.GetDBMySQL().Consulta(comando);
 
                 ConcurrentBag<PLAN_PEP> lista = new ConcurrentBag<PLAN_PEP>();
                 foreach (var ts in DLM.painel.Consultas.quebrar_lista(s.Linhas, 300))
@@ -2010,7 +2010,7 @@ namespace DLM.painel
             setResumos(retorno);
 
 
-            var st_base = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_00_pep);
+            var st_base = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_00_pep);
             foreach (var p in retorno)
             {
                 var igual = st_base.Filtrar("pep", p.PEP, true);
@@ -2171,7 +2171,7 @@ namespace DLM.painel
 
             string consulta =  $"select * from {Cfg.Init.db_comum}.zpp0066n_logistica  as prod where " + chave;
             string consulta2 = $"select * from {Cfg.Init.db_comum}.cargas  as prod where " + chave.Replace("pep", "Elemento_PEP");
-            var dbase = DBases.GetDB().Clonar();
+            var dbase = DBases.GetDBMySQL().Clonar();
 
             //var lista_fab = dbase.Consulta(consulta);
             var lista_fab_0100 = dbase.Clonar().Consulta(consulta2);
@@ -2243,7 +2243,7 @@ namespace DLM.painel
             }
 
 
-            var dbase = DBases.GetDB().Clonar();
+            var dbase = DBases.GetDBMySQL().Clonar();
 
             var lista_fab = dbase.Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_zcontratos_notas_fiscais} as prod where " + chave);
 
@@ -2341,7 +2341,7 @@ namespace DLM.painel
                 $" and pps.pep is not null" +
                 $"  group by prod.pep,prod.material";
 
-            var dbase = DBases.GetDB().Clonar();
+            var dbase = DBases.GetDBMySQL().Clonar();
             var maximo = 10000;
             string consulta_emb = "" +
                 "select prod.Elemento_PEP as Elemento_PEP," +
@@ -2429,7 +2429,7 @@ namespace DLM.painel
         {
             if (_pedidos_clean == null | reset)
             {
-                var s = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_pedidos_clean);
+                var s = DBases.GetDBMySQL().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_pedidos_clean);
                 _pedidos_clean = s.Linhas.Select(x => x["pedido"].Valor).ToList();
             }
             List<string> retorno = new List<string>();
@@ -2455,7 +2455,7 @@ namespace DLM.painel
  
         public static void LimparCOOISN(string chave)
         {
-            DBases.GetDB().Apagar("pep", $"%{chave}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn, true);
+            DBases.GetDBMySQL().Apagar("pep", $"%{chave}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn, true);
         }
         public static bool MatarExcel(bool confirmar = false)
         {
@@ -2535,7 +2535,7 @@ namespace DLM.painel
                 $"((pr.mf <= {fim} and pr.mi >= {ini}) or (pr.montagem_fim <= {fim} and pr.montagem_inicio >= {ini}))" +
                 $" and " +
                 $"pr.pep like '%{pedido}% '");
-            var s = DBases.GetDB().Consulta(comando);
+            var s = DBases.GetDBMySQL().Consulta(comando);
 
 
             ConcurrentBag<PLAN_SUB_ETAPA> lista = new ConcurrentBag<PLAN_SUB_ETAPA>();

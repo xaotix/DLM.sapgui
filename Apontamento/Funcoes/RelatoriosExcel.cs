@@ -1679,7 +1679,7 @@ public class Relatorios
                
                 if(pc.contrato.Length>0)
                 {
-                    DBases.GetDB().Apagar("pep", $"%{pc.contrato}%", Cfg.Init.db_painel_de_obras2, "pecas", true);     
+                    DBases.GetDBMySQL().Apagar("pep", $"%{pc.contrato}%", Cfg.Init.db_painel_de_obras2, "pecas", true);     
                 }
             }
             try
@@ -1830,7 +1830,7 @@ public class Relatorios
                         w.somaProgresso();
                     }
 
-                    DBases.GetDB().Cadastro(linhas, Cfg.Init.db_painel_de_obras2, "pecas");
+                    DBases.GetDBMySQL().Cadastro(linhas, Cfg.Init.db_painel_de_obras2, "pecas");
                 }
 
             }
@@ -1895,7 +1895,7 @@ public class Relatorios
             var w = Conexoes.Utilz.Wait(10, "Consultando logística...");
 
 
-            var Pecas = Conexoes.DBases.GetDB().Consulta($"SELECT * FROM {Cfg.Init.db_painel_de_obras2}.{Cfg.Init.tb_pecas} AS pr WHERE pr.pep LIKE '%{contrato}%'").Linhas;
+            var Pecas = Conexoes.DBases.GetDBMySQL().Consulta($"SELECT * FROM {Cfg.Init.db_painel_de_obras2}.{Cfg.Init.tb_pecas} AS pr WHERE pr.pep LIKE '%{contrato}%'").Linhas;
 
             try
             {

@@ -95,7 +95,7 @@ namespace DLM.painel
         {
             if(this.id>0)
             {
-                DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", this.id) }, GetLinha().Celulas, Cfg.Init.db_comum, "resultado_economico_header");
+                DBases.GetDBMySQL().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", this.id) }, GetLinha().Celulas, Cfg.Init.db_comum, "resultado_economico_header");
             }
             Update_Resultado_Economico();
         }

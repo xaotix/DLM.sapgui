@@ -182,7 +182,7 @@ namespace DLM.painel
         {
             if (_Titulos_Pedidos != null) { return _Titulos_Pedidos; }
             _Titulos_Pedidos = new List<Titulo_Planejamento>();
-            var lista_fab = Conexoes.DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
+            var lista_fab = Conexoes.DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
             ConcurrentBag<Titulo_Planejamento> retorno = new ConcurrentBag<Titulo_Planejamento>();
             List<Task> Tarefas = new List<Task>();
             foreach (var s in lista_fab.Linhas)
@@ -211,7 +211,7 @@ namespace DLM.painel
             if (_Status == null)
             {
                 _Status = new List<StatusSAP_Planejamento>();
-                var lista_log = Conexoes.DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_status_sap);
+                var lista_log = Conexoes.DBases.GetDBMySQL().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_status_sap);
                 foreach (var t in lista_log.Linhas)
                 {
                     _Status.Add(new StatusSAP_Planejamento(t));
