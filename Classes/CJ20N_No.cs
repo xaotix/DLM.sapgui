@@ -1,4 +1,5 @@
-﻿using SAPFEWSELib;
+﻿using Conexoes;
+using SAPFEWSELib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -60,7 +61,7 @@ namespace DLM.sapgui
                 }
 
                 var sts = this.nome.Replace(" ", "").Replace("-","");
-                if(Conexoes.Utilz.ESoNumero(sts))
+                if(sts.ESoNumero())
                 {
                     return CJ20N_Tipo.Tarefa;
                 }
