@@ -506,7 +506,7 @@ namespace DLM.sapgui
                 lista.Add("session.findById(\"wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell\").pressButton \"EBLM\"");
                 lista.Add("session.findById(\"wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell\").pressButton \"ABLM\"");
 
-                Funcoes.RodaScript(lista, Cfg.Init.Raiz_APP + @"\Script_explode_arvore.vbs");
+                Funcoes.RodaScript(lista, Cfg.Init.DIR_APPDATA + @"\Script_explode_arvore.vbs");
                 ////session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").selectedNode = "000002"
                 //var dsd = this.SessaoSAP.FindById("wwnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell");
                 ////session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell").pressButton "EBLM"
@@ -546,7 +546,7 @@ namespace DLM.sapgui
                 //lista.Add("session.findById(\"wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell\").pressButton \"EBLM\"");
                 lista.Add("session.findById(\"wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell\").pressButton \"ABLM\"");
 
-                Funcoes.RodaScript(lista, Cfg.Init.Raiz_APP + @"\Script_explode_arvore.vbs");
+                Funcoes.RodaScript(lista, Cfg.Init.DIR_APPDATA + @"\Script_explode_arvore.vbs");
                 ////session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").selectedNode = "000002"
                 //var dsd = this.SessaoSAP.FindById("wwnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell");
                 ////session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell").pressButton "EBLM"
