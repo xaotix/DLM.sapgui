@@ -32,7 +32,6 @@ namespace DLM.painel
 
 
         public static string args { get; set; } = "";
-        public static string SAP_PDF1 = @"\\PAVMSFS04\SAP_PDF_Desenhos\";
         private static Conexoes.MSAP_Obras _Obras { get; set; }
         public static Conexoes.MSAP_Obras Obras
         {
