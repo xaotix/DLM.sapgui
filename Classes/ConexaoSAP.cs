@@ -33,33 +33,31 @@ namespace DLM.sapgui
             }
             return con;
         }
-        public string GravarTitulos()
+        public string GravarTitulos(List<string> codigos_pedidos)
         {
             var db = DBases.GetDBMySQL().Clonar();
-            if(this.Contrato=="")
-            {
-                return "Contrato em branco";
-            }
-           foreach (var Pedido in DLM.painel.Consultas.GetPedidos(new List<string> { this.Contrato }))
+            var w = Conexoes.Utilz.Wait(codigos_pedidos.Count,"Gravando titulos...");
+
+            foreach (var Pedido in codigos_pedidos)
             {
                 try
                 {
-                    var t = DLM.sap.RfcsSAP.ConsultarPedido(Pedido.pedido);
-                    if (t.Count == 0)
+                    var consulta = DLM.sap.RfcsSAP.ConsultarPedido(Pedido);
+                    if (consulta.Count == 0)
                     {
                         continue;
                     }
-                    var lista = t.Select(x => x.Select(y => y.GetValue().ToString()).ToList()).ToList();
+                    var lista = consulta.Select(x => x.Select(y => y.GetValue().ToString()).ToList()).ToList();
 
-                    db.Apagar("CHAVE", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, true);
-          
+                    db.Apagar("CHAVE", $"%{Pedido.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, true);
+
 
                     List<string> linhas = new List<string>();
                     foreach (var ll in lista)
                     {
-                        linhas.Add("('" + ll[1].Replace("'","") + "','" + ll[2].Replace("'", "") + "')");
+                        linhas.Add("('" + ll[1].Replace("'", "") + "','" + ll[2].Replace("'", "") + "')");
                     }
-                    var sublista = DLM.painel.Consultas.quebrar_lista(linhas, 300);
+                    var sublista = DLM.painel.Consultas.quebrar_lista(linhas, 100);
                     foreach (var sub in sublista)
                     {
                         var SUBCOMANDO = $"INSERT INTO {Cfg.Init.db_comum}.{Cfg.Init.tb_titulos_planejamento}" +
@@ -69,15 +67,20 @@ namespace DLM.sapgui
                         SUBCOMANDO = SUBCOMANDO + string.Join(",", sub);
                         db.Comando(SUBCOMANDO);
                     }
+                    w.somaProgresso();
                 }
                 catch (Exception ex)
                 {
-                    return ex.Message;
+                    //return ex.Message;
 
                 }
             }
+            w.Close();
             return "";
         }
+
+
+
         public void GravarPep_Planejamento()
         {
             var peps = Funcoes.converter(this.PEPsConsultaSAP);

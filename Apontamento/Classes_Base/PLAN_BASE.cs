@@ -136,6 +136,11 @@ namespace DLM.painel
             {
                 this.Titulo = titulos.Find(x => x.CHAVE == this.PEP);
             }
+
+            if(this.Titulo==null)
+            {
+
+            }
         }
         public void Set(List<PLAN_PEDIDO> lista)
         {
