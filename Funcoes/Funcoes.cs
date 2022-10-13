@@ -19,14 +19,14 @@ namespace DLM.sapgui
             pedidos = pedidos.FindAll(x => x.Replace(" ", "") != "");
             DLM.sapgui.Consulta sap = new Consulta();
             var w = Conexoes.Utilz.Wait(pedidos.Count, "Procurando notas fiscais...");
-            var destino = Conexoes.Utilz.CriarPasta(Vars.Raiz, "SAP");
+            var destino = Conexoes.Utilz.CriarPasta(Cfg.Init.DIR_APP, "SAP");
             var CON = false;
             if (Directory.Exists(destino))
             {
                 foreach (var ST in pedidos)
                 {
-                    string arnome = ST.Replace(".", "").Replace("*", "") + Vars.ZCONTRATOSARQ;
-                    CON = sap.ZCONTRATOS(ST, destino, ST.Replace(".", "").Replace("*", "") + Vars.ZCONTRATOSARQ);
+                    string arnome = ST.Replace(".", "").Replace("*", "") + Cfg.Init.SAP_ZCONTRATOSARQ;
+                    CON = sap.ZCONTRATOS(ST, destino, ST.Replace(".", "").Replace("*", "") + Cfg.Init.SAP_ZCONTRATOSARQ);
                     if (CON)
                     {
                         DBases.GetDBMySQL().Apagar("Elemento_PEP", $"%{ST}%", Cfg.Init.db_comum, Cfg.Init.tb_zcontratos_notas_fiscais, true);
@@ -60,15 +60,15 @@ namespace DLM.sapgui
             {
                 try
                 {
-                    if (File.Exists(Vars.SCRIPT_IMPRESSAO_tmp))
+                    if (File.Exists(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp))
                     {
-                        File.Delete(Vars.SCRIPT_IMPRESSAO_tmp);
+                        File.Delete(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp);
 
                     }
-                    Biblioteca_Daniel.Arquivo_Pasta.Buffer_Texto.gravar_arquivo(Vars.SCRIPT_IMPRESSAO_tmp, Script.ToList());
+                    Biblioteca_Daniel.Arquivo_Pasta.Buffer_Texto.gravar_arquivo(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp, Script.ToList());
                     Process scriptProc = new Process();
-                    scriptProc.StartInfo.FileName = Conexoes.Utilz.getNome(Vars.SCRIPT_IMPRESSAO_tmp) + ".vbs";
-                    scriptProc.StartInfo.WorkingDirectory = Conexoes.Utilz.getPasta(Vars.SCRIPT_IMPRESSAO_tmp); //<---very important 
+                    scriptProc.StartInfo.FileName = Conexoes.Utilz.getNome(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp) + ".vbs";
+                    scriptProc.StartInfo.WorkingDirectory = Conexoes.Utilz.getPasta(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp); //<---very important 
                                                                                                                        //scriptProc.StartInfo.Arguments = "//B //Nologo vbscript.vbs";
                     scriptProc.StartInfo.WindowStyle = ProcessWindowStyle.Maximized; //prevent console window from popping up
                     scriptProc.Start();

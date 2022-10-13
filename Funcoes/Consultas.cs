@@ -227,7 +227,7 @@ namespace DLM.sapgui
                     //((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
 
 
-                    ExportarExcel(destino, ARQUIVO,Vars.SCRIPT_IMPRESSAO);
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO);
                     if (!File.Exists(destino + ARQUIVO))
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/cntlALVCONTAINER/shellcont/shell", false);
@@ -1151,7 +1151,7 @@ namespace DLM.sapgui
 
                     if (!File.Exists(destino + ARQUIVO))
                     {
-                        ExportarExcel(destino, ARQUIVO, Vars.SCRIPT_IMPRESSAO);
+                        ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO);
                         if (!File.Exists(destino + ARQUIVO))
                         {
                             var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/cntlALVCONTAINER/shellcont/shell", false);
@@ -1208,7 +1208,7 @@ namespace DLM.sapgui
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
 
 
-                    ExportarExcel(destino, ARQUIVO,Vars.SCRIPT_IMPRESSAO2);
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
                     if(!File.Exists(destino + ARQUIVO))
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell/shellcont/shell", false);
@@ -1266,7 +1266,7 @@ namespace DLM.sapgui
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
 
 
-                    ExportarExcel(destino, ARQUIVO, Vars.SCRIPT_IMPRESSAO2);
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
                     if (!File.Exists(destino + ARQUIVO))
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell/shellcont/shell", false);
@@ -1322,7 +1322,7 @@ namespace DLM.sapgui
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
 
 
-                    ExportarExcel(destino, ARQUIVO, Vars.SCRIPT_IMPRESSAO2);
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
 
                     this.SessaoSAP.EndTransaction();
                     return File.Exists(destino + ARQUIVO);
@@ -1475,7 +1475,7 @@ namespace DLM.sapgui
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
 
 
-                    ExportarExcel(destino, nome, Vars.SCRIPT_IMPRESSAO_ZPMP);
+                    ExportarExcel(destino, nome, Cfg.Init.SAP_SCRIPT_IMPRESSAO_ZPMP);
                     if (!File.Exists(destino + nome))
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
@@ -1549,7 +1549,7 @@ namespace DLM.sapgui
 
 
 
-                    ExportarExcel(destino, ARQUIVO,Vars.SCRIPT_IMPRESSAO_ZPMP);
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO_ZPMP);
                     if (!File.Exists(destino + ARQUIVO))
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
@@ -1607,7 +1607,7 @@ namespace DLM.sapgui
 
 
 
-                    ExportarExcel(destino, ARQUIVO, Vars.SCRIPT_IMPRESSAO_ZPMP);
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO_ZPMP);
                     if (!File.Exists(destino + ARQUIVO))
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
@@ -1667,7 +1667,7 @@ namespace DLM.sapgui
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
 
 
-                    ExportarExcel(destino, ARQUIVO, Vars.SCRIPT_IMPRESSAO_ZPMP);
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO_ZPMP);
                     if (!File.Exists(destino + ARQUIVO))
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
@@ -1727,7 +1727,7 @@ namespace DLM.sapgui
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
 
 
-                    ExportarExcel(destino, ARQUIVO,Vars.SCRIPT_IMPRESSAO2);
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
 
                     this.SessaoSAP.EndTransaction();
                     return File.Exists(destino + ARQUIVO);
@@ -1808,7 +1808,7 @@ namespace DLM.sapgui
                     /*SE NÃO CONSEGUIU GERAR O EXCEL*/
                     if(!File.Exists(destino + ARQUIVO))
                     {
-                    ExportarExcel(destino, ARQUIVO, Vars.SCRIPT_IMPRESSAO2);
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
                     }
                     if (!File.Exists(destino + ARQUIVO))
                     {
@@ -1917,7 +1917,7 @@ namespace DLM.sapgui
 
                     //((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[11]")).Press();
                     /*GERAR EXCEL TENTATIVA 3*/
-                    ExportarExcel(destino, ARQUIVO, Vars.SCRIPT_IMPRESSAO_FAGLL03);
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO_FAGLL03);
 
 
                     this.SessaoSAP.EndTransaction();
@@ -1972,8 +1972,8 @@ namespace DLM.sapgui
                     //MessageBox.Show("Não conseguir exportar em excel o arquivo " + destino + "\nNão encontrei a chamada de menu do SAP para exportação. Contacte suporte.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-
-
+                int tentativas = 0;
+                denovo:
                 var shellToolbarContextButton = ((GuiShell)ctrl);
                 var btnToolbarContextButton = shellToolbarContextButton as GuiGridView;
                 btnToolbarContextButton?.ContextMenu();
@@ -1987,6 +1987,15 @@ namespace DLM.sapgui
                 ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_PATH")).Text = destino;
                 ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = NOME;
                 ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[11]")).Press();
+
+
+                var arquivo = destino + NOME;
+                if(!arquivo.Existe() && tentativas == 0)
+                {
+                    ctrl = this.SessaoSAP.FindById("wnd[0]/usr/shell/shellcont/shell",false);
+                    tentativas++;
+                    goto denovo;
+                }
             }
             catch (Exception)
             {

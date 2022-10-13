@@ -174,7 +174,7 @@ namespace DLM.sapgui
         {
             if (dest != "")
             {
-                string arq = Pedido.Replace("*", "").Replace("%", "") + Vars.ZPPCOOISNARQ;
+                string arq = Pedido.Replace("*", "").Replace("%", "") + Cfg.Init.SAP_ZPPCOOISNARQ;
                 Consulta p = new Consulta();
                 if (!buffer)
                 {
@@ -280,7 +280,7 @@ namespace DLM.sapgui
         {
             if (Pedido.Length < 6) { return; }
             if (dest == null) { dest = Conexoes.Utilz.CriarPasta(System.Windows.Forms.Application.StartupPath, "SAP"); }
-            if (arq == null) { arq = Pedido.Replace("*", "").Replace("%", "") + Vars.ZPPCOOISNARQ; }
+            if (arq == null) { arq = Pedido.Replace("*", "").Replace("%", "") + Cfg.Init.SAP_ZPPCOOISNARQ; }
             if (pecas == null) { pecas = DLM.painel.Consultas.GetPecasReal(new List<string> { Pedido }).FindAll(x => x.material.ToString().StartsWith("31")).ToList(); }
 
             if (pecas.Count == 0) { return; }
