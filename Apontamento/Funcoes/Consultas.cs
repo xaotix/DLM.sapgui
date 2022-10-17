@@ -30,7 +30,6 @@ namespace DLM.painel
                 return "(" + previsto.ToString("N" + decimais.ToString()) + (porcentagem ? " %" : "") + ")";
             }
             return previsto != 0 ? previsto.ToString("N" + decimais.ToString()) + (porcentagem?" %":"") : "";
-            //return previsto != 0 ? previsto.ToString("##,#", CultureInfo.GetCultureInfo("pt-BR")) + (porcentagem ? " %":"") : "";
         }
     }
     public static class Consultas
@@ -1238,32 +1237,14 @@ namespace DLM.painel
 
 
 
-            ApagarCache(contrato_ou_pedido,true);
+            Conexoes.DBases.Painel_Apagar_Cache(contrato_ou_pedido);
+            Conexoes.DBases.Painel_Apagar_Cache_Pecas(contrato_ou_pedido);
 
             BufferObrasPesquisa.Clear();
         }
  
-        public static void ApagarCache(string contrato_ou_pedido, bool pecas)
-        {
-            if(contrato_ou_pedido.Length<5)
-            {
-                return;
-            }
-            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_datas, true);
-            DBases.GetDBMySQL().Apagar("pedido", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia, true);
-            DBases.GetDBMySQL().Apagar("pedido_principal", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_obras_planejamento_copia, true);
-            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento_m_copia, true);
+ 
 
-            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_obra_copia, true);
-            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia, true);
-            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia, true);
-            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia, true);
-            if(pecas)
-            {
-            DBases.GetDBMySQL().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_painel_de_obras2, "pecas", true);
-            }
-        
-        }
 
         public static List<StatusSAP_Planejamento> GetStatus(List<string> descricoes)
         {
@@ -1377,79 +1358,7 @@ namespace DLM.painel
 
             return f0;
         }
-        public static int Imagens(int id)
-        {
-            string pasta = @"\\10.51.0.69\medabil\Medabil_GCM\ArqsMontagem\$id$\Imagens\".Replace("$id$", id.ToString());
-            if(!Directory.Exists(pasta))
-            {
-                return 0;
-            }
-            DirectoryInfo robotImageDir = new DirectoryInfo(pasta);
 
-            return robotImageDir.GetFiles("*.*", SearchOption.TopDirectoryOnly).ToList().FindAll(x => x.Extension.ToUpper() == ".JPG" | x.Extension.ToUpper() == ".JPEG" | x.Extension.ToUpper() == ".PNG").Count;
-        }
-        public static void setImagens(ListBox lista, int id)
-        {
-            lista.Items.Clear();
-            if (id <= 0) { return; };
-            List<BitmapImage> retorno = new List<BitmapImage>();
-            string pasta = @"\\10.51.0.69\medabil\Medabil_GCM\ArqsMontagem\$id$\Imagens\".Replace("$id$", id.ToString());
-            if (!Directory.Exists(pasta))
-            {
-                return;
-            }
-            DirectoryInfo robotImageDir = new DirectoryInfo(pasta);
-
-            var imagens = robotImageDir.GetFiles("*.*", SearchOption.TopDirectoryOnly);
-            if(imagens.Count()>0)
-            {
-                lista.Visibility = Visibility.Visible;
-            }
-              
-            foreach (FileInfo robotImageFile in imagens.ToList().FindAll(x=>x.Extension.ToUpper() == ".JPG"| x.Extension.ToUpper() == ".JPEG"| x.Extension.ToUpper() == ".PNG"))
-            {
-
-                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background,new Action(() =>
-                            {
-                                try
-                                {
-                                    Uri uri = new Uri(robotImageFile.FullName);
-                                    var bmp = new BitmapImage(uri);
-                                  
-                                    lista.Items.Add(bmp);
-                                }
-                                catch (Exception)
-                                {
-                            
-                            
-                                }
-                            }
-                            ));
-
-            }
-        }
-        public static List<PLAN_PECA> getResumo_Grupo_Mercadoria(DateTime ini, DateTime fim)
-        {
-
-            string consulta1 = "select " +
-                $"concat('00-000000.P00.000.',substr(pr.pep,-6,6)) as pep," +
-                $"sum(pr.peso_necessario) as peso_necessario,sum(pr.peso_produzido) as peso_produzido,sum(pr.qtd_necessaria) as qtd_necessaria, pr.grupo_mercadoria as grupo_mercadoria" +
-                $" from {Cfg.Init.db_comum}.zpmp_producao as pr where pr.material not like '300%' " +
-                $"and str_to_date(pr.fim_engenharia_base, '%d/%m/%Y') >=str_to_date('$ini$', '%d/%m/%Y') " +
-                $"and str_to_date(pr.fim_engenharia_base, '%d/%m/%Y') <=str_to_date('$fim$', '%d/%m/%Y') group by pr.grupo_mercadoria, substr(pr.pep,-6,6)";
-            consulta1 = consulta1.Replace("$ini$", ini.ToShortDateString()).Replace("$fim$", fim.ToShortDateString());
-
-            var lista_fab = DBases.GetDBMySQL().Consulta(consulta1);
-            ConcurrentBag<PLAN_PECA> retorno = new ConcurrentBag<PLAN_PECA>();
-            List<Task> Tarefas = new List<Task>();
-            foreach (var s in lista_fab.Linhas)
-            {
-                Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new PLAN_PECA(s,new List<DLM.db.Linha>()))));
-            }
-            Task.WaitAll(Tarefas.ToArray());
-
-            return retorno.OrderBy(x => x.PEP + "-" + x.grupo_mercadoria).ToList().FindAll(x=>x.peso_necessario>0);
-        }
         public static List<Resumo_Pecas> _resumo_pecas_obras { get; set; }
         private static List<Resumo_Pecas> _resumo_pecas_pedido { get; set; }
         private static List<Resumo_Pecas> _resumo_pecas_peps { get; set; }
@@ -1630,7 +1539,6 @@ namespace DLM.painel
             }
             return _resumo_pecas_subetapas;
         }
-
         public static List<Resumo_Pecas> getresumo_pecas_subetapas(List<string> pedidos)
         {
 
@@ -1665,7 +1573,7 @@ namespace DLM.painel
             if(_obras==null | reset)
             {
                 _obras = new List<PLAN_OBRA>();
-                var consulta = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, (copia ? Cfg.Init.tb_obras_planejamento_copia :Cfg.Init.tb_obras_planejamento));
+                var consulta = DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, (copia ? Cfg.Init.tb_obras_planejamento_copia :Cfg.Init.tb_obras_planejamento_copia));
                 List<Task> Tarefas = new List<Task>();
 
                 ConcurrentBag<PLAN_OBRA> lista = new ConcurrentBag<PLAN_OBRA>();
@@ -1709,53 +1617,21 @@ namespace DLM.painel
             }
             return _obras;
         }
-        public static void CopiarViewParaDbase(string contrato, bool embarques = true)
+
+        public static void CriarCache(string contrato)
         {
-            try
-            {
-                contrato = contrato.Replace(" ", "").Replace("*", "");
-                if (contrato.Length < 4) { return; }
-
-
-                DLM.db.Tabela peps = new DLM.db.Tabela();
-                DLM.db.Tabela pedidos = new DLM.db.Tabela();
-                DLM.db.Tabela contratos = new DLM.db.Tabela();
-                DLM.db.Tabela resumo_pecas_obra = new DLM.db.Tabela();
-                DLM.db.Tabela resumo_pecas_pedido = new DLM.db.Tabela();
-                DLM.db.Tabela resumo_pecas_pep = new DLM.db.Tabela();
-                DLM.db.Tabela resumo_pecas_pep_fabrica = new DLM.db.Tabela();
-                List<Task> Tarefas = new List<Task>();
-
-                Tarefas.Add(Task.Factory.StartNew(() => peps = DBases.GetDBMySQL().Clonar().Consulta($"call {Cfg.Init.db_comum}.getpeps('{contrato}')")));
-                Tarefas.Add(Task.Factory.StartNew(() => pedidos = DBases.GetDBMySQL().Clonar().Consulta($"call {Cfg.Init.db_comum}.getpedidos({contrato})")));
-                Tarefas.Add(Task.Factory.StartNew(() => contratos = DBases.GetDBMySQL().Clonar().Consulta($"call {Cfg.Init.db_comum}.getobras({contrato})")));
-                Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_obra = DBases.GetDBMySQL().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_obra} as pr where pr.pep like '%{contrato}%'")));
-                Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pedido = DBases.GetDBMySQL().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pedido} as pr where pr.pep like '%{contrato}%'")));
-                Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pep = DBases.GetDBMySQL().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep} as pr where pr.pep like '%{contrato}%'")));
-                Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pep_fabrica = DBases.GetDBMySQL().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_fabrica} as pr where pr.pep like '%{contrato}%'")));
-                Task.WaitAll(Tarefas.ToArray());
-
-                Consultas.ApagarCache(contrato, embarques);
-
-                DBases.GetDBMySQL().Cadastro(peps.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento_m_copia);
-                DBases.GetDBMySQL().Cadastro(contratos.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_obras_planejamento_copia);
-                DBases.GetDBMySQL().Cadastro(pedidos.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia);
-                DBases.GetDBMySQL().Cadastro(resumo_pecas_obra.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_obra_copia);
-                DBases.GetDBMySQL().Cadastro(resumo_pecas_pedido.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia);
-                DBases.GetDBMySQL().Cadastro(resumo_pecas_pep.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia);
-                DBases.GetDBMySQL().Cadastro(resumo_pecas_pep_fabrica.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia);
-
-                if (embarques)
-                {
-                    var pcs = Consultas.GetPecasReal(new List<string> { contrato });
-                    DLM.painel.Relatorios.ExportarEmbarque(pcs, false, null, null, true, false);
-                }
-            }
-            catch (Exception)
-            {
-
-            }
+            if (contrato.Length < 4) { return; }
+            Conexoes.DBases.Painel_Criar_Cache(contrato);
+            Consultas.Pecas_Criar_Cache(contrato);
         }
+
+        public static void Pecas_Criar_Cache(string contrato)
+        {
+            Conexoes.DBases.Painel_Apagar_Cache_Pecas(contrato);
+            var pcs = Consultas.GetPecasReal(new List<string> { contrato });
+            DLM.painel.Relatorios.ExportarEmbarque(pcs, false, null, null, true, false);
+        }
+
         public static List<PLAN_OBRA> GetObras(List<string> contrato, bool copia, bool reset)
         {
             contrato = contrato.Distinct().ToList().FindAll(x => x.Length > 0);
@@ -1863,17 +1739,17 @@ namespace DLM.painel
 
             List<Task> Tarefas = new List<Task>();
 
-            foreach (var t in _etapas)
+            foreach (var etapa in _etapas)
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
                    
-                    t.Set(titulos, false);
+                    etapa.Set(titulos, false);
 
-                    var igual = st_base.Filtrar("pep", t.PEP.ToUpper().TrimEnd(".P00".ToCharArray()), true);
+                    var igual = st_base.Filtrar("pep", etapa.PEP.ToUpper().TrimEnd(".P00".ToCharArray()), true);
                     if (igual.Count > 0)
                     {
-                        t.SetBase(igual.Linhas.First());
+                        etapa.SetBase(igual.Linhas.First());
                     }
 
                 }));
@@ -2130,31 +2006,9 @@ namespace DLM.painel
 
             return retorno;
         }
-        public static List<PLAN_PECA> GetPecasReal(List<PLAN_SUB_ETAPA> subetapas)
-        {
-            var subs_sem_pecas = subetapas.FindAll(x => !x.carregou_pecas).ToList();
-           var pcs = DLM.painel.Consultas.GetPecasReal(subs_sem_pecas.Select(x => x.subetapa).Distinct().ToList());
-            List<Task> Tarefas = new List<Task>();
-            foreach (var t in subs_sem_pecas)
-            {
-                Tarefas.Add(Task.Factory.StartNew(() => t.Set(pcs)));
-            }
-            Task.WaitAll(Tarefas.ToArray());
-
-            return subetapas.SelectMany(x => x.GetPecas()).ToList();
-        }
 
 
-        private static List<Conexoes.Bobina> _bobinas { get; set; }
-        public static List<Conexoes.Bobina> GetBobinas()
-        {
-            if(_bobinas ==null)
-            {
-                _bobinas = new List<Conexoes.Bobina>();
-                _bobinas.AddRange(DBases.GetBancoRM().GetBobinast());
-            }
-            return _bobinas;
-        }
+
         private static List<Logistica_Planejamento> getLogisticaF(List<string> pedido, List<PLAN_PECA> pecas, out List<PLAN_PECA> orfas)
         {
             orfas = new List<PLAN_PECA>();
@@ -2499,11 +2353,9 @@ namespace DLM.painel
                         try
                         {
                             s.Kill();
-
                         }
                         catch (Exception)
                         {
-
                         }
                     }
                 }
@@ -2523,66 +2375,29 @@ namespace DLM.painel
             foreach (var ped in contratos)
             {
                 var pps = peps.FindAll(x => x.Contrato_Completo == ped);
-         
-                foreach(var p in pps)
+
+                foreach (var p in pps)
                 {
                     var pep = resumos.Find(x => x.pep == p.PEP);
-                    if(pep == null)
+                    if (pep == null)
                     {
                         var peps_sistema = resumos.FindAll(x => x.subetapa == p.subetapa);
-                        var status_outros = peps_sistema.FindAll(y=> pps.Find(x=>x.PEP == y.pep) ==null);
-                        if(status_outros.Count>0)
+                        var status_outros = peps_sistema.FindAll(y => pps.Find(x => x.PEP == y.pep) == null);
+                        if (status_outros.Count > 0)
                         {
                             p.resumo_pecas = status_outros[0];
-
                         }
-
                     }
                     else
                     {
-
-                    p.resumo_pecas = pep;
+                        p.resumo_pecas = pep;
                     }
                 }
             }
         }
 
-        public static List<PLAN_SUB_ETAPA> GetSubEtapasPorDataMontagem(DateTime dt_ini, DateTime dt_fim, string pedido)
-        {
-            var fim = $"str_to_date('{dt_fim.ToShortDateString()}', '%d/%m/%Y')";
-            var ini = $"str_to_date('{dt_ini.ToShortDateString()}', '%d/%m/%Y'))";
-            string comando = ($"select *  from {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento_m_copia} as pr where " +
-                $"((pr.mf <= {fim} and pr.mi >= {ini}) or (pr.montagem_fim <= {fim} and pr.montagem_inicio >= {ini}))" +
-                $" and " +
-                $"pr.pep like '%{pedido}% '");
-            var s = DBases.GetDBMySQL().Consulta(comando);
 
 
-            ConcurrentBag<PLAN_SUB_ETAPA> lista = new ConcurrentBag<PLAN_SUB_ETAPA>();
-            var t = new List<PLAN_SUB_ETAPA>();
-            foreach (var ts in s.Linhas)
-            {
-                //Tarefas.Add(Task.Factory.StartNew(() => 
-                lista.Add(new PLAN_SUB_ETAPA( ts, null))
-                //))
-                //
-                ;
-            }
-            //Task.WaitAll(Tarefas.ToArray());
-
-            return lista.ToList().OrderBy(x => x.PEP).ToList();
-        }
-        public static List<List<List<T>>> quebrar_lista<T>(this List<List<T>> locations, int maximo = 30)
-        {
-            var list = new List<List<List<T>>>();
-
-            for (int i = 0; i < locations.Count; i += maximo)
-            {
-                list.Add(locations.GetRange(i, Math.Min(maximo, locations.Count - i)));
-            }
-
-            return list;
-        }
         public static List<List<T>> quebrar_lista<T>( this List<T> locations, int maximo = 30)
         {
             var list = new List<List<T>>();

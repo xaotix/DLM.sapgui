@@ -86,7 +86,7 @@ namespace DLM.sapgui
             var peps = Funcoes.converter(this.PEPsConsultaSAP);
             DLM.painel.Consultas.Apagar_peps(this.Contrato);
 
-            DBases.GetDBMySQL().Cadastro(peps.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, "pep_planejamento");
+            DBases.GetDBMySQL().Cadastro(peps.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
         }
         public string Contrato
         {
