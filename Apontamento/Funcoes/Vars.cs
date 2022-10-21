@@ -12,18 +12,17 @@ namespace DLM.painel
   public  class Vars
     {
 
-        public static string Raiz = System.Windows.Forms.Application.StartupPath + @"\";
-        public static string SetupUser = Raiz + "setup.user.cfg";
-        public static string TEMPLATE_SAIDA = Raiz + "TEMPLATE_PLANEJAMENTO.xlsx";
-        public static string TEMPLATE_DATAS_FABRICA = Raiz + "TEMPLATE_DATAS_FABRICA.xlsx";
-        public static string TEMPLATE_AVANCO_FABRICA = Raiz + "template_avanco_fabrica.xlsx";
+        public static string SetupUser = $"{Cfg.Init.DIR_APP}setup.user.cfg";
+        public static string TEMPLATE_SAIDA = $"{Cfg.Init.DIR_APP}TEMPLATE_PLANEJAMENTO.xlsx";
+        public static string TEMPLATE_DATAS_FABRICA = $"{Cfg.Init.DIR_APP}TEMPLATE_DATAS_FABRICA.xlsx";
+        public static string TEMPLATE_AVANCO_FABRICA = $"{Cfg.Init.DIR_APP}template_avanco_fabrica.xlsx";
         
-        public static string template_cronograma_resumo = Raiz + "template_cronograma_resumo.xlsx";
-        public static string template_relatorio_economico = Raiz + "template_relatorio_economico.xlsx";
-        public static string TEMPLATE_SAIDA_PECAS = Raiz + "TEMPLATE_PECAS.xlsx";
-        public static string TEMPLATE_SAIDA_PECAS_RESUMO = Raiz + "template_pecas_resumo.xlsx";
-        public static string TEMPLATE_EMBARQUES = Raiz + "template_embarques.xlsx";
-        public static string TEMPLATE_SAIDA_PECAS_RESUMO_CONSOLIDADA = Raiz + "template_pecas_resumo_consolidada.xlsx";
+        public static string template_cronograma_resumo = $"{Cfg.Init.DIR_APP}template_cronograma_resumo.xlsx";
+        public static string template_relatorio_economico = $"{Cfg.Init.DIR_APP}template_relatorio_economico.xlsx";
+        public static string TEMPLATE_SAIDA_PECAS = $"{Cfg.Init.DIR_APP}TEMPLATE_PECAS.xlsx";
+        public static string TEMPLATE_SAIDA_PECAS_RESUMO = $"{Cfg.Init.DIR_APP}template_pecas_resumo.xlsx";
+        public static string TEMPLATE_EMBARQUES = $"{Cfg.Init.DIR_APP}template_embarques.xlsx";
+        public static string TEMPLATE_SAIDA_PECAS_RESUMO_CONSOLIDADA = $"{Cfg.Init.DIR_APP}template_pecas_resumo_consolidada.xlsx";
 
 
 

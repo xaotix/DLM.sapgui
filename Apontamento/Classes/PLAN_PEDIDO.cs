@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLM.vars;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -116,7 +117,7 @@ namespace DLM.painel
             this.status_montagem = L.Get("status_montagem").ToString();
 
             DateTime mont = L.Get("update_montagem").Data();
-            if (mont > Conexoes.Utilz.Calendario.DataDummy())
+            if (mont > Cfg.Init.DataDummy())
             {
                 this.update_montagem = "Montagem: " + mont.ToShortDateString();
             }

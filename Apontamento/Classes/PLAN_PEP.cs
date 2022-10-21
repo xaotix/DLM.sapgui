@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.IO;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using DLM.vars;
 
 namespace DLM.painel
 {
@@ -290,7 +291,7 @@ namespace DLM.painel
         public DLM.db.Linha GetLinha()
         {
             DLM.db.Linha l = new DLM.db.Linha();
-            var data_min = Conexoes.Utilz.Calendario.DataDummy();
+            var data_min = Cfg.Init.DataDummy();
 
             l.Add("id_status_pep", id_status_pep);
             l.Add("id_status_pedido", id_status_pedido);

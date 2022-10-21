@@ -1,4 +1,5 @@
 ﻿using DLM.sapgui;
+using DLM.vars;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace DLM.painel
 {
     public class PLAN_BASE
     {
-        public DateTime mindia { get; set; } = Conexoes.Utilz.Calendario.DataDummy();
+        public DateTime mindia { get; set; } = Cfg.Init.DataDummy();
         public void SetBase(DLM.db.Linha l)
         {
             this.eini = l.Get("eini").Data();
@@ -269,14 +270,14 @@ namespace DLM.painel
                 return Conexoes.Utilz.PEP.Get.Pedido(this.PEP, true);
             }
         }
-        public DateTime? ultima_edicao { get; set; } = new DateTime();
-        public DateTime? criado { get; set; } = new DateTime();
-        public DateTime? engenharia_liberacao { get; set; } = new DateTime();
-        public DateTime? montagem_inicio { get; set; } = new DateTime();
-        public DateTime? montagem_fim { get; set; } = new DateTime();
+        public DateTime? ultima_edicao { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? criado { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? engenharia_liberacao { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? montagem_inicio { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? montagem_fim { get; set; } = Cfg.Init.DataDummy();
 
-        public DateTime? mi_s { get; set; } = new DateTime();
-        public DateTime? mf_s { get; set; } = new DateTime();
+        public DateTime? mi_s { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? mf_s { get; set; } = Cfg.Init.DataDummy();
         public double logistica_previsto
         {
             get
@@ -462,14 +463,14 @@ namespace DLM.painel
             return ps;
         }
 
-        private DateTime? _engenharia_cronograma { get; set; } = new DateTime();
-        private DateTime? _fabrica_cronograma { get; set; } = new DateTime();
-        private DateTime? _logistica_cronograma { get; set; } = new DateTime();
-        private DateTime? _montagem_cronograma { get; set; } = new DateTime();
-        private DateTime? _engenharia_cronograma_inicio { get; set; } = new DateTime();
-        private DateTime? _fabrica_cronograma_inicio { get; set; } = new DateTime();
-        private DateTime? _logistica_cronograma_inicio { get; set; } = new DateTime();
-        private DateTime? _montagem_cronograma_inicio { get; set; } = new DateTime();
+        private DateTime? _engenharia_cronograma { get; set; } = Cfg.Init.DataDummy();
+        private DateTime? _fabrica_cronograma { get; set; } = Cfg.Init.DataDummy();
+        private DateTime? _logistica_cronograma { get; set; } = Cfg.Init.DataDummy();
+        private DateTime? _montagem_cronograma { get; set; } = Cfg.Init.DataDummy();
+        private DateTime? _engenharia_cronograma_inicio { get; set; } = Cfg.Init.DataDummy();
+        private DateTime? _fabrica_cronograma_inicio { get; set; } = Cfg.Init.DataDummy();
+        private DateTime? _logistica_cronograma_inicio { get; set; } = Cfg.Init.DataDummy();
+        private DateTime? _montagem_cronograma_inicio { get; set; } = Cfg.Init.DataDummy();
 
         public DateTime? engenharia_cronograma
         {
@@ -591,14 +592,14 @@ namespace DLM.painel
                 _montagem_cronograma_inicio = value;
             }
         }
-        public DateTime? eini { get; set; } = new DateTime();
-        public DateTime? fini { get; set; } = new DateTime();
-        public DateTime? lini { get; set; } = new DateTime();
-        public DateTime? mini { get; set; } = new DateTime();
-        public DateTime? efim { get; set; } = new DateTime();
-        public DateTime? ffim { get; set; } = new DateTime();
-        public DateTime? lfim { get; set; } = new DateTime();
-        public DateTime? mfim { get; set; } = new DateTime();
+        public DateTime? eini { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? fini { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? lini { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? mini { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? efim { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? ffim { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? lfim { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? mfim { get; set; } = Cfg.Init.DataDummy();
 
         private double _eng_base_st { get; set; } = 0;
         public double eng_base_st
@@ -660,7 +661,7 @@ namespace DLM.painel
         {
             get
             {
-                var t = datas_cronograma_filtro.FindAll(x => x > Conexoes.Utilz.Calendario.DataDummy());
+                var t = datas_cronograma_filtro.FindAll(x => x > Cfg.Init.DataDummy());
                 if (t.Count > 0)
                 {
                     return t.Min();
@@ -672,12 +673,12 @@ namespace DLM.painel
         {
             get
             {
-                var t = datas_cronograma_filtro.FindAll(x => x != new DateTime());
+                var t = datas_cronograma_filtro.FindAll(x => x != Cfg.Init.DataDummy());
                 if (t.Count > 0)
                 {
                     return t.Max();
                 }
-                return new DateTime();
+                return Cfg.Init.DataDummy();
             }
         }
         public List<DateTime> datas_cronograma_filtro
@@ -712,7 +713,7 @@ namespace DLM.painel
         {
             get
             {
-                var t = datas_cronograma.FindAll(x => x > Conexoes.Utilz.Calendario.DataDummy());
+                var t = datas_cronograma.FindAll(x => x > Cfg.Init.DataDummy());
                 if (t.Count > 0)
                 {
                     return t.Min();
@@ -724,12 +725,12 @@ namespace DLM.painel
         {
             get
             {
-                var t = datas_cronograma.FindAll(x => x != new DateTime());
+                var t = datas_cronograma.FindAll(x => x != Cfg.Init.DataDummy());
                 if (t.Count > 0)
                 {
                     return t.Max();
                 }
-                return new DateTime();
+                return Cfg.Init.DataDummy();
             }
         }
         public List<DateTime?> datas_cronograma
@@ -773,7 +774,7 @@ namespace DLM.painel
 
         }
         public bool dados_montagem { get; set; } = false;
-        public DateTime? ultima_consulta_sap { get; set; } = new DateTime();
+        public DateTime? ultima_consulta_sap { get; set; } = Cfg.Init.DataDummy();
         public double peso_planejado { get; set; } = 0;
         public int atraso_engenharia { get; set; } = 0;
         public int atraso_fabrica { get; set; } = 0;

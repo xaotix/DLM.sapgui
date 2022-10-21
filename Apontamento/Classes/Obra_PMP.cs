@@ -1,4 +1,5 @@
 ﻿using DLM.sapgui;
+using DLM.vars;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -261,7 +262,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -279,7 +280,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -297,7 +298,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -315,7 +316,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -333,7 +334,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -351,7 +352,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -369,7 +370,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -387,7 +388,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -578,7 +579,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -596,7 +597,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -614,7 +615,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -632,7 +633,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -650,7 +651,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -668,7 +669,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -686,7 +687,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -703,7 +704,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -720,7 +721,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -738,7 +739,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -924,7 +925,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -942,7 +943,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -960,7 +961,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -978,7 +979,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -996,7 +997,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -1014,7 +1015,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -1032,7 +1033,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -1050,7 +1051,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -1215,7 +1216,7 @@ namespace DLM.painel
     }
     public class Pedido_PMP : Base_PMP
     {
-        public DateTime? ultima_edicao { get; set; } = new DateTime();
+        public DateTime? ultima_edicao { get; set; } = Cfg.Init.DataDummy();
         public DateTime? ei
         {
             get
@@ -1230,7 +1231,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -1248,7 +1249,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -1266,7 +1267,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -1284,7 +1285,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -1302,7 +1303,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -1320,7 +1321,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -1338,7 +1339,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }
@@ -1356,7 +1357,7 @@ namespace DLM.painel
                 }
                 else
                 {
-                    return new DateTime();
+                    return Cfg.Init.DataDummy();
                 }
             }
         }

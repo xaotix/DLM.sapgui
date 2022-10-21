@@ -279,7 +279,7 @@ namespace DLM.sapgui
         private static void Carregar_ZPPCOOISN_Layout(string Pedido, List<PLAN_PECA> pecas = null, string dest = null, string arq = null)
         {
             if (Pedido.Length < 6) { return; }
-            if (dest == null) { dest = Conexoes.Utilz.CriarPasta(System.Windows.Forms.Application.StartupPath, "SAP"); }
+            if (dest == null) { dest = Conexoes.Utilz.CriarPasta(Cfg.Init.DIR_APP, "SAP"); }
             if (arq == null) { arq = Pedido.Replace("*", "").Replace("%", "") + Cfg.Init.SAP_ZPPCOOISNARQ; }
             if (pecas == null) { pecas = DLM.painel.Consultas.GetPecasReal(new List<string> { Pedido }).FindAll(x => x.material.ToString().StartsWith("31")).ToList(); }
 
@@ -316,7 +316,7 @@ namespace DLM.sapgui
                             /*22*/x[(int)TAB_ZPPCOOISN.DESENHO_2].ToString(),
                         }).Distinct().ToList();
                 //w.SetProgresso(1, retorno.Count());
-                var min = Conexoes.Utilz.Calendario.DataDummy();
+                var min = Cfg.Init.DataDummy();
                 var pcs = pecas.FindAll(x => x.material.ToString().StartsWith("31"));
                 List<DLM.db.Linha> linhas = new List<DLM.db.Linha>();
                 foreach (var tl in pcs)
@@ -341,14 +341,14 @@ namespace DLM.sapgui
                     curr = curr.OrderBy(x => Conexoes.Extensoes.Data(x[5].ToString())).ToList();
                     //08/04/2020
                     curr = curr.OrderBy(x => x[18].ToString()).ToList();
-                    //var  curr2 = curr.FindAll(x => Conexoes.Conexoes.Extensoes.Data(x[5].ToString()) > Conexoes.Utilz.Calendario.DataDummy());
+                    //var  curr2 = curr.FindAll(x => Conexoes.Conexoes.Extensoes.Data(x[5].ToString()) > Cfg.Init.DataDummy());
                     if (curr.Count > 0)
                     {
-                        var Dts = curr.Select(x => Conexoes.Extensoes.Data(x[5].ToString())).OrderBy(x => x).ToList().FindAll(x => x > Conexoes.Utilz.Calendario.DataDummy());
+                        var Dts = curr.Select(x => Conexoes.Extensoes.Data(x[5].ToString())).OrderBy(x => x).ToList().FindAll(x => x > Cfg.Init.DataDummy());
                         //Dts = Dts.OrderBy(x => x).ToList();
 
-                        var inicio = new DateTime();
-                        var fim = new DateTime();
+                        var inicio = Cfg.Init.DataDummy();
+                        var fim = Cfg.Init.DataDummy();
                         string ultimo_status = "";
                         if (Dts.Count > 0)
                         {
@@ -358,7 +358,7 @@ namespace DLM.sapgui
                         for (int i = 0; i < curr.Count - 1; i++)
                         {
                             var data = Conexoes.Extensoes.Data(curr[i][5].ToString());
-                            if (data > Conexoes.Utilz.Calendario.DataDummy())
+                            if (data > Cfg.Init.DataDummy())
                             {
                                 if (curr.Count > i + 1)
                                 {
@@ -370,7 +370,7 @@ namespace DLM.sapgui
                                 }
                             }
                         }
-                        if (Conexoes.Extensoes.Data(curr.Last()[5].ToString()) > Conexoes.Utilz.Calendario.DataDummy())
+                        if (Conexoes.Extensoes.Data(curr.Last()[5].ToString()) > Cfg.Init.DataDummy())
                         {
                             ultimo_status = curr.Last()[6].ToString();
                         }

@@ -43,13 +43,13 @@ namespace DLM.painel
         [ReadOnly(true)]
         [Category("Outros")]
         [DisplayName("Última Edição")]
-        public DateTime ultima_edicao { get; set; } = new DateTime();
+        public DateTime ultima_edicao { get; set; } = Cfg.Init.DataDummy();
 
 
         [ReadOnly(true)]
         [Category("Outros")]
         [DisplayName("Criado")]
-        public DateTime criado { get; set; } = new DateTime();
+        public DateTime criado { get; set; } = Cfg.Init.DataDummy();
         [Browsable(false)]
         public bool faltam_dados_preenchidos
         {
@@ -409,7 +409,7 @@ namespace DLM.painel
             }
         }
         [XmlIgnore]
-        public DateTime ultima_edicao { get; set; } = new DateTime();
+        public DateTime ultima_edicao { get; set; } = Cfg.Init.DataDummy();
         [XmlIgnore]
         public Resultado_Economico_Header Header { get; set; } = new Resultado_Economico_Header();
         public override string ToString()

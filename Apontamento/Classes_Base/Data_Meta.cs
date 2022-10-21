@@ -1,4 +1,5 @@
 ﻿using DLM.sapgui;
+using DLM.vars;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,8 +60,8 @@ namespace DLM.painel
         public Valor_Meta Avanco_Realizado { get; set; } = new Valor_Meta();
         public Valor_Meta Avanco_Realizado_Nao_Previsto { get; set; } = new Valor_Meta();
 
-        public DateTime Data_Inicio { get; set; } = new DateTime();
-        public DateTime Data_Fim { get; set; } = new DateTime();
+        public DateTime Data_Inicio { get; set; } = Cfg.Init.DataDummy();
+        public DateTime Data_Fim { get; set; } = Cfg.Init.DataDummy();
         public Valor_Meta Previsto { get; set; } = new Valor_Meta();
         public Valor_Meta Realizado { get; set; } = new Valor_Meta();
         public Valor_Meta Nao_Previsto { get; set; } = new Valor_Meta();
@@ -77,7 +78,7 @@ namespace DLM.painel
             try
             {
                 double valor_considerar_finalizado = (Filtro == Tipo_Filtro_Meta.Etapa ? 99 : 0);
-                var min_data = Conexoes.Utilz.Calendario.DataDummy();
+                var min_data = Cfg.Init.DataDummy();
                 this.SubEtapas = lista;
                 if (Tipo == Tipo_Meta.Engenharia)
                 {
@@ -155,7 +156,7 @@ namespace DLM.painel
     }
     public class Valor_Meta
     {
-        public DateTime Data { get; set; } = new DateTime();
+        public DateTime Data { get; set; } = Cfg.Init.DataDummy();
 
         public string Titulo { get; set; } = "";
         public override string ToString()

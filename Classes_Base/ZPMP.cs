@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using DLM.vars;
 
 namespace DLM.sapgui
 {
@@ -23,7 +24,7 @@ namespace DLM.sapgui
 
         public DLM.db.Linha GetLinha()
         {
-            DateTime dtmin = Conexoes.Utilz.Calendario.DataDummy();
+            DateTime dtmin = Cfg.Init.DataDummy();
             DLM.db.Linha l = new DLM.db.Linha();
             l.Add("pep", PEP.Codigo);
             //l.Add("denominacao", denominacao);
@@ -106,15 +107,15 @@ namespace DLM.sapgui
         public string peso_produzido { get; private set; } ="";
         public string qtd_necessaria { get; private set; } = "";
         public string qtd_mecadoria_entrada { get; private set; } = "";
-        public DateTime fim_engenharia_base { get; private set; } = new DateTime();
-        public DateTime fim_engenharia_real { get; private set; } = new DateTime();
-        public DateTime Fim_Fabrica_Base { get; private set; } = new DateTime();
-        public DateTime Fim_Fabrica_Real { get; private set; } = new DateTime();
-        public DateTime fim_logistica_base { get; private set; } = new DateTime();
-        public DateTime fim_logistica_real { get; private set; } = new DateTime();
-        public DateTime fim_montagem_base { get; private set; } = new DateTime();
-        public DateTime fim_montagem_real { get; private set; } = new DateTime();
-        public DateTime inicio_montagem_base { get; private set; } = new DateTime();
+        public DateTime fim_engenharia_base { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime fim_engenharia_real { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime Fim_Fabrica_Base { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime Fim_Fabrica_Real { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime fim_logistica_base { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime fim_logistica_real { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime fim_montagem_base { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime fim_montagem_real { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime inicio_montagem_base { get; private set; } = Cfg.Init.DataDummy();
         public string saldo_peso_produzido { get; private set; } = "";
         public string Status_Sistema_PEP { get; private set; } = "";
         public string status_usuario_pep { get; private set; } = "";

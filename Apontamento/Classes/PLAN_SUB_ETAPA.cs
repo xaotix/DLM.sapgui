@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLM.vars;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -89,12 +90,12 @@ namespace DLM.painel
 
 
 
-            if (this.logistica_cronograma_inicio == new DateTime() && this.logistica_cronograma != new DateTime())
+            if (this.logistica_cronograma_inicio == Cfg.Init.DataDummy() && this.logistica_cronograma != Cfg.Init.DataDummy())
             {
                 this.logistica_cronograma_inicio = ((DateTime)this.fabrica_cronograma).AddDays(2);
             }
 
-            if (this.montagem_cronograma_inicio == new DateTime() && this.montagem_cronograma != new DateTime())
+            if (this.montagem_cronograma_inicio == Cfg.Init.DataDummy() && this.montagem_cronograma != Cfg.Init.DataDummy())
             {
                 this.montagem_cronograma_inicio = ((DateTime)this.logistica_cronograma).AddDays(2);
             }
@@ -109,7 +110,7 @@ namespace DLM.painel
 
             this.montagem_engenheiro = L.Get("montagem_engenheiro").ToString();
 
-            if (this.montagem_cronograma_inicio < Conexoes.Utilz.Calendario.DataDummy())
+            if (this.montagem_cronograma_inicio < Cfg.Init.DataDummy())
             {
                 this.Montagem_Balanco = false;
                 this.montagem_cronograma = L.Get("montagem_fim").Data();
@@ -147,7 +148,7 @@ namespace DLM.painel
 
 
             DateTime mont = L.Get("update_montagem").Data();
-            if (mont > Conexoes.Utilz.Calendario.DataDummy())
+            if (mont > Cfg.Init.DataDummy())
             {
                 this.update_montagem = "Montagem: " + mont.ToShortDateString();
             }

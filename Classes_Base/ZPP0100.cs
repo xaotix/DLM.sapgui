@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DLM.vars;
 
 namespace DLM.sapgui
 {
@@ -39,7 +40,7 @@ namespace DLM.sapgui
         public string Sld_1204 { get; set; } = "";
         public string St_Conf_ { get; set; } = "";
         public string St_DtProg_ { get; set; } = "";
-        public DateTime Data { get; set; } = new DateTime();
+        public DateTime Data { get; set; } = Cfg.Init.DataDummy();
         public string Ordem_Prod_ { get; set; } = "";
         public string Apontamento_Fert { get; set; } = "";
         public DLM.db.Linha GetLinha()

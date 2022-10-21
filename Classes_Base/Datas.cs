@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DLM.vars;
 
 namespace DLM.sapgui
 {
@@ -50,10 +51,10 @@ namespace DLM.sapgui
         public string Status { get; private set; } = "";
         public string Texto_Operacao { get; private set; } = "";
 
-        public DateTime Data_Inicio_Base { get; private set; } = new DateTime();
-        public DateTime Data_Fim_Base { get; private set; } = new DateTime();
-        public DateTime Inicio_Previsto { get; private set; } = new DateTime();
-        public DateTime Fim_Previsto { get; private set; } = new DateTime();
+        public DateTime Data_Inicio_Base { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime Data_Fim_Base { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime Inicio_Previsto { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime Fim_Previsto { get; private set; } = Cfg.Init.DataDummy();
 
         public CN47N_Datas()
         {

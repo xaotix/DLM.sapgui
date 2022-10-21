@@ -1,4 +1,5 @@
 ﻿using Conexoes;
+using DLM.vars;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -202,7 +203,7 @@ namespace DLM.sapgui
             }
         }
 
-        private DateTime _Engenharia_Cronograma { get; set; } = new DateTime();
+        private DateTime _Engenharia_Cronograma { get; set; } = Cfg.Init.DataDummy();
 
         public DateTime Engenharia_Cronograma
         {
@@ -217,7 +218,7 @@ namespace DLM.sapgui
             }
         }
 
-        private DateTime _Engenharia_Cronograma_Inicio { get; set; } = new DateTime();
+        private DateTime _Engenharia_Cronograma_Inicio { get; set; } = Cfg.Init.DataDummy();
 
         public DateTime Engenharia_Cronograma_Inicio
         {
@@ -232,7 +233,7 @@ namespace DLM.sapgui
             }
         }
 
-        private DateTime _Engenharia_Liberacao { get; set; } = new DateTime();
+        private DateTime _Engenharia_Liberacao { get; set; } = Cfg.Init.DataDummy();
 
         public DateTime Engenharia_Liberacao
         {
@@ -247,7 +248,7 @@ namespace DLM.sapgui
             }
         }
 
-        private DateTime _Fabrica_Cronograma { get; set; } = new DateTime();
+        private DateTime _Fabrica_Cronograma { get; set; } = Cfg.Init.DataDummy();
 
         public DateTime Fabrica_Cronograma
         {
@@ -262,7 +263,7 @@ namespace DLM.sapgui
             }
         }
 
-        private DateTime _Fabrica_Cronograma_Inicio { get; set; } = new DateTime();
+        private DateTime _Fabrica_Cronograma_Inicio { get; set; } = Cfg.Init.DataDummy();
 
         public DateTime Fabrica_Cronograma_Inicio
         {
@@ -277,7 +278,7 @@ namespace DLM.sapgui
             }
         }
 
-        private DateTime _Logistica_Cronograma { get; set; } = new DateTime();
+        private DateTime _Logistica_Cronograma { get; set; } = Cfg.Init.DataDummy();
 
         public DateTime Logistica_Cronograma
         {
@@ -292,7 +293,7 @@ namespace DLM.sapgui
             }
         }
 
-        private DateTime _Logistica_Cronograma_Inicio { get; set; } = new DateTime();
+        private DateTime _Logistica_Cronograma_Inicio { get; set; } = Cfg.Init.DataDummy();
 
         public DateTime Logistica_Cronograma_Inicio
         {
@@ -307,7 +308,7 @@ namespace DLM.sapgui
             }
         }
 
-        private DateTime _Montagem_Cronograma { get; set; } = new DateTime();
+        private DateTime _Montagem_Cronograma { get; set; } = Cfg.Init.DataDummy();
 
         public DateTime Montagem_Cronograma
         {
@@ -322,7 +323,7 @@ namespace DLM.sapgui
             }
         }
 
-        private DateTime _Montagem_Cronograma_Inicio { get; set; } = new DateTime();
+        private DateTime _Montagem_Cronograma_Inicio { get; set; } = Cfg.Init.DataDummy();
 
         public DateTime Montagem_Cronograma_Inicio
         {
@@ -338,15 +339,15 @@ namespace DLM.sapgui
         }
 
 
-        public DateTime eng_base_ini { get; set; } = new DateTime();
-        public DateTime fab_base_ini { get; set; } = new DateTime();
-        public DateTime log_base_ini { get; set; } = new DateTime();
-        public DateTime mon_base_ini { get; set; } = new DateTime();
+        public DateTime eng_base_ini { get; set; } = Cfg.Init.DataDummy();
+        public DateTime fab_base_ini { get; set; } = Cfg.Init.DataDummy();
+        public DateTime log_base_ini { get; set; } = Cfg.Init.DataDummy();
+        public DateTime mon_base_ini { get; set; } = Cfg.Init.DataDummy();
 
-        public DateTime eng_base_fim { get; set; } = new DateTime();
-        public DateTime fab_base_fim { get; set; } = new DateTime();
-        public DateTime log_base_fim { get; set; } = new DateTime();
-        public DateTime mon_base_fim { get; set; } = new DateTime();
+        public DateTime eng_base_fim { get; set; } = Cfg.Init.DataDummy();
+        public DateTime fab_base_fim { get; set; } = Cfg.Init.DataDummy();
+        public DateTime log_base_fim { get; set; } = Cfg.Init.DataDummy();
+        public DateTime mon_base_fim { get; set; } = Cfg.Init.DataDummy();
 
 
         private double _Produzido { get; set; } = 0;

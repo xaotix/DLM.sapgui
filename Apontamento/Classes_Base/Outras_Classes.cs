@@ -45,8 +45,8 @@ namespace DLM.painel
     public class Atraso_Planejamento
     {
         public string pep { get; set; } = "";
-        public DateTime? data_inicio { get; set; } = new DateTime();
-        public DateTime? data_fim { get; set; } = new DateTime();
+        public DateTime? data_inicio { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? data_fim { get; set; } = Cfg.Init.DataDummy();
         public double previsto { get; set; } = 0;
         public double atual { get; set; } = 0;
         public double peso { get; set; } = 0;
@@ -387,7 +387,7 @@ namespace DLM.painel
     public class Grupo_Mercadoria
     {
         public string descricao_obra { get; set; } = "";
-        public DateTime fabrica_cronograma { get; set; } = new DateTime();
+        public DateTime fabrica_cronograma { get; set; } = Cfg.Init.DataDummy();
         public string pep { get; set; } = "";
         public string subetapa
         {
@@ -550,8 +550,8 @@ namespace DLM.painel
         public int fases { get; set; } = 0;
         public int subfases { get; set; } = 0;
 
-        public DateTime? Inicio { get; set; } = new DateTime();
-        public DateTime? Fim { get; set; } = new DateTime();
+        public DateTime? Inicio { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? Fim { get; set; } = Cfg.Init.DataDummy();
 
         private List<PLAN_PECA> _pecas { get; set; }
 

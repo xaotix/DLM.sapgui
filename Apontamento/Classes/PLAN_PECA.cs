@@ -112,7 +112,7 @@ namespace DLM.painel
             return retorno;
         }
 
-        public DateTime ultima_edicao { get; private set; } = new DateTime();
+        public DateTime ultima_edicao { get; private set; } = Cfg.Init.DataDummy();
         public string unidade
         {
             get
@@ -180,8 +180,8 @@ namespace DLM.painel
         public string TIPO_DE_PINTURA { get; private set; } = "";
         public string ULTIMO_STATUS { get; private set; } = "";
 
-        public DateTime? inicio { get; set; } = new DateTime();
-        public DateTime? fim { get; set; } = new DateTime();
+        public DateTime? inicio { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? fim { get; set; } = Cfg.Init.DataDummy();
         public string subetapa
         {
             get

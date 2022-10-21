@@ -504,7 +504,7 @@ public class Relatorios
             myChart.SetPosition(lin, 0, col, 0);
             return c0a;
         }
-        public static bool Exportar_Avanco_Fabrica(List<PLAN_SUB_ETAPA> subetapas, string Destino, bool abrir = true)
+        public static bool Exportar_Avanco_Fabrica(List<PLAN_SUB_ETAPA> subetapas, string destino, bool abrir = true)
         {
             if (!File.Exists(Vars.TEMPLATE_AVANCO_FABRICA))
             {
@@ -517,19 +517,19 @@ public class Relatorios
             }
 
            
-            if (Destino == "")
+            if (destino == "")
             {
-                Destino = Conexoes.Utilz.SalvarArquivo("XLSX", "SELECIONE O DESTINO");
+                destino = Conexoes.Utilz.SalvarArquivo("XLSX", "SELECIONE O DESTINO");
             }
 
-            if(Destino=="" |  Destino==null)
+            if(destino=="" |  destino==null)
             {
                 return false;
             }
             try
             {
-                if (File.Exists(Destino)) { File.Delete(Destino); };
-                File.Copy(Vars.TEMPLATE_AVANCO_FABRICA, Destino);
+                if (File.Exists(destino)) { File.Delete(destino); };
+                File.Copy(Vars.TEMPLATE_AVANCO_FABRICA, destino);
             }
             catch (Exception EX)
             {
@@ -554,7 +554,7 @@ public class Relatorios
             {
                 using (var pck = new OfficeOpenXml.ExcelPackage())
                 {
-                    using (Stream stream = new FileStream(Destino,
+                    using (Stream stream = new FileStream(destino,
                                      FileMode.Open,
                                      FileAccess.Read,
                                      FileShare.ReadWrite))
@@ -569,11 +569,11 @@ public class Relatorios
 
                     gravar_avanco_fabrica(subetapas, principal, status);
 
-                    pck.SaveAs(new FileInfo(Destino));
+                    pck.SaveAs(new FileInfo(destino));
                     if (abrir)
                     {
 
-                        Process.Start(Destino);
+                        Process.Start(destino);
                     }
                 }
 
@@ -603,7 +603,7 @@ public class Relatorios
                 var pds = subetapas.Select(x => x.pedido).Distinct().ToList();
                 var pedidos = DLM.painel.Buffer.GetTitulosPedidos().FindAll(x => pds.Find(y=>y==x.CHAVE)!=null);
 
-                var mindate = Conexoes.Utilz.Calendario.DataDummy();
+                var mindate = Cfg.Init.DataDummy();
                 foreach (var sub in subetapas)
                 {
                     var ped = pedidos.Find(x => x.CHAVE == sub.pedido);
@@ -739,7 +739,7 @@ public class Relatorios
                     int l = 0;
 
                     var subetapas = peps.FindAll(x => !x.resumo_pecas.etapa_bloqueada).Select(x => x.subetapa).Distinct().ToList().OrderBy(X => X);
-                    DateTime mindate = Conexoes.Utilz.Calendario.DataDummy();
+                    DateTime mindate = Cfg.Init.DataDummy();
                     principal.Cells[1, c0].Value = descricao;
                     principal.Cells[2, c0].Value = pedido;
                     principal.Cells[3, c0].Value = local;
@@ -995,7 +995,7 @@ public class Relatorios
                     int l0 = 7;
                     int c0 = 1;
                     int l = 0;
-                    var mindia = Conexoes.Utilz.Calendario.DataDummy();
+                    var mindia = Cfg.Init.DataDummy();
                     DateTime min = peps.FindAll(x => (DateTime)x.montagem_cronograma_inicio > mindia).Min(x => (DateTime)x.montagem_cronograma_inicio);
                     DateTime max = peps.Max(x => (DateTime)x.montagem_cronograma);
                     DateTime at = new DateTime(min.Ticks);
@@ -1141,15 +1141,12 @@ public class Relatorios
 
         public static bool RelatorioAvanco(PLAN_BASE item, bool pecas = true, bool abrir = true )
         {
-           var Destino = Conexoes.Utilz.SalvarArquivo("XLSX", "SELECIONE O DESTINO");
-            if (Destino == ""| Destino==null)
-            {
-                return false;
-            }
+           var destino = Conexoes.Utilz.SalvarArquivo("XLSX", "SELECIONE O DESTINO");
+            if (destino == null) { return false; }
 
 
-            RelatorioAvanco(item.GetPecas(), pecas? item.GetSubEtapas():new List<PLAN_SUB_ETAPA>(), Destino, abrir);
-            return File.Exists(Destino);
+            RelatorioAvanco(item.GetPecas(), pecas? item.GetSubEtapas():new List<PLAN_SUB_ETAPA>(), destino, abrir);
+            return File.Exists(destino);
         }
         public static bool RelatorioAvanco(List<PLAN_PECA> PECAS, List<PLAN_SUB_ETAPA> subetapas = null,string Destino = "", bool abrir = true)
         {
@@ -1224,7 +1221,7 @@ public class Relatorios
                     int l = 1;
                     int c0 = 1;
                     var w = Conexoes.Utilz.Wait(PECAS.Count,"Gerando Planilha...");
-                    var mindia = Conexoes.Utilz.Calendario.DataDummy();
+                    var mindia = Cfg.Init.DataDummy();
                      double at = 0;
                     var pedidosstr = PECAS.Select(x => x.pedido_completo).Distinct().ToList();
                     var peds_peps = DLM.painel.Buffer.GetTitulosPedidos().FindAll(x => pedidosstr.Find(y => x.CHAVE.Contains(y)) != null);
@@ -1689,7 +1686,7 @@ public class Relatorios
                 int c0 = 1;
               
                 w.SetProgresso(1, Pecas.Count,"Mapeando peças...");
-                var mindia = Conexoes.Utilz.Calendario.DataDummy();
+                var mindia = Cfg.Init.DataDummy();
                 double at = 0;
                 var tot = Pecas.Count;
 
@@ -1904,7 +1901,7 @@ public class Relatorios
                 int c0 = 1;
 
                 w.SetProgresso(1, Pecas.Count, "Mapeando peças...");
-                var mindia = Conexoes.Utilz.Calendario.DataDummy();
+                var mindia = Cfg.Init.DataDummy();
                 var tot = Pecas.Count;
 
 
@@ -2199,7 +2196,7 @@ public class Relatorios
                     int c0 = 1;
                     var w = Conexoes.Utilz.Wait(PECAS.Count);
                     var TOT = PECAS.Count;
-                    var mindia = Conexoes.Utilz.Calendario.DataDummy();
+                    var mindia = Cfg.Init.DataDummy();
                     double at = 0;
 
 

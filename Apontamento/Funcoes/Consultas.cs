@@ -397,20 +397,20 @@ namespace DLM.painel
                     //{
                     //    dt_eng = etapa.Real.data_transsap;
                     //}
-                    if (dt_eng < Conexoes.Utilz.Calendario.DataDummy() && etapa.ef<=DateTime.Now)
+                    if (dt_eng < Cfg.Init.DataDummy() && etapa.ef<=DateTime.Now)
                     {
                         dt_eng = (DateTime)etapa.ef;
                     }
                     var dt_fab = (DateTime)etapa.Real.resumo_pecas.Fim;
-                    if (dt_fab < Conexoes.Utilz.Calendario.DataDummy() && etapa.ff <= DateTime.Now)
+                    if (dt_fab < Cfg.Init.DataDummy() && etapa.ff <= DateTime.Now)
                     {
                         dt_fab = (DateTime)etapa.ff;
                     }
-                    if (dt_fab < Conexoes.Utilz.Calendario.DataDummy() && etapa.fi <= DateTime.Now)
+                    if (dt_fab < Cfg.Init.DataDummy() && etapa.fi <= DateTime.Now)
                     {
                         dt_fab = (DateTime)etapa.fi;
                     }
-                    if (dt_fab < Conexoes.Utilz.Calendario.DataDummy())
+                    if (dt_fab < Cfg.Init.DataDummy())
                     {
                         dt_fab = (DateTime)etapa.Real.ultima_edicao;
                     }
@@ -1270,7 +1270,7 @@ namespace DLM.painel
         public static List<Meta> GetMeta(List<PLAN_SUB_ETAPA> lista, Range_Meta range = Range_Meta.Mes, Tipo_Meta Tipo = Tipo_Meta.Tudo, Tipo_Filtro_Meta Filtro = Tipo_Filtro_Meta.Etapa)
         {
             List<Meta> retorno = new List<Meta>();
-            DateTime min_sistema = Conexoes.Utilz.Calendario.DataDummy();
+            DateTime min_sistema = Cfg.Init.DataDummy();
 
 
             if (Tipo == Tipo_Meta.Engenharia)

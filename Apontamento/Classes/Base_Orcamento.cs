@@ -1,4 +1,5 @@
 ﻿using DLM.sapgui;
+using DLM.vars;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -251,7 +252,7 @@ namespace DLM.painel
             return "[PGO] - [" + this.PEP + "] - " + this.descricao + " [" + this.numerocontrato + "." + this.revisao + "]";
         }
 
-        public DateTime criacao { get; set; } = new DateTime();
+        public DateTime criacao { get; set; } = Cfg.Init.DataDummy();
         public ORC_PED(DLM.db.Linha l, Tipo_Material tipo)
         {
             this.L = l;
