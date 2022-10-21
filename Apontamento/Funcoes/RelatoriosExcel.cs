@@ -519,7 +519,7 @@ public class Relatorios
            
             if (destino == "")
             {
-                destino = Conexoes.Utilz.SalvarArquivo("XLSX", "SELECIONE O DESTINO");
+                destino = Conexoes.Utilz.SalvarArquivo("xlsx");
             }
 
             if(destino=="" |  destino==null)
@@ -1141,7 +1141,7 @@ public class Relatorios
 
         public static bool RelatorioAvanco(PLAN_BASE item, bool pecas = true, bool abrir = true )
         {
-           var destino = Conexoes.Utilz.SalvarArquivo("XLSX", "SELECIONE O DESTINO");
+           var destino = Conexoes.Utilz.SalvarArquivo("xlsx");
             if (destino == null) { return false; }
 
 
@@ -1173,7 +1173,7 @@ public class Relatorios
 
             if(Destino=="" | Destino == null)
             {
-            Destino = Conexoes.Utilz.SalvarArquivo("XLSX", "SELECIONE O DESTINO");
+            Destino = Conexoes.Utilz.SalvarArquivo("xlsx");
 
             }
             if (Destino == "")
