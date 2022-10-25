@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace DLM.sapgui
 {
-    public enum CJ20N_Tipo
-    {
-        Pedido,
-        Etapa,
-        SubEtapa,
-        PEP,
-        Tarefa,
-        Desconhecido,
-    }
+    //public enum CJ20N_Tipo
+    //{
+    //    Pedido,
+    //    Etapa,
+    //    SubEtapa,
+    //    PEP,
+    //    Tarefa,
+    //    Desconhecido,
+    //}
     public enum ZPP0100_Tipo
     {
         Monitor_Embarque,

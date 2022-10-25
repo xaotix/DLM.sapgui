@@ -19,7 +19,7 @@ namespace DLM.painel
         {
             var lista = linhas.FindAll(x => x.Get("Material").ToString() == this.material.ToString());
 
-            this.qtd_embarcada = lista.FindAll(x=>x.Get("St_Conf_").ToString().ToUpper() == "@5Y@").Sum(x => Conexoes.Utilz.Double(x.Get("Qtd_Embarque")));
+            this.qtd_embarcada = lista.FindAll(x=>x.Get("St_Conf_").ToString().ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => Conexoes.Utilz.Double(x.Get("Qtd_Embarque")));
             var marca = lista.Select(x => x.Get("Tamanho_dimensao").ToString()).Distinct().ToList().FindAll(x=>x.Replace(" ","")!="");
 
             if(marca.Count>0)
@@ -45,7 +45,7 @@ namespace DLM.painel
                 {
                     return DUMMY;
                 }
-                var t = Conexoes.DBases.GetEsquemas().Find(x => x.ESQUEMA_COD == this.esq_de_pintura);
+                var t = DBases.GetEsquemas().Find(x => x.ESQUEMA_COD == this.esq_de_pintura);
                 if (t != null)
                 {
                     return t;
@@ -258,10 +258,10 @@ namespace DLM.painel
                 {
                     _logistica = new List<Logistica_Planejamento>();
 
-                    var lista_log = Conexoes.DBases.GetDBMySQL().Consulta($"SELECT *  from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0066n_logistica} as pr where pr.pep ='{PEP}' and pr.material = '{material}'");
-                    foreach (var t in lista_log.Linhas)
+                    var consulta = DBases.GetDB().Consulta($"SELECT *  from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0066n_logistica} as pr where pr.pep ='{PEP}' and pr.material = '{material}'");
+                    foreach (var linha in consulta.Linhas)
                     {
-                        this._logistica.Add(new Logistica_Planejamento(this, t));
+                        this._logistica.Add(new Logistica_Planejamento(this, linha));
                     }
                 }
                 return _logistica;
@@ -456,7 +456,7 @@ namespace DLM.painel
                     var ts = Buffer.Bobinas.Find(x => x.SAP == this.codigo_materia_prima_sap);
                     if(ts==null)
                     {
-                        var t = Conexoes.DBases.GetBancoRM().GetBobina(this.codigo_materia_prima_sap);
+                        var t = DBases.GetBancoRM().GetBobina(this.codigo_materia_prima_sap);
                         if (t != null)
                         {
                             Buffer.Bobinas.Add(t);

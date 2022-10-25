@@ -480,7 +480,7 @@ namespace DLM.sapgui
 
             
 
-            foreach (var t in this.Embarque.FindAll(x => x.Carregado()))
+            foreach (var t in this.Embarque.FindAll(x => x.Carregado))
             {
                 var s = Producao.Find(x => x.material == t.Material);
                 if (s != null)

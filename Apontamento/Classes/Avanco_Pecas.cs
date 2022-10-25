@@ -27,7 +27,7 @@ namespace DLM.painel
             {
                 return;
             }
-            DBases.GetDBMySQL().Cadastro(l.Celulas, Cfg.Init.db_comum, "avanco_pecas");
+            DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, "avanco_pecas");
         }
         public string pep { get; set; } = "";
         public string predio { get; set; } = "";

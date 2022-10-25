@@ -867,15 +867,15 @@ public class Relatorios
                                     {
                                         var wpcs = pep.GetPecas().FindAll(x => x.centro == wk);
                                             int c = 3;
-                                        if(wk == "1202")
+                                        if(wk == Cfg.Init.CENTRO_NOB)
                                         {
                                            
                                         }
-                                        else if (wk == "1203")
+                                        else if (wk == Cfg.Init.CENTRO_SER)
                                         {
                                             c = 7;
                                         }
-                                        else if (wk == "1204")
+                                        else if (wk == Cfg.Init.CENTRO_CHA)
                                         {
                                             c = 11;
                                         }
@@ -1676,7 +1676,7 @@ public class Relatorios
                
                 if(pc.contrato.Length>0)
                 {
-                    DBases.GetDBMySQL().Apagar("pep", $"%{pc.contrato}%", Cfg.Init.db_painel_de_obras2, "pecas", true);     
+                    DBases.GetDB().Apagar("pep", $"%{pc.contrato}%", Cfg.Init.db_painel_de_obras2, "pecas", true);     
                 }
             }
             try
@@ -1827,7 +1827,7 @@ public class Relatorios
                         w.somaProgresso();
                     }
 
-                    DBases.GetDBMySQL().Cadastro(linhas, Cfg.Init.db_painel_de_obras2, "pecas");
+                    DBases.GetDB().Cadastro(linhas, Cfg.Init.db_painel_de_obras2, "pecas");
                 }
 
             }
@@ -1892,7 +1892,7 @@ public class Relatorios
             var w = Conexoes.Utilz.Wait(10, "Consultando logística...");
 
 
-            var Pecas = Conexoes.DBases.GetDBMySQL().Consulta($"SELECT * FROM {Cfg.Init.db_painel_de_obras2}.{Cfg.Init.tb_pecas} AS pr WHERE pr.pep LIKE '%{contrato}%'").Linhas;
+            var Pecas = DBases.GetDB().Consulta($"SELECT * FROM {Cfg.Init.db_painel_de_obras2}.{Cfg.Init.tb_pecas} AS pr WHERE pr.pep LIKE '%{contrato}%'").Linhas;
 
             try
             {

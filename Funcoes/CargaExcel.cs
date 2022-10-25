@@ -1,4 +1,5 @@
-﻿using DLM.painel;
+﻿using Conexoes;
+using DLM.painel;
 using DLM.vars;
 using System;
 using System.Collections.Concurrent;
@@ -151,8 +152,8 @@ namespace DLM.sapgui
             //19/06/2020 - aumentei o filtro para pegar a subetapa. serão mais consultas, no entanto evita os erros.
             /*12/05/2022 - mudei a chamada para um procedure.*/
             var chamada = $"call comum.zpp_cooisn_get_qtd_pc('{Pedido.Replace("*","").Replace(" ","")}')";
-            //var consulta = Conexoes.DBases.GetDBMySQL().Consulta($"SELECT left(pr.pep,17) as pep, count(pr.pep) as pcs from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpmp_producao} as pr where pr.pep like '%{Pedido}%' and pr.material like '31%' group by left(pr.pep,17) order by count(pr.pep) desc".Replace("*", ""));
-            var consulta = Conexoes.DBases.GetDBMySQL().Consulta(chamada);
+            //var consulta = DBases.GetDBMySQL().Consulta($"SELECT left(pr.pep,17) as pep, count(pr.pep) as pcs from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpmp_producao} as pr where pr.pep like '%{Pedido}%' and pr.material like '31%' group by left(pr.pep,17) order by count(pr.pep) desc".Replace("*", ""));
+            var consulta = DBases.GetDB().Consulta(chamada);
             var peps = consulta.Linhas.Select(x => x.Get("pep").ToString()).ToList(); 
             var w = Conexoes.Utilz.Wait(peps.Count, Pedido + " ZPPCOOISN"); 
             w.somaProgresso();
@@ -509,7 +510,7 @@ namespace DLM.sapgui
                         linhas.Add(new DLM.db.Linha(valores));
                     }
                 }
-                var ok = Conexoes.DBases.GetDBMySQL().Cadastro(linhas, Cfg.Init.db_comum, "zppcooisn");
+                DBases.GetDB().Cadastro(linhas, Cfg.Init.db_comum, "zppcooisn");
             }
         }
 

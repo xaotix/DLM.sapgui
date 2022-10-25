@@ -16,10 +16,7 @@ namespace DLM.sapgui
         public string Ordem_Embarque { get; set; } = "";
         public string Qtd_Embarque { get; set; } = "";
         public string Nro_Carga { get; set; } = "";
-        public bool Carregado()
-        {
-            return this.St_Conf_.ToUpper() == "@5Y@";
-        }
+        public bool Carregado => this.St_Conf_.ToUpper() ==  Cfg.Init.ZPP0100_CARGA_CONFIRMADA;
         public string St_Embarque { get; set; } = "";
         public string St_Carga { get; set; } = "";
         public string Etq_Material { get; set; } = "";

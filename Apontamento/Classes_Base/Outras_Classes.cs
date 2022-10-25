@@ -321,7 +321,7 @@ namespace DLM.painel
         private void GetDados_0100(DLM.db.Linha l)
         {
             this.descricao = l.Get("Descricao").ToString();
-            this.carga_confirmada = l.Get("St_Conf_").ToString().ToUpper() == "@5Y@";
+            this.carga_confirmada = l.Get("St_Conf_").ToString().ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA;
             this.num_carga = "RN" + l.Get("Nro_Carga").ToString()/*.PadLeft(5,'0')*/;
             this.pack_list = "PL" + l.Get("Ordem_Embarque").ToString().PadLeft(5, '0');
             this.pep = l.Get("Elemento_PEP").ToString();

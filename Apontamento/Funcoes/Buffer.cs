@@ -1,4 +1,5 @@
-﻿using DLM.vars;
+﻿using Conexoes;
+using DLM.vars;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -147,13 +148,13 @@ namespace DLM.painel
                 _ObrasPorSegmento = new List<PLAN_OBRAS>();
 
                 var segs = Obras().Select(x => x.setor_atividade).Distinct().ToList().OrderBy(x => x).ToList();
-                var familias = Conexoes.DBases.GetSegmentos().FindAll(y => segs.Find(z => z == y.COD) != null).Select(x => x.FAMILIA).Distinct().ToList();
+                var familias = DBases.GetSegmentos().FindAll(y => segs.Find(z => z == y.COD) != null).Select(x => x.FAMILIA).Distinct().ToList();
 
                 foreach (var fam in familias)
                 {
                     List<PLAN_OBRA> obras = new List<PLAN_OBRA>();
-                    var segmentos = Conexoes.DBases.GetSegmentos().FindAll(x => x.FAMILIA == fam).Select(x => x.COD).Distinct().ToList();
-                    string nome = Conexoes.DBases.GetSegmentos().Find(x => x.FAMILIA == fam).FAMILIA_DESC;
+                    var segmentos = DBases.GetSegmentos().FindAll(x => x.FAMILIA == fam).Select(x => x.COD).Distinct().ToList();
+                    string nome = DBases.GetSegmentos().Find(x => x.FAMILIA == fam).FAMILIA_DESC;
                     foreach (var ss in segmentos)
                     {
                         obras.AddRange(Obras().FindAll(x => x.setor_atividade == ss));
@@ -182,7 +183,7 @@ namespace DLM.painel
         {
             if (_Titulos_Pedidos != null) { return _Titulos_Pedidos; }
             _Titulos_Pedidos = new List<Titulo_Planejamento>();
-            var lista_fab = Conexoes.DBases.GetDBMySQL().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
+            var lista_fab = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
             ConcurrentBag<Titulo_Planejamento> retorno = new ConcurrentBag<Titulo_Planejamento>();
             List<Task> Tarefas = new List<Task>();
             foreach (var s in lista_fab.Linhas)
@@ -193,7 +194,7 @@ namespace DLM.painel
             _Titulos_Pedidos.AddRange(retorno);
 
             
-            var lista_orcamento = Conexoes.DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_resumo);
+            var lista_orcamento = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_resumo);
 
             foreach (var s in lista_orcamento.Linhas)
             {
@@ -211,7 +212,7 @@ namespace DLM.painel
             if (_Status == null)
             {
                 _Status = new List<StatusSAP_Planejamento>();
-                var lista_log = Conexoes.DBases.GetDBMySQL().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_status_sap);
+                var lista_log = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_status_sap);
                 foreach (var t in lista_log.Linhas)
                 {
                     _Status.Add(new StatusSAP_Planejamento(t));

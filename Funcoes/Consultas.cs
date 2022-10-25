@@ -811,11 +811,11 @@ namespace DLM.sapgui
                                 {
                                     // CP - NB - SR (CALENDÁRIO FÁBRICA)
                                     string cal = "NB";
-                                    if (centro == "1203")
+                                    if (centro == Cfg.Init.CENTRO_SER)
                                     {
                                         cal = "SR";
                                     }
-                                    else if (centro == "1204")
+                                    else if (centro == Cfg.Init.CENTRO_CHA)
                                     {
                                         cal = "CP";
                                     }
@@ -1044,11 +1044,11 @@ namespace DLM.sapgui
                                 {
                                     // CP - NB - SR (CALENDÁRIO FÁBRICA)
                                     string cal = "NB";
-                                    if (centro == "1203")
+                                    if (centro == Cfg.Init.CENTRO_SER)
                                     {
                                         cal = "SR";
                                     }
-                                    else if (centro == "1204")
+                                    else if (centro == Cfg.Init.CENTRO_CHA)
                                     {
                                         cal = "CP";
                                     }
@@ -1378,7 +1378,7 @@ namespace DLM.sapgui
                        session.findById("wnd[0]/tbar[1]/btn[8]").press
                        session.findById("wnd[0]/tbar[1]/btn[48]").press
                      */
-                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtWERKS-LOW")).Text = "1202";
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtWERKS-LOW")).Text = Cfg.Init.CENTRO_NOB;
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtLGORT-LOW")).Text = "0010";
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtBWART-LOW")).Text = "311";
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtBUDAT-LOW")).Text = dt_de;

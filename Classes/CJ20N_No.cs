@@ -1,4 +1,5 @@
 ﻿using Conexoes;
+using DLM.vars;
 using SAPFEWSELib;
 using System;
 using System.Collections.Generic;
