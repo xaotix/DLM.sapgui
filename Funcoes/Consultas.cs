@@ -984,7 +984,7 @@ namespace DLM.sapgui
             }
 
         }
-        public bool CJ20N_CriarEtapa(string nome, string descricao, bool planejado = true, bool contabil = true, bool faturamento = false, string empresa = "1100", string centro = "1104", string divisao = "1104", bool escondermsgs = false)
+        public bool CJ20N_CriarEtapa(string nome, string descricao, bool planejado = true, bool contabil = true, bool faturamento = false, string empresa = "1100", string centro = "1104", string divisao = "1104", bool msgs = false)
         {
 
             try
@@ -1095,7 +1095,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    if (!escondermsgs)
+                    if (msgs)
                     {
                         MessageBox.Show("Não foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
@@ -1104,12 +1104,15 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                if (!escondermsgs)
+                if (msgs)
                 {
-                    MessageBox.Show("Não foi possível consultar o projeto\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                    Esc();
-
+                    Conexoes.Utilz.Alerta(ex);
                 }
+                else
+                {
+                    DLM.log.Log(ex);
+                }
+                Retornar();
                 return false;
             }
 
@@ -1177,9 +1180,13 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                if (!msgs)
+                               if (msgs)
                 {
-                    MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    Conexoes.Utilz.Alerta(ex);
+                }
+                else
+                {
+                    DLM.log.Log(ex);
                 }
                 return false;
             }
@@ -1233,10 +1240,13 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                if(msgs)
+                if (msgs)
                 {
-                MessageBox.Show("Não foi possível criar o arquivo\n"+ ex.Message,"Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-
+                    Conexoes.Utilz.Alerta(ex);
+                }
+                else
+                {
+                    DLM.log.Log(ex);
                 }
                 return false;
             }
@@ -1293,9 +1303,13 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-
+                    Conexoes.Utilz.Alerta(ex);
                 }
+                else
+                {
+                    DLM.log.Log(ex);
+                }
+
                 return false;
             }
 
@@ -1334,8 +1348,9 @@ namespace DLM.sapgui
                     return false;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                DLM.log.Log(ex);
                 //MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return false;
             }
@@ -1420,10 +1435,10 @@ namespace DLM.sapgui
                         return Conexoes.Utilz.Excel.GetTabela(arquivo);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
-                    Conexoes.Utilz.Alerta($"Não foi possível rodar a transação MB51");
+                    Conexoes.Utilz.Alerta(ex);
 
                 }
                 this.Desbloqueia_Secao();
@@ -1490,7 +1505,7 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                Conexoes.Utilz.Alerta($"Não foi possível rodar a transação ZPPCOOISN");
+                Conexoes.Utilz.Alerta(ex);
             }
             return retorno;
         }
@@ -1508,17 +1523,18 @@ namespace DLM.sapgui
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                DLM.log.Log(ex);
             }
             try
             {
                 ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtTCNT-PROF_DB")).Text = "PS0000000001";
                 ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                DLM.log.Log(ex);
             }
         }
 
@@ -1572,10 +1588,13 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                if(msgs)
+                if (msgs)
                 {
-
-                MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    Conexoes.Utilz.Alerta(ex);
+                }
+                else
+                {
+                    DLM.log.Log(ex);
                 }
                 return false;
             }
@@ -1632,8 +1651,11 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-
-                    MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    Conexoes.Utilz.Alerta(ex);
+                }
+                else
+                {
+                    DLM.log.Log(ex);
                 }
                 return false;
             }
@@ -1690,10 +1712,15 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
+
                 if (msgs)
                 {
 
-                    MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    Conexoes.Utilz.Alerta(ex);
+                }
+                else
+                {
+                    DLM.log.Log(ex);
                 }
                 return false;
             }
@@ -1739,8 +1766,9 @@ namespace DLM.sapgui
                     return false;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                DLM.log.Log(ex);
                 //MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return false;
             }
@@ -1776,9 +1804,9 @@ namespace DLM.sapgui
                         ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[16]")).Press();
 
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-
+                        DLM.log.Log(ex);
                     }
 
                     ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/tabsTAB_STRIP/tabpSIVA/ssubSCREEN_HEADER:SAPLALDB:3010/tblSAPLALDBSINGLE/ctxtRSCSEL_255-SLOW_I[1,0]")).Text = "*FM*";
@@ -1798,10 +1826,10 @@ namespace DLM.sapgui
                         ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = ARQUIVO;
                         ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[11]")).Press();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
 
-                  
+                        DLM.log.Log(ex);
                     }
                    
 
@@ -1826,8 +1854,9 @@ namespace DLM.sapgui
                     return false;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                DLM.log.Log(ex);
                 //MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return false;
             }
@@ -1930,8 +1959,9 @@ namespace DLM.sapgui
                     return false;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                DLM.log.Log(ex);
                 //MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return false;
             }
@@ -1997,9 +2027,9 @@ namespace DLM.sapgui
                     goto denovo;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                DLM.log.Log(ex);
                 //throw;
             }
         }

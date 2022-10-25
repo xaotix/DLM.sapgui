@@ -77,7 +77,7 @@ namespace DLM.sapgui
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Operação abortada\n" + ex.Message + "\n" + ex.StackTrace);
+                    Conexoes.Utilz.Alerta(ex);
                     //MessageBox.Show(ex.Message);
                     return;
                 }
