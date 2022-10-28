@@ -70,6 +70,30 @@ namespace DLM.sapgui
 
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
+        public static List<FAGLB03> FAGLB03(string arquivo, string empresa_de = "1100", string empresa_ate = "1200", int ano = 2022, string conta = "3111003011", bool cadastrar = true)
+        {
+            var linhas = Conexoes.Utilz.Arquivo.Ler(arquivo);
+            List<FAGLB03> retorno = new List<FAGLB03>();
+            foreach(var linha in linhas)
+            {
+                var valores = linha.Split('|').ToList().Select(x => x.TrimStart().TrimEnd()).ToList();
+
+                if(valores.Count>=(int)TAB_FAGLB03.Dt_lcto)
+                {
+                    FAGLB03 pp = new FAGLB03(valores, empresa_de, empresa_ate, ano, conta);
+                    retorno.Add(pp);
+                }
+            }
+            db.Linha chave = new db.Linha();
+            chave.Add("K_ano", ano);
+            chave.Add("K_Empresa_De", empresa_de);
+            chave.Add("K_Empresa_Ate", empresa_ate);
+            chave.Add("K_Conta", conta);
+            Conexoes.DBases.GetDB().Apagar(chave, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
+            var tabela = retorno.GetTabela();
+            Conexoes.DBases.GetDB().Cadastro(tabela.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
+            return retorno;
+        }
         public static List<FAGLL03> FAGLL03(string arquivo, string pedido)
         {
             ConcurrentBag<FAGLL03> retorno = new ConcurrentBag<FAGLL03>();

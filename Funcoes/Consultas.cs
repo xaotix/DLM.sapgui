@@ -1865,6 +1865,109 @@ namespace DLM.sapgui
 
         public static DateTime antes { get; set; } = DateTime.Now.AddYears(-4);
         public static DateTime agora { get; set; } = DateTime.Now.AddYears(1);
+
+        public List<FAGLB03> FAGLB03(bool cadastrar,  int ano = 2022,  string conta = "3111003011", string empresa_de = "1100", string empresa_ate = "1200")
+        {
+            string arquivo = $"{Cfg.Init.DIR_APPDATA}FAGLB03.{ano}.{conta}.{empresa_de}.{empresa_ate}.{Cfg.Init.DATA_TEXT}.txt";
+
+
+            if (!Conexoes.Utilz.Apagar(arquivo))
+            {
+                return new List<FAGLB03>();
+            }
+
+
+
+            string pasta = Conexoes.Utilz.getPasta(arquivo);
+            string nome = Conexoes.Utilz.getNome(arquivo);
+            string ext = Conexoes.Utilz.getExtensao(arquivo);
+
+            //session.findById("wnd[0]/tbar[0]/okcd").text = "faglb03"
+            this.SessaoSAP.StartTransaction("faglb03");
+
+            //session.findById("wnd[0]/usr/ctxtRACCT-LOW").text = "3111003011"
+            SetTexto("wnd[0]/usr/ctxtRACCT-LOW", conta);
+
+            //session.findById("wnd[0]/usr/ctxtRACCT-HIGH").text
+            SetTexto("wnd[0]/usr/ctxtRACCT-HIGH", "");
+
+            //session.findById("wnd[0]/usr/ctxtRBUKRS-LOW").text = "1100"
+            SetTexto("wnd[0]/usr/ctxtRBUKRS-LOW", empresa_de);
+
+            //session.findById("wnd[0]/usr/ctxtRBUKRS-HIGH").text = "1200"
+            SetTexto("wnd[0]/usr/ctxtRBUKRS-HIGH", empresa_ate);
+
+            //session.findById("wnd[0]/usr/txtRYEAR").text = "2022"
+            ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txtRYEAR")).Text = ano.ToString();
+
+            //session.findById("wnd[0]").sendVKey 0
+            SendKey(0);
+
+            //session.findById("wnd[0]/tbar[1]/btn[8]").press
+            Press("wnd[0]/tbar[1]/btn[8]");
+
+            var gridview = ((GuiGridView)this.SessaoSAP.FindById("wnd[0]/usr/cntlFDBL_BALANCE_CONTAINER/shellcont/shell"));
+
+            //session.findById("wnd[0]/usr/cntlFDBL_BALANCE_CONTAINER/shellcont/shell").setCurrentCell 17,"BALANCE"
+            gridview.SetCurrentCell(17, "BALANCE");
+
+            //session.findById("wnd[0]/usr/cntlFDBL_BALANCE_CONTAINER/shellcont/shell").selectedRows = "17"
+            gridview.SelectedRows = "17";
+
+            //session.findById("wnd[0]/usr/cntlFDBL_BALANCE_CONTAINER/shellcont/shell").doubleClickCurrentCell
+            gridview.DoubleClickCurrentCell();
+
+            //session.findById("wnd[0]/tbar[1]/btn[33]").press
+            Press("wnd[0]/tbar[1]/btn[33]");
+
+            //session.findById("wnd[1]").sendVKey 2
+            SendKey(2);
+
+            //session.findById("wnd[0]/mbar/menu[6]/menu[5]/menu[2]/menu[1]").select
+            ((GuiMenu)this.SessaoSAP.FindById("wnd[0]/mbar/menu[6]/menu[5]/menu[2]/menu[1]")).Select();
+
+            //session.findById("wnd[1]/tbar[0]/btn[0]").press
+            Press("wnd[1]/tbar[0]/btn[0]");
+
+            //session.findById("wnd[1]/usr/ctxtDY_PATH").text = "c:\temp\"
+            SetTexto("wnd[1]/usr/ctxtDY_PATH", pasta);
+
+            //session.findById("wnd[1]/usr/ctxtDY_FILENAME").text = "faglb03.txt"
+            SetTexto("wnd[1]/usr/ctxtDY_FILENAME", $"{nome}{ext}");
+
+            //session.findById("wnd[1]/tbar[0]/btn[11]").press
+            Press("wnd[1]/tbar[0]/btn[11]");
+
+            //session.findById("wnd[0]/tbar[0]/btn[15]").press
+            Press("wnd[0]/tbar[0]/btn[15]");
+
+            //session.findById("wnd[0]/tbar[0]/btn[15]").press
+            Press("wnd[0]/tbar[0]/btn[15]");
+
+            //session.findById("wnd[0]/tbar[0]/btn[15]").press
+            Press("wnd[0]/tbar[0]/btn[15]");
+
+            if(cadastrar && arquivo.Existe())
+            {
+                var valores = CargaExcel.FAGLB03(arquivo, empresa_de,empresa_ate,ano,conta, cadastrar);
+                return valores;
+            }
+
+
+            return new List<FAGLB03>();
+        }
+        public void Press(string obj)
+        {
+            ((GuiButton)this.SessaoSAP.FindById(obj)).Press();
+        }
+        public void SetTexto(string obj, string valor)
+        {
+            ((GuiCTextField)this.SessaoSAP.FindById(obj)).Text = valor;
+        }
+        public void SendKey(int key, string wind = "wnd[0]")
+        {
+            ((GuiFrameWindow)this.SessaoSAP.FindById(wind)).SendVKey(key);
+        }
         /*ESSE CARA DÁ OS CUSTOS DA OBRA*/
         public bool FAGLL03(List<string> peps, string destino, string ARQUIVO)
         {

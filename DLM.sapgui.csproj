@@ -181,6 +181,7 @@
     <Compile Include="Apontamento\Funcoes\RelatoriosExcel.cs" />
     <Compile Include="Apontamento\Funcoes\Vars.cs" />
     <Compile Include="Classes\CJ20N_No.cs" />
+    <Compile Include="Classes_Base\FAGLB03.cs" />
     <Compile Include="Classes_Base\ZPP0112.cs" />
     <Compile Include="Classes_Base_FI\FolhaMargem.cs" />
     <Compile Include="Classes_Base_FI\Resultado_Economico.cs" />
