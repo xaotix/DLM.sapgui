@@ -49,7 +49,7 @@ namespace DLM.sapgui
                     }
                     var lista = consulta.Select(x => x.Select(y => y.GetValue().ToString()).ToList()).ToList();
 
-                    db.Apagar("CHAVE", $"%{Pedido.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, true);
+                    db.Apagar("CHAVE", $"%{Pedido.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, false);
 
 
                     List<string> linhas = new List<string>();
@@ -200,18 +200,18 @@ namespace DLM.sapgui
             }
             if(zpmp)
             {
-                DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, true);
+                DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, false);
             }
             if(zpp0066n)
             {
-                DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0066n_logistica, true);
+                DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0066n_logistica, false);
             }
             if (zpp0100)
             {
-                DBases.GetDB().Apagar("Elemento_PEP", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques, true);
+                DBases.GetDB().Apagar("Elemento_PEP", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques, false);
             }
          
-            DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n, true);
+            DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n, false);
 
         }
 
@@ -312,7 +312,7 @@ namespace DLM.sapgui
 
             if(salvar && peps.Count>0)
             {
-                DBases.GetDB().Apagar("Pedido", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_fagll03, true);
+                DBases.GetDB().Apagar("Pedido", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_fagll03, false);
             }
 
             this.fagll03.Clear();
@@ -355,7 +355,7 @@ namespace DLM.sapgui
                 this.cji3 = CargaExcel.CJI3(Cfg.Init.GetDestinoSAP_Excel() + arq0100);
                 if (salvar)
                 {
-                    DBases.GetDB().Apagar("Elemento_PEP", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, true);
+                    DBases.GetDB().Apagar("Elemento_PEP", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, false);
                     var w = Conexoes.Utilz.Wait(this.cji3.Count, "Salvando...");                     
                     DBases.GetDB().Cadastro(this.cji3.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "cji3");
                     w.Close();
@@ -375,7 +375,7 @@ namespace DLM.sapgui
                 this.ZPP0112 = CargaExcel.ZPP0112(Cfg.Init.GetDestinoSAP_Excel() + ARQ);
                 if (salvar)
                 {
-                    DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0112, true);
+                    DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0112, false);
                     //DBases.GetDBMySQL().Clonar().Comando($"delete from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0112} where {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0112}.Elemento_PEP like '%{pedido}%'");
                     var w = Conexoes.Utilz.Wait(this.ZPP0112.Count, "Salvando..."); 
                     w.Show();

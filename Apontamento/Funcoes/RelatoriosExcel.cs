@@ -1676,7 +1676,7 @@ public class Relatorios
                
                 if(pc.contrato.Length>0)
                 {
-                    DBases.GetDB().Apagar("pep", $"%{pc.contrato}%", Cfg.Init.db_painel_de_obras2, "pecas", true);     
+                    DBases.GetDB().Apagar("pep", $"%{pc.contrato}%", Cfg.Init.db_painel_de_obras2, "pecas", false);     
                 }
             }
             try
