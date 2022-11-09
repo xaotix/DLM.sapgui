@@ -304,8 +304,8 @@ namespace DLM.painel
         {
             this.l = l;
             this.id = this.l["id"].Int();
-            this.Pedido = this.l.Get("pep").ToString();
-            this.descricao = this.l.Get("descricao").ToString();
+            this.Pedido = this.l.Get("pep").Valor;
+            this.descricao = this.l.Get("descricao").Valor;
 
             this.mp = this.l.Get("mp").Double();
             this.mod = this.l.Get("mod").Double();
@@ -319,7 +319,7 @@ namespace DLM.painel
 
             this.ultima_edicao = this.l["ultima_edicao"].Data();
             this.criado = this.l.Get("criado").Data();
-            this.user = this.l.Get("user").ToString();
+            this.user = this.l.Get("user").Valor;
         }
 
         public Resultado_Economico_Header(List<Resultado_Economico_Header> j)

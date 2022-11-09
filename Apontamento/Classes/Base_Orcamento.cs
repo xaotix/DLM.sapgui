@@ -94,7 +94,7 @@ namespace DLM.painel
         {
             this.L = l;
             this.id_obra = l["id_obra"].Int();
-            this.PEP = l.Get("pep").ToString();
+            this.PEP = l.Get("pep").Valor;
             this.peso_planejado = l.Get("peso_total").Double();
             this.quantidade = l.Get("quantidade").Int();
         }
@@ -141,7 +141,7 @@ namespace DLM.painel
         {
             this.L = l;
             this.id_obra = l["id_obra"].Int();
-            this.PEP = l.Get("pep").ToString();
+            this.PEP = l.Get("pep").Valor;
             this.peso_planejado = l.Get("peso_total").Double();
             this.quantidade = l.Get("quantidade").Double();
         
@@ -160,9 +160,9 @@ namespace DLM.painel
             this.L = l;
 
             this.id_obra = l["id_obra"].Int();
-            this.PEP = l.Get("pep").ToString();
-            this.pep_inicial = l.Get("pep_inicial").ToString();
-            this.centro = l.Get("centro").ToString();
+            this.PEP = l.Get("pep").Valor;
+            this.pep_inicial = l.Get("pep_inicial").Valor;
+            this.centro = l.Get("centro").Valor;
             this.peso_planejado = l.Get("peso_total").Double();
             this.quantidade = l.Get("quantidade").Double();
 
@@ -257,10 +257,10 @@ namespace DLM.painel
         {
             this.L = l;
             this.id_obra = l["id_obra"].Int();
-            this.numerocontrato = l.Get("numerocontrato").ToString();
-            this.revisao = l.Get("revisao").ToString();
-            this.Titulo.DESCRICAO = l.Get("descricao").ToString();
-            this.PEP = l.Get("pedido").ToString().ToString();
+            this.numerocontrato = l.Get("numerocontrato").Valor;
+            this.revisao = l.Get("revisao").Valor;
+            this.Titulo.DESCRICAO = l.Get("descricao").Valor;
+            this.PEP = l.Get("pedido").Valor;
             this.quantidade = l.Get("quantidade").Double();
             this.peso_planejado = l.Get("peso_total").Double();
 

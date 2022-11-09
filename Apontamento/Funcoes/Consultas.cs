@@ -495,7 +495,7 @@ namespace DLM.painel
             |x["Elemento_PEP"].Valor.Contains(".F4")
             |x["Elemento_PEP"].Valor.Contains(".FO")
             ).ToList();
-            var eng = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").ToString().Contains(".EN")).ToList();
+            var eng = resultado.Linhas.FindAll(x => x["Elemento_PEP"].Valor.Contains(".EN")).ToList();
             var mo = resultado.Linhas.FindAll(x =>
              x["Elemento_PEP"].Valor.Contains(".MO")
             |x["Elemento_PEP"].Valor.Contains(".EQ")
@@ -541,12 +541,12 @@ namespace DLM.painel
             /*adicionado filtro para remover itens 31 milhoes*/
             var resultado = DBases.GetDB().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_cji3} as pr where pr.Elemento_PEP like '%{Pedido}% ' and pr.Classe_de_custo not like '31%'");
 
-            var mod_di = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").ToString().Contains(".MO")).ToList();
-            var equipamentos = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").ToString().Contains(".EQ")).ToList();
-            var supervisor = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").ToString().Contains(".SU")).ToList();
-            var equipe_propria = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").ToString().Contains(".EP")).ToList();
-            var logistica = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").ToString().Contains(".LOG")).ToList();
-            var seguro = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").ToString().Contains(".SEG")).ToList();
+            var mod_di = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".MO")).ToList();
+            var equipamentos = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".EQ")).ToList();
+            var supervisor = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".SU")).ToList();
+            var equipe_propria = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".EP")).ToList();
+            var logistica = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".LOG")).ToList();
+            var seguro = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".SEG")).ToList();
           
 
             foreach (var f in mod_di)
@@ -624,7 +624,7 @@ namespace DLM.painel
 
         private static List<DLM.sapgui.Lancamento> LancamentoFAGLL03(DLM.db.Linha l)
         {
-            var pep = l.Get("Elemento_PEP").ToString();
+            var pep = l.Get("Elemento_PEP").Valor;
             var data = l.Get("Data_de_lancamento").Data();
             var BeneficiamentoCO = l.Get("BeneficiamentoCO").Double();
             var GGF_CO = l.Get("GGF_CO").Double();
@@ -670,7 +670,7 @@ namespace DLM.painel
             l.mes = data.Month;
             l.dia = data.Day;
             l.realizado = f.Get("Valor_total_NF").Double();
-            l.descricao = f.Get("Elemento_PEP").ToString();
+            l.descricao = f.Get("Elemento_PEP").Valor;
             l.Tipo_Lancamento = tipo_lancamento;
             return l;
         }
@@ -682,7 +682,7 @@ namespace DLM.painel
             l.mes = data.Month;
             l.dia = data.Day;
             l.realizado = f.Get("Valor_moeda_ACC").Double();
-            l.descricao = f.Get("Elemento_PEP").ToString();
+            l.descricao = f.Get("Elemento_PEP").Valor;
             l.Tipo_Lancamento = tipo_lancamento;
             return l;
         }
@@ -989,7 +989,7 @@ namespace DLM.painel
             var s = DBases.GetDB().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_folhamargem} as pr where pr.pep like '%{ChavePesquisa}% '");
             foreach (var ss in s.Linhas)
             {
-                var xml = ss.Get("dados").ToString();
+                var xml = ss.Get("dados").Valor;
                 var folha = Get.FolhaMargem(xml);
                 if(folha!=null)
                 {
@@ -1052,7 +1052,7 @@ namespace DLM.painel
             var consulta = DBases.GetDB().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resultado_economico} as pr where pr.pep like '%{ChavePesquisa}% '");
             foreach (var linha in consulta.Linhas)
             {
-                var xml = linha.Get("xml").ToString();
+                var xml = linha.Get("xml").Valor;
                 var resultado = Get.Resultado_Economico(xml);
                 if (resultado != null)
                 {
@@ -2255,7 +2255,7 @@ namespace DLM.painel
                 Tarefas.Clear();
             }
 
-            var peps_chaves = lista_zpp0100.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Subetapa(x.Get("Elemento_PEP").ToString(),true));
+            var peps_chaves = lista_zpp0100.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Subetapa(x.Get("Elemento_PEP").Valor,true));
 
             Tarefas = new List<Task>();
             foreach(var pep in peps_chaves)

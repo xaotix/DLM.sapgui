@@ -228,7 +228,7 @@ namespace DLM.painel
         public PLAN_OBRA(DLM.db.Linha L)
         {
             this.L = L;
-            string pedido_principal = L.Get("pedido_principal").ToString();
+            string pedido_principal = L.Get("pedido_principal").Valor;
             this.PEP = pedido_principal.Replace(".C00", ".P").Replace(".P00","").Replace(".G00","");
             this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");
             this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
@@ -249,7 +249,7 @@ namespace DLM.painel
             this.total_montado = L.Get("total_montado").Double();
             this.ultima_edicao = L.Get("ultima_atualizacao").Data();
 
-            this.dados_montagem = L.Get("total_montado").ToString() != "";
+            this.dados_montagem = L.Get("total_montado").Valor != "";
 
             this.montagem_inicio = L.Get("montagem_inicio").Data();
             this.montagem_fim = L.Get("montagem_fim").Data();
@@ -270,7 +270,7 @@ namespace DLM.painel
             this.atraso_montagem = L.Get("atraso_montagem").Int();
 
             this.id_montagem = L.Get("id_montagem").Int();
-            this.status_montagem = L.Get("status_montagem").ToString();
+            this.status_montagem = L.Get("status_montagem").Valor;
 
             this.criado = L.Get("criado").Data();
 
@@ -280,7 +280,7 @@ namespace DLM.painel
                 this.update_montagem = "Montagem: " + mont.ToShortDateString();
             }
 
-            this.finalizado = (L.Get("finalizado").ToString().ToUpper() == "X");
+            this.finalizado = (L.Get("finalizado").Valor.ToUpper() == "X");
 
         }
     }

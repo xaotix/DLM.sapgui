@@ -1939,17 +1939,17 @@ public class Relatorios
                             peso_unit = peso_total / qtd;
                         }
                         double peso_embarcado = qtd_carregada * peso_unit;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 0].Value = pc.Get("pep").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 1].Value = pc.Get("centro").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 2].Value = pc.Get("carreta").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 3].Value = pc.Get("ordem").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 4].Value = pc.Get("material").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 5].Value = pc.Get("descricao").ToString();
+                        pecas_aba_excel.Cells[l0 + l, c0 + 0].Value = pc.Get("pep").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 1].Value = pc.Get("centro").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 2].Value = pc.Get("carreta").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 3].Value = pc.Get("ordem").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 4].Value = pc.Get("material").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 5].Value = pc.Get("descricao").Valor;
                         pecas_aba_excel.Cells[l0 + l, c0 + 7].Value = pc.Get("qtd_a_embarcar").Int(); //qtd a embarcar
                         pecas_aba_excel.Cells[l0 + l, c0 + 8].Value = qtd_carregada; //qtd carregada
-                        pecas_aba_excel.Cells[l0 + l, c0 + 9].Value = pc.Get("placa").ToString(); //placa
-                        pecas_aba_excel.Cells[l0 + l, c0 + 10].Value = pc.Get("motorista").ToString(); //motorista
-                        pecas_aba_excel.Cells[l0 + l, c0 + 11].Value = pc.Get("marca").ToString(); //marca
+                        pecas_aba_excel.Cells[l0 + l, c0 + 9].Value = pc.Get("placa").Valor; //placa
+                        pecas_aba_excel.Cells[l0 + l, c0 + 10].Value = pc.Get("motorista").Valor; //motorista
+                        pecas_aba_excel.Cells[l0 + l, c0 + 11].Value = pc.Get("marca").Valor; //marca
                         pecas_aba_excel.Cells[l0 + l, c0 + 12].Value = pc["observacoes"].Valor; //observações
                         pecas_aba_excel.Cells[l0 + l, c0 + 13].Value = qtd; //qtd
                         pecas_aba_excel.Cells[l0 + l, c0 + 14].Value = qtd_fabricada; //qtd fabricada
@@ -1957,14 +1957,14 @@ public class Relatorios
                         pecas_aba_excel.Cells[l0 + l, c0 + 16].Value = pc.Get("comprimento").Double(); //comprimento
                         pecas_aba_excel.Cells[l0 + l, c0 + 17].Value = pc.Get("corte").Double(); //corte
                         pecas_aba_excel.Cells[l0 + l, c0 + 18].Value = pc.Get("espessura").Double(); //espessura
-                        pecas_aba_excel.Cells[l0 + l, c0 + 19].Value = pc.Get("material").ToString(); //material
+                        pecas_aba_excel.Cells[l0 + l, c0 + 19].Value = pc.Get("material").Valor; //material
                         pecas_aba_excel.Cells[l0 + l, c0 + 20].Value = peso_unit; /*peso unitario*/
                         pecas_aba_excel.Cells[l0 + l, c0 + 21].Value = qtd *peso_unit;/*peso parcial nec*/
                         pecas_aba_excel.Cells[l0 + l, c0 + 22].Value = qtd_fabricada * peso_unit; //peso parcial fabricado
                         pecas_aba_excel.Cells[l0 + l, c0 + 23].Value = peso_embarcado;  // peso embarcado
                         pecas_aba_excel.Cells[l0 + l, c0 + 24].Value = (qtd * peso_unit) - (qtd_fabricada * peso_unit);//* - peso a produzir;
                         pecas_aba_excel.Cells[l0 + l, c0 + 25].Value = qtd_a_embarcar * peso_unit;// - peso a embarcar*;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 26].Value = pc.Get("mercadoria").ToString(); //mercadoria
+                        pecas_aba_excel.Cells[l0 + l, c0 + 26].Value = pc.Get("mercadoria").Valor; //mercadoria
                         //pecas_aba_excel.Cells[l0 + l, c0 + 27].Value = pc.total_fabricado / 100; //porcentagem total fabricada
                         //pecas_aba_excel.Cells[l0 + l, c0 + 28].Value = pc.total_embarcado / 100; //porcentagem total embarcada
                         if (inicio > mindia)
@@ -1976,18 +1976,18 @@ public class Relatorios
                             pecas_aba_excel.Cells[l0 + l, c0 + 30].Value = fim;
                         }
                         pecas_aba_excel.Cells[l0 + l, c0 + 31].Value = atualizado;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 32].Value = pc.Get("status").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 33].Value = pc.Get("pintura").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 34].Value = pc.Get("esquema").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 35].Value = pc.Get("esquema_desc").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 36].Value = pc.Get("bobina").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 37].Value = pc.Get("face1").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 38].Value = pc.Get("face2").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 39].Value = pc.Get("complexidade").ToString(); 
-                        pecas_aba_excel.Cells[l0 + l, c0 + 40].Value = pc.Get("denominacao").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 41].Value = pc.Get("tipo").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 42].Value = pc.Get("arquivo").ToString();
-                        pecas_aba_excel.Cells[l0 + l, c0 + 43].Value = pc.Get("tipo_embarque").ToString();
+                        pecas_aba_excel.Cells[l0 + l, c0 + 32].Value = pc.Get("status").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 33].Value = pc.Get("pintura").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 34].Value = pc.Get("esquema").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 35].Value = pc.Get("esquema_desc").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 36].Value = pc.Get("bobina").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 37].Value = pc.Get("face1").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 38].Value = pc.Get("face2").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 39].Value = pc.Get("complexidade").Valor; 
+                        pecas_aba_excel.Cells[l0 + l, c0 + 40].Value = pc.Get("denominacao").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 41].Value = pc.Get("tipo").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 42].Value = pc.Get("arquivo").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 43].Value = pc.Get("tipo_embarque").Valor;
 
                         l++;
                     }

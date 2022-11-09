@@ -74,7 +74,7 @@ namespace DLM.painel
 
         public PLAN_PEDIDO(DLM.db.Linha L, PLAN_OBRA contrato)
         {
-            this.PEP = L.Get("pedido").ToString();
+            this.PEP = L.Get("pedido").Valor;
             this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
             this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();
             this.etapas_qtd = L.Get("etapas").Int();
@@ -91,7 +91,7 @@ namespace DLM.painel
             this.montagem_inicio = L.Get("montagem_inicio").Data();
             this.montagem_fim = L.Get("montagem_fim").Data();
 
-            this.dados_montagem = L.Get("total_montado").ToString() != "";
+            this.dados_montagem = L.Get("total_montado").Valor != "";
 
             this.engenharia_previsto = L.Get("es").Double();
             this.fabrica_previsto = L.Get("fs").Double();
@@ -102,7 +102,7 @@ namespace DLM.painel
 
             this.nome = L["Nome"].Valor;
 
-            this.montagem_engenheiro = L.Get("montagem_engenheiro").ToString();
+            this.montagem_engenheiro = L.Get("montagem_engenheiro").Valor;
 
 
 
@@ -114,7 +114,7 @@ namespace DLM.painel
 
             this.nome = L["Nome"].Valor;
 
-            this.status_montagem = L.Get("status_montagem").ToString();
+            this.status_montagem = L.Get("status_montagem").Valor;
 
             DateTime mont = L.Get("update_montagem").Data();
             if (mont > Cfg.Init.DataDummy())

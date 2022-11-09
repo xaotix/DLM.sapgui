@@ -17,10 +17,10 @@ namespace DLM.painel
         public Tipo_Embarque Tipo_Embarque { get; set; } = Tipo_Embarque.ZPP0100;
        public void SetStatusByZPP0100(List<DLM.db.Linha> linhas)
         {
-            var lista = linhas.FindAll(x => x.Get("Material").ToString() == this.material.ToString());
+            var lista = linhas.FindAll(x => x["Material"].Valor == this.material.ToString());
 
-            this.qtd_embarcada = lista.FindAll(x=>x.Get("St_Conf_").ToString().ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => Conexoes.Utilz.Double(x.Get("Qtd_Embarque")));
-            var marca = lista.Select(x => x.Get("Tamanho_dimensao").ToString()).Distinct().ToList().FindAll(x=>x.Replace(" ","")!="");
+            this.qtd_embarcada = lista.FindAll(x=>x["St_Conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x.Get("Qtd_Embarque").Double());
+            var marca = lista.Select(x => x["Tamanho_dimensao"].Valor).Distinct().ToList().FindAll(x=>x.Replace(" ","")!="");
 
             if(marca.Count>0)
             {
@@ -495,38 +495,38 @@ namespace DLM.painel
             if (!orcamento)
             {
                 this.Tipo = Tipo_Material.Real;
-                this.material = peca.Get("material").ToString();
-                this.PEP = peca.Get("pep").ToString();
-                this.texto_breve = peca.Get("texto_breve").ToString();
+                this.material = peca.Get("material").Valor;
+                this.PEP = peca.Get("pep").Valor;
+                this.texto_breve = peca.Get("texto_breve").Valor;
                 this.peso_unitario = peca.Get("peso_unitario").Double();
                 this.peso_necessario = peca.Get("peso_necessario").Double();
                 this.peso_produzido = peca.Get("peso_produzido").Double(6);
                 this.qtd_necessaria = peca.Get("qtd_necessaria").Double();
                 this.qtd_produzida = peca.Get("qtd_produzida").Double();
                 this.qtd_embarcada = peca.Get("qtd_embarcada").Double();
-                this.grupo_mercadoria = peca.Get("grupo_mercadoria").ToString();
-                this.desenho = peca.Get("desenho").ToString();
+                this.grupo_mercadoria = peca.Get("grupo_mercadoria").Valor;
+                this.desenho = peca.Get("desenho").Valor;
 
-                this.DENOMINDSTAND = peca.Get("DENOMINDSTAND").ToString();
+                this.DENOMINDSTAND = peca.Get("DENOMINDSTAND").Valor;
                
                 this.inicio = peca.Get("DATA_INICIO").Data();
                 this.fim = peca.Get("DATA_FIM").Data();
-                this.DESENHO_1 = peca.Get("DESENHO_1").ToString();
-                this.TIPO_DE_PINTURA = peca.Get("TIPO_DE_PINTURA").ToString();
+                this.DESENHO_1 = peca.Get("DESENHO_1").Valor;
+                this.TIPO_DE_PINTURA = peca.Get("TIPO_DE_PINTURA").Valor;
 
                 /*04/04/2019 - novas caracterísricas*/
-                this.corte_largura = Utilz.Double(peca.Get("CORTE_LARGURA").ToString());
-                this.comprimento = Utilz.Double(peca.Get("COMPRIMENTO").ToString());
-                this.esq_de_pintura = peca.Get("ESQ_DE_PINTURA").ToString();
-                this.superficie = Utilz.Double(peca.Get("SUPERFICIE").ToString());
-                this.furacoes = Utilz.Int(peca.Get("FURACOES").ToString());
-                this.espessura = Utilz.Double(peca.Get("ESPESSURA").ToString());
-                this.tipo_aco = peca.Get("TIPO_ACO").ToString();
-                this.codigo_materia_prima_sap = peca.Get("CODIGO_MATERIA_PRIMA_SAP").ToString();
+                this.corte_largura = Utilz.Double(peca.Get("CORTE_LARGURA").Valor);
+                this.comprimento = Utilz.Double(peca.Get("COMPRIMENTO").Valor);
+                this.esq_de_pintura = peca.Get("ESQ_DE_PINTURA").Valor;
+                this.superficie = Utilz.Double(peca.Get("SUPERFICIE").Valor);
+                this.furacoes = Utilz.Int(peca.Get("FURACOES").Valor);
+                this.espessura = Utilz.Double(peca.Get("ESPESSURA").Valor);
+                this.tipo_aco = peca.Get("TIPO_ACO").Valor;
+                this.codigo_materia_prima_sap = peca.Get("CODIGO_MATERIA_PRIMA_SAP").Valor;
 
-                if (this.desenho == "" | this.desenho.ToString() == this.material.ToString())
+                if (this.desenho == "" | this.desenho == this.material)
                 {
-                    this.desenho = peca.Get("MARCA").ToString();
+                    this.desenho = peca.Get("MARCA").Valor;
                 }
 
                 this.peso_embarcado = this.qtd_embarcada * peso_unitario;
@@ -534,10 +534,10 @@ namespace DLM.painel
                 /*porcentagens*/
 
                 this.ultima_edicao = peca["ultima_edicao"].Data();
-                this.pep_cooisn = peca.Get("pep_cooisn").ToString();
-                this.centro = peca.Get("centro").ToString();
+                this.pep_cooisn = peca.Get("pep_cooisn").Valor;
+                this.centro = peca.Get("centro").Valor;
 
-                var s = peca.Get("centro_producao").ToString();
+                var s = peca.Get("centro_producao").Valor;
                 if (s != "")
                 {
                     this.centro = s;
@@ -549,7 +549,7 @@ namespace DLM.painel
                 }
                 else if (this.qtd_necessaria > this.qtd_produzida)
                 {
-                    this.ULTIMO_STATUS = peca.Get("ULTIMO_STATUS").ToString();
+                    this.ULTIMO_STATUS = peca.Get("ULTIMO_STATUS").Valor;
                 }
                 else if(this.qtd_necessaria> this.qtd_embarcada)
                 {
@@ -569,51 +569,51 @@ namespace DLM.painel
                 this.Tipo = Tipo_Material.Orçamento;
                 this.comprimento = peca.Get("comp").Double();
                 this.corte_largura = peca.Get("corte").Double();
-                this.desenho = peca.Get("marca").ToString();
-                this.DESENHO_1 = peca.Get("marca").ToString();
+                this.desenho = peca.Get("marca").Valor;
+                this.DESENHO_1 = peca.Get("marca").Valor;
                 this.espessura = peca.Get("esp").Double();
-                this.esq_de_pintura = peca.Get("esquema").ToString();
+                this.esq_de_pintura = peca.Get("esquema").Valor;
                 this.furacoes = peca.Get("furos").Int();
-                this.grupo_mercadoria = peca.Get("grupo_mercadoria").ToString();
-                this.material = peca.Get("marca").ToString();
-                this.PEP = peca.Get("pep").ToString();
-                this.pep_cooisn = peca.Get("pep").ToString();
+                this.grupo_mercadoria = peca.Get("grupo_mercadoria").Valor;
+                this.material = peca.Get("marca").Valor;
+                this.PEP = peca.Get("pep").Valor;
+                this.pep_cooisn = peca.Get("pep").Valor;
                 this.qtd_necessaria = peca.Get("quantidade").Double();
                 this.peso_unitario = peca.Get("peso").Double();
                 this.peso_necessario = peca.Get("peso").Double() * this.qtd_necessaria;
-                this.status_sistema_pep = peca.Get("marca").ToString();
+                this.status_sistema_pep = peca.Get("marca").Valor;
                 this.superficie = peca.Get("superficie").Double();
-                this.texto_breve = peca.Get("descricao").ToString();
-                this.tipo_aco = peca.Get("tipo_aco").ToString();
-                this.TIPO_DE_PINTURA = peca.Get("tratamento").ToString();
+                this.texto_breve = peca.Get("descricao").Valor;
+                this.tipo_aco = peca.Get("tipo_aco").Valor;
+                this.TIPO_DE_PINTURA = peca.Get("tratamento").Valor;
                 this.ultima_edicao = peca["ultima_edicao"].Data();
-                this.centro = peca.Get("unidade_fabril").ToString();
-                this.codigo_materia_prima_sap = peca.Get("materia_prima").ToString();
+                this.centro = peca.Get("unidade_fabril").Valor;
+                this.codigo_materia_prima_sap = peca.Get("materia_prima").Valor;
 
             }
         }
         public PLAN_PECA(DLM.db.Linha peca, List<DLM.db.Linha> logistica)
         {
             this.Tipo = Tipo_Material.Real;
-            this.PEP = peca.Get("pep").ToString();
-            this.material = peca.Get("material").ToString();
-            this.texto_breve = peca.Get("texto_breve").ToString();
-            this.grupo_mercadoria = peca.Get("grupo_mercadoria").ToString();
+            this.PEP = peca.Get("pep").Valor;
+            this.material = peca.Get("material").Valor;
+            this.texto_breve = peca.Get("texto_breve").Valor;
+            this.grupo_mercadoria = peca.Get("grupo_mercadoria").Valor;
             this.peso_necessario = peca.Get("peso_necessario").Double(6);
             this.peso_produzido = peca.Get("peso_produzido").Double(6);
             this.qtd_necessaria = peca.Get("qtd_necessaria").Double();
             this.qtd_mercadoria_entrada = peca.Get("qtd_mercadoria_entrada").Long();
             this.saldo_peso_produzido = peca.Get("saldo_peso_produzido").Double();
-            this.status_sistema_pep = peca.Get("status_sistema_pep").ToString();
-            this.status_usuario_pep = peca.Get("status_usuario_pep").ToString();
-            this.status_sistema_tarefa = peca.Get("status_sistema_tarefa").ToString();
+            this.status_sistema_pep = peca.Get("status_sistema_pep").Valor;
+            this.status_usuario_pep = peca.Get("status_usuario_pep").Valor;
+            this.status_sistema_tarefa = peca.Get("status_sistema_tarefa").Valor;
             foreach (var t in logistica)
             {
                 this.logistica.Add(new Logistica_Planejamento(this, t));
             }
             if (logistica.Count > 0)
             {
-                this.desenho = logistica[0].Get("desenho").ToString();
+                this.desenho = logistica[0].Get("desenho").Valor;
             }
 
             this.peso_unitario = (peso_necessario / qtd_necessaria);
@@ -623,9 +623,9 @@ namespace DLM.painel
 
             this.ultima_edicao = peca["ultima_edicao"].Data();
 
-            this.DENOMINDSTAND = peca.Get("DENOMINDSTAND").ToString();
-            this.DESENHO_1 = peca.Get("DESENHO_1").ToString();
-            this.TIPO_DE_PINTURA = peca.Get("TIPO_DE_PINTURA").ToString();
+            this.DENOMINDSTAND = peca.Get("DENOMINDSTAND").Valor;
+            this.DESENHO_1 = peca.Get("DESENHO_1").Valor;
+            this.TIPO_DE_PINTURA = peca.Get("TIPO_DE_PINTURA").Valor;
 
 
 
@@ -636,11 +636,11 @@ namespace DLM.painel
             this.inicio = peca.Get("DATA_INICIO").Data();
             this.fim = peca.Get("DATA_FIM").Data();
 
-            this.ULTIMO_STATUS = peca.Get("ULTIMO_STATUS").ToString();
+            this.ULTIMO_STATUS = peca.Get("ULTIMO_STATUS").Valor;
 
-            this.pep_cooisn = peca.Get("pep_cooisn").ToString();
-            this.centro = peca.Get("centro").ToString();
-            var s = peca.Get("centro_producao").ToString();
+            this.pep_cooisn = peca.Get("pep_cooisn").Valor;
+            this.centro = peca.Get("centro").Valor;
+            var s = peca.Get("centro_producao").Valor;
             if (s != "")
             {
                 this.centro = s;

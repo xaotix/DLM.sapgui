@@ -36,7 +36,7 @@ namespace DLM.painel
         }
         public PLAN_SUB_ETAPA(DLM.db.Linha L, List<PLAN_PEP> peps)
         {
-            this.PEP = L.Get("pep").ToString();
+            this.PEP = L.Get("pep").Valor;
 
 
             if (peps != null && this.carregou_pecas)
@@ -66,7 +66,7 @@ namespace DLM.painel
             this.ultima_edicao = L["ultima_edicao"].Data();
             this.peps_qtd = L.Get("pep_fabrica").Int();
 
-            this.dados_montagem = L.Get("total_montado").ToString() != "";
+            this.dados_montagem = L.Get("total_montado").Valor != "";
 
             this.ultima_consulta_sap = L.Get("ultima_consulta_sap").Data();
 
@@ -100,7 +100,7 @@ namespace DLM.painel
                 this.montagem_cronograma_inicio = ((DateTime)this.logistica_cronograma).AddDays(2);
             }
 
-            this.resumo = L.Get("descricao").ToString();
+            this.resumo = L.Get("descricao").Valor;
 
 
             this.atraso_engenharia = L.Get("atraso_engenharia").Int();
@@ -108,7 +108,7 @@ namespace DLM.painel
             this.atraso_embarque = L.Get("atraso_embarque").Int();
             this.atraso_montagem = L.Get("atraso_montagem").Int();
 
-            this.montagem_engenheiro = L.Get("montagem_engenheiro").ToString();
+            this.montagem_engenheiro = L.Get("montagem_engenheiro").Valor;
 
             if (this.montagem_cronograma_inicio < Cfg.Init.DataDummy())
             {

@@ -178,7 +178,7 @@ namespace DLM.sapgui
             var chamada = $"call comum.zpp_cooisn_get_qtd_pc('{Pedido.Replace("*","").Replace(" ","")}')";
             //var consulta = DBases.GetDBMySQL().Consulta($"SELECT left(pr.pep,17) as pep, count(pr.pep) as pcs from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpmp_producao} as pr where pr.pep like '%{Pedido}%' and pr.material like '31%' group by left(pr.pep,17) order by count(pr.pep) desc".Replace("*", ""));
             var consulta = DBases.GetDB().Consulta(chamada);
-            var peps = consulta.Linhas.Select(x => x.Get("pep").ToString()).ToList(); 
+            var peps = consulta.Linhas.Select(x => x.Get("pep").Valor).ToList(); 
             var w = Conexoes.Utilz.Wait(peps.Count, Pedido + " ZPPCOOISN"); 
             w.somaProgresso();
             foreach (var s in peps)

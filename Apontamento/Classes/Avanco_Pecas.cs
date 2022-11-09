@@ -95,13 +95,13 @@ namespace DLM.painel
         }
         public Avanco_Pecas(DLM.db.Linha db)
         {
-            this.pep = db.Get("pep").ToString();
-            this.predio = db.Get("predio").ToString();
-            this.status_geral = db.Get("status_geral").ToString();
-            this.etapa = db.Get("etapa").ToString();
-            this.marca = db.Get("marca").ToString();
-            this.carga = db.Get("carga").ToString();
-            this.tipo = db.Get("tipo").ToString();
+            this.pep = db.Get("pep").Valor;
+            this.predio = db.Get("predio").Valor;
+            this.status_geral = db.Get("status_geral").Valor;
+            this.etapa = db.Get("etapa").Valor;
+            this.marca = db.Get("marca").Valor;
+            this.carga = db.Get("carga").Valor;
+            this.tipo = db.Get("tipo").Valor;
             this.peso = db.Get("peso").Double();
             this.quantidade = db.Get("quantidade").Double();
             this.peso_pedido = db.Get("peso_pedido").Double();

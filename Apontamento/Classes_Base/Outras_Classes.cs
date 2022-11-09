@@ -27,16 +27,16 @@ namespace DLM.painel
         {
             if (!orcamento)
             {
-                this.CHAVE = L.Get("CHAVE").ToString();
-                this.DESCRICAO = L.Get("DESCRICAO").ToString();
+                this.CHAVE = L.Get("CHAVE").Valor;
+                this.DESCRICAO = L.Get("DESCRICAO").Valor;
             }
             else
             {
-                var cont = L.Get("numerocontrato").ToString();
-                var revisao = L.Get("revisao").ToString();
-                var descricao = L.Get("descricao").ToString();
+                var cont = L.Get("numerocontrato").Valor;
+                var revisao = L.Get("revisao").Valor;
+                var descricao = L.Get("descricao").Valor;
 
-                this.CHAVE = L.Get("pedido").ToString() + ".PGO";
+                this.CHAVE = L.Get("pedido").Valor + ".PGO";
                 this.DESCRICAO = "[PGO] - [" + cont + "." + revisao + "] " + descricao;
             }
         }
@@ -307,12 +307,12 @@ namespace DLM.painel
         private void GetDados(DLM.db.Linha l)
         {
             this.carga_confirmada = l.Get("carga_confirmada").Boolean();
-            this.num_carga = l.Get("num_carga").ToString();
-            this.pack_list = l.Get("pack_list").ToString();
-            this.pep = l.Get("pep").ToString();
-            this.material = l.Get("material").ToString();
-            this.desenho = l.Get("desenho").ToString();
-            this.nota_fiscal = l.Get("nota_fiscal").ToString();
+            this.num_carga = l.Get("num_carga").Valor;
+            this.pack_list = l.Get("pack_list").Valor;
+            this.pep = l.Get("pep").Valor;
+            this.material = l.Get("material").Valor;
+            this.desenho = l.Get("desenho").Valor;
+            this.nota_fiscal = l.Get("nota_fiscal").Valor;
             this.quantidade = l.Get("quantidade").Double();
 
             this.subetapa = Conexoes.Utilz.PEP.Get.Subetapa(this.pep,true);
@@ -320,25 +320,25 @@ namespace DLM.painel
         }
         private void GetDados_0100(DLM.db.Linha l)
         {
-            this.descricao = l.Get("Descricao").ToString();
-            this.carga_confirmada = l.Get("St_Conf_").ToString().ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA;
-            this.num_carga = "RN" + l.Get("Nro_Carga").ToString()/*.PadLeft(5,'0')*/;
-            this.pack_list = "PL" + l.Get("Ordem_Embarque").ToString().PadLeft(5, '0');
-            this.pep = l.Get("Elemento_PEP").ToString();
-            this.material = l.Get("Material").ToString();
-            this.desenho = l.Get("Tamanho_dimensao").ToString();
-            this.etiqueta = l.Get("etiqueta").ToString();
-            this.etiqueta_impressa = l.Get("etiqueta_impressa").ToString().ToUpper() == "TRUE";
-            this.centro = l.Get("Centro").ToString();
+            this.descricao = l.Get("Descricao").Valor;
+            this.carga_confirmada = l.Get("St_Conf_").Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA;
+            this.num_carga = "RN" + l.Get("Nro_Carga").Valor/*.PadLeft(5,'0')*/;
+            this.pack_list = "PL" + l.Get("Ordem_Embarque").Valor.PadLeft(5, '0');
+            this.pep = l.Get("Elemento_PEP").Valor;
+            this.material = l.Get("Material").Valor;
+            this.desenho = l.Get("Tamanho_dimensao").Valor;
+            this.etiqueta = l.Get("etiqueta").Valor;
+            this.etiqueta_impressa = l.Get("etiqueta_impressa").Valor.ToUpper() == "TRUE";
+            this.centro = l.Get("Centro").Valor;
             this.quantidade = l.Get("Qtd_Embarque").Double();
 
             this.Saldo_1202 = l.Get("Sld_1202").Double();
             this.Saldo_1203 = l.Get("Sld_1203").Double();
             this.Saldo_1204 = l.Get("Sld_1204").Double();
 
-            this.telefone = l.Get("telefone").ToString();
-            this.placa = l.Get("placa").ToString();
-            this.motorista = l.Get("motorista").ToString();
+            this.telefone = l.Get("telefone").Valor;
+            this.placa = l.Get("placa").Valor;
+            this.motorista = l.Get("motorista").Valor;
             this.observacoes = l["observacoes"].Valor;
 
             this.subetapa = Conexoes.Utilz.PEP.Get.Subetapa(this.pep, true);
@@ -567,7 +567,7 @@ namespace DLM.painel
         public Resumo_Pecas(DLM.db.Linha L)
         {
             this.L = L;
-            this.pep = L.Get("pep").ToString();
+            this.pep = L.Get("pep").Valor;
             this.peso_necessario = L.Get("peso_necessario").Double();
             this.qtd_necessaria = L.Get("qtd_necessaria").Double();
             this.qtd_produzida = L.Get("qtd_produzida").Double();
@@ -576,14 +576,14 @@ namespace DLM.painel
             this.subfases = L.Get("subfases").Int();
             this.Inicio = L.Get("inicio").Data();
             this.Fim = L.Get("fim").Data();
-            this.status_usuario_pep = L.Get("status_usuario_pep").ToString();
+            this.status_usuario_pep = L.Get("status_usuario_pep").Valor;
             this.etapa_bloqueada = L.Get("etapa_bloqueada").Boolean();
-            this.status_sistema_pep = L.Get("status_sistema_pep").ToString();
+            this.status_sistema_pep = L.Get("status_sistema_pep").Valor;
 
 
             /*23/04/2019*/
-            this.centro = L.Get("centro").ToString();
-            this.centro_producao = L.Get("centro_producao").ToString();
+            this.centro = L.Get("centro").Valor;
+            this.centro_producao = L.Get("centro_producao").Valor;
         }
         public Resumo_Pecas(string pep)
         {

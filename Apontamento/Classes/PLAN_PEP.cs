@@ -248,8 +248,8 @@ namespace DLM.painel
         }
         public void Ler(bool carrega_id = true)
         {
-            this.data_eng = L.Get("data_eng").ToString();
-            this.data_fab = L.Get("data_fab").ToString();
+            this.data_eng = L["data_eng"].Valor;
+            this.data_fab = L["data_fab"].Valor;
 
             this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();
 
@@ -272,17 +272,17 @@ namespace DLM.painel
             this.id_status_pep = L.Get("id_status_pedido").Int();
 
             this.observacoes = L["observacoes"].Valor;
-            this.PEP = L.Get("pep").ToString();
-            this.pep_engenharia = L.Get("pep_engenharia").ToString();
+            this.PEP = L.Get("pep").Valor;
+            this.pep_engenharia = L.Get("pep_engenharia").Valor;
 
-            this.peso_embarcado = L.Get("peso_embarcado").Double(6);
-            this.peso_planejado = L.Get("peso_planejado").Double(6);
-            this.peso_produzido = L.Get("peso_produzido").Double(6);
+            this.peso_embarcado = L["peso_embarcado"].Double(6);
+            this.peso_planejado = L["peso_planejado"].Double(6);
+            this.peso_produzido = L["peso_produzido"].Double(6);
 
             this.ultima_consulta_sap = L.Get("ultima_consulta_sap").Data();
 
-            this.status_eng = L.Get("status_eng").ToString();
-            this.status = L.Get("status").ToString();
+            this.status_eng = L.Get("status_eng").Valor;
+            this.status = L.Get("status").Valor;
 
 
             this.Titulo = new Titulo_Planejamento() { CHAVE = this.PEP, DESCRICAO = this.descricao };
