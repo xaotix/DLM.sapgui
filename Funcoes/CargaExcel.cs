@@ -94,6 +94,45 @@ namespace DLM.sapgui
             Conexoes.DBases.GetDB().Cadastro(tabela.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
             return retorno;
         }
+        public static List<AVANCO_FATURAMENTO> Cadastro_AVANCO_FATURAMENTO()
+        {
+            List<AVANCO_FATURAMENTO> retorno = new List<AVANCO_FATURAMENTO>();
+            string arquivo = Conexoes.Utilz.Abrir_String("xlsx");
+            if(arquivo == null) { return new List<AVANCO_FATURAMENTO>(); }
+            var selecao = Conexoes.Utilz.Excel.GetTabelaPrompt(arquivo);
+
+            if(selecao.Linhas.Count>0)
+            {
+               
+                foreach(var l in selecao.Linhas)
+                {
+                    var pedido = l.Get("C1").Valor;
+                    var valor_contrato = l.Get("C6").Valor;
+                    var valor_f_direto = l.Get("C7").Valor;
+
+                    var novo = new AVANCO_FATURAMENTO(pedido, valor_contrato, valor_f_direto);
+                    if(novo.Pedido.Length == 13)
+                    {
+                        retorno.Add(novo);
+                    }
+                }
+
+                if (retorno.Count > 0)
+                {
+                    var cadastro = retorno.GetTabela();
+
+                    DBases.GetDB().Apagar(new db.Linha(new List<db.Celula> { new db.Celula("id", "%%") }), Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento, "And", false);
+                    DBases.GetDB().Cadastro(cadastro.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
+                    Conexoes.Utilz.Alerta($"Avanço sincronizado! {retorno.Count} itens cadastrados.");
+                }
+                else
+                {
+                    Conexoes.Utilz.Alerta("Nenhum item de avanço encontrado na aba selecionada.");
+                }
+
+            }
+            return retorno;
+        }
         public static List<FAGLL03> FAGLL03(string arquivo, string pedido)
         {
             ConcurrentBag<FAGLL03> retorno = new ConcurrentBag<FAGLL03>();

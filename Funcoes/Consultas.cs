@@ -1917,11 +1917,19 @@ namespace DLM.sapgui
             //session.findById("wnd[0]/usr/cntlFDBL_BALANCE_CONTAINER/shellcont/shell").doubleClickCurrentCell
             gridview.DoubleClickCurrentCell();
 
-            //session.findById("wnd[0]/tbar[1]/btn[33]").press
-            Press("wnd[0]/tbar[1]/btn[33]");
+            try
+            {
+                //Selecionar layout
+                //session.findById("wnd[0]/tbar[1]/btn[33]").press
+                Press("wnd[0]/tbar[1]/btn[33]");
+                //session.findById("wnd[1]").sendVKey 2
+                SendKey(2);
+            }
+            catch (Exception)
+            {
 
-            //session.findById("wnd[1]").sendVKey 2
-            SendKey(2);
+            }
+            
 
             //session.findById("wnd[0]/mbar/menu[6]/menu[5]/menu[2]/menu[1]").select
             ((GuiMenu)this.SessaoSAP.FindById("wnd[0]/mbar/menu[6]/menu[5]/menu[2]/menu[1]")).Select();
