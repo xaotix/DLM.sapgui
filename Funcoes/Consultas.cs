@@ -1917,6 +1917,7 @@ namespace DLM.sapgui
             //session.findById("wnd[0]/usr/cntlFDBL_BALANCE_CONTAINER/shellcont/shell").doubleClickCurrentCell
             gridview.DoubleClickCurrentCell();
 
+
             try
             {
                 //Selecionar layout
