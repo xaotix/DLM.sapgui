@@ -1768,7 +1768,7 @@ namespace DLM.painel
                    
                     etapa.Set(titulos, false);
 
-                    var igual = st_base.Filtrar("pep", etapa.PEP.ToUpper().TrimEnd(".P00".ToCharArray()), true);
+                    var igual = st_base.Filtrar("pep", etapa.PEP.ToUpper().Replace(".P00", ""), true);
                     if (igual.Count > 0)
                     {
                         etapa.SetBase(igual.Linhas.First());
@@ -1850,7 +1850,7 @@ namespace DLM.painel
                     }
                     t.Set(titulos, false);
 
-                    var igual = st_base.Filtrar("pep", t.PEP.ToUpper().TrimEnd(".P00".ToCharArray()), true);
+                    var igual = st_base.Filtrar("pep", t.PEP.ToUpper().Replace(".P00",""), true);
                     if (igual.Count > 0)
                     {
                         t.SetBase(igual.Linhas.First());
