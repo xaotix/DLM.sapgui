@@ -1213,6 +1213,11 @@ namespace DLM.painel
             {
                 return;
             }
+
+            DBases.GetDB().Apagar("pedido_principal", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_obras_planejamento_copia, false);
+            DBases.GetDB().Apagar("pedido", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia, false);
+            DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento_m_copia, false);
+
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0066n_logistica, false);
@@ -1231,6 +1236,7 @@ namespace DLM.painel
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_datas, false);
+
 
 
 
