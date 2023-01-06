@@ -107,11 +107,6 @@ namespace DLM.sapgui
             this.FaturamentoDireto = new FaturamentoDireto(j.Select(x => x.FaturamentoDireto).ToList());
 
         }
-
-        public string RetornaSerializado()
-        {
-            return Conexoes.Extensoes.Serializar(this);
-        }
     }
     [Serializable]
     [ExpandableObject()]

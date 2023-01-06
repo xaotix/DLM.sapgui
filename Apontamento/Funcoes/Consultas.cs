@@ -697,7 +697,7 @@ namespace DLM.painel
             DLM.db.Linha l = new DLM.db.Linha();
             l.Add("pep", pedido);
 
-            l.Add("dados", folha.RetornaSerializado());
+            l.Add("dados", folha.Serializar());
             DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, Cfg.Init.tb_folhamargem);
         }
 

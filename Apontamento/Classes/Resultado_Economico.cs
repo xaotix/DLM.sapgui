@@ -418,7 +418,7 @@ namespace DLM.painel
         }
         public string RetornaSerializado()
         {
-            return Conexoes.Extensoes.Serializar(this);
+            return this.Serializar();
         }
         public List<Grupo> GetGrupos()
         {
