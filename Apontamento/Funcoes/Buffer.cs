@@ -183,7 +183,7 @@ namespace DLM.painel
         {
             if (_Titulos_Pedidos != null) { return _Titulos_Pedidos; }
             _Titulos_Pedidos = new List<Titulo_Planejamento>();
-            var lista_fab = DBases.GetDB().Clonar().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
+            var lista_fab = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
             ConcurrentBag<Titulo_Planejamento> retorno = new ConcurrentBag<Titulo_Planejamento>();
             List<Task> Tarefas = new List<Task>();
             foreach (var s in lista_fab.Linhas)

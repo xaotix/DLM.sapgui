@@ -13,20 +13,20 @@ namespace DLM.painel
     {
         public void GetDatas()
         {
-            this.engenharia_cronograma_inicio = L.Get("ei").Data();
-            this.engenharia_cronograma = L.Get("ef").Data();
+            this.engenharia_cronograma_inicio = Linha.Get("ei").Data();
+            this.engenharia_cronograma = Linha.Get("ef").Data();
 
-            this.fabrica_cronograma_inicio = L.Get("fi").Data();
-            this.fabrica_cronograma = L.Get("ff").Data();
+            this.fabrica_cronograma_inicio = Linha.Get("fi").Data();
+            this.fabrica_cronograma = Linha.Get("ff").Data();
 
-            this.logistica_cronograma_inicio = L.Get("li").Data();
-            this.logistica_cronograma = L.Get("lf").Data();
+            this.logistica_cronograma_inicio = Linha.Get("li").Data();
+            this.logistica_cronograma = Linha.Get("lf").Data();
 
-            this.montagem_cronograma_inicio = L.Get("mi").Data();
-            this.montagem_cronograma = L.Get("mf").Data();
+            this.montagem_cronograma_inicio = Linha.Get("mi").Data();
+            this.montagem_cronograma = Linha.Get("mf").Data();
 
-            this.mi_s = L.Get("mi_s").Data();
-            this.mf_s = L.Get("mf_s").Data();
+            this.mi_s = Linha.Get("mi_s").Data();
+            this.mf_s = Linha.Get("mf_s").Data();
         }
 
 
@@ -92,7 +92,7 @@ namespace DLM.painel
 
         public ORC_SUB(DLM.db.Linha l)
         {
-            this.L = l;
+            this.Linha = l;
             this.id_obra = l["id_obra"].Int();
             this.PEP = l.Get("pep").Valor;
             this.peso_planejado = l.Get("peso_total").Double();
@@ -139,7 +139,7 @@ namespace DLM.painel
         }
         public ORC_ETP(DLM.db.Linha l)
         {
-            this.L = l;
+            this.Linha = l;
             this.id_obra = l["id_obra"].Int();
             this.PEP = l.Get("pep").Valor;
             this.peso_planejado = l.Get("peso_total").Double();
@@ -157,7 +157,7 @@ namespace DLM.painel
         }
         public ORC_PEP(DLM.db.Linha l)
         {
-            this.L = l;
+            this.Linha = l;
 
             this.id_obra = l["id_obra"].Int();
             this.PEP = l.Get("pep").Valor;
@@ -255,7 +255,7 @@ namespace DLM.painel
         public DateTime criacao { get; set; } = Cfg.Init.DataDummy();
         public ORC_PED(DLM.db.Linha l, Tipo_Material tipo)
         {
-            this.L = l;
+            this.Linha = l;
             this.id_obra = l["id_obra"].Int();
             this.numerocontrato = l.Get("numerocontrato").Valor;
             this.revisao = l.Get("revisao").Valor;

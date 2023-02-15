@@ -115,7 +115,7 @@ namespace DLM.painel
         }
         public PLAN_OBRA Clonar()
         {
-            return new PLAN_OBRA(this.L);
+            return new PLAN_OBRA(this.Linha);
         }
         public bool finalizado { get; set; } = false;
 
@@ -227,7 +227,7 @@ namespace DLM.painel
         }
         public PLAN_OBRA(DLM.db.Linha L)
         {
-            this.L = L;
+            this.Linha = L;
             string pedido_principal = L.Get("pedido_principal").Valor;
             this.PEP = pedido_principal.Replace(".C00", ".P").Replace(".P00","").Replace(".G00","");
             this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");

@@ -1,4 +1,5 @@
-﻿using DLM.sapgui;
+﻿using DLM.db;
+using DLM.sapgui;
 using DLM.vars;
 using System;
 using System.Collections.Generic;
@@ -355,7 +356,7 @@ namespace DLM.painel
                 return 0;
             }
         }
-        public DLM.db.Linha L { get; set; } = new DLM.db.Linha();
+        public Linha Linha { get; set; } = new Linha();
 
         public ImageSource imagem
         {

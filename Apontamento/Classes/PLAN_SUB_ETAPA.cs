@@ -49,7 +49,7 @@ namespace DLM.painel
             }
 
 
-            this.L = L;
+            this.Linha = L;
 
             this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
             this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();

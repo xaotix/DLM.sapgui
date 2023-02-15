@@ -248,41 +248,41 @@ namespace DLM.painel
         }
         public void Ler(bool carrega_id = true)
         {
-            this.data_eng = L["data_eng"].Valor;
-            this.data_fab = L["data_fab"].Valor;
+            this.data_eng = Linha["data_eng"].Valor;
+            this.data_fab = Linha["data_fab"].Valor;
 
-            this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();
+            this.engenharia_liberacao = Linha.Get("engenharia_liberacao").Data();
 
-            this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
-            this.fabrica_cronograma = L.Get("fabrica_cronograma").Data();
-            this.logistica_cronograma = L.Get("logistica_cronograma").Data();
-            this.montagem_cronograma = L.Get("montagem_cronograma").Data();
+            this.engenharia_cronograma = Linha.Get("engenharia_cronograma").Data();
+            this.fabrica_cronograma = Linha.Get("fabrica_cronograma").Data();
+            this.logistica_cronograma = Linha.Get("logistica_cronograma").Data();
+            this.montagem_cronograma = Linha.Get("montagem_cronograma").Data();
 
-            this.engenharia_cronograma_inicio = L.Get("engenharia_cronograma_inicio").Data();
-            this.fabrica_cronograma_inicio = L.Get("fabrica_cronograma_inicio").Data();
-            this.logistica_cronograma_inicio = L.Get("logistica_cronograma_inicio").Data();
-            this.montagem_cronograma_inicio = L.Get("montagem_cronograma_inicio").Data();
+            this.engenharia_cronograma_inicio = Linha.Get("engenharia_cronograma_inicio").Data();
+            this.fabrica_cronograma_inicio = Linha.Get("fabrica_cronograma_inicio").Data();
+            this.logistica_cronograma_inicio = Linha.Get("logistica_cronograma_inicio").Data();
+            this.montagem_cronograma_inicio = Linha.Get("montagem_cronograma_inicio").Data();
 
             if (carrega_id)
             {
 
-            this.id = L["id"].Int();
+            this.id = Linha["id"].Int();
             }
-            this.id_status_pedido = L.Get("id_status_pedido").Int();
-            this.id_status_pep = L.Get("id_status_pedido").Int();
+            this.id_status_pedido = Linha.Get("id_status_pedido").Int();
+            this.id_status_pep = Linha.Get("id_status_pedido").Int();
 
-            this.observacoes = L["observacoes"].Valor;
-            this.PEP = L.Get("pep").Valor;
-            this.pep_engenharia = L.Get("pep_engenharia").Valor;
+            this.observacoes = Linha["observacoes"].Valor;
+            this.PEP = Linha.Get("pep").Valor;
+            this.pep_engenharia = Linha.Get("pep_engenharia").Valor;
 
-            this.peso_embarcado = L["peso_embarcado"].Double(6);
-            this.peso_planejado = L["peso_planejado"].Double(6);
-            this.peso_produzido = L["peso_produzido"].Double(6);
+            this.peso_embarcado = Linha["peso_embarcado"].Double(6);
+            this.peso_planejado = Linha["peso_planejado"].Double(6);
+            this.peso_produzido = Linha["peso_produzido"].Double(6);
 
-            this.ultima_consulta_sap = L.Get("ultima_consulta_sap").Data();
+            this.ultima_consulta_sap = Linha.Get("ultima_consulta_sap").Data();
 
-            this.status_eng = L.Get("status_eng").Valor;
-            this.status = L.Get("status").Valor;
+            this.status_eng = Linha.Get("status_eng").Valor;
+            this.status = Linha.Get("status").Valor;
 
 
             this.Titulo = new Titulo_Planejamento() { CHAVE = this.PEP, DESCRICAO = this.descricao };
@@ -421,7 +421,7 @@ namespace DLM.painel
         public PLAN_PEP(DLM.db.Linha L)
         {
             //this.banco = banco;
-            this.L = L;
+            this.Linha = L;
             Ler(true);
         }
         public PLAN_PEP(List<PLAN_PECA> pecas, string observacoes, string descricao)

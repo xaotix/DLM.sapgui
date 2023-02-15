@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using System.Xml.Serialization;
 using Conexoes;
+using DLM.db;
 using DLM.sapgui;
 using DLM.vars;
 
@@ -149,7 +150,7 @@ namespace DLM.painel
         }
 
         [Browsable(false)]
-        public DLM.db.Linha l { get; set; } = new DLM.db.Linha();
+        public Linha Linha { get; set; } = new Linha();
         [Browsable(false)]
         public long id { get; set; } = -1;
         [Browsable(false)]
@@ -302,24 +303,24 @@ namespace DLM.painel
         }
         public Resultado_Economico_Header(DLM.db.Linha l)
         {
-            this.l = l;
-            this.id = this.l["id"].Int();
-            this.Pedido = this.l.Get("pep").Valor;
-            this.descricao = this.l.Get("descricao").Valor;
+            this.Linha = l;
+            this.id = this.Linha["id"].Int();
+            this.Pedido = this.Linha.Get("pep").Valor;
+            this.descricao = this.Linha.Get("descricao").Valor;
 
-            this.mp = this.l.Get("mp").Double();
-            this.mod = this.l.Get("mod").Double();
-            this.ggf = this.l.Get("ggf").Double();
-            this.terceirizacao_producao = this.l.Get("terceirizacao_producao").Double();
-            this.terceirizacao_projeto = this.l.Get("terceirizacao_projeto").Double();
+            this.mp = this.Linha.Get("mp").Double();
+            this.mod = this.Linha.Get("mod").Double();
+            this.ggf = this.Linha.Get("ggf").Double();
+            this.terceirizacao_producao = this.Linha.Get("terceirizacao_producao").Double();
+            this.terceirizacao_projeto = this.Linha.Get("terceirizacao_projeto").Double();
 
-            this.overhead = this.l.Get("overhead").Double();
-            this.comercial = this.l.Get("comercial").Double();
-            this.suporte_producao = this.l.Get("suporte_producao").Double();
+            this.overhead = this.Linha.Get("overhead").Double();
+            this.comercial = this.Linha.Get("comercial").Double();
+            this.suporte_producao = this.Linha.Get("suporte_producao").Double();
 
-            this.ultima_edicao = this.l["ultima_edicao"].Data();
-            this.criado = this.l.Get("criado").Data();
-            this.user = this.l.Get("user").Valor;
+            this.ultima_edicao = this.Linha["ultima_edicao"].Data();
+            this.criado = this.Linha.Get("criado").Data();
+            this.user = this.Linha.Get("user").Valor;
         }
 
         public Resultado_Economico_Header(List<Resultado_Economico_Header> j)

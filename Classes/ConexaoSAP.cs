@@ -35,7 +35,6 @@ namespace DLM.sapgui
         }
         public static string GravarTitulos(List<string> codigos_pedidos)
         {
-            var db = DBases.GetDB().Clonar();
             var w = Conexoes.Utilz.Wait(codigos_pedidos.Count,"Gravando titulos...");
 
             foreach (var Pedido in codigos_pedidos)
@@ -49,7 +48,7 @@ namespace DLM.sapgui
                     }
                     var lista = consulta.Select(x => x.Select(y => y.GetValue().ToString()).ToList()).ToList();
 
-                    db.Apagar("CHAVE", $"%{Pedido.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, false);
+                    DBases.GetDB().Apagar("CHAVE", $"%{Pedido.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, false);
 
 
                     List<string> linhas = new List<string>();
@@ -65,7 +64,7 @@ namespace DLM.sapgui
                                         $" VALUES ";
 
                         SUBCOMANDO = SUBCOMANDO + string.Join(",", sub);
-                        db.Comando(SUBCOMANDO);
+                        DBases.GetDB().Comando(SUBCOMANDO);
                     }
                     w.somaProgresso();
                 }

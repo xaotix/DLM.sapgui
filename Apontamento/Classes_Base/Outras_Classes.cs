@@ -1,4 +1,5 @@
 ﻿using Conexoes;
+using DLM.db;
 using DLM.sap;
 using DLM.sapgui;
 using DLM.vars;
@@ -16,7 +17,7 @@ namespace DLM.painel
         {
             return CHAVE + " - " +  DESCRICAO;
         }
-        public DLM.db.Linha L { get; set; } = new DLM.db.Linha();
+        public Linha Linha { get; set; } = new Linha();
         public string CHAVE { get; set; } = "";
         public string DESCRICAO { get; set; } = "";
         public Titulo_Planejamento()
@@ -189,7 +190,7 @@ namespace DLM.painel
         {
             return this.PEP;
         }
-        public db.Linha L { get; private set; } = new db.Linha();
+        public Linha Linha { get; private set; } = new Linha();
         public string PEP { get; set; } = "";
         public double Necessario { get; set; } = 0;
         public double Embarcado { get; set; } = 0;
@@ -525,7 +526,7 @@ namespace DLM.painel
         {
             return pep + " - peso: " + peso_necessario + " - qtd: " + qtd_necessaria + " - prod: " + qtd_produzida + " - emb: " + qtd_embarcada;
         }
-        public DLM.db.Linha L { get; set; } = new DLM.db.Linha();
+        public Linha Linha { get; set; } = new Linha();
         public string pep { get; set; } = "";
         public double peso_necessario { get; set; } = 0;
         public double qtd_necessaria { get; set; } = 0;
@@ -566,7 +567,7 @@ namespace DLM.painel
 
         public Resumo_Pecas(DLM.db.Linha L)
         {
-            this.L = L;
+            this.Linha = L;
             this.pep = L.Get("pep").Valor;
             this.peso_necessario = L.Get("peso_necessario").Double();
             this.qtd_necessaria = L.Get("qtd_necessaria").Double();

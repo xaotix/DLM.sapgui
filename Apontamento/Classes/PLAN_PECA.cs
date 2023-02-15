@@ -258,7 +258,7 @@ namespace DLM.painel
                 {
                     _logistica = new List<Logistica_Planejamento>();
 
-                    var consulta = DBases.GetDB().Consulta($"SELECT *  from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0066n_logistica} as pr where pr.pep ='{PEP}' and pr.material = '{material}'");
+                    var consulta = DBases.GetDB().Consulta($"SELECT *  FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0066n_logistica} as pr where pr.pep ='{PEP}' and pr.material = '{material}'");
                     foreach (var linha in consulta.Linhas)
                     {
                         this._logistica.Add(new Logistica_Planejamento(this, linha));
