@@ -375,9 +375,7 @@ namespace DLM.sapgui
                 if (salvar)
                 {
                     DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0112, false);
-                    //DBases.GetDBMySQL().Clonar().Comando($"delete from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0112} where {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0112}.Elemento_PEP like '%{pedido}%'");
                     var w = Conexoes.Utilz.Wait(this.ZPP0112.Count, "Salvando..."); 
-                    w.Show();
                     DBases.GetDB().Cadastro(this.ZPP0112.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpp0112);
                     w.Close();
                 }

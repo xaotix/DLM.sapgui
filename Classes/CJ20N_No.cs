@@ -55,13 +55,13 @@ namespace DLM.sapgui
                 var s = this.pai;
                 if(s!=null)
                 {
-                    if (!this.nome.Contains(this.GetRaiz().nome))
+                    if (!this.Nome.Contains(this.GetRaiz().Nome))
                     {
                         return CJ20N_Tipo.Tarefa;
                     }
                 }
 
-                var sts = this.nome.Replace(" ", "").Replace("-","");
+                var sts = this.Nome.Replace(" ", "").Replace("-","");
                 if(sts.ESoNumero())
                 {
                     return CJ20N_Tipo.Tarefa;
@@ -90,75 +90,75 @@ namespace DLM.sapgui
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.Pedido(this.nome);
+                return Conexoes.Utilz.PEP.Get.Pedido(this.Nome);
             }
         }
         public string pedido_completo
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.Pedido(this.nome,true);
+                return Conexoes.Utilz.PEP.Get.Pedido(this.Nome,true);
             }
         }
         public string etapa
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.Etapa(this.nome);
+                return Conexoes.Utilz.PEP.Get.Etapa(this.Nome);
             }
         }
         public string etapa_completa
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.Etapa(this.nome,true);
+                return Conexoes.Utilz.PEP.Get.Etapa(this.Nome,true);
             }
         }
         public string subetapa
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.Subetapa(this.nome);
+                return Conexoes.Utilz.PEP.Get.Subetapa(this.Nome);
             }
         }
         public string subetapa_completa
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.Subetapa(this.nome,true);
+                return Conexoes.Utilz.PEP.Get.Subetapa(this.Nome,true);
             }
         }
         public string pep
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.PEP(this.nome);
+                return Conexoes.Utilz.PEP.Get.PEP(this.Nome);
             }
         }
         public string pep_completo
         {
             get
             {
-                return Conexoes.Utilz.PEP.Get.PEP(this.nome,true);
+                return Conexoes.Utilz.PEP.Get.PEP(this.Nome,true);
             }
         }
         public CJ20N_No GetNo(string fim)
         {
            if(this._filhos!=null)
             {
-                return this._filhos.Find(x => x.nome.ToUpper().EndsWith(fim.ToUpper()));
+                return this._filhos.Find(x => x.Nome.ToUpper().EndsWith(fim.ToUpper()));
             }
             return null;
         }
         public bool AddTarefa( string centro_de_trabalho = "1202",string divisao = "1202",string centro = "1202")
         {
-            var s = this.Getfilhos(true).FindAll(x => !x.nome.Contains(this.nome)).ToList();
+            var s = this.Getfilhos(true).FindAll(x => !x.Nome.Contains(this.Nome)).ToList();
             if (s.Count>0)
             {
                 return true;
             }
             this.SetNo();
-            return this.SAP.CJ20N_CriarTarefa(this.nome, this.descricao, centro_de_trabalho, divisao, centro, true);
+            return this.SAP.CJ20N_CriarTarefa(this.Nome, this.descricao, centro_de_trabalho, divisao, centro, true);
         }
 
         public bool Atualizar( string novo_nome=null, string nova_descricao = null, string novo_centro =null, string nova_divisao=null, bool atualizar_tarefas = true)
@@ -169,11 +169,11 @@ namespace DLM.sapgui
         {
             
             var fls = this.Getfilhos(true);
-            var pep = this.nome + "." + nome.ToUpper();
-            if(this.GetRaiz().nos.Find(x=> x.nome.ToUpper() == pep.ToUpper())==null)
+            var pep = this.Nome + "." + nome.ToUpper();
+            if(this.GetRaiz().nos.Find(x=> x.Nome.ToUpper() == pep.ToUpper())==null)
             {
                 this.SetNo();
-                var ss = this.SAP.CJ20N_CriarEtapa(this.nome + "." + nome, descricao, planejado, contabil, faturamento, empresa, centro, divisao, true);
+                var ss = this.SAP.CJ20N_CriarEtapa(this.Nome + "." + nome, descricao, planejado, contabil, faturamento, empresa, centro, divisao, true);
                 if (ss)
                 {
                     foreach (var s in this.Getfilhos(true))
@@ -256,7 +256,7 @@ namespace DLM.sapgui
 
                         }
                     }
-                    no.nome = pep;
+                    no.Nome = pep;
                     no.descricao = desc;
                     no.key = key;
                     no.chave_pep = chave_pep;
@@ -273,10 +273,10 @@ namespace DLM.sapgui
         public CJ20N_No pai { get; set; }
         public override string ToString()
         {
-            return "[" + this.tipo + "] "  + this.nome + " - " + this.descricao;
+            return "[" + this.tipo + "] "  + this.Nome + " - " + this.descricao;
         }
         public GuiTree arvore { get; private set; }
-        public string nome { get; set; } = "";
+        public string Nome { get; set; } = "";
         public string key { get; set; } = "";
         public string chave_pep { get; set; } = "";
         public string descricao { get; set; } = "";
@@ -333,7 +333,7 @@ namespace DLM.sapgui
                         else
                         {
                             //teóricamente não deveria vir aqui.
-                            if(b.pai==this && this._filhos.Find(x=>x.nome == b.nome)==null)
+                            if(b.pai==this && this._filhos.Find(x=>x.Nome == b.Nome)==null)
                             {
                                 this._filhos.Add(b);
                             }
@@ -415,7 +415,7 @@ namespace DLM.sapgui
         public CJ20N_No(string nome, string descricao, string key, string chave_pep, GuiTree arvore, Consulta SessaoSAP)
         {
             this.arvore = arvore;
-            this.nome = nome;
+            this.Nome = nome;
             this.key = key;
             this.descricao = descricao;
             this.SAP = SessaoSAP;
@@ -440,7 +440,7 @@ namespace DLM.sapgui
             }
             try
             {
-                this.nome = this.arvore.GetItemText(key, "TECH_KEY"); ;
+                this.Nome = this.arvore.GetItemText(key, "TECH_KEY"); ;
                 this.descricao = this.arvore.GetNodeTextByKey(key);
             }
             catch (Exception)

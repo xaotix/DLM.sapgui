@@ -136,7 +136,6 @@ namespace DLM.painel
             pp.Pedido = Pedido;
             int max = 6;
             var w = Conexoes.Utilz.Wait(max, "Carregando..." + Pedido);
-            w.Show();
             w.somaProgresso();
             var folha = GetFolhasMargens(Pedido);
             w.somaProgresso();
@@ -932,7 +931,6 @@ namespace DLM.painel
             List<PLAN_PECA> retorno = new List<PLAN_PECA>();
             var sub_lista = quebrar_lista(pedido, max_pacote);
             var w = Conexoes.Utilz.Wait(sub_lista.Count, "Procurando Peças ..." + (consolidada ? "(2/3 - Consolidadas)" : "(3/3 - Orcamentos)"));
-            w.Show();
             foreach (var s in sub_lista)
             {
                 retorno.AddRange(GetPecasPGOF(s, consolidada));
