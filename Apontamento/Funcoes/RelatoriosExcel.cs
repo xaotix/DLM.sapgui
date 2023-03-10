@@ -2120,9 +2120,9 @@ public class Relatorios
             ldb.Add("face2", t.peca.bobina.cor2.Nome);
             ldb.Add("complexidade", t.peca.Complexidade);
             ldb.Add("denominacao", t.peca.DENOMINDSTAND);
-            ldb.Add("tipo", t.peca.Tipo.ToString());
+            ldb.Add("tipo", t.peca.Tipo);
             ldb.Add("arquivo", t.peca.DESENHO_1);
-            ldb.Add("tipo_embarque", t.peca.Tipo_Embarque.ToString());
+            ldb.Add("tipo_embarque", t.peca.Tipo_Embarque);
             return ldb;
         }
         public static bool ExportarListaPecasPMP(Pacote_PMP pacote, bool abrir = false, bool gerar_subetapas = false, bool gerar_grupos_mercadoria = false, bool gerar_avanco = false, bool gerar_pedidos = false, bool gerar_pecas =true)
