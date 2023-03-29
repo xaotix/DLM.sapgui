@@ -159,7 +159,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Apontamento\Classes\Avanco_Pecas.cs" />
     <Compile Include="Apontamento\Classes\Base_Orcamento.cs" />
     <Compile Include="Apontamento\Classes\Obra_PMP.cs" />
     <Compile Include="Apontamento\Classes\PLAN_ETAPA.cs" />
@@ -168,7 +167,6 @@
     <Compile Include="Apontamento\Classes\PLAN_PEDIDO.cs" />
     <Compile Include="Apontamento\Classes\PLAN_PEP.cs" />
     <Compile Include="Apontamento\Classes\PLAN_SUB_ETAPA.cs" />
-    <Compile Include="Apontamento\Classes\Resultado_Economico.cs" />
     <Compile Include="Apontamento\Classes_Base\Colunas.cs" />
     <Compile Include="Apontamento\Classes_Base\Data_Meta.cs" />
     <Compile Include="Apontamento\Classes_Base\Descricao_PEP.cs" />
@@ -183,16 +181,11 @@
     <Compile Include="Classes\CJ20N_No.cs" />
     <Compile Include="Classes_Base\FAGLB03.cs" />
     <Compile Include="Classes_Base\ZPP0112.cs" />
-    <Compile Include="Classes_Base_FI\FolhaMargem.cs" />
-    <Compile Include="Classes_Base_FI\Resultado_Economico.cs" />
     <Compile Include="Enumeradores.cs" />
     <Compile Include="Funcoes\CargaExcel.cs" />
-    <Compile Include="Classes_Base\CJI3.cs" />
     <Compile Include="Classes_Base\Datas.cs" />
     <Compile Include="Classes_Base\ZPP0100.cs" />
-    <Compile Include="Classes_Base\FAGLL03.cs" />
     <Compile Include="Funcoes\Funcoes.cs" />
-    <Compile Include="Classes_Base\ZPP0066N.cs" />
     <Compile Include="Classes_Base\ZCONTRATOS.cs" />
     <Compile Include="Classes\ConexaoSAP.cs" />
     <Compile Include="Classes\PEPConsultaSAP.cs" />

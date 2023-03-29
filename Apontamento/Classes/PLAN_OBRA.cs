@@ -29,8 +29,7 @@ namespace DLM.painel
             this.obras = Obras;
 
             this.PEP = $"{this.obras.Count} Obras";
-            this.Titulo.CHAVE = contrato;
-            this.Titulo.DESCRICAO = nome;
+            this.nome = nome;
 
             this.engenharia_cronograma = Obras.Max(x => x.engenharia_cronograma);
             this.engenharia_liberacao = Obras.Max(x => x.engenharia_cronograma);
@@ -94,7 +93,7 @@ namespace DLM.painel
 
             this.id_montagem = 1;
 
-            this.resumo_pecas = new Resumo_Pecas(Obras.Select(x => x.resumo_pecas).ToList());
+            //this.resumo_pecas = new Resumo_Pecas(Obras.Select(x => x.resumo_pecas).ToList());
 
             this.status_montagem = "EM ANDAMENTO";
 
@@ -142,7 +141,7 @@ namespace DLM.painel
         }
         public override string ToString()
         {
-            return descricao;
+            return base.nome;
         }
 
         private List<string> _pedidos_clean { get; set; }
