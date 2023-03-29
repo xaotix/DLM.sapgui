@@ -78,7 +78,6 @@ namespace DLM.sapgui
                 catch (Exception ex)
                 {
                     Conexoes.Utilz.Alerta(ex);
-                    //MessageBox.Show(ex.Message);
                     return;
                 }
             }

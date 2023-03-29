@@ -297,71 +297,71 @@ namespace DLM.sapgui
             }
         }
 
-        public List<FAGLL03> GetFAGLL03(bool salvar)
-        {
-            bool con = false;
-            if (!DLM.painel.Consultas.MatarExcel(false)) { return new List<FAGLL03>(); }
-            if (this.Codigo.Length < 3) { return new List<FAGLL03>(); }
-            var arquivo = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_FAGLL03ARQ;
-          var peps =  DBases.GetDB().Consulta($"SELECT pr.pep as pep from {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} as pr where pr.pep like '%{Codigo.Replace("*", "")}% '").Linhas.Select(x=>x.Get("pep").Valor).ToList();
+        //public List<FAGLL03> GetFAGLL03(bool salvar)
+        //{
+        //    bool con = false;
+        //    if (!DLM.painel.Consultas.MatarExcel(false)) { return new List<FAGLL03>(); }
+        //    if (this.Codigo.Length < 3) { return new List<FAGLL03>(); }
+        //    var arquivo = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_FAGLL03ARQ;
+        //  var peps =  DBases.GetDB().Consulta($"SELECT pr.pep as pep from {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} as pr where pr.pep like '%{Codigo.Replace("*", "")}% '").Linhas.Select(x=>x.Get("pep").Valor).ToList();
 
 
 
-            var sub_lista = peps.quebrar_lista(200);
+        //    var sub_lista = peps.quebrar_lista(200);
 
-            if(salvar && peps.Count>0)
-            {
-                DBases.GetDB().Apagar("Pedido", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_fagll03, false);
-            }
+        //    if(salvar && peps.Count>0)
+        //    {
+        //        DBases.GetDB().Apagar("Pedido", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_fagll03, false);
+        //    }
 
-            this.fagll03.Clear();
-            var w = Conexoes.Utilz.Wait(sub_lista.Count, "FAGLL03 - 1/2 - Consultando..."); 
+        //    this.fagll03.Clear();
+        //    var w = Conexoes.Utilz.Wait(sub_lista.Count, "FAGLL03 - 1/2 - Consultando..."); 
          
-            for (int i = 0; i < sub_lista.Count; i++)
-            {
-                con = Consulta.FAGLL03(sub_lista[i], Cfg.Init.GetDestinoSAP_Excel(), i + "_" + arquivo);
-                if (con)
-                {
-                    DLM.painel.Consultas.MatarExcel(false);
-                    var CARGA = CargaExcel.FAGLL03(Cfg.Init.GetDestinoSAP_Excel() + i + "_" + arquivo, this.Codigo.Replace("*","").Replace("%",""));
-                    this.fagll03.AddRange(CARGA);
-                }
-                w.somaProgresso();
-            }
+        //    for (int i = 0; i < sub_lista.Count; i++)
+        //    {
+        //        con = Consulta.FAGLL03(sub_lista[i], Cfg.Init.GetDestinoSAP_Excel(), i + "_" + arquivo);
+        //        if (con)
+        //        {
+        //            DLM.painel.Consultas.MatarExcel(false);
+        //            var CARGA = CargaExcel.FAGLL03(Cfg.Init.GetDestinoSAP_Excel() + i + "_" + arquivo, this.Codigo.Replace("*","").Replace("%",""));
+        //            this.fagll03.AddRange(CARGA);
+        //        }
+        //        w.somaProgresso();
+        //    }
 
 
-            if (salvar)
-            {
-                w.SetProgresso(0, this.fagll03.Count, "FAGLL03 - 2/2 - Salvando...");
-                DBases.GetDB().Cadastro(this.fagll03.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "fagll03");
+        //    if (salvar)
+        //    {
+        //        w.SetProgresso(0, this.fagll03.Count, "FAGLL03 - 2/2 - Salvando...");
+        //        DBases.GetDB().Cadastro(this.fagll03.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "fagll03");
               
-            }
+        //    }
 
-            w.Close();
+        //    w.Close();
 
-            return this.fagll03;
-        }
+        //    return this.fagll03;
+        //}
 
-        public List<CJI3> GetCJI3(bool salvar)
-        {
-            if (!DLM.painel.Consultas.MatarExcel(false)) { return new List<CJI3>(); }
-            if (this.Codigo.Length < 3) { return new List<CJI3>(); }
-            var arq0100 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_CJI3ARQ;
+        //public List<CJI3> GetCJI3(bool salvar)
+        //{
+        //    if (!DLM.painel.Consultas.MatarExcel(false)) { return new List<CJI3>(); }
+        //    if (this.Codigo.Length < 3) { return new List<CJI3>(); }
+        //    var arq0100 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_CJI3ARQ;
 
-            if (Consulta.CJI3(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
-            {
-                DLM.painel.Consultas.MatarExcel(false);
-                this.cji3 = CargaExcel.CJI3(Cfg.Init.GetDestinoSAP_Excel() + arq0100);
-                if (salvar)
-                {
-                    DBases.GetDB().Apagar("Elemento_PEP", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, false);
-                    var w = Conexoes.Utilz.Wait(this.cji3.Count, "Salvando...");                     
-                    DBases.GetDB().Cadastro(this.cji3.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "cji3");
-                    w.Close();
-                }
-            }
-            return this.cji3;
-        }
+        //    if (Consulta.CJI3(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
+        //    {
+        //        DLM.painel.Consultas.MatarExcel(false);
+        //        this.cji3 = CargaExcel.CJI3(Cfg.Init.GetDestinoSAP_Excel() + arq0100);
+        //        if (salvar)
+        //        {
+        //            DBases.GetDB().Apagar("Elemento_PEP", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, false);
+        //            var w = Conexoes.Utilz.Wait(this.cji3.Count, "Salvando...");                     
+        //            DBases.GetDB().Cadastro(this.cji3.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "cji3");
+        //            w.Close();
+        //        }
+        //    }
+        //    return this.cji3;
+        //}
         public List<ZPP0112> GetZPP0112(long min, long max, bool salvar, string pedido = "")
         {
             if (!DLM.painel.Consultas.MatarExcel(false)) { return new List<ZPP0112>(); }

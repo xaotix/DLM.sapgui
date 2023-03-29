@@ -1525,7 +1525,7 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                DLM.log.Log(ex);
+                //DLM.log.Log(ex);
             }
             try
             {
@@ -1534,7 +1534,7 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                DLM.log.Log(ex);
+                //DLM.log.Log(ex);
             }
         }
 

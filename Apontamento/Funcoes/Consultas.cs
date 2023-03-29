@@ -128,61 +128,61 @@ namespace DLM.painel
             }
             return retorno;
         }
-        public static Resultado_Economico CalcularResultado_Economico(string Pedido, bool salvar = false)
-        {
-            if (Pedido.Length < 5) { return new Resultado_Economico(); }
+        //public static Resultado_Economico CalcularResultado_Economico(string Pedido, bool salvar = false)
+        //{
+        //    if (Pedido.Length < 5) { return new Resultado_Economico(); }
 
-            Resultado_Economico pp = new Resultado_Economico();
-            pp.Pedido = Pedido;
-            int max = 6;
-            var w = Conexoes.Utilz.Wait(max, "Carregando..." + Pedido);
-            w.somaProgresso();
-            var folha = GetFolhasMargens(Pedido);
-            w.somaProgresso();
-            DLM.sapgui.FolhaMargem folhamargem = new DLM.sapgui.FolhaMargem();
-            if(folha.Count>0)
-            {
-                folhamargem = folha[0];
-            }
-            pp.SetFolhaMargem(folhamargem);
+        //    Resultado_Economico pp = new Resultado_Economico();
+        //    pp.Pedido = Pedido;
+        //    int max = 6;
+        //    var w = Conexoes.Utilz.Wait(max, "Carregando..." + Pedido);
+        //    w.somaProgresso();
+        //    var folha = GetFolhasMargens(Pedido);
+        //    w.somaProgresso();
+        //    DLM.sapgui.FolhaMargem folhamargem = new DLM.sapgui.FolhaMargem();
+        //    if(folha.Count>0)
+        //    {
+        //        folhamargem = folha[0];
+        //    }
+        //    pp.SetFolhaMargem(folhamargem);
 
-            pp.Lancamentos = GetLancamentos(Pedido);
+        //    pp.Lancamentos = GetLancamentos(Pedido);
 
-            w.somaProgresso();
-            pp.pedidos = Consultas.GetObrasPMP(Pedido, true,false);
-            foreach(var p in pp.pedidos)
-            {
-                if(p.Material_CONS)
-                {
-                    //p.mudartipo(Tipo_Material.Consolidado);
-                }
-                w.somaProgresso();
-            }
+        //    w.somaProgresso();
+        //    pp.pedidos = Consultas.GetObrasPMP(Pedido, true,false);
+        //    foreach(var p in pp.pedidos)
+        //    {
+        //        if(p.Material_CONS)
+        //        {
+        //            //p.mudartipo(Tipo_Material.Consolidado);
+        //        }
+        //        w.somaProgresso();
+        //    }
 
-            if(pp.pedidos.Count>0)
-            {
-                pp.descricao = pp.pedidos[0].descricao;
-            }
+        //    if(pp.pedidos.Count>0)
+        //    {
+        //        pp.descricao = pp.pedidos[0].descricao;
+        //    }
 
-            /*esse cara precisa que a folha margem esteja carregada*/
-            pp.Lancamentos.AddRange(GetLancamentosEtapas(pp.pedidos, pp));
-            w.somaProgresso();
-            w.Close();
+        //    /*esse cara precisa que a folha margem esteja carregada*/
+        //    pp.Lancamentos.AddRange(GetLancamentosEtapas(pp.pedidos, pp));
+        //    w.somaProgresso();
+        //    w.Close();
 
 
             
-            w.somaProgresso();
-            pp.Header = Consultas.GetResultado_Economico_Header(Pedido);
-            pp.SetLancamentos();
-            w.somaProgresso();
+        //    w.somaProgresso();
+        //    pp.Header = Consultas.GetResultado_Economico_Header(Pedido);
+        //    pp.SetLancamentos();
+        //    w.somaProgresso();
 
-            if(salvar)
-            {
-                Salvar(pp);
-            }
-            w.Close();
-            return pp;
-        }
+        //    if(salvar)
+        //    {
+        //        Salvar(pp);
+        //    }
+        //    w.Close();
+        //    return pp;
+        //}
 
         public static List<DLM.sapgui.Lancamento> GetLancamentosEtapas(List<Pedido_PMP> pedidos, Resultado_Economico resultado)
         {
@@ -469,17 +469,17 @@ namespace DLM.painel
             }
             return DLM.sapgui.Funcoes.Agrupar(retorno);
         }
-        public static List<DLM.sapgui.Lancamento> GetLancamentos(string Pedido)
-        {
-            var receitas_brutas_realizadas = GetReceitasBrutasrRealizadas(Pedido);
-            var custos_montagem = GetCustosMontagem(Pedido);
-            var custos_materiais = GetCustosMaterial(Pedido);
-            List<DLM.sapgui.Lancamento> retorno = new List<DLM.sapgui.Lancamento>();
-            retorno.AddRange(receitas_brutas_realizadas);
-            retorno.AddRange(custos_montagem);
-            retorno.AddRange(custos_materiais);
-             return retorno;
-        }
+        //public static List<DLM.sapgui.Lancamento> GetLancamentos(string Pedido)
+        //{
+        //    var receitas_brutas_realizadas = GetReceitasBrutasrRealizadas(Pedido);
+        //    var custos_montagem = GetCustosMontagem(Pedido);
+        //    var custos_materiais = GetCustosMaterial(Pedido);
+        //    List<DLM.sapgui.Lancamento> retorno = new List<DLM.sapgui.Lancamento>();
+        //    retorno.AddRange(receitas_brutas_realizadas);
+        //    retorno.AddRange(custos_montagem);
+        //    retorno.AddRange(custos_materiais);
+        //     return retorno;
+        //}
         public static List<DLM.sapgui.Lancamento> GetReceitasBrutasrRealizadas(string Pedido)
         {
             if (Pedido.Length < 5) { return new List<DLM.sapgui.Lancamento>(); }
@@ -530,96 +530,96 @@ namespace DLM.painel
 
             return retorno.OrderBy(x=>x.ToString()).ToList();
         }
-        public static List<DLM.sapgui.Lancamento> GetCustosMontagem(string Pedido)
-        {
-            if (Pedido.Length < 5) { return new List<DLM.sapgui.Lancamento>(); }
-            List<DLM.sapgui.Lancamento> lancamentos = new List<DLM.sapgui.Lancamento>();
-            List<DLM.sapgui.Lancamento> retorno = new List<DLM.sapgui.Lancamento>();
+        //public static List<DLM.sapgui.Lancamento> GetCustosMontagem(string Pedido)
+        //{
+        //    if (Pedido.Length < 5) { return new List<DLM.sapgui.Lancamento>(); }
+        //    List<DLM.sapgui.Lancamento> lancamentos = new List<DLM.sapgui.Lancamento>();
+        //    List<DLM.sapgui.Lancamento> retorno = new List<DLM.sapgui.Lancamento>();
 
-            /*realizado*/
-            /*adicionado filtro para remover itens 31 milhoes*/
-            var resultado = DBases.GetDB().Consulta($"SELECT * FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_cji3} as pr where pr.Elemento_PEP like '%{Pedido}% ' and pr.Classe_de_custo not like '31%'");
+        //    /*realizado*/
+        //    /*adicionado filtro para remover itens 31 milhoes*/
+        //    var resultado = DBases.GetDB().Consulta($"SELECT * FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_cji3} as pr where pr.Elemento_PEP like '%{Pedido}% ' and pr.Classe_de_custo not like '31%'");
 
-            var mod_di = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".MO")).ToList();
-            var equipamentos = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".EQ")).ToList();
-            var supervisor = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".SU")).ToList();
-            var equipe_propria = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".EP")).ToList();
-            var logistica = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".LOG")).ToList();
-            var seguro = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".SEG")).ToList();
+        //    var mod_di = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".MO")).ToList();
+        //    var equipamentos = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".EQ")).ToList();
+        //    var supervisor = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".SU")).ToList();
+        //    var equipe_propria = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".EP")).ToList();
+        //    var logistica = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".LOG")).ToList();
+        //    var seguro = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".SEG")).ToList();
           
 
-            foreach (var f in mod_di)
-            {
-                DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Montagem_MO_DI);
-                lancamentos.Add(l);
-            }
-            foreach (var f in equipamentos)
-            {
-                DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Equipamentos);
-                lancamentos.Add(l);
-            }
-            foreach (var f in supervisor)
-            {
-                DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Supervisor);
-                lancamentos.Add(l);
-            }
-            foreach (var f in equipe_propria)
-            {
-                DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Equipe_Propria);
-                lancamentos.Add(l);
-            }
-            foreach (var f in logistica)
-            {
-                DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Logistica);
-                lancamentos.Add(l);
-            }
-            foreach (var f in seguro)
-            {
-                DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Seguros);
-                lancamentos.Add(l);
-            }
+        //    foreach (var f in mod_di)
+        //    {
+        //        DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Montagem_MO_DI);
+        //        lancamentos.Add(l);
+        //    }
+        //    foreach (var f in equipamentos)
+        //    {
+        //        DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Equipamentos);
+        //        lancamentos.Add(l);
+        //    }
+        //    foreach (var f in supervisor)
+        //    {
+        //        DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Supervisor);
+        //        lancamentos.Add(l);
+        //    }
+        //    foreach (var f in equipe_propria)
+        //    {
+        //        DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Equipe_Propria);
+        //        lancamentos.Add(l);
+        //    }
+        //    foreach (var f in logistica)
+        //    {
+        //        DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Logistica);
+        //        lancamentos.Add(l);
+        //    }
+        //    foreach (var f in seguro)
+        //    {
+        //        DLM.sapgui.Lancamento l = LancamentosCJI3(f, DLM.sapgui.Tipo_Lancamento.Custos_Seguros);
+        //        lancamentos.Add(l);
+        //    }
 
 
-            var meses = lancamentos.GroupBy(x => x.Chave).Select(x => x.First()).ToList();
+        //    var meses = lancamentos.GroupBy(x => x.Chave).Select(x => x.First()).ToList();
 
-            foreach (var mes in meses)
-            {
-                var subs = lancamentos.FindAll(x => x.Chave == mes.Chave).ToList();
-                retorno.Add(new DLM.sapgui.Lancamento(subs));
-            }
+        //    foreach (var mes in meses)
+        //    {
+        //        var subs = lancamentos.FindAll(x => x.Chave == mes.Chave).ToList();
+        //        retorno.Add(new DLM.sapgui.Lancamento(subs));
+        //    }
 
-            return retorno.OrderBy(x => x.ToString()).ToList();
-        }
+        //    return retorno.OrderBy(x => x.ToString()).ToList();
+        //}
         
-        public static List<DLM.sapgui.Lancamento> GetCustosMaterial(string Pedido)
-        {
-            if (Pedido.Length < 5) { return new List<DLM.sapgui.Lancamento>(); }
-            List<DLM.sapgui.Lancamento> lancamentos = new List<DLM.sapgui.Lancamento>();
-            List<DLM.sapgui.Lancamento> retorno = new List<DLM.sapgui.Lancamento>();
+        //public static List<DLM.sapgui.Lancamento> GetCustosMaterial(string Pedido)
+        //{
+        //    if (Pedido.Length < 5) { return new List<DLM.sapgui.Lancamento>(); }
+        //    List<DLM.sapgui.Lancamento> lancamentos = new List<DLM.sapgui.Lancamento>();
+        //    List<DLM.sapgui.Lancamento> retorno = new List<DLM.sapgui.Lancamento>();
 
-            /*realizado*/
-            var resultado = DBases.GetDB().Consulta($"SELECT * FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_fagll03} as pr where pr.Elemento_PEP like '%{Pedido}% '");
-
-
-
-            foreach (var l in resultado.Linhas)
-            {
-               var s = LancamentoFAGLL03(l);
-                lancamentos.AddRange(s);
-            }
+        //    /*realizado*/
+        //    var resultado = DBases.GetDB().Consulta($"SELECT * FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_fagll03} as pr where pr.Elemento_PEP like '%{Pedido}% '");
 
 
 
-            var meses = lancamentos.GroupBy(x => x.Chave).Select(x => x.First()).ToList();
+        //    foreach (var l in resultado.Linhas)
+        //    {
+        //       var s = LancamentoFAGLL03(l);
+        //        lancamentos.AddRange(s);
+        //    }
 
-            foreach (var mes in meses)
-            {
-                var subs = lancamentos.FindAll(x => x.Chave == mes.Chave).ToList();
-                retorno.Add(new DLM.sapgui.Lancamento(subs));
-            }
 
-            return retorno.OrderBy(x => x.ToString()).ToList();
-        }
+
+        //    var meses = lancamentos.GroupBy(x => x.Chave).Select(x => x.First()).ToList();
+
+        //    foreach (var mes in meses)
+        //    {
+        //        var subs = lancamentos.FindAll(x => x.Chave == mes.Chave).ToList();
+        //        retorno.Add(new DLM.sapgui.Lancamento(subs));
+        //    }
+
+        //    return retorno.OrderBy(x => x.ToString()).ToList();
+        //}
 
         private static List<DLM.sapgui.Lancamento> LancamentoFAGLL03(DLM.db.Linha l)
         {
@@ -1226,9 +1226,9 @@ namespace DLM.painel
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_folhamargem, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico_header, false);
-            DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, false);
-            DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_fagll03, false);
-            DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_avanco_pecas, false);
+            //DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, false);
+            //DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_fagll03, false);
+            //DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_avanco_pecas, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n, false);
 
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada, false);
@@ -1580,23 +1580,20 @@ namespace DLM.painel
             {
                 _obras = new List<PLAN_OBRA>();
                 var consulta = DBases.GetDB().Consulta(Cfg.Init.db_comum, (copia ? Cfg.Init.tb_obras_planejamento_copia :Cfg.Init.tb_obras_planejamento_copia));
-                List<Task> Tarefas = new List<Task>();
 
-                ConcurrentBag<PLAN_OBRA> lista = new ConcurrentBag<PLAN_OBRA>();
+                //ConcurrentBag<PLAN_OBRA> lista = new ConcurrentBag<PLAN_OBRA>();
 
                 foreach (var t in consulta.Linhas)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() => lista.Add(new PLAN_OBRA(t))));
+                    _obras.Add(new PLAN_OBRA(t));
                 }
-                Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
 
-
+                List<Task> Tarefas = new List<Task>();
                 var st_base = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_04_obra);
                 var titulos = GetTitulosObras();
                 var lista_resumos = Consultas.getresumo_pecas_obras();
 
-                foreach (var t in lista)
+                foreach (var t in _obras)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() =>
                     {
@@ -1619,7 +1616,7 @@ namespace DLM.painel
                 Tarefas.Clear();              
 
 
-                _obras.AddRange(lista.ToList());
+                //_obras.AddRange(lista.ToList());
             }
             return _obras;
         }
