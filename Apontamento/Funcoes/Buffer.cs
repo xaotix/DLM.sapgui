@@ -69,6 +69,18 @@ namespace DLM.painel
         public static List<Conexoes.Bobina> Bobinas { get; set; } = new List<Conexoes.Bobina>();
         public static void Carregar()
         {
+            List<Task> Tarefas = new List<Task>();
+            Tarefas.Add(Task.Factory.StartNew(() => GetTitulosPedidos()));
+            Tarefas.Add(Task.Factory.StartNew(() => Consultas.GetTitulosObras()));
+            Tarefas.Add(Task.Factory.StartNew(() => Consultas.GetTitulosEtapas()));
+            Tarefas.Add(Task.Factory.StartNew(() => Consultas.GetTitulosEtapas()));
+
+            Tarefas.Add(Task.Factory.StartNew(() => Consultas.getresumo_pecas_obras()));
+            Tarefas.Add(Task.Factory.StartNew(() => Consultas.getresumo_pecas_pedidos()));
+            Tarefas.Add(Task.Factory.StartNew(() => Consultas.getresumo_pecas_subetapas()));
+            Task.WaitAll(Tarefas.ToArray());
+            Tarefas.Clear();
+
             Buffer.Obras();
             Buffer.Pedidos();
             Buffer.ObrasPorSegmento();
@@ -119,11 +131,11 @@ namespace DLM.painel
             return _Pedidos;
         }
         private static List<PLAN_OBRA> _Obras { get; set; }
-        public static List<PLAN_OBRA> Obras(bool reset = false)
+        public static List<PLAN_OBRA> Obras(bool copia = true, bool reset = false)
         {
             if (_Obras == null)
             {
-                _Obras = Consultas.GetObras(reset);
+                _Obras = Consultas.GetObras(copia,reset);
             }
             return _Obras;
         }
@@ -162,13 +174,52 @@ namespace DLM.painel
         {
             if (_Garantias == null)
             {
-                _Garantias = Consultas.GetObras(new List<string> { ".G" },false);
+                _Garantias = Consultas.GetObras(new List<string> { ".G" },true,false);
             }
             return _Garantias;
         }
+        private static List<Titulo_Planejamento> _Titulos_Pedidos { get; set; }
+        public static List<Titulo_Planejamento> GetTitulosPedidos()
+        {
+            if (_Titulos_Pedidos != null) { return _Titulos_Pedidos; }
+            _Titulos_Pedidos = new List<Titulo_Planejamento>();
+            var lista_fab = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
+            ConcurrentBag<Titulo_Planejamento> retorno = new ConcurrentBag<Titulo_Planejamento>();
+            List<Task> Tarefas = new List<Task>();
+            foreach (var s in lista_fab.Linhas)
+            {
+                Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new Titulo_Planejamento(s))));
+            }
+            Task.WaitAll(Tarefas.ToArray());
+            _Titulos_Pedidos.AddRange(retorno);
+
+            
+            var lista_orcamento = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_resumo);
+
+            foreach (var s in lista_orcamento.Linhas)
+            {
+                _Titulos_Pedidos.Add(new Titulo_Planejamento(s, true));
+            }
 
 
+            return _Titulos_Pedidos.OrderBy(x => x.CHAVE).ToList();
+        }
 
+        private static List<StatusSAP_Planejamento> _Status { get; set; }
+
+        public static List<StatusSAP_Planejamento> GetStatus()
+        {
+            if (_Status == null)
+            {
+                _Status = new List<StatusSAP_Planejamento>();
+                var lista_log = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_status_sap);
+                foreach (var t in lista_log.Linhas)
+                {
+                    _Status.Add(new StatusSAP_Planejamento(t));
+                }
+            }
+            return _Status;
+        }
 
     }
 

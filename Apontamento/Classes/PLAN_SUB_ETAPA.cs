@@ -13,7 +13,7 @@ namespace DLM.painel
     {
         public override string ToString()
         {
-            return nome;
+            return descricao;
         }
         public List<PLAN_PEP> peps
         {

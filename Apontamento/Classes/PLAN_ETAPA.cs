@@ -12,7 +12,7 @@ namespace DLM.painel
     {
         public override string ToString()
         {
-            return nome;
+            return descricao;
         }
         public List<PLAN_SUB_ETAPA> subetapas { get; set; } = new List<PLAN_SUB_ETAPA>();
         public List<PLAN_SUB_ETAPA> get(bool atraso_engenharia = false, bool atraso_fabrica = false, bool atraso_embarque = false, bool atraso_montagem = false)
@@ -114,29 +114,29 @@ namespace DLM.painel
 
                 this.dados_montagem = this.subetapas.FindAll(x => x.dados_montagem).Count > 0;
 
-                //this.resumo_pecas = new Resumo_Pecas();
-                //this.resumo_pecas.pep = this.etapa;
-                //this.resumo_pecas.fases = this.subetapas.Sum(x => x.resumo_pecas.fases);
-                //this.resumo_pecas.peso_necessario = this.subetapas.Sum(x => x.resumo_pecas.peso_necessario);
-                //this.resumo_pecas.qtd_embarcada = this.subetapas.Sum(x => x.resumo_pecas.qtd_embarcada);
-                //this.resumo_pecas.qtd_necessaria = this.subetapas.Sum(x => x.resumo_pecas.qtd_necessaria);
-                //this.resumo_pecas.qtd_produzida = this.subetapas.Sum(x => x.resumo_pecas.qtd_produzida);
-                //this.resumo_pecas.subfases = this.subetapas.Sum(x => x.resumo_pecas.subfases);
+                this.resumo_pecas = new Resumo_Pecas();
+                this.resumo_pecas.pep = this.etapa;
+                this.resumo_pecas.fases = this.subetapas.Sum(x => x.resumo_pecas.fases);
+                this.resumo_pecas.peso_necessario = this.subetapas.Sum(x => x.resumo_pecas.peso_necessario);
+                this.resumo_pecas.qtd_embarcada = this.subetapas.Sum(x => x.resumo_pecas.qtd_embarcada);
+                this.resumo_pecas.qtd_necessaria = this.subetapas.Sum(x => x.resumo_pecas.qtd_necessaria);
+                this.resumo_pecas.qtd_produzida = this.subetapas.Sum(x => x.resumo_pecas.qtd_produzida);
+                this.resumo_pecas.subfases = this.subetapas.Sum(x => x.resumo_pecas.subfases);
 
-                //this.resumo_pecas.etapa_bloqueada = (this.subetapas.FindAll(x => x.resumo_pecas.etapa_bloqueada).Count == this.subetapas.Count);
+                this.resumo_pecas.etapa_bloqueada = (this.subetapas.FindAll(x => x.resumo_pecas.etapa_bloqueada).Count == this.subetapas.Count);
 
-                //var MIN = Cfg.Init.DataDummy();
-                //var D0 = this.subetapas.Select(X => X.resumo_pecas.Inicio).ToList().FindAll(X => X > MIN).OrderBy(x => x);
-                //var D1 = this.subetapas.Select(X => X.resumo_pecas.Fim).ToList().FindAll(X => X > MIN).OrderBy(x => x);
+                var MIN = Cfg.Init.DataDummy();
+                var D0 = this.subetapas.Select(X => X.resumo_pecas.Inicio).ToList().FindAll(X => X > MIN).OrderBy(x => x);
+                var D1 = this.subetapas.Select(X => X.resumo_pecas.Fim).ToList().FindAll(X => X > MIN).OrderBy(x => x);
 
-                //if (D0.Count() > 0)
-                //{
-                //    this.resumo_pecas.Inicio = D0.First();
-                //}
-                //if (D1.Count() > 0)
-                //{
-                //    this.resumo_pecas.Fim = D1.Last();
-                //}
+                if (D0.Count() > 0)
+                {
+                    this.resumo_pecas.Inicio = D0.First();
+                }
+                if (D1.Count() > 0)
+                {
+                    this.resumo_pecas.Fim = D1.Last();
+                }
 
                 var apontamentos = this.subetapas.FindAll(x => x.update_montagem != "").Distinct().ToList().Select(x => Conexoes.Extensoes.Data(x.update_montagem.ToUpper().Replace(" ", "").Replace("MONTAGEM:", "")));
                 if (apontamentos.Count() > 0)

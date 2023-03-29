@@ -249,7 +249,7 @@ namespace DLM.painel
         }
         public override string ToString()
         {
-            return "[PGO] - [" + this.PEP + "] - " + this.nome + " [" + this.numerocontrato + "." + this.revisao + "]";
+            return "[PGO] - [" + this.PEP + "] - " + this.descricao + " [" + this.numerocontrato + "." + this.revisao + "]";
         }
 
         public DateTime criacao { get; set; } = Cfg.Init.DataDummy();
@@ -259,6 +259,7 @@ namespace DLM.painel
             this.id_obra = l["id_obra"].Int();
             this.numerocontrato = l.Get("numerocontrato").Valor;
             this.revisao = l.Get("revisao").Valor;
+            this.Titulo.DESCRICAO = l.Get("descricao").Valor;
             this.PEP = l.Get("pedido").Valor;
             this.quantidade = l.Get("quantidade").Double();
             this.peso_planejado = l.Get("peso_total").Double();
@@ -268,7 +269,10 @@ namespace DLM.painel
             this.arquivos = l.Get("arquivos").Int();
             this.criacao = l.Get("criacao").Data();
             this.tipo = tipo;
-            this.nome = l.Get("nome").Valor;
+            if(this.descricao == "")
+            {
+                this.Titulo.DESCRICAO = l.Get("nome").Valor;
+            }
         }
     }
 }

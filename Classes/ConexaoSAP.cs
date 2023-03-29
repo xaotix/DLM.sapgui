@@ -15,8 +15,68 @@ namespace DLM.sapgui
 {
     public class ConexaoSAP
     {
+        public bool ZSD0031N(string pedido)
+        {
+            string arquivo = pedido.Replace(".", "") + "_" + Cfg.Init.SAP_ZSD0031NARQ;
+            var con = Consulta.ZSD0031N(pedido, Cfg.Init.GetDestinoSAP_Excel(), arquivo);
+            if (con)
+            {
+                if (File.Exists(Cfg.Init.GetDestinoSAP_Excel() + arquivo))
+                {
+                    var folha = CargaExcel.ZSD0031N(Cfg.Init.GetDestinoSAP_Excel() + arquivo);
+                    folha.PEP = pedido;
+                    if (folha.Carregado)
+                    {
+                        DLM.painel.Consultas.Salvar(folha, pedido);
+                    }
+                }
+            }
+            return con;
+        }
+        public static string GravarTitulos(List<string> codigos_pedidos)
+        {
+            var w = Conexoes.Utilz.Wait(codigos_pedidos.Count,"Gravando titulos...");
+
+            foreach (var Pedido in codigos_pedidos)
+            {
+                try
+                {
+                    var consulta = DLM.sap.RfcsSAP.ConsultarPedido(Pedido);
+                    if (consulta.Count == 0)
+                    {
+                        continue;
+                    }
+                    var lista = consulta.Select(x => x.Select(y => y.GetValue().ToString()).ToList()).ToList();
+
+                    DBases.GetDB().Apagar("CHAVE", $"%{Pedido.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, false);
 
 
+                    List<string> linhas = new List<string>();
+                    foreach (var ll in lista)
+                    {
+                        linhas.Add("('" + ll[1].Replace("'", "") + "','" + ll[2].Replace("'", "") + "')");
+                    }
+                    var sublista = DLM.painel.Consultas.quebrar_lista(linhas, 100);
+                    foreach (var sub in sublista)
+                    {
+                        var SUBCOMANDO = $"INSERT INTO {Cfg.Init.db_comum}.{Cfg.Init.tb_titulos_planejamento}" +
+                                        $"(CHAVE, DESCRICAO)" +
+                                        $" VALUES ";
+
+                        SUBCOMANDO = SUBCOMANDO + string.Join(",", sub);
+                        DBases.GetDB().Comando(SUBCOMANDO);
+                    }
+                    w.somaProgresso();
+                }
+                catch (Exception ex)
+                {
+                    //return ex.Message;
+
+                }
+            }
+            w.Close();
+            return "";
+        }
 
 
 
@@ -103,7 +163,7 @@ namespace DLM.sapgui
 
         public Consulta Consulta { get; private set; } = new Consulta();
         public string Codigo { get; private set; } = "";
-        //public List<ZPP0066N> Logistica { get; set; } = new List<ZPP0066N>();
+        public List<ZPP0066N> Logistica { get; set; } = new List<ZPP0066N>();
         public List<ZPP0100> Embarque { get; set; } = new List<ZPP0100>();
 
         public List<CJI3> cji3 { get; set; } = new List<CJI3>();
@@ -131,7 +191,7 @@ namespace DLM.sapgui
         }
 
 
-        public void LimparMateriais(bool zpmp, bool zpp0100)
+        public void LimparMateriais(bool zpmp, bool zpp0066n, bool zpp0100)
         {
             if(this.Codigo.Length<5)
             {
@@ -141,12 +201,16 @@ namespace DLM.sapgui
             {
                 DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, false);
             }
+            if(zpp0066n)
+            {
+                DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0066n_logistica, false);
+            }
             if (zpp0100)
             {
-                DBases.GetDB().Apagar("Elemento_PEP", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_zpp0100_embarques, false);
+                DBases.GetDB().Apagar("Elemento_PEP", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques, false);
             }
          
-            DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_cn47n, false);
+            DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n, false);
 
         }
 
@@ -172,9 +236,14 @@ namespace DLM.sapgui
             }
 
 
-            if (ZPP0100)
+            if (ZPP0066N | ZPP0100)
             {
-                var log = this.ZPP0100( true);
+                var log = this.ZPP0100( true, ZPP0066N, ZPP0100);
+
+                if (this.Codigo.StartsWith("*") && this.Logistica.Count > 0)
+                {
+                    this.Codigo = this.Logistica[0].PEP.Codigo.Substring(0, 13);
+                }
             }
 
 
@@ -197,16 +266,22 @@ namespace DLM.sapgui
         public void GravarMateriais()
         {
 
-            if (this.Codigo.Length > 10 && (this.Producao.Count > 0 | this.Embarque.Count > 0))
+            if (this.Codigo.Length > 10 && (this.Producao.Count > 0 | this.Logistica.Count > 0 | this.Embarque.Count > 0))
             {
-                var count = this.Producao.Count + this.Embarque.Count;
+                var count = this.Producao.Count + this.Logistica.Count + this.Embarque.Count;
 
-                LimparMateriais(this.Producao.Count > 0, this.Embarque.Count > 0);
+                LimparMateriais(this.Producao.Count > 0, this.Logistica.Count > 0, this.Embarque.Count > 0);
 
                 if (this.Producao.Count > 0)
                 {
                     var linhas = this.Producao.Select(x => x.GetLinha()).ToList();
                     DBases.GetDB().Cadastro(linhas, Cfg.Init.db_comum, "zpmp_producao");
+                }
+
+                if (this.Logistica.Count > 0)
+                {
+                    var linhas = this.Logistica.Select(x => x.GetLinha()).ToList();
+                    DBases.GetDB().Cadastro(linhas, Cfg.Init.db_comum, "zpp0066n_logistica");
                 }
 
                 if (this.Embarque.Count > 0)
@@ -222,9 +297,71 @@ namespace DLM.sapgui
             }
         }
 
+        public List<FAGLL03> GetFAGLL03(bool salvar)
+        {
+            bool con = false;
+            if (!DLM.painel.Consultas.MatarExcel(false)) { return new List<FAGLL03>(); }
+            if (this.Codigo.Length < 3) { return new List<FAGLL03>(); }
+            var arquivo = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_FAGLL03ARQ;
+          var peps =  DBases.GetDB().Consulta($"SELECT pr.pep as pep from {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} as pr where pr.pep like '%{Codigo.Replace("*", "")}% '").Linhas.Select(x=>x.Get("pep").Valor).ToList();
 
 
 
+            var sub_lista = peps.quebrar_lista(200);
+
+            if(salvar && peps.Count>0)
+            {
+                DBases.GetDB().Apagar("Pedido", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_fagll03, false);
+            }
+
+            this.fagll03.Clear();
+            var w = Conexoes.Utilz.Wait(sub_lista.Count, "FAGLL03 - 1/2 - Consultando..."); 
+         
+            for (int i = 0; i < sub_lista.Count; i++)
+            {
+                con = Consulta.FAGLL03(sub_lista[i], Cfg.Init.GetDestinoSAP_Excel(), i + "_" + arquivo);
+                if (con)
+                {
+                    DLM.painel.Consultas.MatarExcel(false);
+                    var CARGA = CargaExcel.FAGLL03(Cfg.Init.GetDestinoSAP_Excel() + i + "_" + arquivo, this.Codigo.Replace("*","").Replace("%",""));
+                    this.fagll03.AddRange(CARGA);
+                }
+                w.somaProgresso();
+            }
+
+
+            if (salvar)
+            {
+                w.SetProgresso(0, this.fagll03.Count, "FAGLL03 - 2/2 - Salvando...");
+                DBases.GetDB().Cadastro(this.fagll03.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "fagll03");
+              
+            }
+
+            w.Close();
+
+            return this.fagll03;
+        }
+
+        public List<CJI3> GetCJI3(bool salvar)
+        {
+            if (!DLM.painel.Consultas.MatarExcel(false)) { return new List<CJI3>(); }
+            if (this.Codigo.Length < 3) { return new List<CJI3>(); }
+            var arq0100 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_CJI3ARQ;
+
+            if (Consulta.CJI3(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
+            {
+                DLM.painel.Consultas.MatarExcel(false);
+                this.cji3 = CargaExcel.CJI3(Cfg.Init.GetDestinoSAP_Excel() + arq0100);
+                if (salvar)
+                {
+                    DBases.GetDB().Apagar("Elemento_PEP", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, false);
+                    var w = Conexoes.Utilz.Wait(this.cji3.Count, "Salvando...");                     
+                    DBases.GetDB().Cadastro(this.cji3.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, "cji3");
+                    w.Close();
+                }
+            }
+            return this.cji3;
+        }
         public List<ZPP0112> GetZPP0112(long min, long max, bool salvar, string pedido = "")
         {
             if (!DLM.painel.Consultas.MatarExcel(false)) { return new List<ZPP0112>(); }
@@ -237,31 +374,58 @@ namespace DLM.sapgui
                 this.ZPP0112 = CargaExcel.ZPP0112(Cfg.Init.GetDestinoSAP_Excel() + ARQ);
                 if (salvar)
                 {
-                    DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_zpp0112, false);
+                    DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0112, false);
                     var w = Conexoes.Utilz.Wait(this.ZPP0112.Count, "Salvando..."); 
-                    DBases.GetDB().Cadastro(this.ZPP0112.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_zpp0112);
+                    DBases.GetDB().Cadastro(this.ZPP0112.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpp0112);
                     w.Close();
                 }
             }
             return this.ZPP0112;
         }
 
-        public bool ZPP0100( bool sem_perfil)
+        public bool ZPP0100( bool sem_perfil, bool ZPP0066N, bool ZPP0100)
         {
+            this.Logistica = new List<ZPP0066N>();
             this.Embarque = new List<ZPP0100>();
 
             var arq = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPP066NARQ;
             var arq0100 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPP0100ARQ;
 
-
-            if (Consulta.ZPP0100(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
+            if (ZPP0066N)
             {
-                DLM.painel.Consultas.MatarExcel(false);
-                this.Embarque = CargaExcel.ZPP0100(Cfg.Init.GetDestinoSAP_Excel() + arq0100);
+                if(sem_perfil)
+                {
+                    if (Consulta.ZPP0066N_SemPerfil(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq))
+                    {
+                        DLM.painel.Consultas.MatarExcel(false);
+                        this.Logistica = CargaExcel.ZPP0066N(Cfg.Init.GetDestinoSAP_Excel() + arq, true);
+                    }
+                }
+                else
+                {
+                    if (Consulta.ZPP0066N(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq))
+                    {
+                        DLM.painel.Consultas.MatarExcel(false);
+                        this.Logistica = CargaExcel.ZPP0066N(Cfg.Init.GetDestinoSAP_Excel() + arq, false);
+                    }
+                }
             }
 
-            return this.Embarque.Count > 0;
+            if (ZPP0100)
+            {
+                if (Consulta.ZPP0100(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
+                {
+                    DLM.painel.Consultas.MatarExcel(false);
+                    this.Embarque = CargaExcel.ZPP0100(Cfg.Init.GetDestinoSAP_Excel() + arq0100);
+                }
+            }
 
+
+            if (this.Logistica.Count > 0 | this.Embarque.Count > 0)
+            {
+                return true;
+            }
+            return false;
         }
 
         public bool ZPMP()
