@@ -249,36 +249,14 @@ namespace DLM.painel
         public double qtd_embarcada { get; private set; } = 0;
         public double qtd_produzida { get; private set; } = 0;
         public double peso_unitario { get; private set; } = 0;
-        private List<Logistica_Planejamento> _logistica { get; set; }
-        public List<Logistica_Planejamento> logistica
-        {
-            get
-            {
-                if (_logistica == null)
-                {
-                    _logistica = new List<Logistica_Planejamento>();
+        public List<Logistica_Planejamento> logistica { get; private set; } = new List<Logistica_Planejamento>();
 
-                    var consulta = DBases.GetDB().Consulta($"SELECT *  FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0066n_logistica} as pr where pr.pep ='{PEP}' and pr.material = '{material}'");
-                    foreach (var linha in consulta.Linhas)
-                    {
-                        this._logistica.Add(new Logistica_Planejamento(this, linha));
-                    }
-                }
-                return _logistica;
-
-            }
-            //set
-            //{
-            //    _logistica = value;
-
-            //}
-        }
         public void SetLogistica(List<Logistica_Planejamento> logs)
         {
-            this._logistica = logs;
-            foreach(var s in this._logistica)
+            this.logistica = logs;
+            foreach (var log in this.logistica)
             {
-                s.peca = this;
+                log.peca = this;
             }
         }
         private string _desenho { get; set; } = "";
@@ -490,6 +468,57 @@ namespace DLM.painel
 
 
 
+
+
+        private void getComplexidade()
+        {
+            if (DENOMINDSTAND.Replace(" ", "").StartsWith("SS") | DENOMINDSTAND.Replace(" ", "").EndsWith("SS"))
+            {
+                Complexidade = "Super Simples";
+            }
+            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("S") | DENOMINDSTAND.Replace(" ", "").EndsWith("S"))
+            {
+                Complexidade = "Simples";
+            }
+            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("M") | DENOMINDSTAND.Replace(" ", "").EndsWith("M"))
+            {
+                Complexidade = "Média";
+            }
+            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("C") | DENOMINDSTAND.Replace(" ", "").EndsWith("C"))
+            {
+                Complexidade = "Complexa";
+            }
+            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("H") | DENOMINDSTAND.Replace(" ", "").EndsWith("H"))
+            {
+                Complexidade = "Hiper Complexa";
+            }
+            if (this.grupo_mercadoria.Contains("PARAF"))
+            {
+                this.grupo_mercadoria = "PARAFUSO";
+            }
+            else if (this.grupo_mercadoria.Contains("PORCA"))
+            {
+                this.grupo_mercadoria = "PARAFUSO";
+            }
+            else if (this.grupo_mercadoria.Contains("ARRU"))
+            {
+                this.grupo_mercadoria = "PARAFUSO";
+            }
+            else if (this.material.ToString().StartsWith("10"))
+            {
+                this.grupo_mercadoria = "ALMOX NÃO FATURÁVEL";
+            }
+            else if (this.material.ToString().StartsWith("11"))
+            {
+                this.grupo_mercadoria = "ALMOX";
+            }
+           
+        }
+
+        public PLAN_PECA()
+        {
+
+        }
         public PLAN_PECA(DLM.db.Linha peca, bool orcamento = false)
         {
             if (!orcamento)
@@ -592,114 +621,6 @@ namespace DLM.painel
 
             }
         }
-        public PLAN_PECA(DLM.db.Linha peca, List<DLM.db.Linha> logistica)
-        {
-            this.Tipo = Tipo_Material.Real;
-            this.PEP = peca.Get("pep").Valor;
-            this.material = peca.Get("material").Valor;
-            this.texto_breve = peca.Get("texto_breve").Valor;
-            this.grupo_mercadoria = peca.Get("grupo_mercadoria").Valor;
-            this.peso_necessario = peca.Get("peso_necessario").Double(6);
-            this.peso_produzido = peca.Get("peso_produzido").Double(6);
-            this.qtd_necessaria = peca.Get("qtd_necessaria").Double();
-            this.qtd_mercadoria_entrada = peca.Get("qtd_mercadoria_entrada").Long();
-            this.saldo_peso_produzido = peca.Get("saldo_peso_produzido").Double();
-            this.status_sistema_pep = peca.Get("status_sistema_pep").Valor;
-            this.status_usuario_pep = peca.Get("status_usuario_pep").Valor;
-            this.status_sistema_tarefa = peca.Get("status_sistema_tarefa").Valor;
-            foreach (var t in logistica)
-            {
-                this.logistica.Add(new Logistica_Planejamento(this, t));
-            }
-            if (logistica.Count > 0)
-            {
-                this.desenho = logistica[0].Get("desenho").Valor;
-            }
-
-            this.peso_unitario = (peso_necessario / qtd_necessaria);
-            this.qtd_embarcada = this.logistica.FindAll(x => x.carga_confirmada).Sum(x => x.quantidade);
-            this.peso_embarcado = qtd_embarcada * this.peso_unitario;
-            this.qtd_produzida = (int)Math.Round(peso_produzido / peso_unitario);
-
-            this.ultima_edicao = peca["ultima_edicao"].Data();
-
-            this.DENOMINDSTAND = peca.Get("DENOMINDSTAND").Valor;
-            this.DESENHO_1 = peca.Get("DESENHO_1").Valor;
-            this.TIPO_DE_PINTURA = peca.Get("TIPO_DE_PINTURA").Valor;
-
-
-
-
-
-
-
-            this.inicio = peca.Get("DATA_INICIO").Data();
-            this.fim = peca.Get("DATA_FIM").Data();
-
-            this.ULTIMO_STATUS = peca.Get("ULTIMO_STATUS").Valor;
-
-            this.pep_cooisn = peca.Get("pep_cooisn").Valor;
-            this.centro = peca.Get("centro").Valor;
-            var s = peca.Get("centro_producao").Valor;
-            if (s != "")
-            {
-                this.centro = s;
-            }
-
-            getComplexidade();
-
-        }
-
-        private void getComplexidade()
-        {
-            if (DENOMINDSTAND.Replace(" ", "").StartsWith("SS") | DENOMINDSTAND.Replace(" ", "").EndsWith("SS"))
-            {
-                Complexidade = "Super Simples";
-            }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("S") | DENOMINDSTAND.Replace(" ", "").EndsWith("S"))
-            {
-                Complexidade = "Simples";
-            }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("M") | DENOMINDSTAND.Replace(" ", "").EndsWith("M"))
-            {
-                Complexidade = "Média";
-            }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("C") | DENOMINDSTAND.Replace(" ", "").EndsWith("C"))
-            {
-                Complexidade = "Complexa";
-            }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("H") | DENOMINDSTAND.Replace(" ", "").EndsWith("H"))
-            {
-                Complexidade = "Hiper Complexa";
-            }
-            if (this.grupo_mercadoria.Contains("PARAF"))
-            {
-                this.grupo_mercadoria = "PARAFUSO";
-            }
-            else if (this.grupo_mercadoria.Contains("PORCA"))
-            {
-                this.grupo_mercadoria = "PARAFUSO";
-            }
-            else if (this.grupo_mercadoria.Contains("ARRU"))
-            {
-                this.grupo_mercadoria = "PARAFUSO";
-            }
-            else if (this.material.ToString().StartsWith("10"))
-            {
-                this.grupo_mercadoria = "ALMOX NÃO FATURÁVEL";
-            }
-            else if (this.material.ToString().StartsWith("11"))
-            {
-                this.grupo_mercadoria = "ALMOX";
-            }
-           
-        }
-
-        public PLAN_PECA()
-        {
-
-        }
-
         public PLAN_PECA(Logistica_Planejamento ps)
         {
             this.centro = ps.centro;

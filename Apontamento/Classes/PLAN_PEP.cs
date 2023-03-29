@@ -107,11 +107,12 @@ namespace DLM.painel
         }
         private void GetObservacoes()
         {
-            if(this.resumo_pecas.etapa_bloqueada)
-            {
-                this._observacoes = "ETAPA BLOQUEADA";
-            }
-            else if (this.porcentagem_produzida > 99 && this.porcentagem_embarcada > 99)
+            //if(this.resumo_pecas.etapa_bloqueada)
+            //{
+            //    this._observacoes = "ETAPA BLOQUEADA";
+            //}
+            //else 
+            if (this.porcentagem_produzida > 99 && this.porcentagem_embarcada > 99)
             {
                 this._observacoes = "TOTALMENTE EMBARCADA";
             }
@@ -283,10 +284,6 @@ namespace DLM.painel
 
             this.status_eng = Linha.Get("status_eng").Valor;
             this.status = Linha.Get("status").Valor;
-
-
-            this.Titulo = new Titulo_Planejamento() { CHAVE = this.PEP, DESCRICAO = this.descricao };
-
         }
         public DLM.db.Linha GetLinha()
         {

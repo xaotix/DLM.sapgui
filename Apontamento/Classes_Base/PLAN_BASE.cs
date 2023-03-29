@@ -12,29 +12,7 @@ namespace DLM.painel
 {
     public class PLAN_BASE
     {
-        public DateTime mindia { get; set; } = Cfg.Init.DataDummy();
-        public void SetBase(DLM.db.Linha l)
-        {
-            this.eini = l.Get("eini").Data();
-            this.efim = l.Get("efim").Data();
-            this.fini = l.Get("fini").Data();
-            this.ffim = l.Get("ffim").Data();
-            this.lini = l.Get("lini").Data();
-            this.lfim = l.Get("lfim").Data();
-            this.mini = l.Get("mini").Data();
-            this.mfim = l.Get("mfim").Data();
-            this.eng_base_st = l.Get("es").Double();
-            this.fab_base_st = l.Get("fs").Double();
-            this.log_base_st = l.Get("ls").Double();
-            this.mon_base_st = l.Get("ms").Double();
-        }
-        public string descricao
-        {
-            get
-            {
-                return this.PEP + (this.Titulo.DESCRICAO != "" ? (" - " + this.Titulo.DESCRICAO) : "");
-            }
-        }
+
         private List<PLAN_ETAPA> _etapas { get; set; } = new List<PLAN_ETAPA>();
         private List<PLAN_PEP> _peps { get; set; } = new List<PLAN_PEP>();
         private List<PLAN_SUB_ETAPA> _subetapas { get; set; } = new List<PLAN_SUB_ETAPA>();
@@ -128,22 +106,7 @@ namespace DLM.painel
 
             return _pecas;
         }
-        public void Set(List<Titulo_Planejamento> titulos, bool contrato = false)
-        {
-            if (contrato)
-            {
-                this.Titulo = titulos.Find(x => x.CHAVE == this.contrato);
-            }
-            else
-            {
-                this.Titulo = titulos.Find(x => x.CHAVE == this.PEP);
-            }
 
-            if(this.Titulo==null)
-            {
-
-            }
-        }
         public void Set(List<PLAN_PEDIDO> lista)
         {
             this._pedidos = new List<PLAN_PEDIDO>();
@@ -271,6 +234,9 @@ namespace DLM.painel
                 return Conexoes.Utilz.PEP.Get.Pedido(this.PEP, true);
             }
         }
+
+        public string nome { get; set; } = "";
+
         public DateTime? ultima_edicao { get; set; } = Cfg.Init.DataDummy();
         public DateTime? criado { get; set; } = Cfg.Init.DataDummy();
         public DateTime? engenharia_liberacao { get; set; } = Cfg.Init.DataDummy();
@@ -362,10 +328,6 @@ namespace DLM.painel
         {
             get
             {
-                if (this.resumo_pecas.etapa_bloqueada | this.status_montagem == "TRANCADA")
-                {
-                    return Conexoes.BufferImagem._lock;
-                }
                 if (this is PLAN_OBRAS)
                 {
                     return Conexoes.BufferImagem.folder_new;
@@ -427,19 +389,6 @@ namespace DLM.painel
             }
         }
         public string update_montagem { get; set; } = "";
-        private Titulo_Planejamento _Titulo { get; set; } = new Titulo_Planejamento();
-        public Titulo_Planejamento Titulo
-        {
-            get
-            {
-                if (_Titulo == null) { _Titulo = new Titulo_Planejamento() { CHAVE = this.PEP }; }
-                return _Titulo;
-            }
-            set
-            {
-                _Titulo = value;
-            }
-        }
 
 
         public List<Atraso_Planejamento> GetAtrasos()
@@ -752,16 +701,11 @@ namespace DLM.painel
                 };
             }
         }
-        public Resumo_Pecas resumo_pecas { get; set; } = new Resumo_Pecas();
         private string _status_montagem { get; set; } = "-1";
         public string status_montagem
         {
             get
             {
-                if (this.resumo_pecas.etapa_bloqueada)
-                {
-                    return "TRANCADA";
-                }
                 if (_status_montagem.Replace("-1", "") == "")
                 {
                     return "SEM APONTAMENTO";
@@ -785,10 +729,6 @@ namespace DLM.painel
         {
             get
             {
-                if (resumo_pecas.etapa_bloqueada)
-                {
-                    return Conexoes.BufferImagem._lock;
-                }
 
                 if (liberado_engenharia == 100)
                 {
@@ -809,10 +749,6 @@ namespace DLM.painel
         {
             get
             {
-                if (resumo_pecas.etapa_bloqueada)
-                {
-                    return Conexoes.BufferImagem._lock;
-                }
                 if (total_embarcado == 100)
                 {
                     return Vars.Imagens.embarque_32x32_verde;
@@ -832,10 +768,6 @@ namespace DLM.painel
         {
             get
             {
-                if (resumo_pecas.etapa_bloqueada)
-                {
-                    return Conexoes.BufferImagem._lock;
-                }
                 if (total_fabricado == 100)
                 {
                     return Vars.Imagens.fabrica_32x32_verde;
@@ -855,10 +787,6 @@ namespace DLM.painel
         {
             get
             {
-                if (resumo_pecas.etapa_bloqueada)
-                {
-                    return Conexoes.BufferImagem._lock;
-                }
                 if (exportacao)
                 {
                     return Conexoes.BufferImagem.globo;
@@ -1136,11 +1064,12 @@ namespace DLM.painel
         {
             get
             {
-                if (resumo_pecas.etapa_bloqueada | this.status_montagem == "TRANCADA")
-                {
-                    return new SolidColorBrush(Colors.Violet) { Opacity = opacidade0 };
-                }
-                else if (this.total_montado > 95 | this.status_montagem == "CONCLUÍDA" | this.status_montagem == "ENTREGUE")
+                //if (resumo_pecas.etapa_bloqueada | this.status_montagem == "TRANCADA")
+                //{
+                //    return new SolidColorBrush(Colors.Violet) { Opacity = opacidade0 };
+                //}
+                //else 
+                if (this.total_montado > 95 | this.status_montagem == "CONCLUÍDA" | this.status_montagem == "ENTREGUE")
                 {
                     return new SolidColorBrush(Colors.LightGreen) { Opacity = opacidade0 };
                 }

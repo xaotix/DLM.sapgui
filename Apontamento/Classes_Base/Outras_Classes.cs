@@ -11,37 +11,37 @@ using System.Threading.Tasks;
 
 namespace DLM.painel
 {
-    public class Titulo_Planejamento
-    {
-        public override string ToString()
-        {
-            return CHAVE + " - " +  DESCRICAO;
-        }
-        public Linha Linha { get; set; } = new Linha();
-        public string CHAVE { get; set; } = "";
-        public string DESCRICAO { get; set; } = "";
-        public Titulo_Planejamento()
-        {
+    //public class Titulo_Planejamento
+    //{
+    //    public override string ToString()
+    //    {
+    //        return CHAVE + " - " +  DESCRICAO;
+    //    }
+    //    public Linha Linha { get; set; } = new Linha();
+    //    public string CHAVE { get; set; } = "";
+    //    public string DESCRICAO { get; set; } = "";
+    //    public Titulo_Planejamento()
+    //    {
 
-        }
-        public Titulo_Planejamento(DLM.db.Linha L, bool orcamento = false)
-        {
-            if (!orcamento)
-            {
-                this.CHAVE = L.Get("CHAVE").Valor;
-                this.DESCRICAO = L.Get("DESCRICAO").Valor;
-            }
-            else
-            {
-                var cont = L.Get("numerocontrato").Valor;
-                var revisao = L.Get("revisao").Valor;
-                var descricao = L.Get("descricao").Valor;
+    //    }
+    //    public Titulo_Planejamento(DLM.db.Linha L, bool orcamento = false)
+    //    {
+    //        if (!orcamento)
+    //        {
+    //            this.CHAVE = L.Get("CHAVE").Valor;
+    //            this.DESCRICAO = L.Get("DESCRICAO").Valor;
+    //        }
+    //        else
+    //        {
+    //            var cont = L.Get("numerocontrato").Valor;
+    //            var revisao = L.Get("revisao").Valor;
+    //            var descricao = L.Get("descricao").Valor;
 
-                this.CHAVE = L.Get("pedido").Valor + ".PGO";
-                this.DESCRICAO = "[PGO] - [" + cont + "." + revisao + "] " + descricao;
-            }
-        }
-    }
+    //            this.CHAVE = L.Get("pedido").Valor + ".PGO";
+    //            this.DESCRICAO = "[PGO] - [" + cont + "." + revisao + "] " + descricao;
+    //        }
+    //    }
+    //}
 
     public class Atraso_Planejamento
     {

@@ -471,21 +471,21 @@ namespace DLM.painel
                 return 0;
             }
         }
-        public string centro
-        {
-            get
-            {
-                if (Obra.tipo == Tipo_Material.Real && this.Material_REAL)
-                {
-                    return Real.resumo_pecas.centro_producao;
-                }
-                else if (Obra.tipo == Tipo_Material.Orçamento && this.Material_ORC)
-                {
-                    return Orcamento.centro;
-                }
-                return "";
-            }
-        }
+        //public string centro
+        //{
+        //    get
+        //    {
+        //        if (Obra.tipo == Tipo_Material.Real && this.Material_REAL)
+        //        {
+        //            return Real.resumo_pecas.centro_producao;
+        //        }
+        //        else if (Obra.tipo == Tipo_Material.Orçamento && this.Material_ORC)
+        //        {
+        //            return Orcamento.centro;
+        //        }
+        //        return "";
+        //    }
+        //}
         public Pedido_PMP Obra { get; set; } = new Pedido_PMP();
         public ORC_PEP Orcamento { get; set; } = new ORC_PEP();
         public ORC_PEP Consolidada { get; set; } = new ORC_PEP();
@@ -508,7 +508,7 @@ namespace DLM.painel
                 this.Real = real;
                 this.Material_REAL = true;
                 this.pep = real.PEP;
-                this.descricao = real.descricao;
+                this.descricao = real.nome;
             }
             if(orcamento != null)
             {
@@ -818,21 +818,21 @@ namespace DLM.painel
                 return Math.Round(Getpeps().Sum(x => x.peso), 2);
             }
         }
-        public string centro
-        {
-            get
-            {
-                if (Obra.tipo == Tipo_Material.Real && this.Material_REAL)
-                {
-                    return Real.resumo_pecas.centro_producao;
-                }
-                else if (Obra.tipo == Tipo_Material.Orçamento && this.Material_ORC)
-                {
-                    return Orcamento.centro;
-                }
-                return "";
-            }
-        }
+        //public string centro
+        //{
+        //    get
+        //    {
+        //        if (Obra.tipo == Tipo_Material.Real && this.Material_REAL)
+        //        {
+        //            return Real.resumo_pecas.centro_producao;
+        //        }
+        //        else if (Obra.tipo == Tipo_Material.Orçamento && this.Material_ORC)
+        //        {
+        //            return Orcamento.centro;
+        //        }
+        //        return "";
+        //    }
+        //}
 
 
 
@@ -861,7 +861,7 @@ namespace DLM.painel
             this.Real = real;
                 this.Material_REAL = true;
                 this.pep = Real.PEP;
-                this.descricao = real.Titulo.DESCRICAO;
+                this.descricao = real.nome;
 
             }
 
@@ -1131,21 +1131,21 @@ namespace DLM.painel
                 return Math.Round(Getsubetapas().Sum(x => x.peso),2);
             }
         }
-        public string centro
-        {
-            get
-            {
-                if (Obra.tipo == Tipo_Material.Real && this.Material_REAL)
-                {
-                    return Real.resumo_pecas.centro_producao;
-                }
-                else if (Obra.tipo == Tipo_Material.Orçamento && this.Material_ORC)
-                {
-                    return Orcamento.centro;
-                }
-                return "";
-            }
-        }
+        //public string centro
+        //{
+        //    get
+        //    {
+        //        if (Obra.tipo == Tipo_Material.Real && this.Material_REAL)
+        //        {
+        //            return Real.resumo_pecas.centro_producao;
+        //        }
+        //        else if (Obra.tipo == Tipo_Material.Orçamento && this.Material_ORC)
+        //        {
+        //            return Orcamento.centro;
+        //        }
+        //        return "";
+        //    }
+        //}
 
 
         public List<SubEtapa_PMP> Getsubetapas()
@@ -1168,7 +1168,7 @@ namespace DLM.painel
                 this.Real = real;
 
                 this.Material_REAL = true;
-                this.descricao = real.Titulo.DESCRICAO;
+                this.descricao = real.nome;
                 this.pep = real.PEP;
             }
             if (orcamento != null)
@@ -1617,7 +1617,7 @@ namespace DLM.painel
                 this.Material_REAL = true;
                 this.Real = real;
                 this.pep = real.pedido;
-                this.descricao = real.Titulo.DESCRICAO;
+                this.descricao = real.nome;
             }
             if (orcamento!=null)
             {
@@ -1626,7 +1626,7 @@ namespace DLM.painel
                 if(pep=="")
                 {
                     this.pep = Orcamento.PEP;
-                    this.descricao = orcamento.descricao;
+                    this.descricao = orcamento.nome;
                 }
             }
 
@@ -1637,18 +1637,18 @@ namespace DLM.painel
                 if(this.pep == "")
                 {
                     this.pep = this.Consolidada.PEP;
-                    this.descricao = this.Consolidada.descricao;
+                    this.descricao = this.Consolidada.nome;
 
                 }
             }
 
             if(this.Orcamento!=null && descricao=="")
             {
-                this.descricao = this.Orcamento.descricao;
+                this.descricao = this.Orcamento.nome;
             }
             if (this.Consolidada != null && descricao == "")
             {
-                this.descricao = this.Consolidada.descricao;
+                this.descricao = this.Consolidada.nome;
             }
             if (this.Material_REAL)
             {

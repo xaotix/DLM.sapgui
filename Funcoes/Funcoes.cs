@@ -14,45 +14,7 @@ namespace DLM.sapgui
 {
    public partial class Funcoes
     {
-        public static bool GravarZContratos(List<string> pedidos)
-        {
-            pedidos = pedidos.FindAll(x => x.Replace(" ", "") != "");
-            DLM.sapgui.Consulta sap = new Consulta();
-            var w = Conexoes.Utilz.Wait(pedidos.Count, "Procurando notas fiscais...");
-            var destino = Conexoes.Utilz.CriarPasta(Cfg.Init.DIR_APP, "SAP");
-            var CON = false;
-            if (Directory.Exists(destino))
-            {
-                foreach (var ST in pedidos)
-                {
-                    string arnome = ST.Replace(".", "").Replace("*", "") + Cfg.Init.SAP_ZCONTRATOSARQ;
-                    CON = sap.ZCONTRATOS(ST, destino, ST.Replace(".", "").Replace("*", "") + Cfg.Init.SAP_ZCONTRATOSARQ);
-                    if (CON)
-                    {
-                        DBases.GetDB().Apagar("Elemento_PEP", $"%{ST}%", Cfg.Init.db_comum, Cfg.Init.tb_zcontratos_notas_fiscais, true);
-                        DLM.painel.Consultas.MatarExcel(false);
-                        List<ZCONTRATOS> notas =  CargaExcel.ZCONTRATO(destino + arnome);
-                       DBases.GetDB().Cadastro(notas.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zcontratos_notas_fiscais);
-                    }
-                    else
-                    {
-                        w.Close();
-                        return CON;
-                    }
 
-                w.somaProgresso();
-                }
-            }
-            else
-            {
-                w.Close();
-
-                return false;
-            }
-
-            w.Close();
-            return CON;
-        }
         public static void RodaScript(List<string> Script, string Destino)
         {
 
@@ -153,31 +115,6 @@ namespace DLM.sapgui
             return RETORNO;
         }
 
-        public static List<DLM.sapgui.Lancamento> Agrupar(List<DLM.sapgui.Lancamento> lancamentos, bool separar_por_tipo = true)
-        {
-            List<DLM.sapgui.Lancamento> retorno = new List<DLM.sapgui.Lancamento>();
-            if (separar_por_tipo)
-            {
-                var meses = lancamentos.GroupBy(x => x.Chave).Select(x => x.First()).ToList();
 
-                foreach (var mes in meses)
-                {
-                    var subs = lancamentos.FindAll(x => x.Chave == mes.Chave).ToList();
-                    retorno.Add(new DLM.sapgui.Lancamento(subs));
-                }
-            }
-            else
-            {
-                var meses = lancamentos.GroupBy(x => x.data).Select(x => x.First()).ToList();
-
-                foreach (var mes in meses)
-                {
-                    var subs = lancamentos.FindAll(x => x.data == mes.data).ToList();
-                    retorno.Add(new DLM.sapgui.Lancamento(subs));
-                }
-            }
-
-            return retorno.OrderBy(x => x.ToString()).ToList();
-        }
     }
 }

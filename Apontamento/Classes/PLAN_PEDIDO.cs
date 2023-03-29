@@ -51,7 +51,7 @@ namespace DLM.painel
         }
         public override string ToString()
         {
-            return descricao;
+            return base.nome;
         }
 
 
@@ -72,7 +72,7 @@ namespace DLM.painel
         public int etapas_qtd { get; private set; } = 0;
         public int pedidos { get; private set; } = 0;
 
-        public PLAN_PEDIDO(DLM.db.Linha L, PLAN_OBRA contrato)
+        public PLAN_PEDIDO(DLM.db.Linha L)
         {
             this.PEP = L.Get("pedido").Valor;
             this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
