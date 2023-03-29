@@ -70,7 +70,105 @@ namespace DLM.sapgui
 
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
+        public static List<FAGLB03> FAGLB03(string arquivo, string empresa_de = "1100", string empresa_ate = "1200", int ano = 2022, string conta = "3111003011", bool cadastrar = true)
+        {
+            var linhas = Conexoes.Utilz.Arquivo.Ler(arquivo);
+            List<FAGLB03> retorno = new List<FAGLB03>();
+            foreach(var linha in linhas)
+            {
+                var valores = linha.Split('|').ToList().Select(x => x.TrimStart().TrimEnd()).ToList();
 
+                if(valores.Count>=(int)TAB_FAGLB03.Dt_lcto)
+                {
+                    FAGLB03 pp = new FAGLB03(valores, empresa_de, empresa_ate, ano, conta);
+                    retorno.Add(pp);
+                }
+            }
+            db.Linha chave = new db.Linha();
+            chave.Add("K_ano", ano);
+            chave.Add("K_Empresa_De", empresa_de);
+            chave.Add("K_Empresa_Ate", empresa_ate);
+            chave.Add("K_Conta", conta);
+            Conexoes.DBases.GetDB().Apagar(chave, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
+            var tabela = retorno.GetTabela();
+            Conexoes.DBases.GetDB().Cadastro(tabela.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
+            return retorno;
+        }
+        public static List<AVANCO_FATURAMENTO> Cadastro_AVANCO_FATURAMENTO()
+        {
+            List<AVANCO_FATURAMENTO> retorno = new List<AVANCO_FATURAMENTO>();
+            string arquivo = Conexoes.Utilz.Abrir_String("xlsx");
+            if(arquivo == null) { return new List<AVANCO_FATURAMENTO>(); }
+            var selecao = Conexoes.Utilz.Excel.GetTabelaPrompt(arquivo);
+
+            if(selecao.Linhas.Count>0)
+            {
+               
+                foreach(var l in selecao.Linhas)
+                {
+                    var pedido = l.Get("C1").Valor;
+                    var valor_contrato = l.Get("C6").Valor;
+                    var valor_f_direto = l.Get("C7").Valor;
+
+                    var novo = new AVANCO_FATURAMENTO(pedido, valor_contrato, valor_f_direto);
+                    if(novo.Pedido.Length == 13)
+                    {
+                        retorno.Add(novo);
+                    }
+                }
+
+                if (retorno.Count > 0)
+                {
+                    var cadastro = retorno.GetTabela();
+
+                    DBases.GetDB().Apagar(new db.Linha(new List<db.Celula> { new db.Celula("id", "%%") }), Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento, "And", false);
+                    DBases.GetDB().Cadastro(cadastro.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
+                    Conexoes.Utilz.Alerta($"Avanço sincronizado! {retorno.Count} itens cadastrados.");
+                }
+                else
+                {
+                    Conexoes.Utilz.Alerta("Nenhum item de avanço encontrado na aba selecionada.");
+                }
+
+            }
+            return retorno;
+        }
+        public static List<FAGLL03> FAGLL03(string arquivo, string pedido)
+        {
+            ConcurrentBag<FAGLL03> retorno = new ConcurrentBag<FAGLL03>();
+            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            {
+                List<Task> Tarefas = new List<Task>();
+
+                foreach (var l in sub)
+                {
+                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new FAGLL03(pedido,l))));
+                }
+                Task.WaitAll(Tarefas.ToArray());
+                Tarefas.Clear();
+            }
+
+            return retorno.ToList().FindAll(x => x.N_documento.Replace(" ", "") != "");
+        }
+        public static List<CJI3> CJI3(string arquivo)
+        {
+            ConcurrentBag<CJI3> retorno = new ConcurrentBag<CJI3>();
+            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            {
+                List<Task> Tarefas = new List<Task>();
+
+                foreach (var l in sub)
+                {
+                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new CJI3(l))));
+                }
+                Task.WaitAll(Tarefas.ToArray());
+                Tarefas.Clear();
+            }
+
+            return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
+        }
 
         public static List<ZPMP> ZPMP(string arquivo)
         {
@@ -90,14 +188,34 @@ namespace DLM.sapgui
 
             return retorno.ToList();
         }
+        public static List<ZPP0066N> ZPP0066N(string arquivo, bool semperfil)
+        {
+            ConcurrentBag<ZPP0066N> retorno = new ConcurrentBag<ZPP0066N>();
+            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
 
+            var sublista = DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks);
+            foreach (var sub in sublista)
+            {
+                List<Task> Tarefas = new List<Task>();
+
+                foreach (var l in sub)
+                {
+                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPP0066N(l,semperfil))));
+                }
+                Task.WaitAll(Tarefas.ToArray());
+                Tarefas.Clear();
+            }
+
+            return retorno.ToList().FindAll(x=>x.Material!="").ToList();
+        }
         public static List<DLM.painel.PLAN_PECA> ZPPCOOISN(string destino,string Pedido, bool buffer = false)
         {
             List<DLM.painel.PLAN_PECA> Retorno = new List<DLM.painel.PLAN_PECA>();
 
             //19/06/2020 - aumentei o filtro para pegar a subetapa. serão mais consultas, no entanto evita os erros.
             /*12/05/2022 - mudei a chamada para um procedure.*/
-            var chamada = $"call {Cfg.Init.db_painel_de_obras2}.zpp_cooisn_get_qtd_pc('{Pedido.Replace("*","").Replace(" ","")}')";
+            var chamada = $"call comum.zpp_cooisn_get_qtd_pc('{Pedido.Replace("*","").Replace(" ","")}')";
+            //var consulta = DBases.GetDBMySQL().Consulta($"SELECT left(pr.pep,17) as pep, count(pr.pep) as pcs from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpmp_producao} as pr where pr.pep like '%{Pedido}%' and pr.material like '31%' group by left(pr.pep,17) order by count(pr.pep) desc".Replace("*", ""));
             var consulta = DBases.GetDB().Consulta(chamada);
             var peps = consulta.Linhas.Select(x => x.Get("pep").Valor).ToList(); 
             var w = Conexoes.Utilz.Wait(peps.Count, Pedido + " ZPPCOOISN"); 
@@ -473,6 +591,106 @@ namespace DLM.sapgui
 
             return retorno.ToList();
         }
+        public static DLM.sapgui.FolhaMargem ZSD0031N(string arquivo)
+        {
+            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            var plan = t.Linhas;
+            DLM.sapgui.FolhaMargem ret = new DLM.sapgui.FolhaMargem();
+            try
+            {
+                int max_col = 12;
+                int m = 3;
+                int c12 = 11;
+                int c4 = 3;
+                if (plan.Count < 63) { return new DLM.sapgui.FolhaMargem(); }
+                if (plan.Max(x => x.Count) < max_col) { return new DLM.sapgui.FolhaMargem(); }
 
+                ret.receitabruta.material.valor = Conexoes.Utilz.Double(plan[19-m][c12]);
+                ret.receitabruta.montagem.valor = Conexoes.Utilz.Double(plan[20-m][c12]);
+                ret.receitabruta.projeto.valor = Conexoes.Utilz.Double(plan[21-m][c12]);
+
+                ret.impostos.IPI_Material.valor = Conexoes.Utilz.Double(plan[25-m][c12]);
+                ret.impostos.ICMS_Material.valor = Conexoes.Utilz.Double(plan[26-m][c12]);
+                ret.impostos.PIS_COFINS_Material.valor = Conexoes.Utilz.Double(plan[27-m][c12]);
+                ret.impostos.PIS_COFINS_Montagem.valor = Conexoes.Utilz.Double(plan[28-m][c12]);
+                ret.impostos.PIS_COFINS_Projeto.valor = Conexoes.Utilz.Double(plan[29-m][c12]);
+                ret.impostos.ISS_Locacao_Equipamentos.valor = Conexoes.Utilz.Double(plan[30-m][c12]);
+                ret.impostos.ISS_Supervisao.valor = Conexoes.Utilz.Double(plan[31-m][c12]);
+                ret.impostos.ISS_Montagem.valor = Conexoes.Utilz.Double(plan[32-m][c12]);
+                ret.impostos.ISS_Projeto.valor = Conexoes.Utilz.Double(plan[33-m][c12]);
+                ret.impostos.CPRB_Servico.valor = Conexoes.Utilz.Double(plan[34-m][c12]);
+                ret.impostos.CPRB_Material.valor = Conexoes.Utilz.Double(plan[35-m][c12]);
+
+                ret.impostos.IPI_Material.porcentagem = Conexoes.Utilz.Double(plan[25 - m][c4]);
+                ret.impostos.ICMS_Material.porcentagem = Conexoes.Utilz.Double(plan[26 - m][c4]);
+                ret.impostos.PIS_COFINS_Material.porcentagem = Conexoes.Utilz.Double(plan[27 - m][c4]);
+                ret.impostos.PIS_COFINS_Montagem.porcentagem = Conexoes.Utilz.Double(plan[28 - m][c4]);
+                ret.impostos.PIS_COFINS_Projeto.porcentagem = Conexoes.Utilz.Double(plan[29 - m][c4]);
+                ret.impostos.ISS_Locacao_Equipamentos.porcentagem = Conexoes.Utilz.Double(plan[30 - m][c4]);
+                ret.impostos.ISS_Supervisao.porcentagem = Conexoes.Utilz.Double(plan[31 - m][c4]);
+                ret.impostos.ISS_Montagem.porcentagem = Conexoes.Utilz.Double(plan[32 - m][c4]);
+                ret.impostos.ISS_Projeto.porcentagem = Conexoes.Utilz.Double(plan[33 - m][c4]);
+                ret.impostos.CPRB_Servico.porcentagem = Conexoes.Utilz.Double(plan[34 - m][c4]);
+                ret.impostos.CPRB_Material.porcentagem = Conexoes.Utilz.Double(plan[35 - m][c4]);
+
+                ret.receitaliquida.material.valor = Conexoes.Utilz.Double(plan[39 - m][c12]);
+                ret.receitaliquida.montagem.valor = Conexoes.Utilz.Double(plan[40 - m][c12]);
+                ret.receitaliquida.projeto.valor = Conexoes.Utilz.Double(plan[41 - m][c12]);
+
+                ret.custosmateriais.materiais.valor = Conexoes.Utilz.Double(plan[45 - m][c12]);
+                ret.custosmateriais.contingencia.valor = Conexoes.Utilz.Double(plan[46 - m][c12]);
+
+                ret.total_custo_projeto.valor = Conexoes.Utilz.Double(plan[48 - m][c12]);
+
+                ret.custosmontagem.equipamentos.valor = Conexoes.Utilz.Double(plan[52 - m][c12]);
+                ret.custosmontagem.empreiteiros_despesas.valor = Conexoes.Utilz.Double(plan[53 - m][c12]);
+                ret.custosmontagem.supervisao.valor = Conexoes.Utilz.Double(plan[54 - m][c12]);
+
+                ret.gastoslogisticos.frete_rodoviario.valor = Conexoes.Utilz.Double(plan[61 - m][c12]);
+                ret.gastoslogisticos.verba_adicional.valor = Conexoes.Utilz.Double(plan[62 - m][c12]);
+                ret.gastoslogisticos.gastos_logisticos.valor = Conexoes.Utilz.Double(plan[63 - m][c12]);
+                ret.gastoslogisticos.outras_despesas.valor = Conexoes.Utilz.Double(plan[64 - m][c12]);
+                ret.gastoslogisticos.seguro_internacional.valor = Conexoes.Utilz.Double(plan[65 - m][c12]);
+                ret.gastoslogisticos.frete_aereo.valor = Conexoes.Utilz.Double(plan[66 - m][c12]);
+                ret.gastoslogisticos.frete_maritimo.valor = Conexoes.Utilz.Double(plan[67 - m][c12]);
+                ret.gastoslogisticos.frete_rodoviario_internacional.valor = Conexoes.Utilz.Double(plan[68 - m][c12]);
+                ret.gastoslogisticos.frete_rodoviario_nacional_exportacao.valor = Conexoes.Utilz.Double(plan[69 - m][c12]);
+                ret.gastoslogisticos.frete_maritimo_cabotagem.valor = Conexoes.Utilz.Double(plan[70 - m][c12]);
+                ret.gastoslogisticos.frete_rodoviario_nacional_cabotagem.valor = Conexoes.Utilz.Double(plan[71 - m][c12]);
+
+                ret.despesasgerais.seguro.valor = Conexoes.Utilz.Double(plan[75 - m][c12]);
+                ret.despesasgerais.comissao.valor = Conexoes.Utilz.Double(plan[76 - m][c12]);
+                ret.despesasgerais.assessoria.valor = Conexoes.Utilz.Double(plan[77 - m][c12]);
+                ret.despesasgerais.custo_financeiro.valor = Conexoes.Utilz.Double(plan[78 - m][c12]);
+                ret.despesasgerais.supervisao_exportacao.valor = Conexoes.Utilz.Double(plan[79 - m][c12]);
+                ret.despesasgerais.creditos_debitos_material.valor = Conexoes.Utilz.Double(plan[80 - m][c12]);
+                ret.despesasgerais.creditos_debitos_projeto.valor = Conexoes.Utilz.Double(plan[81 - m][c12]);
+                ret.despesasgerais.creditos_debitos_montagem.valor = Conexoes.Utilz.Double(plan[82 - m][c12]);
+                ret.despesasgerais.projeto_exportacao.valor = Conexoes.Utilz.Double(plan[83 - m][c12]);
+                ret.despesasgerais.outros.valor = Conexoes.Utilz.Double(plan[84 - m][c12]);
+
+                ret.despesasgerais.seguro.porcentagem = Conexoes.Utilz.Double(plan[75 - m][c4]);
+                ret.despesasgerais.comissao.porcentagem = Conexoes.Utilz.Double(plan[76 - m][c4]);
+                ret.despesasgerais.assessoria.porcentagem = Conexoes.Utilz.Double(plan[77 - m][c4]);
+                ret.despesasgerais.custo_financeiro.porcentagem = Conexoes.Utilz.Double(plan[78 - m][c4]);
+                ret.despesasgerais.supervisao_exportacao.porcentagem = Conexoes.Utilz.Double(plan[79 - m][c4]);
+                ret.despesasgerais.creditos_debitos_material.porcentagem = Conexoes.Utilz.Double(plan[80 - m][c4]);
+                ret.despesasgerais.creditos_debitos_projeto.porcentagem = Conexoes.Utilz.Double(plan[81 - m][c4]);
+                ret.despesasgerais.creditos_debitos_montagem.porcentagem = Conexoes.Utilz.Double(plan[82 - m][c4]);
+                ret.despesasgerais.projeto_exportacao.porcentagem = Conexoes.Utilz.Double(plan[83 - m][c4]);
+                ret.despesasgerais.outros.porcentagem = Conexoes.Utilz.Double(plan[84 - m][c4]);
+
+                ret.margens.valor = Conexoes.Utilz.Double(plan[63][c12]);
+                ret.margens.porcentagem = Conexoes.Utilz.Double(plan[63][c4]);
+                ret.Carregado = true;
+            }
+            catch (Exception)
+            {
+
+            }
+
+
+            return ret;
+        }
     }
 }
