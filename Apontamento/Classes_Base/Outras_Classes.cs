@@ -11,25 +11,25 @@ using System.Threading.Tasks;
 
 namespace DLM.painel
 {
-    public class Titulo_Planejamento
+    public class PLAN_CONTRATO
     {
         public override string ToString()
         {
-            return CHAVE + " - " +  DESCRICAO;
+            return Contrato + " - " +  Descricao;
         }
         public Linha Linha { get; set; } = new Linha();
-        public string CHAVE { get; set; } = "";
-        public string DESCRICAO { get; set; } = "";
-        public Titulo_Planejamento()
+        public string Contrato { get; set; } = "";
+        public string Descricao { get; set; } = "";
+        public PLAN_CONTRATO()
         {
 
         }
-        public Titulo_Planejamento(DLM.db.Linha L, bool orcamento = false)
+        public PLAN_CONTRATO(DLM.db.Linha L, bool orcamento = false)
         {
             if (!orcamento)
             {
-                this.CHAVE = L.Get("CHAVE").Valor;
-                this.DESCRICAO = L.Get("DESCRICAO").Valor;
+                this.Contrato = L.Get("Contrato").Valor;
+                this.Descricao = L.Get("Descricao").Valor;
             }
             else
             {
@@ -37,8 +37,8 @@ namespace DLM.painel
                 var revisao = L.Get("revisao").Valor;
                 var descricao = L.Get("descricao").Valor;
 
-                this.CHAVE = L.Get("pedido").Valor + ".PGO";
-                this.DESCRICAO = "[PGO] - [" + cont + "." + revisao + "] " + descricao;
+                this.Contrato = L.Get("pedido").Valor + ".PGO";
+                this.Descricao = "[PGO] - [" + cont + "." + revisao + "] " + descricao;
             }
         }
     }

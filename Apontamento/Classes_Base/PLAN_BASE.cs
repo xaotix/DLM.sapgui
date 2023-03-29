@@ -32,7 +32,7 @@ namespace DLM.painel
         {
             get
             {
-                return this.PEP + (this.Titulo.DESCRICAO != "" ? (" - " + this.Titulo.DESCRICAO) : "");
+                return this.PEP + (this.Titulo.Descricao != "" ? (" - " + this.Titulo.Descricao) : "");
             }
         }
         private List<PLAN_ETAPA> _etapas { get; set; } = new List<PLAN_ETAPA>();
@@ -128,15 +128,15 @@ namespace DLM.painel
 
             return _pecas;
         }
-        public void Set(List<Titulo_Planejamento> titulos, bool contrato = false)
+        public void Set(List<PLAN_CONTRATO> titulos, bool contrato = false)
         {
             if (contrato)
             {
-                this.Titulo = titulos.Find(x => x.CHAVE == this.contrato);
+                this.Titulo = titulos.Find(x => x.Contrato == this.contrato);
             }
             else
             {
-                this.Titulo = titulos.Find(x => x.CHAVE == this.PEP);
+                this.Titulo = titulos.Find(x => x.Contrato == this.PEP);
             }
 
             if(this.Titulo==null)
@@ -427,12 +427,12 @@ namespace DLM.painel
             }
         }
         public string update_montagem { get; set; } = "";
-        private Titulo_Planejamento _Titulo { get; set; } = new Titulo_Planejamento();
-        public Titulo_Planejamento Titulo
+        private PLAN_CONTRATO _Titulo { get; set; } = new PLAN_CONTRATO();
+        public PLAN_CONTRATO Titulo
         {
             get
             {
-                if (_Titulo == null) { _Titulo = new Titulo_Planejamento() { CHAVE = this.PEP }; }
+                if (_Titulo == null) { _Titulo = new PLAN_CONTRATO() { Contrato = this.PEP }; }
                 return _Titulo;
             }
             set

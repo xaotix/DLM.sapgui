@@ -285,7 +285,7 @@ namespace DLM.painel
             this.status = Linha.Get("status").Valor;
 
 
-            this.Titulo = new Titulo_Planejamento() { CHAVE = this.PEP, DESCRICAO = this.descricao };
+            this.Titulo = new PLAN_CONTRATO() { Contrato = this.PEP, Descricao = this.descricao };
 
         }
         public DLM.db.Linha GetLinha()

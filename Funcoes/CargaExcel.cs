@@ -170,11 +170,11 @@ namespace DLM.sapgui
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
 
-        public static List<ZPMP> ZPMP(string arquivo)
+        public static List<ZPMP> ZPMP(string arquivo, out DLM.db.Tabela tabela)
         {
             ConcurrentBag<ZPMP> retorno = new ConcurrentBag<ZPMP>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            foreach (var sub in DLM.painel.Consultas.quebrar_lista(tabela.Linhas, max_tasks))
             {
                 List<Task> Tarefas = new List<Task>();
 

@@ -259,7 +259,7 @@ namespace DLM.painel
             this.id_obra = l["id_obra"].Int();
             this.numerocontrato = l.Get("numerocontrato").Valor;
             this.revisao = l.Get("revisao").Valor;
-            this.Titulo.DESCRICAO = l.Get("descricao").Valor;
+            this.Titulo.Descricao = l.Get("descricao").Valor;
             this.PEP = l.Get("pedido").Valor;
             this.quantidade = l.Get("quantidade").Double();
             this.peso_planejado = l.Get("peso_total").Double();
@@ -271,7 +271,7 @@ namespace DLM.painel
             this.tipo = tipo;
             if(this.descricao == "")
             {
-                this.Titulo.DESCRICAO = l.Get("nome").Valor;
+                this.Titulo.Descricao = l.Get("nome").Valor;
             }
         }
     }

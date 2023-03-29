@@ -29,8 +29,8 @@ namespace DLM.painel
             this.obras = Obras;
 
             this.PEP = $"{this.obras.Count} Obras";
-            this.Titulo.CHAVE = contrato;
-            this.Titulo.DESCRICAO = nome;
+            this.Titulo.Contrato = contrato;
+            this.Titulo.Descricao = nome;
 
             this.engenharia_cronograma = Obras.Max(x => x.engenharia_cronograma);
             this.engenharia_liberacao = Obras.Max(x => x.engenharia_cronograma);

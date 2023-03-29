@@ -601,19 +601,19 @@ public class Relatorios
                 int c0 = 1;
                 int l = 0;
                 var pds = subetapas.Select(x => x.pedido).Distinct().ToList();
-                var pedidos = DLM.painel.Buffer.GetTitulosPedidos().FindAll(x => pds.Find(y=>y==x.CHAVE)!=null);
+                //var pedidos = Consultas.GetTitulosObras().FindAll(x => pds.Find(y=>y==x.CHAVE)!=null);
 
                 var mindate = Cfg.Init.DataDummy();
                 foreach (var sub in subetapas)
                 {
-                    var ped = pedidos.Find(x => x.CHAVE == sub.pedido);
+                    var ped = Consultas.GetTitulosObras().Find(x => x.Contrato == sub.contrato);
                     if (ped == null)
                     {
-                        ped = new Titulo_Planejamento();
+                        ped = new PLAN_CONTRATO();
                     }
                     foreach (var pep in sub.peps.FindAll(x => !x.resumo_pecas.etapa_bloqueada))
                     {
-                        principal.Cells[l0 + l, c0 + 0].Value = ped.DESCRICAO;
+                        principal.Cells[l0 + l, c0 + 0].Value = ped.Descricao;
                         principal.Cells[l0 + l, c0 + 1].Value = pep.PEP;
                         principal.Cells[l0 + l, c0 + 2].Value = pep.status_eng;
                         principal.Cells[l0 + l, c0 + 3].Value = pep.status;
@@ -1224,7 +1224,7 @@ public class Relatorios
                     var mindia = Cfg.Init.DataDummy();
                      double at = 0;
                     var pedidosstr = PECAS.Select(x => x.pedido_completo).Distinct().ToList();
-                    var peds_peps = DLM.painel.Buffer.GetTitulosPedidos().FindAll(x => pedidosstr.Find(y => x.CHAVE.Contains(y)) != null);
+                    var peds_peps = Consultas.GetTitulosObras().FindAll(x => pedidosstr.Find(y => x.Contrato.Contains(y)) != null);
                     var tot = PECAS.Count;
 
                     /*PEÇAS*/
@@ -1233,13 +1233,13 @@ public class Relatorios
                         double dif = (l / (double)tot) * 100;
                         try
                         {
-                            var ped = peds_peps.Find(x => x.CHAVE == t.pedido_completo);
+                            var ped = peds_peps.Find(x => x.Contrato == t.contrato);
                             if (ped == null)
                             {
-                                ped = new Titulo_Planejamento();
+                                ped = new PLAN_CONTRATO();
                             }
                             pecas_aba_excel.Cells[l0 + l, c0 + 0].Value = t.contrato;
-                            pecas_aba_excel.Cells[l0 + l, c0 + 1].Value = ped.DESCRICAO;
+                            pecas_aba_excel.Cells[l0 + l, c0 + 1].Value = ped.Descricao;
                             pecas_aba_excel.Cells[l0 + l, c0 + 2].Value = t.pedido_completo;
                             pecas_aba_excel.Cells[l0 + l, c0 + 3].Value = t.PEP;
                             pecas_aba_excel.Cells[l0 + l, c0 + 4].Value = t.centro;
@@ -1312,13 +1312,13 @@ public class Relatorios
                         {
                             try
                             {
-                                var ped = DLM.painel.Buffer.GetTitulosPedidos().Find(x => x.CHAVE == t.pedido);
+                                var ped = Consultas.GetTitulosObras().Find(x => x.Contrato == t.contrato);
                                 if (ped == null)
                                 {
-                                    ped = new Titulo_Planejamento();
+                                    ped = new PLAN_CONTRATO();
                                 }
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 0].Value = t.contrato;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 1].Value = ped.DESCRICAO;
+                                subetapas_aba_excel.Cells[l0 + l, c0 + 1].Value = ped.Descricao;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 2].Value = t.pedido;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 3].Value = t.PEP;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 4].Value = t.resumo_pecas.etapa_bloqueada ? 1 : 0;
@@ -1386,7 +1386,7 @@ public class Relatorios
                             try
                             {
 
-                                pedidos_aba_excel.Cells[l0 + l, c0 + 0].Value = t.Titulo.DESCRICAO;
+                                pedidos_aba_excel.Cells[l0 + l, c0 + 0].Value = t.Titulo.Descricao;
                                 pedidos_aba_excel.Cells[l0 + l, c0 + 1].Value = t.pedido;
                                 pedidos_aba_excel.Cells[l0 + l, c0 + 2].Value = t.exportacao ? 1 : 0;
                                 pedidos_aba_excel.Cells[l0 + l, c0 + 3].Value = t.peso_planejado;
@@ -2160,13 +2160,13 @@ public class Relatorios
             }
 
           List<PLAN_PECA>  PECAS = new List<PLAN_PECA>();
-            List<Titulo_Planejamento> peds_peps = new List<Titulo_Planejamento>();
+            List<PLAN_CONTRATO> peds_peps = new List<PLAN_CONTRATO>();
 
             if (gerar_pecas && gerar_subetapas)
             {
                 PECAS.AddRange(pacote.GetPecas());
                 var pedidosstr = pacote.Pedidos.Select(x=>x.pep).Distinct().ToList();
-                peds_peps = DLM.painel.Buffer.GetTitulosPedidos().FindAll(x => pedidosstr.Find(y => x.CHAVE.Contains(y)) != null);
+                peds_peps = Consultas.GetTitulosObras().FindAll(x => pedidosstr.Find(y => x.Contrato.Contains(y)) != null);
             }
 
             try
@@ -2223,13 +2223,13 @@ public class Relatorios
                                     var L1 = l0 + l;
                                     try
                                     {
-                                        var ped = peds_peps.Find(x => x.CHAVE == peca.pedido_completo);
+                                        var ped = peds_peps.Find(x => x.Contrato == peca.contrato);
                                         if (ped == null)
                                         {
-                                            ped = new Titulo_Planejamento();
+                                            ped = new PLAN_CONTRATO();
                                         }
                                         pecas_aba_excel.Cells[$"A{L1}"].Value = peca.contrato;
-                                        pecas_aba_excel.Cells[$"B{L1}"].Value = ped.DESCRICAO;
+                                        pecas_aba_excel.Cells[$"B{L1}"].Value = ped.Descricao;
                                         pecas_aba_excel.Cells[$"C{L1}"].Value = peca.pedido_completo;
                                         pecas_aba_excel.Cells[$"D{L1}"].Value = peca.PEP;
                                         pecas_aba_excel.Cells[$"E{L1}"].Value = peca.desenho;
@@ -2308,16 +2308,16 @@ public class Relatorios
                         {
                             try
                             {
-                                var pedido = Buffer.GetTitulosPedidos().Find(x => x.CHAVE == subetapa.pedido);
+                                var pedido = Consultas.GetTitulosObras().Find(x => x.Contrato == subetapa.contrato);
                                 if (pedido == null)
                                 {
-                                    pedido = new Titulo_Planejamento();
+                                    pedido = new PLAN_CONTRATO();
                                 }
                                 var L1 = l0 + l;
 
 
                                 subetapas_aba_excel.Cells[$"A{L1}"].Value = subetapa.contrato;
-                                subetapas_aba_excel.Cells[$"B{L1}"].Value = pedido.DESCRICAO;
+                                subetapas_aba_excel.Cells[$"B{L1}"].Value = pedido.Descricao;
                                 subetapas_aba_excel.Cells[$"C{L1}"].Value = subetapa.pedido;
                                 subetapas_aba_excel.Cells[$"D{L1}"].Value = subetapa.pep;
                                 subetapas_aba_excel.Cells[$"E{L1}"].Value = subetapa.tipo.ToString();
@@ -2384,7 +2384,7 @@ public class Relatorios
                             try
                             {
 
-                                pedidos_aba_excel.Cells[$"A{L1}"].Value = pedido.Titulo.DESCRICAO;
+                                pedidos_aba_excel.Cells[$"A{L1}"].Value = pedido.Titulo.Descricao;
                                 pedidos_aba_excel.Cells[$"B{L1}"].Value = pedido.pedido;
                                 pedidos_aba_excel.Cells[$"C{L1}"].Value = pedido.exportacao ? 1 : 0;
                                 pedidos_aba_excel.Cells[$"D{L1}"].Value = pedido.peso_planejado;

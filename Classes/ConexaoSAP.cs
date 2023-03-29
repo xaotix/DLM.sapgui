@@ -33,50 +33,50 @@ namespace DLM.sapgui
             }
             return con;
         }
-        public static string GravarTitulos(List<string> codigos_pedidos)
-        {
-            var w = Conexoes.Utilz.Wait(codigos_pedidos.Count,"Gravando titulos...");
+        //public static string GravarTitulos(List<string> codigos_pedidos)
+        //{
+        //    var w = Conexoes.Utilz.Wait(codigos_pedidos.Count,"Gravando titulos...");
 
-            foreach (var Pedido in codigos_pedidos)
-            {
-                try
-                {
-                    var consulta = DLM.sap.RfcsSAP.ConsultarPedido(Pedido);
-                    if (consulta.Count == 0)
-                    {
-                        continue;
-                    }
-                    var lista = consulta.Select(x => x.Select(y => y.GetValue().ToString()).ToList()).ToList();
+        //    foreach (var Pedido in codigos_pedidos)
+        //    {
+        //        try
+        //        {
+        //            var consulta = DLM.sap.RfcsSAP.ConsultarPedido(Pedido);
+        //            if (consulta.Count == 0)
+        //            {
+        //                continue;
+        //            }
+        //            var lista = consulta.Select(x => x.Select(y => y.GetValue().ToString()).ToList()).ToList();
 
-                    DBases.GetDB().Apagar("CHAVE", $"%{Pedido.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, false);
+        //            DBases.GetDB().Apagar("CHAVE", $"%{Pedido.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, false);
 
 
-                    List<string> linhas = new List<string>();
-                    foreach (var ll in lista)
-                    {
-                        linhas.Add("('" + ll[1].Replace("'", "") + "','" + ll[2].Replace("'", "") + "')");
-                    }
-                    var sublista = DLM.painel.Consultas.quebrar_lista(linhas, 100);
-                    foreach (var sub in sublista)
-                    {
-                        var SUBCOMANDO = $"INSERT INTO {Cfg.Init.db_comum}.{Cfg.Init.tb_titulos_planejamento}" +
-                                        $"(CHAVE, DESCRICAO)" +
-                                        $" VALUES ";
+        //            List<string> linhas = new List<string>();
+        //            foreach (var ll in lista)
+        //            {
+        //                linhas.Add("('" + ll[1].Replace("'", "") + "','" + ll[2].Replace("'", "") + "')");
+        //            }
+        //            var sublista = DLM.painel.Consultas.quebrar_lista(linhas, 100);
+        //            foreach (var sub in sublista)
+        //            {
+        //                var SUBCOMANDO = $"INSERT INTO {Cfg.Init.db_comum}.{Cfg.Init.tb_titulos_planejamento}" +
+        //                                $"(CHAVE, DESCRICAO)" +
+        //                                $" VALUES ";
 
-                        SUBCOMANDO = SUBCOMANDO + string.Join(",", sub);
-                        DBases.GetDB().Comando(SUBCOMANDO);
-                    }
-                    w.somaProgresso();
-                }
-                catch (Exception ex)
-                {
-                    //return ex.Message;
+        //                SUBCOMANDO = SUBCOMANDO + string.Join(",", sub);
+        //                DBases.GetDB().Comando(SUBCOMANDO);
+        //            }
+        //            w.somaProgresso();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            //return ex.Message;
 
-                }
-            }
-            w.Close();
-            return "";
-        }
+        //        }
+        //    }
+        //    w.Close();
+        //    return "";
+        //}
 
 
 
@@ -433,8 +433,13 @@ namespace DLM.sapgui
              var arq = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPMPARQ;
             if (Consulta.ZPMP(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(),  arq))
             {
-                this.Producao = CargaExcel.ZPMP(Cfg.Init.GetDestinoSAP_Excel() + arq);
-                return true;
+                DLM.db.Tabela tabela;
+                this.Producao = CargaExcel.ZPMP(Cfg.Init.GetDestinoSAP_Excel() + arq, out tabela);
+                if(tabela.Linhas.Count>0)
+                {
+                    this.Descricao = tabela[0][Colunas.ZPMP.Denominacao].Valor;
+                }
+                return this.Producao.Count>0;
             }
             return false;
         }

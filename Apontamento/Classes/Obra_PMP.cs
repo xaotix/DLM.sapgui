@@ -861,7 +861,7 @@ namespace DLM.painel
             this.Real = real;
                 this.Material_REAL = true;
                 this.pep = Real.PEP;
-                this.descricao = real.Titulo.DESCRICAO;
+                this.descricao = real.Titulo.Descricao;
 
             }
 
@@ -1168,7 +1168,7 @@ namespace DLM.painel
                 this.Real = real;
 
                 this.Material_REAL = true;
-                this.descricao = real.Titulo.DESCRICAO;
+                this.descricao = real.Titulo.Descricao;
                 this.pep = real.PEP;
             }
             if (orcamento != null)
@@ -1617,7 +1617,7 @@ namespace DLM.painel
                 this.Material_REAL = true;
                 this.Real = real;
                 this.pep = real.pedido;
-                this.descricao = real.Titulo.DESCRICAO;
+                this.descricao = real.Titulo.Descricao;
             }
             if (orcamento!=null)
             {
