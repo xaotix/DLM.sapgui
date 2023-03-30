@@ -25,16 +25,16 @@ namespace DLM.painel
     {
         public static string tostr(double previsto, bool porcentagem = false, int decimais = 0)
         {
-            if(previsto<0)
+            if (previsto < 0)
             {
                 return "(" + previsto.ToString("N" + decimais.ToString()) + (porcentagem ? " %" : "") + ")";
             }
-            return previsto != 0 ? previsto.ToString("N" + decimais.ToString()) + (porcentagem?" %":"") : "";
+            return previsto != 0 ? previsto.ToString("N" + decimais.ToString()) + (porcentagem ? " %" : "") : "";
         }
     }
     public static class Consultas
     {
-        
+
         public static void Salvar(Resultado_Economico resultado)
         {
             if (resultado.Pedido.Length < 6) { return; }
@@ -48,11 +48,11 @@ namespace DLM.painel
             l2.Add("descricao", resultado.descricao);
 
             var existe = GetResultados_Economicos_Headers(resultado.Pedido);
-            if(existe.Count>0)
+            if (existe.Count > 0)
             {
                 var ped = existe[0];
                 var id = ped.id;
-                if(id>0)
+                if (id > 0)
                 {
                     DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", id) }, l.Celulas, Cfg.Init.db_comum, "resultado_economico");
                     //DBases.GetDBMySQL().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", id) }, l2.Celulas, Cfg.Init.db_comum, "resultado_economico_header");
@@ -70,7 +70,7 @@ namespace DLM.painel
         }
         public static void Salvar(Resultado_Economico_Header resultado)
         {
-            if(resultado== null) { return; }
+            if (resultado == null) { return; }
             if (resultado.Pedido.Length < 6) { return; }
             DLM.db.Linha l = new DLM.db.Linha();
             l.Add("pep", resultado.Pedido);
@@ -78,7 +78,7 @@ namespace DLM.painel
             l.Add("xml", resultado.GetResultado_Economico().RetornaSerializado());
 
 
-      
+
             if (resultado.id > 0)
             {
                 DBases.GetDB().Update(new List<DLM.db.Celula> { new DLM.db.Celula("id", resultado.id) }, l.Celulas, Cfg.Init.db_comum, "resultado_economico");
@@ -170,7 +170,7 @@ namespace DLM.painel
         //    w.Close();
 
 
-            
+
         //    w.somaProgresso();
         //    pp.Header = Consultas.GetResultado_Economico_Header(Pedido);
         //    pp.SetLancamentos();
@@ -191,7 +191,7 @@ namespace DLM.painel
             double peso_total_previsto = etapas.Sum(x => x.Consolidada.peso_planejado);
 
             resultado.peso_total_previsto = peso_total_previsto;
-            foreach(var etapa in etapas.ToList())
+            foreach (var etapa in etapas.ToList())
             {
                 DLM.sapgui.Lancamento eng = new DLM.sapgui.Lancamento();
                 eng.ano = ((DateTime)etapa.ef).Year;
@@ -253,110 +253,110 @@ namespace DLM.painel
                 {
 
 
-                #region custos
-                /*Custos - Projeto*/
-                retorno.Add(eng);
+                    #region custos
+                    /*Custos - Projeto*/
+                    retorno.Add(eng);
 
-                /*Receitas - Receita Bruta Projeto*/
-                retorno.Add(new DLM.sapgui.Lancamento(eng)
-                {
-                    valor_maximo_previsto = resultado.Receitas.receita_bruta_projeto.contrato.previsto,
-                    Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Receita_Bruta_Projeto,
-                    previsto = resultado.Receitas.receita_bruta_projeto.contrato.previsto * eng.porcentagem_previsto
-                });
-
-
-                /*Custos - MP*/
-                retorno.Add(fab);
-
-                /*Custos - MOD*/
-                retorno.Add(new DLM.sapgui.Lancamento(fab)
-                {
-                    valor_maximo_previsto = resultado.Custos.mod.contrato.previsto,
-                    Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Material_MOD,
-                    previsto = resultado.Custos.mod.contrato.previsto * fab.porcentagem_previsto
-                });
-
-                /*Custos - GGF*/
-                retorno.Add(new DLM.sapgui.Lancamento(fab)
-                {
-                    valor_maximo_previsto = resultado.Custos.ggf.contrato.previsto,
-                    Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Material_GGF,
-                    previsto = resultado.Custos.ggf.contrato.previsto * fab.porcentagem_previsto
-                });
+                    /*Receitas - Receita Bruta Projeto*/
+                    retorno.Add(new DLM.sapgui.Lancamento(eng)
+                    {
+                        valor_maximo_previsto = resultado.Receitas.receita_bruta_projeto.contrato.previsto,
+                        Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Receita_Bruta_Projeto,
+                        previsto = resultado.Receitas.receita_bruta_projeto.contrato.previsto * eng.porcentagem_previsto
+                    });
 
 
-                /*Custos - Material Terceirização*/
-                retorno.Add(new DLM.sapgui.Lancamento(fab)
-                {
-                    valor_maximo_previsto = resultado.Custos.terceiricacao_producao.contrato.previsto,
-                    Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Material_Terceirizacao,
-                    previsto = resultado.Custos.terceiricacao_producao.contrato.previsto * fab.porcentagem_previsto
-                });
+                    /*Custos - MP*/
+                    retorno.Add(fab);
 
-                /*Custos - Receita Bruta Materiais*/
-                retorno.Add(new DLM.sapgui.Lancamento(fab)
-                {
-                    valor_maximo_previsto = resultado.Receitas.receita_bruta_materiais.contrato.previsto,
-                    Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Receita_Bruta_Materiais,
-                    previsto = resultado.Receitas.receita_bruta_materiais.contrato.previsto * fab.porcentagem_previsto
-                });
+                    /*Custos - MOD*/
+                    retorno.Add(new DLM.sapgui.Lancamento(fab)
+                    {
+                        valor_maximo_previsto = resultado.Custos.mod.contrato.previsto,
+                        Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Material_MOD,
+                        previsto = resultado.Custos.mod.contrato.previsto * fab.porcentagem_previsto
+                    });
 
-                /*Custos - Logística*/
-                retorno.Add(log);
-
-
-                /*Custos - Seguro*/
-                retorno.Add(new DLM.sapgui.Lancamento(log)
-                {
-                    valor_maximo_previsto = resultado.Custos.seguros.contrato.previsto,
-                    Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Seguros,
-                    previsto = resultado.Custos.seguros.contrato.previsto * log.porcentagem_previsto
-                });
-
-                /*Custos - Deduções*/
-                retorno.Add(new DLM.sapgui.Lancamento(log)
-                {
-                    valor_maximo_previsto = resultado.Receitas.deducoes.contrato.previsto,
-                    Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Deducoes,
-                    previsto = resultado.Receitas.deducoes.contrato.previsto * log.porcentagem_previsto
-                });
-
-                /*Custos - MO + DI*/
-                retorno.Add(mon);
-
-                /*Custos - Equipamentos*/
-                retorno.Add(new DLM.sapgui.Lancamento(mon)
-                {
-                    valor_maximo_previsto = resultado.Custos.equipamentos.contrato.previsto,
-                    Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Equipamentos,
-                    previsto = resultado.Custos.equipamentos.contrato.previsto * mon.porcentagem_previsto
-                });
-
-                /*Custos - Supervisor*/
-                retorno.Add(new DLM.sapgui.Lancamento(mon)
-                {
-                    valor_maximo_previsto = resultado.Custos.supervisor_medabil.contrato.previsto,
-                    Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Supervisor,
-                    previsto = resultado.Custos.supervisor_medabil.contrato.previsto * mon.porcentagem_previsto
-                });
-
-                /*Custos - Equipe Própria*/
-                retorno.Add(new DLM.sapgui.Lancamento(mon)
-                {
-                    valor_maximo_previsto = resultado.Custos.equipe_propria.contrato.previsto,
-                    Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Equipe_Propria,
-                    previsto = resultado.Custos.equipe_propria.contrato.previsto * mon.porcentagem_previsto
-                });
+                    /*Custos - GGF*/
+                    retorno.Add(new DLM.sapgui.Lancamento(fab)
+                    {
+                        valor_maximo_previsto = resultado.Custos.ggf.contrato.previsto,
+                        Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Material_GGF,
+                        previsto = resultado.Custos.ggf.contrato.previsto * fab.porcentagem_previsto
+                    });
 
 
-                /*Custos - Receita Bruta Montagem*/
-                retorno.Add(new DLM.sapgui.Lancamento(mon)
-                {
-                    valor_maximo_previsto = resultado.Receitas.receita_bruta_montagem.contrato.previsto,
-                    Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Receita_Bruta_Montagem,
-                    previsto = resultado.Receitas.receita_bruta_montagem.contrato.previsto * mon.porcentagem_previsto
-                });
+                    /*Custos - Material Terceirização*/
+                    retorno.Add(new DLM.sapgui.Lancamento(fab)
+                    {
+                        valor_maximo_previsto = resultado.Custos.terceiricacao_producao.contrato.previsto,
+                        Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Material_Terceirizacao,
+                        previsto = resultado.Custos.terceiricacao_producao.contrato.previsto * fab.porcentagem_previsto
+                    });
+
+                    /*Custos - Receita Bruta Materiais*/
+                    retorno.Add(new DLM.sapgui.Lancamento(fab)
+                    {
+                        valor_maximo_previsto = resultado.Receitas.receita_bruta_materiais.contrato.previsto,
+                        Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Receita_Bruta_Materiais,
+                        previsto = resultado.Receitas.receita_bruta_materiais.contrato.previsto * fab.porcentagem_previsto
+                    });
+
+                    /*Custos - Logística*/
+                    retorno.Add(log);
+
+
+                    /*Custos - Seguro*/
+                    retorno.Add(new DLM.sapgui.Lancamento(log)
+                    {
+                        valor_maximo_previsto = resultado.Custos.seguros.contrato.previsto,
+                        Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Seguros,
+                        previsto = resultado.Custos.seguros.contrato.previsto * log.porcentagem_previsto
+                    });
+
+                    /*Custos - Deduções*/
+                    retorno.Add(new DLM.sapgui.Lancamento(log)
+                    {
+                        valor_maximo_previsto = resultado.Receitas.deducoes.contrato.previsto,
+                        Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Deducoes,
+                        previsto = resultado.Receitas.deducoes.contrato.previsto * log.porcentagem_previsto
+                    });
+
+                    /*Custos - MO + DI*/
+                    retorno.Add(mon);
+
+                    /*Custos - Equipamentos*/
+                    retorno.Add(new DLM.sapgui.Lancamento(mon)
+                    {
+                        valor_maximo_previsto = resultado.Custos.equipamentos.contrato.previsto,
+                        Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Equipamentos,
+                        previsto = resultado.Custos.equipamentos.contrato.previsto * mon.porcentagem_previsto
+                    });
+
+                    /*Custos - Supervisor*/
+                    retorno.Add(new DLM.sapgui.Lancamento(mon)
+                    {
+                        valor_maximo_previsto = resultado.Custos.supervisor_medabil.contrato.previsto,
+                        Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Supervisor,
+                        previsto = resultado.Custos.supervisor_medabil.contrato.previsto * mon.porcentagem_previsto
+                    });
+
+                    /*Custos - Equipe Própria*/
+                    retorno.Add(new DLM.sapgui.Lancamento(mon)
+                    {
+                        valor_maximo_previsto = resultado.Custos.equipe_propria.contrato.previsto,
+                        Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Custos_Montagem_Equipe_Propria,
+                        previsto = resultado.Custos.equipe_propria.contrato.previsto * mon.porcentagem_previsto
+                    });
+
+
+                    /*Custos - Receita Bruta Montagem*/
+                    retorno.Add(new DLM.sapgui.Lancamento(mon)
+                    {
+                        valor_maximo_previsto = resultado.Receitas.receita_bruta_montagem.contrato.previsto,
+                        Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Receita_Bruta_Montagem,
+                        previsto = resultado.Receitas.receita_bruta_montagem.contrato.previsto * mon.porcentagem_previsto
+                    });
 
                     #endregion
 
@@ -365,7 +365,7 @@ namespace DLM.painel
                     {
                         Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Engenharia_Peso,
                         realizado = 0,
-                        previsto = etapa.Consolidada.peso_planejado *1000
+                        previsto = etapa.Consolidada.peso_planejado * 1000
                     });
 
                     retorno.Add(new DLM.sapgui.Lancamento(fab)
@@ -394,7 +394,7 @@ namespace DLM.painel
                     //{
                     //    dt_eng = etapa.Real.data_transsap;
                     //}
-                    if (dt_eng < Cfg.Init.DataDummy() && etapa.ef<=DateTime.Now)
+                    if (dt_eng < Cfg.Init.DataDummy() && etapa.ef <= DateTime.Now)
                     {
                         dt_eng = (DateTime)etapa.ef;
                     }
@@ -414,7 +414,7 @@ namespace DLM.painel
                     var dt_emb = dt_fab.AddDays(3);
 
                     /*se a data de embarque passar o mes, volta para o mes anterior*/
-                    if(dt_emb.Month> dt_fab.Month || dt_emb.Month == 1 && dt_fab.Month == 12)
+                    if (dt_emb.Month > dt_fab.Month || dt_emb.Month == 1 && dt_fab.Month == 12)
                     {
                         dt_emb = new DateTime(dt_fab.Year, dt_fab.Month, dt_fab.Day);
                     }
@@ -433,8 +433,8 @@ namespace DLM.painel
                             realizado = etapa.Real.peso_planejado * 1000
                         });
                     }
-                if (etapa.Real.total_fabricado > 0)
-                {
+                    if (etapa.Real.total_fabricado > 0)
+                    {
                         retorno.Add(new DLM.sapgui.Lancamento(fab)
                         {
                             dia = dt_fab.Day,
@@ -447,10 +447,10 @@ namespace DLM.painel
                             realizado = etapa.Real.peso_produzido * 1000
 
                         });
-                }
-                    
-                if (etapa.Real.total_embarcado > 0)
-                {
+                    }
+
+                    if (etapa.Real.total_embarcado > 0)
+                    {
                         retorno.Add(new DLM.sapgui.Lancamento(log)
                         {
                             dia = dt_emb.Day,
@@ -459,11 +459,11 @@ namespace DLM.painel
                             Tipo_Valor = DLM.sapgui.Tipo_Valor.Realizado,
                             Tipo_Lancamento = DLM.sapgui.Tipo_Lancamento.Logística_Peso,
                             peso = etapa.Real.peso_planejado,
-                        previsto = 0,
-                        realizado = etapa.Real.peso_embarcado * 1000
+                            previsto = 0,
+                            realizado = etapa.Real.peso_embarcado * 1000
                         });
-                }
-                #endregion
+                    }
+                    #endregion
 
                 }
             }
@@ -488,21 +488,21 @@ namespace DLM.painel
 
             /*realizado*/
             var resultado = DBases.GetDB().Consulta($"SELECT * FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_zcontratos_notas_fiscais} as pr where pr.Elemento_PEP like '%{Pedido}% ' and pr.Situacao = 'FATURADA' and pr.Devolucoes = '' and Receita = 'SIM'");
-            var fab = resultado.Linhas.FindAll(x => 
+            var fab = resultado.Linhas.FindAll(x =>
              x["Elemento_PEP"].Valor.Contains(".F2")
-            |x["Elemento_PEP"].Valor.Contains(".F3")
-            |x["Elemento_PEP"].Valor.Contains(".F4")
-            |x["Elemento_PEP"].Valor.Contains(".FO")
+            | x["Elemento_PEP"].Valor.Contains(".F3")
+            | x["Elemento_PEP"].Valor.Contains(".F4")
+            | x["Elemento_PEP"].Valor.Contains(".FO")
             ).ToList();
             var eng = resultado.Linhas.FindAll(x => x["Elemento_PEP"].Valor.Contains(".EN")).ToList();
             var mo = resultado.Linhas.FindAll(x =>
              x["Elemento_PEP"].Valor.Contains(".MO")
-            |x["Elemento_PEP"].Valor.Contains(".EQ")
-            |x["Elemento_PEP"].Valor.Contains(".SU")
-            |x["Elemento_PEP"].Valor.Contains(".EP")
+            | x["Elemento_PEP"].Valor.Contains(".EQ")
+            | x["Elemento_PEP"].Valor.Contains(".SU")
+            | x["Elemento_PEP"].Valor.Contains(".EP")
             ).ToList();
 
-            foreach(var f in fab)
+            foreach (var f in fab)
             {
                 DLM.sapgui.Lancamento l = LancamentoZCONTRATOS(f, DLM.sapgui.Tipo_Lancamento.Receita_Bruta_Materiais);
                 lancamentos.Add(l);
@@ -522,13 +522,13 @@ namespace DLM.painel
 
             var meses = lancamentos.GroupBy(x => x.Chave).Select(x => x.First()).ToList();
 
-            foreach(var mes in meses)
+            foreach (var mes in meses)
             {
                 var subs = lancamentos.FindAll(x => x.Chave == mes.Chave).ToList();
                 retorno.Add(new DLM.sapgui.Lancamento(subs));
             }
 
-            return retorno.OrderBy(x=>x.ToString()).ToList();
+            return retorno.OrderBy(x => x.ToString()).ToList();
         }
         //public static List<DLM.sapgui.Lancamento> GetCustosMontagem(string Pedido)
         //{
@@ -546,7 +546,7 @@ namespace DLM.painel
         //    var equipe_propria = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".EP")).ToList();
         //    var logistica = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".LOG")).ToList();
         //    var seguro = resultado.Linhas.FindAll(x => x.Get("Elemento_PEP").Valor.Contains(".SEG")).ToList();
-          
+
 
         //    foreach (var f in mod_di)
         //    {
@@ -590,7 +590,7 @@ namespace DLM.painel
 
         //    return retorno.OrderBy(x => x.ToString()).ToList();
         //}
-        
+
         //public static List<DLM.sapgui.Lancamento> GetCustosMaterial(string Pedido)
         //{
         //    if (Pedido.Length < 5) { return new List<DLM.sapgui.Lancamento>(); }
@@ -688,7 +688,7 @@ namespace DLM.painel
 
         public static void Salvar(DLM.sapgui.FolhaMargem folha, string pedido)
         {
-            if(pedido.Length<5)
+            if (pedido.Length < 5)
             {
                 return;
             }
@@ -700,7 +700,7 @@ namespace DLM.painel
             DBases.GetDB().Cadastro(l.Celulas, Cfg.Init.db_comum, Cfg.Init.tb_folhamargem);
         }
 
-        public class   Get
+        public class Get
         {
             public static DLM.sapgui.FolhaMargem FolhaMargem(string XML)
             {
@@ -715,7 +715,7 @@ namespace DLM.painel
                         return result;
                     }
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                     //MessageBox.Show(ex.Message);
                     return null;
@@ -736,7 +736,7 @@ namespace DLM.painel
                         return result;
                     }
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                     //MessageBox.Show(ex.Message);
                     return null;
@@ -748,7 +748,7 @@ namespace DLM.painel
         {
             List<Carga_Planejamento> retorno = new List<Carga_Planejamento>();
 
-            foreach(var s in logs.Select(x=>x.num_carga).Distinct().ToList())
+            foreach (var s in logs.Select(x => x.num_carga).Distinct().ToList())
             {
                 retorno.Add(new Carga_Planejamento(s, logs));
             }
@@ -779,37 +779,37 @@ namespace DLM.painel
         }
         public static void Apagar_peps(string contrato)
         {
-            if(contrato.Length>5)
+            if (contrato.Length > 5)
             {
                 DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento, false);
             }
         }
-        public static List<ORC_PED> GetObrasPGO( bool consolidadas = false)
+        public static List<ORC_PED> GetObrasPGO(bool consolidadas = false)
         {
             List<ORC_PED> retorno = new List<ORC_PED>();
             string tab = $"pmp_orc_resumo";
-            if(consolidadas)
+            if (consolidadas)
             {
                 tab = $"pmp_orc_resumo_consolidada";
             }
             var s = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, tab);
-            foreach(var p in s.Linhas)
+            foreach (var p in s.Linhas)
             {
                 var ped = new ORC_PED(p, consolidadas ? Tipo_Material.Consolidado : Tipo_Material.Orçamento);
-                if(!consolidadas)
+                if (!consolidadas)
                 {
                     ped.GetDatas();
                 }
-                if(ped.PEP.Length>0)
+                if (ped.PEP.Length > 0)
                 {
-                retorno.Add(ped);
+                    retorno.Add(ped);
                 }
             }
 
-            if(consolidadas)
+            if (consolidadas)
             {
                 var pacotes = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada_arquivos_peps).Linhas;
-               foreach(var pedido in retorno)
+                foreach (var pedido in retorno)
                 {
                     var pcks = pacotes.FindAll(x => x.Get("pedido").Valor == pedido.PEP);
                     var arqs = pcks.Select(x => x.Get("arquivo").Valor).Distinct().ToList();
@@ -823,7 +823,7 @@ namespace DLM.painel
             }
             return retorno;
         }
-        public static List<ORC_PED> GetObrasPGO(string chave,bool consolidadas = false, bool consolidadas_x_real = false)
+        public static List<ORC_PED> GetObrasPGO(string chave, bool consolidadas = false, bool consolidadas_x_real = false)
         {
             if (chave.Length < 5) { return new List<ORC_PED>(); }
             List<ORC_PED> retorno = new List<ORC_PED>();
@@ -867,25 +867,25 @@ namespace DLM.painel
         public static List<PLAN_PECA> GetPecasPMP(List<Pedido_PMP> pedidos)
         {
             List<PLAN_PECA> retorno = new List<PLAN_PECA>();
-            List<string> reais = pedidos.FindAll(x => x.Material_REAL).Select(x=>x.pep).Distinct().ToList();
+            List<string> reais = pedidos.FindAll(x => x.Material_REAL).Select(x => x.pep).Distinct().ToList();
             List<string> orcamentos = pedidos.FindAll(x => x.Material_ORC).Select(x => x.pep).Distinct().ToList();
             List<string> consolidadas = pedidos.FindAll(x => x.Material_CONS).Select(x => x.pep).Distinct().ToList();
 
             var w = Conexoes.Utilz.Wait(reais.Count * 4 + 3, $"Mapeando peças...{pedidos.Count} pedidos...");
 
             int tam_pacote = 20;
-            
+
             var reais_pecas = GetPecasReal(reais, tam_pacote);
             w.somaProgresso();
             var orc_pecas = GetPecasPGO(orcamentos, tam_pacote);
             w.somaProgresso();
             var cons_pecas = GetPecasPGO(consolidadas, tam_pacote, true);
             w.somaProgresso();
-         
+
             foreach (var real in reais)
             {
                 var ped = pedidos.Find(x => x.pep == real);
-                if(ped!=null)
+                if (ped != null)
                 {
                     ped.Real.Set(reais_pecas);
                 }
@@ -924,7 +924,7 @@ namespace DLM.painel
         }
         public static List<PLAN_PECA> GetPecasPGO(List<string> pedido, int max_pacote, bool consolidada = false)
         {
-            if(pedido.Count==0)
+            if (pedido.Count == 0)
             {
                 return new List<PLAN_PECA>();
             }
@@ -989,19 +989,19 @@ namespace DLM.painel
             {
                 var xml = ss.Get("dados").Valor;
                 var folha = Get.FolhaMargem(xml);
-                if(folha!=null)
+                if (folha != null)
                 {
                     folha.id = ss["id"].Int();
                     retorno.Add(folha);
                 }
             }
-            
+
             return retorno;
         }
         public static DLM.sapgui.FolhaMargem GetFolhaMargem(string chavepesquisa)
         {
             var sel = GetFolhasMargens(chavepesquisa);
-            if(sel.Count>0)
+            if (sel.Count > 0)
             {
                 return sel[0];
             }
@@ -1011,7 +1011,7 @@ namespace DLM.painel
         {
             var pedidos = GetResultados_Economicos_Headers(Chavepesquisa);
             List<Resultado_Economico_Header> retorno = new List<Resultado_Economico_Header>();
-            foreach(var p in pedidos.Select(x=>x.Contrato).Distinct().ToList())
+            foreach (var p in pedidos.Select(x => x.Contrato).Distinct().ToList())
             {
                 var peds = pedidos.FindAll(x => x.Contrato == p);
                 retorno.Add(new Resultado_Economico_Header(peds));
@@ -1020,12 +1020,12 @@ namespace DLM.painel
         }
         public static Resultado_Economico_Header GetResultado_Economico_Header(string chavepesquisa = "")
         {
-            if(chavepesquisa.Length<6)
+            if (chavepesquisa.Length < 6)
             {
                 return new Resultado_Economico_Header();
             }
             var s = GetResultados_Economicos_Headers(chavepesquisa);
-            if(s.Count>0)
+            if (s.Count > 0)
             {
                 return s[0];
             }
@@ -1084,7 +1084,7 @@ namespace DLM.painel
             foreach (var ss in s.Linhas)
             {
                 ORC_ETP pc = new ORC_ETP(ss);
-                if(!consolidada)
+                if (!consolidada)
                 {
                     pc.GetDatas();
                 }
@@ -1108,15 +1108,15 @@ namespace DLM.painel
         public static List<ZPP0100_Resumo> GetResumoEmbarquesPEP(List<string> pedidos, Tipo_ZPP0100_Resumo tipo)
         {
             string tabela = "zpp0100_peps";
-            if(tipo == Tipo_ZPP0100_Resumo.Subetapa)
+            if (tipo == Tipo_ZPP0100_Resumo.Subetapa)
             {
                 tabela = "zpp0100_subetapas";
             }
 
-            var comando = DBases.GetDB().Consulta(pedidos.Select(x=> new Celula("pep", x)).ToList(),false, Cfg.Init.db_comum, tabela,"or");
+            var comando = DBases.GetDB().Consulta(pedidos.Select(x => new Celula("pep", x)).ToList(), false, Cfg.Init.db_comum, tabela, "or");
 
             List<ZPP0100_Resumo> retorno = new List<ZPP0100_Resumo>();
-            foreach(var p in comando.Linhas)
+            foreach (var p in comando.Linhas)
             {
                 retorno.Add(new ZPP0100_Resumo(p));
             }
@@ -1164,7 +1164,7 @@ namespace DLM.painel
 
             List<ORC_PEP> retorno = new List<ORC_PEP>();
             string tab = "pmp_orc_peps";
-            if(consolidada)
+            if (consolidada)
             {
                 tab = "pmp_orc_peps_consolidada";
             }
@@ -1184,16 +1184,16 @@ namespace DLM.painel
             foreach (var ss in s.Linhas)
             {
                 ORC_PEP pc = new ORC_PEP(ss);
-                if(!consolidada)
+                if (!consolidada)
                 {
                     pc.GetDatas();
                 }
                 retorno.Add(pc);
             }
 
-            if(consolidada)
+            if (consolidada)
             {
-                foreach(var ss in retorno)
+                foreach (var ss in retorno)
                 {
                     ss.tipo = Tipo_Material.Consolidado;
                 }
@@ -1205,30 +1205,27 @@ namespace DLM.painel
 
         public static void ApagarObra(string contrato)
         {
-            contrato = contrato.Replace("*", "").Replace(" ","").Replace("%","");
+            contrato = contrato.Replace("*", "").Replace(" ", "").Replace("%", "");
 
             if (contrato.Length < 5)
             {
                 return;
             }
 
-            DBases.GetDB().Apagar("pedido_principal", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_obras_planejamento_copia, false);
-            DBases.GetDB().Apagar("pedido", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia, false);
-            DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento_m_copia, false);
+            DBases.GetDB().Apagar("pedido_principal", $"%{contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_obras_copia, false);
+            DBases.GetDB().Apagar("pedido", $"%{contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pedidos_copia, false);
+            DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pep_copia, false);
 
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0066n_logistica, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn, false);
-            DBases.GetDB().Apagar("contrato", $"%{contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb__contratos, false);
+            DBases.GetDB().Apagar("contrato", $"%{contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia, false);
             DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zcontratos_notas_fiscais, false);
             DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_folhamargem, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_resultado_economico_header, false);
-            //DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cji3, false);
-            //DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_fagll03, false);
-            //DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_avanco_pecas, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n, false);
 
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada, false);
@@ -1248,18 +1245,18 @@ namespace DLM.painel
 
             BufferObrasPesquisa.Clear();
         }
- 
- 
+
+
 
 
         public static List<StatusSAP_Planejamento> GetStatus(List<string> descricoes)
         {
             List<string> fim = new List<string>();
-            foreach(var desc in descricoes)
+            foreach (var desc in descricoes)
             {
                 fim.AddRange(desc.ToUpper().Split(' ').ToList().FindAll(x => x != "").Distinct().ToList());
             }
-            fim = fim.Distinct().ToList().OrderBy(x=>x).ToList();
+            fim = fim.Distinct().ToList().OrderBy(x => x).ToList();
             List<StatusSAP_Planejamento> retorno = new List<StatusSAP_Planejamento>();
             foreach (var ss in fim)
             {
@@ -1290,7 +1287,7 @@ namespace DLM.painel
                     DateTime fim = (DateTime)datas.Max();
                     fim = new DateTime(fim.Year, fim.Month, DateTime.DaysInMonth(fim.Year, fim.Month));
                     DateTime f0 = new DateTime(inicio.Year, inicio.Month, 01);
-                    f0 = GetRanges(lista, range, Tipo,Filtro, retorno, fim, f0);
+                    f0 = GetRanges(lista, range, Tipo, Filtro, retorno, fim, f0);
 
                 }
 
@@ -1308,13 +1305,13 @@ namespace DLM.painel
                     DateTime fim = (DateTime)datas.Max();
                     fim = new DateTime(fim.Year, fim.Month, DateTime.DaysInMonth(fim.Year, fim.Month));
                     DateTime f0 = new DateTime(inicio.Year, inicio.Month, 01);
-                    f0 = GetRanges(lista, range, Tipo,Filtro, retorno, fim, f0);
+                    f0 = GetRanges(lista, range, Tipo, Filtro, retorno, fim, f0);
 
                 }
             }
 
 
-            return retorno.FindAll(x=>x.SubEtapas.Count>0).ToList();
+            return retorno.FindAll(x => x.SubEtapas.Count > 0).ToList();
         }
         private static DateTime GetRanges(List<PLAN_SUB_ETAPA> lista, Range_Meta range, Tipo_Meta Tipo, Tipo_Filtro_Meta Filtro, List<Meta> retorno, DateTime fim, DateTime f0)
         {
@@ -1324,7 +1321,7 @@ namespace DLM.painel
                 {
 
                     DateTime f0_fim = new DateTime(f0.Year, f0.Month, DateTime.DaysInMonth(f0.Day, f0.Month));
-                    Meta mm = new Meta(lista, f0, f0_fim, Tipo,Filtro);
+                    Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
                     if (mm.Metas.Count > 0)
                     {
                         retorno.Add(mm);
@@ -1338,7 +1335,7 @@ namespace DLM.painel
                 {
 
                     DateTime f0_fim = f0.AddDays(7);
-                    Meta mm = new Meta(lista, f0, f0_fim, Tipo,Filtro);
+                    Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
                     if (mm.Metas.Count > 0)
                     {
                         retorno.Add(mm);
@@ -1353,7 +1350,7 @@ namespace DLM.painel
                 {
 
                     DateTime f0_fim = f0.AddYears(1);
-                    Meta mm = new Meta(lista, f0, f0_fim, Tipo,Filtro);
+                    Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
                     if (mm.Metas.Count > 0)
                     {
                         retorno.Add(mm);
@@ -1365,7 +1362,6 @@ namespace DLM.painel
             return f0;
         }
 
-        public static List<Resumo_Pecas> _resumo_pecas_obras { get; set; }
         private static List<Resumo_Pecas> _resumo_pecas_pedido { get; set; }
         private static List<Resumo_Pecas> _resumo_pecas_peps { get; set; }
         private static List<Resumo_Pecas> _resumo_pecas_subetapas { get; set; }
@@ -1381,7 +1377,7 @@ namespace DLM.painel
             {
                 _titulos_obras = new List<PLAN_CONTRATO>();
 
-                var lista_fab = DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb__contratos);
+                var lista_fab = DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
                 ConcurrentBag<PLAN_CONTRATO> retorno = new ConcurrentBag<PLAN_CONTRATO>();
                 List<Task> Tarefas = new List<Task>();
                 foreach (var s in lista_fab.Linhas)
@@ -1397,29 +1393,9 @@ namespace DLM.painel
             return _titulos_obras;
         }
 
-        //public static List<Resumo_Pecas> getresumo_pecas_obras()
-        //{
-        //   if(_resumo_pecas_obras == null)
-        //    {
-        //        DLM.db.Tabela consulta = new DLM.db.Tabela();
-        //        consulta = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_obra_copia);
-
-        //        ConcurrentBag<Resumo_Pecas> retorno = new ConcurrentBag<Resumo_Pecas>();
-        //        List<Task> Tarefas = new List<Task>();
-        //        foreach (var s in consulta.Linhas)
-        //        {
-        //            Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new Resumo_Pecas(s))));
-        //        }
-        //        Task.WaitAll(Tarefas.ToArray());
-
-        //        _resumo_pecas_obras = retorno.OrderBy(x => x.pep).ToList();
-        //    }
-
-        //    return _resumo_pecas_obras;
-        //}
         public static List<Resumo_Pecas> getresumo_pecas_pedidos()
         {
-            if(_resumo_pecas_pedido==null)
+            if (_resumo_pecas_pedido == null)
             {
                 try
                 {
@@ -1462,11 +1438,11 @@ namespace DLM.painel
         }
         public static List<Resumo_Pecas> getresumo_pecas_subetapas()
         {
-            if(_resumo_pecas_subetapas==null)
+            if (_resumo_pecas_subetapas == null)
             {
                 _resumo_pecas_subetapas = new List<Resumo_Pecas>();
                 var consulta = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia);
-                ConcurrentBag <Resumo_Pecas> retorno = new ConcurrentBag<Resumo_Pecas>();
+                ConcurrentBag<Resumo_Pecas> retorno = new ConcurrentBag<Resumo_Pecas>();
                 foreach (var t in DLM.painel.Consultas.quebrar_lista(consulta.Linhas, 300))
                 {
                     List<Task> Tarefas = new List<Task>();
@@ -1486,7 +1462,7 @@ namespace DLM.painel
 
 
             var ret = new List<Resumo_Pecas>();
-            foreach(var ped in pedidos)
+            foreach (var ped in pedidos)
             {
                 ret.AddRange(getresumo_pecas_subetapas().FindAll(x => x.pep.Contains(ped.Replace("%", ""))));
             }
@@ -1509,13 +1485,13 @@ namespace DLM.painel
 
 
 
-        public static List<PLAN_OBRA> GetObras(bool copia, bool reset)
+        private static List<PLAN_OBRA> GetObras(bool reset = false)
         {
 
-            if(_obras==null | reset)
+            if (_obras == null | reset)
             {
                 _obras = new List<PLAN_OBRA>();
-                var consulta = DBases.GetDB().Consulta(Cfg.Init.db_comum, (copia ? Cfg.Init.tb_obras_planejamento_copia :Cfg.Init.tb_obras_planejamento_copia));
+                var consulta = DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_obras_copia);
 
                 foreach (var t in consulta.Linhas)
                 {
@@ -1542,12 +1518,33 @@ namespace DLM.painel
                     }));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();              
+                Tarefas.Clear();
 
 
                 //_obras.AddRange(lista.ToList());
             }
             return _obras;
+        }
+        public static List<PLAN_OBRA> GetObras(List<string> obras = null, bool reset = false)
+        {
+            if (obras == null)
+            {
+                obras = new List<string>();
+            }
+            obras = obras.Distinct().ToList().FindAll(x => x.Length > 0);
+            if (obras.Count == 0)
+            {
+                return GetObras(reset);
+            }
+
+            var retorno = new List<PLAN_OBRA>();
+            foreach (var obra in obras)
+            {
+                retorno.AddRange(GetObras(reset).FindAll(x => x.PEP.Contains(obra)));
+            }
+            retorno = retorno.GroupBy(x => x.PEP).Select(x => x.First()).ToList();
+
+            return retorno;
         }
 
         public static void CriarCache(string contrato)
@@ -1564,12 +1561,10 @@ namespace DLM.painel
             DLM.painel.Relatorios.ExportarEmbarque(pcs, false, null, null, true, false);
 
             List<Task> Tarefas = new List<Task>();
-            DLM.db.Tabela resumo_pecas_obra = new DLM.db.Tabela();
             DLM.db.Tabela resumo_pecas_pedido = new DLM.db.Tabela();
             DLM.db.Tabela resumo_pecas_pep = new DLM.db.Tabela();
             DLM.db.Tabela resumo_pecas_pep_fabrica = new DLM.db.Tabela();
 
-            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_obra = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_obra} as pr where pr.pep like '%{contrato}%'")));
             Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pedido = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pedido} as pr where pr.pep like '%{contrato}%'")));
             Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pep = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep} as pr where pr.pep like '%{contrato}%'")));
             Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pep_fabrica = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_fabrica} as pr where pr.pep like '%{contrato}%'")));
@@ -1578,97 +1573,80 @@ namespace DLM.painel
 
 
 
- 
+
             DBases.GetDB().Cadastro(resumo_pecas_pedido.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia);
             DBases.GetDB().Cadastro(resumo_pecas_pep.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia);
             DBases.GetDB().Cadastro(resumo_pecas_pep_fabrica.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia);
         }
 
-        public static List<PLAN_OBRA> GetObras(List<string> contrato, bool copia, bool reset)
+        public static List<PLAN_PEDIDO> GetPedidos(bool reset = false)
         {
-            contrato = contrato.Distinct().ToList().FindAll(x => x.Length > 0);
-            if (contrato.Count == 0)
+            if (_pedidos == null | reset)
             {
-                return GetObras(copia, reset);
-            }
+                _pedidos = new List<PLAN_PEDIDO>();
+                var consulta = new DLM.db.Tabela();
+                var lista = new List<PLAN_PEDIDO>();
 
-            List<PLAN_OBRA> retorno = new List<PLAN_OBRA>();
-            foreach (var s in contrato)
-            {
-                retorno.AddRange(GetObras(copia,reset).FindAll(x => x.PEP.Contains(s)));
-            }
-            retorno = retorno.GroupBy(x => x.PEP).Select(x => x.First()).ToList();
+                consulta = DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pedidos_copia);
 
-            return retorno;
-        }
-        public static List<PLAN_PEDIDO> GetPedidos()
-        {
-            if (_pedidos != null) { return _pedidos; }
-            _pedidos = new List<PLAN_PEDIDO>();
-            DLM.db.Tabela consulta = new DLM.db.Tabela();
-            List<PLAN_PEDIDO> lista = new List<PLAN_PEDIDO>();
-
-            consulta = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_pedidos_planejamento_copia);
-
-
-            List<Task> Tarefas = new List<Task>();
-            foreach (var t in consulta.Linhas)
-            {
-                lista.Add(new PLAN_PEDIDO(t, new PLAN_OBRA()));
-            }
-            Task.WaitAll(Tarefas.ToArray());
-            _pedidos.AddRange(lista);
-            _pedidos = _pedidos.OrderBy(x => x.pedido).ToList();
-
-            foreach (var o in GetObras(true,false))
-            {
-                o.Set(_pedidos);
-            }
-
-            var st_base = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_03_pedido);
-            var lista_resumos = Consultas.getresumo_pecas_pedidos();
-
-
-            foreach (var t in _pedidos)
-            {
-                Tarefas.Add(Task.Factory.StartNew(() =>
+                var Tarefas = new List<Task>();
+                foreach (var t in consulta.Linhas)
                 {
-                    var t0 = lista_resumos.Find(x => x.pep == t.PEP);
-                    if (t0 != null)
-                    {
-                        t.resumo_pecas = t0;
-                    }
-            
+                    lista.Add(new PLAN_PEDIDO(t, new PLAN_OBRA()));
+                }
+                Task.WaitAll(Tarefas.ToArray());
+                _pedidos.AddRange(lista);
+                _pedidos = _pedidos.OrderBy(x => x.pedido).ToList();
 
-                    var igual = st_base.Filtrar("pep", t.PEP, true);
-                    if (igual.Count > 0)
-                    {
-                        t.SetBase(igual.Linhas.First());
-                    }
+                foreach (var o in GetObras(false))
+                {
+                    o.Set(_pedidos);
+                }
 
-                }));
+                var st_base = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_03_pedido);
+                var lista_resumos = Consultas.getresumo_pecas_pedidos();
+
+
+                foreach (var t in _pedidos)
+                {
+                    Tarefas.Add(Task.Factory.StartNew(() =>
+                    {
+                        var t0 = lista_resumos.Find(x => x.pep == t.PEP);
+                        if (t0 != null)
+                        {
+                            t.resumo_pecas = t0;
+                        }
+
+                        var igual = st_base.Filtrar("pep", t.PEP, true);
+                        if (igual.Count > 0)
+                        {
+                            t.SetBase(igual.Linhas.First());
+                        }
+                    }));
+                }
+                Task.WaitAll(Tarefas.ToArray());
             }
-            Task.WaitAll(Tarefas.ToArray());
 
 
-           
+
+
             return _pedidos;
         }
-        
-        
+
+
         public static List<PLAN_PEDIDO> GetPedidos(List<string> contrato)
         {
 
             contrato = contrato.Distinct().ToList().FindAll(x => x.Length > 0);
-            if(contrato.Count==0)
+            if (contrato.Count == 0)
             {
                 return GetPedidos();
             }
 
             List<PLAN_PEDIDO> pedidos = new List<PLAN_PEDIDO>();
-            foreach(var s in contrato)
+            foreach (var s in contrato)
             {
-                pedidos.AddRange(GetPedidos().FindAll(x => x.PEP.Contains(s.Replace("%","").Replace("*",""))));
+                pedidos.AddRange(GetPedidos().FindAll(x => x.PEP.Contains(s.Replace("%", "").Replace("*", ""))));
             }
             pedidos = pedidos.GroupBy(x => x.PEP).Select(x => x.First()).ToList();
 
@@ -1685,7 +1663,7 @@ namespace DLM.painel
             }
 
             var st_base = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_02_etapa);
-           
+
 
             List<Task> Tarefas = new List<Task>();
 
@@ -1704,9 +1682,9 @@ namespace DLM.painel
             Task.WaitAll(Tarefas.ToArray());
 
 
-            if (_pedidos!=null)
+            if (_pedidos != null)
             {
-                foreach(var p in _pedidos)
+                foreach (var p in _pedidos)
                 {
                     p.Set(_etapas);
                 }
@@ -1734,7 +1712,7 @@ namespace DLM.painel
 
             foreach (var pedido in consultas)
             {
-                chave_pedidos = chave_pedidos + (chave_pedidos != "" ? " or " : $"select *  from {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento_m_copia} as pr where ") + $" pr.pep like '%{pedido}%'";
+                chave_pedidos = chave_pedidos + (chave_pedidos != "" ? " or " : $"select *  from {Cfg.Init.db_painel_de_obras2}.{Cfg.Init.tb_pep_copia} as pr where ") + $" pr.pep like '%{pedido}%'";
             }
 
 
@@ -1773,7 +1751,7 @@ namespace DLM.painel
                         t.resumo_pecas = t0;
                     }
 
-                    var igual = st_base.Filtrar("pep", t.PEP.ToUpper().Replace(".P00",""), true);
+                    var igual = st_base.Filtrar("pep", t.PEP.ToUpper().Replace(".P00", ""), true);
                     if (igual.Count > 0)
                     {
                         t.SetBase(igual.Linhas.First());
@@ -1859,19 +1837,19 @@ namespace DLM.painel
         public static List<Logistica_Planejamento> GetLogistica(List<string> pedidos, List<PLAN_PECA> pecas, out List<PLAN_PECA> orfas)
         {
             orfas = new List<PLAN_PECA>();
-            if(pedidos==null && pecas == null)
+            if (pedidos == null && pecas == null)
             {
                 return new List<Logistica_Planejamento>();
             }
-            else if(pedidos==null && pecas!=null)
+            else if (pedidos == null && pecas != null)
             {
                 pedidos = pecas.Select(x => x.pedido_completo).Distinct().ToList();
             }
             pedidos = pedidos.FindAll(x => x.Length > 5).Distinct().ToList();
             if (pedidos.Count == 0) { return new List<Logistica_Planejamento>(); }
-            if(pecas==null)
+            if (pecas == null)
             {
-            pecas = GetPecasReal(pedidos);
+                pecas = GetPecasReal(pedidos);
             }
             List<Logistica_Planejamento> retorno = new List<Logistica_Planejamento>();
             var sub = quebrar_lista(pedidos, 50);
@@ -1883,8 +1861,8 @@ namespace DLM.painel
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
                     List<PLAN_PECA> orrfas = new List<PLAN_PECA>();
-                    retorno.AddRange(getLogisticaF(t, pecas,out orrfas));
-                    foreach(var o in orrfas)
+                    retorno.AddRange(getLogisticaF(t, pecas, out orrfas));
+                    foreach (var o in orrfas)
                     {
                         orfs.Add(o);
                     }
@@ -1900,43 +1878,50 @@ namespace DLM.painel
 
             orfas.AddRange(orfs);
 
-            return retorno.FindAll(x=>x.peca!=null);
+            return retorno.FindAll(x => x.peca != null);
         }
-        public static List<PLAN_PECA> GetPecasReal(List<string> pedidos,int max_pacote = 10)
+        public static List<PLAN_PECA> GetPecasReal(List<string> pedidos, int max_pacote = 10, bool setbobinas = false)
         {
             pedidos = pedidos.FindAll(x => x.Length > 5).Distinct().ToList();
             if (pedidos.Count == 0) { return new List<PLAN_PECA>(); }
-            List<PLAN_PECA> retorno = new List<PLAN_PECA>();
+            var retorno = new List<PLAN_PECA>();
             var pacote_pedidos = quebrar_lista(pedidos, max_pacote);
 
-
-            List<Task> Tarefas = new List<Task>();
-
-            foreach (var peds in pacote_pedidos)
+            var bobinas = new List<Bobina>();
+            if (setbobinas)
             {
-
-                var pecas = getPecasF(peds);
-               Tarefas.Add(Task.Factory.StartNew(() =>
+                bobinas.AddRange(DBases.GetBancoRM().GetBobinas());
+            }
+            var Tarefas = new List<Task>();
+            foreach (var pedido in pacote_pedidos)
+            {
+                var pecas = getPecasF(pedido);
+                if (setbobinas)
                 {
-
-                    var codigos_bobinas = pecas.Select(x => x.codigo_materia_prima_sap).Distinct().ToList().FindAll(x => x.Replace(" ", "").Replace("0", "") != "");
-
-                    foreach (var cod in codigos_bobinas)
+                    Tarefas.Add(Task.Factory.StartNew(() =>
                     {
-                        var bobina = DBases.GetBancoRM().GetBobina(cod);
-                        if (bobina == null)
+
+                        var codigos_bobinas = pecas.Select(x => x.codigo_materia_prima_sap).Distinct().ToList().FindAll(x => x.Replace(" ", "").Replace("0", "") != "");
+
+                        foreach (var cod in codigos_bobinas)
                         {
-                            bobina = new Conexoes.Bobina() { SAP = cod };
-                        }
-                        if (bobina != null)
-                        {
-                            foreach (var ss in pecas.ToList().FindAll(x => x.codigo_materia_prima_sap == cod))
+                            var bobina = bobinas.Find(x => x.SAP == cod);
+                            if (bobina == null)
                             {
-                                ss.bobina = bobina;
+                                bobina = new Conexoes.Bobina() { SAP = cod };
+                            }
+                            if (bobina != null)
+                            {
+                                var pecas_bob = pecas.ToList().FindAll(x => x.codigo_materia_prima_sap == cod).ToList();
+                                foreach (var peca in pecas_bob)
+                                {
+                                    peca.bobina = bobina;
+                                }
                             }
                         }
-                    }
-                }));
+                    }));
+                }
+
 
                 retorno.AddRange(pecas);
 
@@ -1957,7 +1942,7 @@ namespace DLM.painel
         private static List<Logistica_Planejamento> getLogisticaF(List<string> pedido, List<PLAN_PECA> pecas, out List<PLAN_PECA> orfas)
         {
             orfas = new List<PLAN_PECA>();
-            if(pecas == null)
+            if (pecas == null)
             {
                 pecas = GetPecasReal(pedido);
             }
@@ -1979,7 +1964,7 @@ namespace DLM.painel
                 }
             }
 
-            string consulta =  $"select * from {Cfg.Init.db_comum}.zpp0066n_logistica  as prod where " + chave;
+            string consulta = $"select * from {Cfg.Init.db_comum}.zpp0066n_logistica  as prod where " + chave;
             string consulta2 = $"select * from {Cfg.Init.db_comum}.cargas  as prod where " + chave.Replace("pep", "Elemento_PEP");
 
             //var lista_fab = dbase.Consulta(consulta);
@@ -1987,7 +1972,7 @@ namespace DLM.painel
             ConcurrentBag<Logistica_Planejamento> retorno = new ConcurrentBag<Logistica_Planejamento>();
 
             List<Task> Tarefas = new List<Task>();
-     
+
 
             foreach (var linha in lista_fab_0100.Linhas)
             {
@@ -2001,7 +1986,7 @@ namespace DLM.painel
 
             for (int i = 0; i < pecas.Count; i++)
             {
-                if (pecas[i].PEP.Length>0 && pecas[i].material!="")
+                if (pecas[i].PEP.Length > 0 && pecas[i].material != "")
                 {
                     var logs = retorno.ToList().FindAll(x => x.pep == pecas[i].PEP && x.material == pecas[i].material);
                     pecas[i].SetLogistica(logs);
@@ -2014,14 +1999,14 @@ namespace DLM.painel
 
             var sem_peca = retorn.FindAll(x => x.peca == null).ToList();
 
-            var grp_sem_peca = sem_peca.GroupBy(x => x.pep + "/" + x.material + "/" + x.desenho).ToList().Select(x=> x.ToList()).ToList();
+            var grp_sem_peca = sem_peca.GroupBy(x => x.pep + "/" + x.material + "/" + x.desenho).ToList().Select(x => x.ToList()).ToList();
             List<PLAN_PECA> pcas_orfas = new List<PLAN_PECA>();
-            foreach(var s in grp_sem_peca)
+            foreach (var s in grp_sem_peca)
             {
                 var fils = s.ToList();
                 var pc = new PLAN_PECA(fils[0]);
                 pc.SetLogistica(fils);
-                
+
                 orfas.Add(pc);
             }
 
@@ -2031,7 +2016,7 @@ namespace DLM.painel
         {
             string chave = "";
             var NFS = pedido.Select(x => x.nota_fiscal.Replace("*", "").Replace(" ", "")).ToList().FindAll(x => x != "").Distinct().ToList();
-            if(NFS.Count==0)
+            if (NFS.Count == 0)
             {
                 return;
             }
@@ -2059,12 +2044,12 @@ namespace DLM.painel
             {
                 var pcs = pedido.FindAll(x => x.nota_fiscal == s);
                 var info = lista_fab.Filtrar("NF", s, true);
-                if(info.Count>0)
+                if (info.Count > 0)
                 {
                     var t = info.Linhas.First().Get("Data_emissao").Data();
-                    if(t> new DateTime(2001,01,01))
+                    if (t > new DateTime(2001, 01, 01))
                     {
-                        foreach(var pc in pcs)
+                        foreach (var pc in pcs)
                         {
                             pc.data = t.ToShortDateString().ToString();
                         }
@@ -2075,79 +2060,79 @@ namespace DLM.painel
         private static List<PLAN_PECA> getPecasF(List<string> pedido, string material = null)
         {
             string chave = "";
-            pedido = pedido.Select(x => x.Replace("*", "").Replace(" ", "")).ToList().FindAll(x => x !="");
-            if(pedido.Count==0)
+            pedido = pedido.Select(x => x.Replace("*", "").Replace(" ", "")).ToList().FindAll(x => x != "");
+            if (pedido.Count == 0)
             {
                 return new List<PLAN_PECA>();
             }
             for (int i = 0; i < pedido.Count; i++)
             {
-            if(i==0)
+                if (i == 0)
                 {
                     chave = "prod.pep like '%$P$%'".Replace("$P$", pedido[i]);
                 }
-            else
+                else
                 {
                     chave = chave + " or prod.pep like '%$P$%'".Replace("$P$", pedido[i]);
                 }
             }
 
-            if(material!=null)
+            if (material != null)
             {
                 chave = "(" + chave + ") and prod.material like'" + material + "%')";
             }
 
 
-   string consulta =
-                $"select prod.pep AS pep,"+
-                $"coois.pep as pep_cooisn," +
-                $"substr(prod.pep, -24, 21) as subetapa," +
-                $"logi.desenho as desenho," +
-                $"prod.material as material," +
-                $"prod.texto_breve as texto_breve," +
-                $"prod.peso_necessario / prod.qtd_necessaria as peso_unitario," +
-                $"prod.peso_necessario as peso_necessario," +
-                $"prod.peso_produzido as peso_produzido," +
-                $"prod.qtd_necessaria AS qtd_necessaria," +
-                $"prod.peso_produzido / (prod.peso_necessario / prod.qtd_necessaria) AS qtd_produzida," +
-                $"sum(if ((logi.carga_confirmada = 'True'),logi.quantidade,0)) AS qtd_embarcada," +
-                $"prod.grupo_mercadoria as grupo_mercadoria," +
-                $"prod.denominacao as denominacao," +
-                $"prod.centro as centro," +
-                $"prod.centro_producao as centro_producao," +
-                $"coois.DENOMINDSTAND as DENOMINDSTAND," +
-                $"coois.ULTIMO_STATUS as ULTIMO_STATUS," +
-                $"str_to_date(coois.DATA_INICIO, '%d/%m/%Y') AS DATA_INICIO," +
-                $"str_to_date(coois.DATA_FIM, '%d/%m/%Y') AS DATA_FIM," +
-                $"coois.DESENHO_1 as DESENHO_1," +
-                $"coois.TIPO_DE_PINTURA as TIPO_DE_PINTURA," +
-                $"coois.CORTE_LARGURA as CORTE_LARGURA," +
-                $"coois.COMPRIMENTO as COMPRIMENTO," +
-                $"coois.ESQ_DE_PINTURA as ESQ_DE_PINTURA," +
-                $"coois.SUPERFICIE as SUPERFICIE," +
-                $"coois.FURACOES as FURACOES," +
-                $"coois.ESPESSURA as ESPESSURA," +
-                $"coois.TIPO_ACO as TIPO_ACO," +
-                $"coois.CODIGO_MATERIA_PRIMA_SAP as CODIGO_MATERIA_PRIMA_SAP," +
-                $"coois.MARCA as MARCA," +
-                $"prod.ultima_edicao as ultima_edicao," +
-                $"coois.ultimo_update as cooisn_ultima_edicao" +
-                $" from" +
-                $"(" +
-                $"(" +
-                $"({Cfg.Init.db_comum}.{Cfg.Init.tb_zpmp_producao} as prod" +
-                $" left join {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0066n_logistica} as logi on(prod.pep = logi.pep and prod.material = logi.material))" +
-                $" left join {Cfg.Init.db_comum}.{Cfg.Init.tb_zppcooisn} as coois on(substr(prod.pep, -24, 21) = substr(coois.pep, -24, 21)  and prod.material = coois.material)" +
-                $")" +
-                $"left join {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} as pps on(prod.pep = pps.pep) " +
-                $")" +
-                $" where" +
-                $" (not((prod.material like '300%')) and " +
-                $" ($P$)".Replace("$P$", chave) +
-                $" and prod.status_sistema_pep not like '%BLOQ%'" +
-                $")" +
-                $" and pps.pep is not null" +
-                $"  group by prod.pep,prod.material";
+            string consulta =
+                         $"select prod.pep AS pep," +
+                         $"coois.pep as pep_cooisn," +
+                         $"substr(prod.pep, -24, 21) as subetapa," +
+                         $"logi.desenho as desenho," +
+                         $"prod.material as material," +
+                         $"prod.texto_breve as texto_breve," +
+                         $"prod.peso_necessario / prod.qtd_necessaria as peso_unitario," +
+                         $"prod.peso_necessario as peso_necessario," +
+                         $"prod.peso_produzido as peso_produzido," +
+                         $"prod.qtd_necessaria AS qtd_necessaria," +
+                         $"prod.peso_produzido / (prod.peso_necessario / prod.qtd_necessaria) AS qtd_produzida," +
+                         $"sum(if ((logi.carga_confirmada = 'True'),logi.quantidade,0)) AS qtd_embarcada," +
+                         $"prod.grupo_mercadoria as grupo_mercadoria," +
+                         $"prod.denominacao as denominacao," +
+                         $"prod.centro as centro," +
+                         $"prod.centro_producao as centro_producao," +
+                         $"coois.DENOMINDSTAND as DENOMINDSTAND," +
+                         $"coois.ULTIMO_STATUS as ULTIMO_STATUS," +
+                         $"str_to_date(coois.DATA_INICIO, '%d/%m/%Y') AS DATA_INICIO," +
+                         $"str_to_date(coois.DATA_FIM, '%d/%m/%Y') AS DATA_FIM," +
+                         $"coois.DESENHO_1 as DESENHO_1," +
+                         $"coois.TIPO_DE_PINTURA as TIPO_DE_PINTURA," +
+                         $"coois.CORTE_LARGURA as CORTE_LARGURA," +
+                         $"coois.COMPRIMENTO as COMPRIMENTO," +
+                         $"coois.ESQ_DE_PINTURA as ESQ_DE_PINTURA," +
+                         $"coois.SUPERFICIE as SUPERFICIE," +
+                         $"coois.FURACOES as FURACOES," +
+                         $"coois.ESPESSURA as ESPESSURA," +
+                         $"coois.TIPO_ACO as TIPO_ACO," +
+                         $"coois.CODIGO_MATERIA_PRIMA_SAP as CODIGO_MATERIA_PRIMA_SAP," +
+                         $"coois.MARCA as MARCA," +
+                         $"prod.ultima_edicao as ultima_edicao," +
+                         $"coois.ultimo_update as cooisn_ultima_edicao" +
+                         $" from" +
+                         $"(" +
+                         $"(" +
+                         $"({Cfg.Init.db_comum}.{Cfg.Init.tb_zpmp_producao} as prod" +
+                         $" left join {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0066n_logistica} as logi on(prod.pep = logi.pep and prod.material = logi.material))" +
+                         $" left join {Cfg.Init.db_comum}.{Cfg.Init.tb_zppcooisn} as coois on(substr(prod.pep, -24, 21) = substr(coois.pep, -24, 21)  and prod.material = coois.material)" +
+                         $")" +
+                         $"left join {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} as pps on(prod.pep = pps.pep) " +
+                         $")" +
+                         $" where" +
+                         $" (not((prod.material like '300%')) and " +
+                         $" ($P$)".Replace("$P$", chave) +
+                         $" and prod.status_sistema_pep not like '%BLOQ%'" +
+                         $")" +
+                         $" and pps.pep is not null" +
+                         $"  group by prod.pep,prod.material";
 
 
             var maximo = 10000;
@@ -2161,7 +2146,7 @@ namespace DLM.painel
                 $" from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0100_embarques} as prod where ($P$) and prod.St_Conf_ = '@5Y@'".Replace("$P$", chave.Replace("pep", "Elemento_PEP"));
             var lista_fab = DBases.GetDB().Consulta(consulta);
             var lista_zpp0100 = DBases.GetDB().Consulta(consulta_emb);
-            ConcurrentBag <PLAN_PECA> retorno = new ConcurrentBag<PLAN_PECA>();
+            ConcurrentBag<PLAN_PECA> retorno = new ConcurrentBag<PLAN_PECA>();
             /*quebra da consulta em sub_consultas*/
             var sub_max = lista_fab.Linhas.quebrar_lista(maximo);
             List<Task> Tarefas = new List<Task>();
@@ -2176,10 +2161,10 @@ namespace DLM.painel
                 Tarefas.Clear();
             }
 
-            var peps_chaves = lista_zpp0100.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Subetapa(x.Get("Elemento_PEP").Valor,true));
+            var peps_chaves = lista_zpp0100.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Subetapa(x.Get("Elemento_PEP").Valor, true));
 
             Tarefas = new List<Task>();
-            foreach(var pep in peps_chaves)
+            foreach (var pep in peps_chaves)
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
@@ -2195,17 +2180,17 @@ namespace DLM.painel
 
 
 
-           
+
 
             return retorno.OrderBy(x => x.PEP + "-" + x.desenho).ToList();
         }
-        public static SolidColorBrush getCor(double previsto,double realizado, double opacidade = 1)
+        public static SolidColorBrush getCor(double previsto, double realizado, double opacidade = 1)
         {
-            if(realizado>=100)
+            if (realizado >= 100)
             {
                 return new SolidColorBrush(Colors.DarkGreen) { Opacity = opacidade };
             }
-            else if(realizado==0 && previsto==0)
+            else if (realizado == 0 && previsto == 0)
             {
                 return new SolidColorBrush(Colors.DarkGray) { Opacity = opacidade };
             }
@@ -2237,7 +2222,7 @@ namespace DLM.painel
         {
             var pedidos = GetPedidosClean(reset);
             List<string> retorno = new List<string>();
-            foreach(var contrato in contratos.Distinct().ToList().FindAll(x=>x.Length>5))
+            foreach (var contrato in contratos.Distinct().ToList().FindAll(x => x.Length > 5))
             {
                 retorno.AddRange(pedidos.FindAll(x => x.Contains(contrato)));
             }
@@ -2247,13 +2232,13 @@ namespace DLM.painel
 
         public static List<string> GetPedidosClean(bool update = false)
         {
-            if(_pedidos_clean==null| update)
+            if (_pedidos_clean == null | update)
             {
                 _pedidos_clean = new List<string>();
                 _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.cn47n AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x.Get("pedido").Valor).ToList());
-                _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.pep_planejamento AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x.Get("pedido").Valor).ToList());
+                _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x.Get("pedido").Valor).ToList());
 
-                _pedidos_clean = _pedidos_clean.Distinct().ToList().FindAll(x=>x.Length>3);
+                _pedidos_clean = _pedidos_clean.Distinct().ToList().FindAll(x => x.Length > 3);
             }
 
             return _pedidos_clean;
@@ -2264,12 +2249,12 @@ namespace DLM.painel
         {
             var sem_peps = subetapas.FindAll(x => !x.carregou_peps);
             var peps = DLM.painel.Consultas.GetPeps(sem_peps.Select(x => x.subetapa).Distinct().ToList());
-            foreach(var sub in sem_peps)
+            foreach (var sub in sem_peps)
             {
                 sub.Set(peps);
             }
         }
- 
+
         public static void LimparCOOISN(string chave)
         {
             DBases.GetDB().Apagar("pep", $"%{chave}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn, false);
@@ -2341,7 +2326,7 @@ namespace DLM.painel
 
 
 
-        public static List<List<T>> quebrar_lista<T>( this List<T> locations, int maximo = 30)
+        public static List<List<T>> quebrar_lista<T>(this List<T> locations, int maximo = 30)
         {
             var list = new List<List<T>>();
 

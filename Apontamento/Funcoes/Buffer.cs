@@ -20,7 +20,7 @@ namespace DLM.painel
             if (true)
             {
                 _Obras_PMP = new List<Pedido_PMP>();
-                var reais = Pedidos();
+                var reais = Consultas.GetPedidos();
                 var orcs = Obras_PGO(recarregar);
                 var cons = Obras_PGO_Consolidadas( recarregar);
                 var contratos = reais.Select(x => x.pedido).Distinct().ToList();
@@ -78,13 +78,13 @@ namespace DLM.painel
             Task.WaitAll(Tarefas.ToArray());
             Tarefas.Clear();
 
-            Buffer.Obras();
-            Buffer.Pedidos();
+            Consultas.GetObras();
+            Consultas.GetPedidos();
             Buffer.ObrasPorSegmento();
         }
 
         private static List<PLAN_OBRA> _Garantias { get; set; }
-        private static List<PLAN_PEDIDO> _Pedidos { get; set; }
+
         private static List<PLAN_PEDIDO> _Pedidos_Principais { get; set; }
 
         public static List<PLAN_OBRA> GetObrasClone(bool Principais,bool Garantias)
@@ -103,7 +103,7 @@ namespace DLM.painel
         }
         public static List<PLAN_OBRA> GetObrasPrincipaisClone()
         {
-            return Obras().Select(x => x.Clonar()).ToList();
+            return Consultas.GetObras().Select(x => x.Clonar()).ToList();
         }
 
         public static List<PLAN_OBRA> GetObrasGarantiasClone()
@@ -119,23 +119,8 @@ namespace DLM.painel
             return _Pedidos_Principais;
 
         }
-        public static List<PLAN_PEDIDO> Pedidos()
-        {
-            if (_Pedidos == null)
-            {
-                _Pedidos = Consultas.GetPedidos();
-            }
-            return _Pedidos;
-        }
-        private static List<PLAN_OBRA> _Obras { get; set; }
-        public static List<PLAN_OBRA> Obras(bool copia = true, bool reset = false)
-        {
-            if (_Obras == null)
-            {
-                _Obras = Consultas.GetObras(copia,reset);
-            }
-            return _Obras;
-        }
+
+
 
         private static List<PLAN_OBRAS> _ObrasPorSegmento { get; set; }
         public static List<PLAN_OBRAS> ObrasPorSegmento()
@@ -144,7 +129,7 @@ namespace DLM.painel
             {
                 _ObrasPorSegmento = new List<PLAN_OBRAS>();
 
-                var segs = Obras().Select(x => x.setor_atividade).Distinct().ToList().OrderBy(x => x).ToList();
+                var segs = Consultas.GetObras().Select(x => x.setor_atividade).Distinct().ToList().OrderBy(x => x).ToList();
                 var familias = DBases.GetSegmentos().FindAll(y => segs.Find(z => z == y.COD) != null).Select(x => x.FAMILIA).Distinct().ToList();
 
                 foreach (var fam in familias)
@@ -154,7 +139,7 @@ namespace DLM.painel
                     string nome = DBases.GetSegmentos().Find(x => x.FAMILIA == fam).FAMILIA_DESC;
                     foreach (var ss in segmentos)
                     {
-                        obras.AddRange(Obras().FindAll(x => x.setor_atividade == ss));
+                        obras.AddRange(Consultas.GetObras().FindAll(x => x.setor_atividade == ss));
                     }
                     var nova = new PLAN_OBRAS(obras, fam, nome);
 
@@ -171,7 +156,7 @@ namespace DLM.painel
         {
             if (_Garantias == null)
             {
-                _Garantias = Consultas.GetObras(new List<string> { ".G" },true,false);
+                _Garantias = Consultas.GetObras(new List<string> { ".G" });
             }
             return _Garantias;
         }
