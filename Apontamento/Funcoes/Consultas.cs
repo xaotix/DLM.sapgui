@@ -1237,8 +1237,6 @@ namespace DLM.painel
 
 
 
-            DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia, false);
-            DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia, false);
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia, false);
 
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_painel_de_obras2, "pecas", false);
@@ -1362,12 +1360,9 @@ namespace DLM.painel
             return f0;
         }
 
-        private static List<Resumo_Pecas> _resumo_pecas_pedido { get; set; }
         private static List<Resumo_Pecas> _resumo_pecas_peps { get; set; }
-        private static List<Resumo_Pecas> _resumo_pecas_subetapas { get; set; }
         private static List<PLAN_OBRA> _obras { get; set; }
         private static List<PLAN_PEDIDO> _pedidos { get; set; }
-
         private static List<PLAN_CONTRATO> _titulos_obras { get; set; }
 
 
@@ -1392,30 +1387,7 @@ namespace DLM.painel
             }
             return _titulos_obras;
         }
-
-        public static List<Resumo_Pecas> getresumo_pecas_pedidos()
-        {
-            if (_resumo_pecas_pedido == null)
-            {
-                try
-                {
-                    _resumo_pecas_pedido = new List<Resumo_Pecas>();
-                    var consulta = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia);
-                    foreach (var linha in consulta.Linhas)
-                    {
-                        _resumo_pecas_pedido.Add(new Resumo_Pecas(linha));
-                    }
-                }
-                catch (Exception)
-                {
-
-
-                }
-
-            }
-            return _resumo_pecas_pedido;
-        }
-        public static List<Resumo_Pecas> getresumo_pecas_peps()
+        public static List<Resumo_Pecas> getresumo_pecas_peps_fabrica()
         {
             if (_resumo_pecas_peps == null)
             {
@@ -1436,47 +1408,14 @@ namespace DLM.painel
             }
             return _resumo_pecas_peps;
         }
-        public static List<Resumo_Pecas> getresumo_pecas_subetapas()
-        {
-            if (_resumo_pecas_subetapas == null)
-            {
-                _resumo_pecas_subetapas = new List<Resumo_Pecas>();
-                var consulta = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia);
-                ConcurrentBag<Resumo_Pecas> retorno = new ConcurrentBag<Resumo_Pecas>();
-                foreach (var t in DLM.painel.Consultas.quebrar_lista(consulta.Linhas, 300))
-                {
-                    List<Task> Tarefas = new List<Task>();
-                    foreach (var s in t)
-                    {
-                        Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new Resumo_Pecas(s))));
-                    }
-                    Task.WaitAll(Tarefas.ToArray());
-                    Tarefas.Clear();
-                }
-                _resumo_pecas_subetapas.AddRange(retorno);
-            }
-            return _resumo_pecas_subetapas;
-        }
-        public static List<Resumo_Pecas> getresumo_pecas_subetapas(List<string> pedidos)
+        public static List<Resumo_Pecas> getresumo_pecas_peps_fabrica(List<string> pedidos)
         {
 
 
             var ret = new List<Resumo_Pecas>();
             foreach (var ped in pedidos)
             {
-                ret.AddRange(getresumo_pecas_subetapas().FindAll(x => x.pep.Contains(ped.Replace("%", ""))));
-            }
-
-            return ret;
-        }
-        public static List<Resumo_Pecas> getresumo_pecas_peps(List<string> pedidos)
-        {
-
-
-            var ret = new List<Resumo_Pecas>();
-            foreach (var ped in pedidos)
-            {
-                ret.AddRange(getresumo_pecas_peps().FindAll(x => x.pep.Contains(ped.Replace("%", ""))));
+                ret.AddRange(getresumo_pecas_peps_fabrica().FindAll(x => x.pep.Contains(ped.Replace("%", ""))));
             }
 
             return ret;
@@ -1560,22 +1499,7 @@ namespace DLM.painel
             var pcs = Consultas.GetPecasReal(new List<string> { contrato });
             DLM.painel.Relatorios.ExportarEmbarque(pcs, false, null, null, true, false);
 
-            List<Task> Tarefas = new List<Task>();
-            DLM.db.Tabela resumo_pecas_pedido = new DLM.db.Tabela();
-            DLM.db.Tabela resumo_pecas_pep = new DLM.db.Tabela();
-            DLM.db.Tabela resumo_pecas_pep_fabrica = new DLM.db.Tabela();
-
-            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pedido = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pedido} as pr where pr.pep like '%{contrato}%'")));
-            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pep = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep} as pr where pr.pep like '%{contrato}%'")));
-            Tarefas.Add(Task.Factory.StartNew(() => resumo_pecas_pep_fabrica = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_fabrica} as pr where pr.pep like '%{contrato}%'")));
-            Task.WaitAll(Tarefas.ToArray());
-
-
-
-
-
-            DBases.GetDB().Cadastro(resumo_pecas_pedido.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pedido_copia);
-            DBases.GetDB().Cadastro(resumo_pecas_pep.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_copia);
+            var resumo_pecas_pep_fabrica = DBases.GetDB().Clonar().Consulta($"SELECT * from {Cfg.Init.db_comum}.{Cfg.Init.tb_resumo_pecas_pep_fabrica} as pr where pr.pep like '%{contrato}%'");
             DBases.GetDB().Cadastro(resumo_pecas_pep_fabrica.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_resumo_pecas_pep_fabrica_copia);
         }
 
@@ -1604,19 +1528,12 @@ namespace DLM.painel
                 }
 
                 var st_base = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_03_pedido);
-                var lista_resumos = Consultas.getresumo_pecas_pedidos();
 
 
                 foreach (var t in _pedidos)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() =>
                     {
-                        var t0 = lista_resumos.Find(x => x.pep == t.PEP);
-                        if (t0 != null)
-                        {
-                            t.resumo_pecas = t0;
-                        }
-
                         var igual = st_base.Filtrar("pep", t.PEP, true);
                         if (igual.Count > 0)
                         {
@@ -1737,7 +1654,7 @@ namespace DLM.painel
 
             _subetapas.AddRange(lista);
             _subetapas = _subetapas.OrderBy(x => x.subetapa).ToList();
-            var lista_resumos = Consultas.getresumo_pecas_subetapas(pedidos);
+            //var lista_resumos = Consultas.getresumo_pecas_pep(pedidos);
             var st_base = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_01_subetapa);
 
 
@@ -1745,11 +1662,11 @@ namespace DLM.painel
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
-                    var t0 = lista_resumos.Find(x => x.pep == t.PEP);
-                    if (t0 != null)
-                    {
-                        t.resumo_pecas = t0;
-                    }
+                    //var t0 = lista_resumos.Find(x => x.pep == t.PEP);
+                    //if (t0 != null)
+                    //{
+                    //    t.resumo_pecas = t0;
+                    //}
 
                     var igual = st_base.Filtrar("pep", t.PEP.ToUpper().Replace(".P00", ""), true);
                     if (igual.Count > 0)
@@ -1851,17 +1768,17 @@ namespace DLM.painel
             {
                 pecas = GetPecasReal(pedidos);
             }
-            List<Logistica_Planejamento> retorno = new List<Logistica_Planejamento>();
-            var sub = quebrar_lista(pedidos, 50);
+            var retorno = new List<Logistica_Planejamento>();
+            var lista_pedidos = quebrar_lista(pedidos, 50);
 
-            ConcurrentBag<PLAN_PECA> orfs = new ConcurrentBag<PLAN_PECA>();
-            List<Task> Tarefas = new List<Task>();
-            foreach (var t in sub)
+            var orfs = new ConcurrentBag<PLAN_PECA>();
+            var Tarefas = new List<Task>();
+            foreach (var lista_pedido in lista_pedidos)
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
                     List<PLAN_PECA> orrfas = new List<PLAN_PECA>();
-                    retorno.AddRange(getLogisticaF(t, pecas, out orrfas));
+                    retorno.AddRange(getLogisticaF(lista_pedido, pecas, out orrfas));
                     foreach (var o in orrfas)
                     {
                         orfs.Add(o);
@@ -1880,59 +1797,37 @@ namespace DLM.painel
 
             return retorno.FindAll(x => x.peca != null);
         }
-        public static List<PLAN_PECA> GetPecasReal(List<string> pedidos, int max_pacote = 10, bool setbobinas = false)
+        public static List<PLAN_PECA> GetPecasReal(List<string> lista_pedidos, int max_pacote = 10)
         {
-            pedidos = pedidos.FindAll(x => x.Length > 5).Distinct().ToList();
-            if (pedidos.Count == 0) { return new List<PLAN_PECA>(); }
+            lista_pedidos = lista_pedidos.FindAll(x => x.Length > 5).Distinct().ToList();
+            lista_pedidos = lista_pedidos.Select(x => x.Replace("*", "").Replace(" ", "")).ToList().FindAll(x => x != "").OrderBy(x=>x).ToList();
+
+            if (lista_pedidos.Count == 0) { return new List<PLAN_PECA>(); }
             var retorno = new List<PLAN_PECA>();
-            var pacote_pedidos = quebrar_lista(pedidos, max_pacote);
 
-            var bobinas = new List<Bobina>();
-            if (setbobinas)
+
+            foreach (var pedido in lista_pedidos)
             {
-                bobinas.AddRange(DBases.GetBancoRM().GetBobinas());
-            }
-            var Tarefas = new List<Task>();
-            foreach (var pedido in pacote_pedidos)
-            {
-                var pecas = getPecasF(pedido);
-                if (setbobinas)
+                var lista_pecas = DBases.GetDB().Consulta($"call comum.getpecas('{pedido}')");
+                var lista_embarques = DBases.GetDB().Consulta($"call comum.getPecasEmbarques('{pedido}')");
+                var plan_pecas = new List<PLAN_PECA>();
+
+                foreach (var linha in lista_pecas.Linhas)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() =>
-                    {
-
-                        var codigos_bobinas = pecas.Select(x => x.codigo_materia_prima_sap).Distinct().ToList().FindAll(x => x.Replace(" ", "").Replace("0", "") != "");
-
-                        foreach (var cod in codigos_bobinas)
-                        {
-                            var bobina = bobinas.Find(x => x.SAP == cod);
-                            if (bobina == null)
-                            {
-                                bobina = new Conexoes.Bobina() { SAP = cod };
-                            }
-                            if (bobina != null)
-                            {
-                                var pecas_bob = pecas.ToList().FindAll(x => x.codigo_materia_prima_sap == cod).ToList();
-                                foreach (var peca in pecas_bob)
-                                {
-                                    peca.bobina = bobina;
-                                }
-                            }
-                        }
-                    }));
+                    plan_pecas.Add(new PLAN_PECA(linha));
                 }
 
-
-                retorno.AddRange(pecas);
-
-
+                var peps_chaves = lista_embarques.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Subetapa(x.Get("Elemento_PEP").Valor, true)).ToList();
+                foreach (var pep in peps_chaves)
+                {
+                    var pecas_pep = plan_pecas.FindAll(x => Conexoes.Utilz.PEP.Get.Subetapa(x.PEP, true) == pep.Key);
+                    foreach (var peca in pecas_pep)
+                    {
+                        peca.SetStatusByZPP0100(pep.ToList());
+                    }
+                }
+                retorno.AddRange(plan_pecas);
             }
-
-
-
-
-
-
 
             return retorno;
         }
@@ -1964,12 +1859,8 @@ namespace DLM.painel
                 }
             }
 
-            string consulta = $"select * from {Cfg.Init.db_comum}.zpp0066n_logistica  as prod where " + chave;
-            string consulta2 = $"select * from {Cfg.Init.db_comum}.cargas  as prod where " + chave.Replace("pep", "Elemento_PEP");
-
-            //var lista_fab = dbase.Consulta(consulta);
-            var lista_fab_0100 = DBases.GetDB().Consulta(consulta2);
-            ConcurrentBag<Logistica_Planejamento> retorno = new ConcurrentBag<Logistica_Planejamento>();
+            var lista_fab_0100 = DBases.GetDB().Consulta($"select * from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0100_cargas} as prod where " + chave.Replace("pep", "Elemento_PEP"));
+            var retorno = new ConcurrentBag<Logistica_Planejamento>();
 
             List<Task> Tarefas = new List<Task>();
 
@@ -2057,133 +1948,7 @@ namespace DLM.painel
                 }
             }
         }
-        private static List<PLAN_PECA> getPecasF(List<string> pedido, string material = null)
-        {
-            string chave = "";
-            pedido = pedido.Select(x => x.Replace("*", "").Replace(" ", "")).ToList().FindAll(x => x != "");
-            if (pedido.Count == 0)
-            {
-                return new List<PLAN_PECA>();
-            }
-            for (int i = 0; i < pedido.Count; i++)
-            {
-                if (i == 0)
-                {
-                    chave = "prod.pep like '%$P$%'".Replace("$P$", pedido[i]);
-                }
-                else
-                {
-                    chave = chave + " or prod.pep like '%$P$%'".Replace("$P$", pedido[i]);
-                }
-            }
 
-            if (material != null)
-            {
-                chave = "(" + chave + ") and prod.material like'" + material + "%')";
-            }
-
-
-            string consulta =
-                         $"select prod.pep AS pep," +
-                         $"coois.pep as pep_cooisn," +
-                         $"substr(prod.pep, -24, 21) as subetapa," +
-                         $"logi.desenho as desenho," +
-                         $"prod.material as material," +
-                         $"prod.texto_breve as texto_breve," +
-                         $"prod.peso_necessario / prod.qtd_necessaria as peso_unitario," +
-                         $"prod.peso_necessario as peso_necessario," +
-                         $"prod.peso_produzido as peso_produzido," +
-                         $"prod.qtd_necessaria AS qtd_necessaria," +
-                         $"prod.peso_produzido / (prod.peso_necessario / prod.qtd_necessaria) AS qtd_produzida," +
-                         $"sum(if ((logi.carga_confirmada = 'True'),logi.quantidade,0)) AS qtd_embarcada," +
-                         $"prod.grupo_mercadoria as grupo_mercadoria," +
-                         $"prod.denominacao as denominacao," +
-                         $"prod.centro as centro," +
-                         $"prod.centro_producao as centro_producao," +
-                         $"coois.DENOMINDSTAND as DENOMINDSTAND," +
-                         $"coois.ULTIMO_STATUS as ULTIMO_STATUS," +
-                         $"str_to_date(coois.DATA_INICIO, '%d/%m/%Y') AS DATA_INICIO," +
-                         $"str_to_date(coois.DATA_FIM, '%d/%m/%Y') AS DATA_FIM," +
-                         $"coois.DESENHO_1 as DESENHO_1," +
-                         $"coois.TIPO_DE_PINTURA as TIPO_DE_PINTURA," +
-                         $"coois.CORTE_LARGURA as CORTE_LARGURA," +
-                         $"coois.COMPRIMENTO as COMPRIMENTO," +
-                         $"coois.ESQ_DE_PINTURA as ESQ_DE_PINTURA," +
-                         $"coois.SUPERFICIE as SUPERFICIE," +
-                         $"coois.FURACOES as FURACOES," +
-                         $"coois.ESPESSURA as ESPESSURA," +
-                         $"coois.TIPO_ACO as TIPO_ACO," +
-                         $"coois.CODIGO_MATERIA_PRIMA_SAP as CODIGO_MATERIA_PRIMA_SAP," +
-                         $"coois.MARCA as MARCA," +
-                         $"prod.ultima_edicao as ultima_edicao," +
-                         $"coois.ultimo_update as cooisn_ultima_edicao" +
-                         $" from" +
-                         $"(" +
-                         $"(" +
-                         $"({Cfg.Init.db_comum}.{Cfg.Init.tb_zpmp_producao} as prod" +
-                         $" left join {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0066n_logistica} as logi on(prod.pep = logi.pep and prod.material = logi.material))" +
-                         $" left join {Cfg.Init.db_comum}.{Cfg.Init.tb_zppcooisn} as coois on(substr(prod.pep, -24, 21) = substr(coois.pep, -24, 21)  and prod.material = coois.material)" +
-                         $")" +
-                         $"left join {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} as pps on(prod.pep = pps.pep) " +
-                         $")" +
-                         $" where" +
-                         $" (not((prod.material like '300%')) and " +
-                         $" ($P$)".Replace("$P$", chave) +
-                         $" and prod.status_sistema_pep not like '%BLOQ%'" +
-                         $")" +
-                         $" and pps.pep is not null" +
-                         $"  group by prod.pep,prod.material";
-
-
-            var maximo = 10000;
-            string consulta_emb = "" +
-                "select prod.Elemento_PEP as Elemento_PEP," +
-                "prod.Material as Material," +
-                "prod.St_Embarque as St_Embarque," +
-                "prod.Qtd_Embarque as Qtd_Embarque," +
-                "prod.St_Conf_ as St_Conf_," +
-                "prod.Tamanho_dimensao as Tamanho_dimensao" +
-                $" from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0100_embarques} as prod where ($P$) and prod.St_Conf_ = '@5Y@'".Replace("$P$", chave.Replace("pep", "Elemento_PEP"));
-            var lista_fab = DBases.GetDB().Consulta(consulta);
-            var lista_zpp0100 = DBases.GetDB().Consulta(consulta_emb);
-            ConcurrentBag<PLAN_PECA> retorno = new ConcurrentBag<PLAN_PECA>();
-            /*quebra da consulta em sub_consultas*/
-            var sub_max = lista_fab.Linhas.quebrar_lista(maximo);
-            List<Task> Tarefas = new List<Task>();
-
-            foreach (var ss in sub_max)
-            {
-                foreach (var s in ss)
-                {
-                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new PLAN_PECA(s))));
-                }
-                Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
-            }
-
-            var peps_chaves = lista_zpp0100.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Subetapa(x.Get("Elemento_PEP").Valor, true));
-
-            Tarefas = new List<Task>();
-            foreach (var pep in peps_chaves)
-            {
-                Tarefas.Add(Task.Factory.StartNew(() =>
-                {
-                    var querys = pep.ToList();
-                    var pcs = retorno.ToList().FindAll(x => Conexoes.Utilz.PEP.Get.Subetapa(x.PEP, true) == pep.Key);
-                    foreach (var pc in pcs)
-                    {
-                        pc.SetStatusByZPP0100(querys);
-                    }
-                }));
-
-            }
-
-
-
-
-
-            return retorno.OrderBy(x => x.PEP + "-" + x.desenho).ToList();
-        }
         public static SolidColorBrush getCor(double previsto, double realizado, double opacidade = 1)
         {
             if (realizado >= 100)
@@ -2298,7 +2063,7 @@ namespace DLM.painel
         {
             peps = peps.OrderBy(x => x.PEP).ToList();
             List<string> contratos = peps.Select(x => x.Contrato_Completo).Distinct().ToList();
-            var resumos = Consultas.getresumo_pecas_peps(contratos);
+            var resumos = Consultas.getresumo_pecas_peps_fabrica(contratos);
 
             foreach (var ped in contratos)
             {

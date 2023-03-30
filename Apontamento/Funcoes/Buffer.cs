@@ -69,15 +69,7 @@ namespace DLM.painel
         public static List<Conexoes.Bobina> Bobinas { get; set; } = new List<Conexoes.Bobina>();
         public static void Carregar()
         {
-            List<Task> Tarefas = new List<Task>();
-            Tarefas.Add(Task.Factory.StartNew(() => Consultas.GetTitulosObras()));
-
-
-            Tarefas.Add(Task.Factory.StartNew(() => Consultas.getresumo_pecas_pedidos()));
-            Tarefas.Add(Task.Factory.StartNew(() => Consultas.getresumo_pecas_subetapas()));
-            Task.WaitAll(Tarefas.ToArray());
-            Tarefas.Clear();
-
+            Consultas.GetTitulosObras();
             Consultas.GetObras();
             Consultas.GetPedidos();
             Buffer.ObrasPorSegmento();

@@ -468,15 +468,15 @@ namespace DLM.sapgui
            
 
 
-            /*pegando datas da zpmp*/
-            if(Producao.Count>0)
-            {
-                /*datas fim de cronograma pegando da zpmp*/
-                this.Engenharia_Cronograma = this.Producao.Max(X => X.fim_engenharia_base);
-                this.Fabrica_Cronograma = this.Producao.Max(X => X.Fim_Fabrica_Base);
-                this.Logistica_Cronograma = this.Producao.Max(X => X.fim_logistica_base);
-                this.Engenharia_Liberacao = this.Producao.Max(X => X.fim_engenharia_real);
-            }
+            ///*pegando datas da zpmp*/
+            //if(Producao.Count>0)
+            //{
+            //    /*datas fim de cronograma pegando da zpmp*/
+            //    this.Engenharia_Cronograma = this.Producao.Max(X => X.fim_engenharia_base);
+            //    this.Fabrica_Cronograma = this.Producao.Max(X => X.Fim_Fabrica_Base);
+            //    this.Logistica_Cronograma = this.Producao.Max(X => X.fim_logistica_base);
+            //    this.Engenharia_Liberacao = this.Producao.Max(X => X.fim_engenharia_real);
+            //}
 
             
 

@@ -1539,7 +1539,7 @@ namespace DLM.sapgui
         }
 
         /*ESSE CARA DÁ O AVANÇO DE LOGÍSTICA*/
-        public bool ZPMP(string Pedido, string destino, string ARQUIVO, bool msgs = false)
+        public bool ZPMP(string Pedido, string destino, string ARQUIVO, bool msgs = false, string LAYOUT = @"/SISTEMA")
         {
    
             try
@@ -1554,7 +1554,7 @@ namespace DLM.sapgui
                     this.SessaoSAP.StartTransaction("ZPMP");
 
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_PSPID-LOW")).Text = Pedido + "*";
-                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtPC_VARI")).Text = @"/SALDO_PT";
+                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtPC_VARI")).Text = LAYOUT;
 
 
                     //((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_POSID-LOW")).Text = "";

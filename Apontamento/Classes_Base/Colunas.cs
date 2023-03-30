@@ -216,121 +216,36 @@ namespace DLM.painel
             FIM_PREVISTO  =  9
         }
 
-        //public class TAB_ZPP0100
+
+
+
+        //public class ZPMP
         //{
-        //    public static int booleano {get;set;} =  0;
-        //    public static int Ordem_Embarque {get;set;} =  1;
-        //    public static int Qtd_Embarque {get;set;} =  2;
-        //    public static int Nro_Carga {get;set;} =  3;
-        //    public static int St_Embarque {get;set;} =  4;
-        //    public static int St_Carga {get;set;} =  5;
-        //    public static int Etq_Material {get;set;} =  6;
-        //    public static int Material {get;set;} =  7;
-        //    public static int Descricao {get;set;} =  8;
-        //    public static int Tamanho_dimensao {get;set;} =  9;
-        //    public static int Comprimento {get;set;} =  10;
-        //    public static int Peso_item_Tot {get;set;} =  11;
-        //    public static int Nome_da_Obra {get;set;} =  12;
-        //    public static int Elemento_PEP {get;set;} =  13;
-        //    public static int Centro {get;set;} =  14;
-        //    public static int Etq_Impressa {get;set;} =  15;
-        //    public static int Etq_Volume {get;set;} =  16;
-        //    public static int Status {get;set;} =  17;
-        //    public static int Qtd_Carregada {get;set;} =  18;
-        //    public static int Sld_1202 {get;set;} =  19;
-        //    public static int Sld_1203 {get;set;} =  20;
-        //    public static int Sld_1204 {get;set;} =  21;
-        //    public static int St_Conf_ {get;set;} =  22;
-        //    public static int St_DtProg_ {get;set;} =  23;
-        //    public static int Data {get;set;} =  24;
-        //    public static int Ordem_Prod_ {get;set;} =  25;
-        //    public static int Apontamento_Fert {get;set;} =  26;
-
+        //    public static int Elemento_PEP {get;set;} =  0;
+        //    public static int Denominacao {get;set;} =  1;
+        //    public static int Centro {get;set;} =  2;
+        //    public static int Centro_producao {get;set;} =  3;
+        //    public static int Material {get;set;} =  4;
+        //    public static int Texto_breve_material {get;set;} =  5;
+        //    public static int Denom_grupo_merc {get;set;} =  6;
+        //    public static int Peso_necessario {get;set;} =  7;
+        //    public static int Peso_produzido {get;set;} =  8;
+        //    public static int Qtd_necessaria {get;set;} =  9;
+        //    public static int Qtd_mercad_entrada {get;set;} =  10;
+        //    public static int Fim_Engenharia_Base {get;set;} =  11;
+        //    public static int Fim_Engenharia_Real {get;set;} =  12;
+        //    public static int Fim_Fabrica_Base {get;set;} =  13;
+        //    public static int Fim_Fabrica_Real {get;set;} =  14;
+        //    public static int Fim_Logistica_Base {get;set;} =  15;
+        //    public static int Fim_Logistica_Real {get;set;} =  16;
+        //    public static int Fim_Montagem_Base {get;set;} =  17;
+        //    public static int Fim_Montagem_Real {get;set;} =  18;
+        //    public static int Inicio_Montagem_Base {get;set;} =  19;
+        //    public static int Saldo_peso_produzido {get;set;} =  20;
+        //    public static int Status_Sistema_PEP {get;set;} =  21;
+        //    public static int Status_Usuario_PEP {get;set;} =  22;
+        //    public static int Status_Sistema_Tarefa {get;set;} =  23;
+        //    public static int Tamanho_Dimensao {get;set;} =  24;
         //}
-
-
-
-        //public class TAB_ZCONTRATOS
-        //{
-        //    public static int Empresa {get;set;} =  0;
-        //    public static int Cen {get;set;} =  1;
-        //    public static int Contrato {get;set;} =  2;
-        //    public static int Cliente {get;set;} =  3;
-        //    public static int CNPJ {get;set;} =  4;
-        //    public static int Razao_Social_Cliente {get;set;} =  5;
-        //    public static int SetInd {get;set;} =  6;
-        //    public static int UF {get;set;} =  7;
-        //    public static int Situacao {get;set;} =  8;
-        //    public static int Devolucoes {get;set;} =  9;
-        //    public static int Nome_da_obra {get;set;} =  10;
-        //    public static int Elemento_PEP {get;set;} =  11;
-        //    public static int Contas_a_receber {get;set;} =  12;
-        //    public static int Receita {get;set;} =  13;
-        //    public static int Cotacao {get;set;} =  14;
-        //    public static int Itm {get;set;} =  15;
-        //    public static int Ordem_venda {get;set;} =  16;
-        //    public static int TpDV {get;set;} =  17;
-        //    public static int Fatura {get;set;} =  18;
-        //    public static int TipFt {get;set;} =  19;
-        //    public static int Descr_tipo_fat {get;set;} =  20;
-        //    public static int NF {get;set;} =  21;
-        //    public static int Data_emissao {get;set;} =  22;
-        //    public static int Material {get;set;} =  23;
-        //    public static int CFOP {get;set;} =  24;
-        //    public static int Quantidade {get;set;} =  25;
-        //    public static int UM {get;set;} =  26;
-        //    public static int Valor_unit {get;set;} =  27;
-        //    public static int Peso_liq {get;set;} =  28;
-        //    public static int Valor_total_NF {get;set;} =  29;
-
-        //}
-
-        //public class TAB_ZPP0112
-        //{
-        //    public static int sel { get; set; } = 0;
-        //    public static int Nro_Carga { get; set; } = 1;
-        //    public static int Elemento_PEP { get; set; } = 2;
-        //    public static int Centro { get; set; } = 3;
-        //    public static int Fornecedor { get; set; } = 4;
-        //    public static int Tipo_Veiculo { get; set; } = 5;
-        //    public static int Num_Placa { get; set; } = 6;
-        //    public static int Motorista { get; set; } = 7;
-        //    public static int RG { get; set; } = 8;
-        //    public static int Telefone { get; set; } = 9;
-        //    public static int VAL2 { get; set; } = 10;
-        //    public static int Telefone_2 { get; set; } = 11;
-        //    public static int Fornecedor_2 { get; set; } = 12;
-        //    public static int Telefone_3 { get; set; } = 13;
-        //    public static int Observacoes { get; set; } = 14;
-        //}
-
-
-        public class ZPMP
-        {
-            public static int Elemento_PEP {get;set;} =  0;
-            public static int Denominacao {get;set;} =  1;
-            public static int Centro {get;set;} =  2;
-            public static int Centro_producao {get;set;} =  3;
-            public static int Material {get;set;} =  4;
-            public static int Texto_breve_material {get;set;} =  5;
-            public static int Denom_grupo_merc {get;set;} =  6;
-            public static int Peso_necessario {get;set;} =  7;
-            public static int Peso_produzido {get;set;} =  8;
-            public static int Qtd_necessaria {get;set;} =  9;
-            public static int Qtd_mercad_entrada {get;set;} =  10;
-            public static int Fim_Engenharia_Base {get;set;} =  11;
-            public static int Fim_Engenharia_Real {get;set;} =  12;
-            public static int Fim_Fabrica_Base {get;set;} =  13;
-            public static int Fim_Fabrica_Real {get;set;} =  14;
-            public static int Fim_Logistica_Base {get;set;} =  15;
-            public static int Fim_Logistica_Real {get;set;} =  16;
-            public static int Fim_Montagem_Base {get;set;} =  17;
-            public static int Fim_Montagem_Real {get;set;} =  18;
-            public static int Inicio_Montagem_Base {get;set;} =  19;
-            public static int Saldo_peso_produzido {get;set;} =  20;
-            public static int Status_Sistema_PEP {get;set;} =  21;
-            public static int Status_Usuario_PEP {get;set;} =  22;
-            public static int Status_Sistema_Tarefa {get;set;} =  23;
-        }
     }
 }

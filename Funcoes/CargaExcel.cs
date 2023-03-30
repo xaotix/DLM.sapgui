@@ -172,7 +172,7 @@ namespace DLM.sapgui
 
         public static List<ZPMP> ZPMP(string arquivo, out DLM.db.Tabela tabela)
         {
-            ConcurrentBag<ZPMP> retorno = new ConcurrentBag<ZPMP>();
+            var retorno = new List<ZPMP>();
             tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
             foreach (var sub in DLM.painel.Consultas.quebrar_lista(tabela.Linhas, max_tasks))
             {
@@ -180,13 +180,11 @@ namespace DLM.sapgui
 
                 foreach (var l in sub)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPMP(l))));
+                    retorno.Add(new ZPMP(l));
                 }
-                Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
-            return retorno.ToList();
+            retorno = retorno.FindAll(x => x.PEP.Codigo.Length > 0).ToList();
+            return retorno;
         }
         public static List<ZPP0066N> ZPP0066N(string arquivo, bool semperfil)
         {
@@ -214,7 +212,7 @@ namespace DLM.sapgui
 
             //19/06/2020 - aumentei o filtro para pegar a subetapa. serão mais consultas, no entanto evita os erros.
             /*12/05/2022 - mudei a chamada para um procedure.*/
-            var chamada = $"call comum.zpp_cooisn_get_qtd_pc('{Pedido.Replace("*","").Replace(" ","")}')";
+            var chamada = $"call comum.getzppcoisn_qtd_pcs('{Pedido.Replace("*","").Replace(" ","")}')";
             //var consulta = DBases.GetDBMySQL().Consulta($"SELECT left(pr.pep,17) as pep, count(pr.pep) as pcs from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpmp_producao} as pr where pr.pep like '%{Pedido}%' and pr.material like '31%' group by left(pr.pep,17) order by count(pr.pep) desc".Replace("*", ""));
             var consulta = DBases.GetDB().Consulta(chamada);
             var peps = consulta.Linhas.Select(x => x.Get("pep").Valor).ToList(); 

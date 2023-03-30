@@ -365,14 +365,14 @@ namespace DLM.sapgui
 
         public bool ZPMP()
         {
-             var arq = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPMPARQ;
+             var arq = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPMPARQ_SISTEMA;
             if (Consulta.ZPMP(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(),  arq))
             {
                 DLM.db.Tabela tabela;
                 this.Producao = CargaExcel.ZPMP(Cfg.Init.GetDestinoSAP_Excel() + arq, out tabela);
                 if(tabela.Linhas.Count>0)
                 {
-                    this.Descricao = tabela[0][Colunas.ZPMP.Denominacao].Valor;
+                    this.Descricao = tabela[0][(int)TAB_ZPMP.DENOMINACAO].Valor;
                 }
                 return this.Producao.Count>0;
             }

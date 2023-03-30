@@ -1610,7 +1610,7 @@ public class Relatorios
 
             return true;
         }
-        public static bool ExportarEmbarque(List<PLAN_PECA> Pecas, bool abrir = false, List<Logistica_Planejamento> log = null, string Destino = null, bool enviar_dbase = false, bool gera_excel = true)
+        public static bool ExportarEmbarque(List<PLAN_PECA> Pecas, bool abrir = false, List<Logistica_Planejamento> logistica = null, string Destino = null, bool enviar_dbase = false, bool gera_excel = true)
         {
             if (Pecas.Count == 0)
             {
@@ -1662,10 +1662,10 @@ public class Relatorios
           
             var w = Conexoes.Utilz.Wait(10,$"Logística...{Pecas.Count} Peças do(s) pedido(s) {pedido}");
             List<PLAN_PECA> orfas = new List<PLAN_PECA>();
-            if (log==null && Pecas.Count>0)
+            if (logistica==null && Pecas.Count>0)
             {
                
-            log = DLM.painel.Consultas.GetLogistica(null, Pecas, out orfas);
+            logistica = DLM.painel.Consultas.GetLogistica(null, Pecas, out orfas);
             }
 
             Pecas.AddRange(orfas);
