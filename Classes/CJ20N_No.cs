@@ -192,7 +192,7 @@ namespace DLM.sapgui
             if(this.key.Replace(" ", "") == "") { return false; }
             return this.SAP.CJ20N_Apagar(this);
         }
-        public Consulta SAP { get; set; }
+        public SAP_Consulta_Macro SAP { get; set; }
         public List<CJ20N_No> nos { get; set; } = new List<CJ20N_No>();
         public CJ20N_No GetRaiz()
         {
@@ -412,7 +412,7 @@ namespace DLM.sapgui
             }
             return _filhos;
         }
-        public CJ20N_No(string nome, string descricao, string key, string chave_pep, GuiTree arvore, Consulta SessaoSAP)
+        public CJ20N_No(string nome, string descricao, string key, string chave_pep, GuiTree arvore, SAP_Consulta_Macro SessaoSAP)
         {
             this.arvore = arvore;
             this.Nome = nome;
@@ -424,7 +424,7 @@ namespace DLM.sapgui
             {
             }
         }
-        public CJ20N_No(GuiTree arvore, Consulta SessaoSAP)
+        public CJ20N_No(GuiTree arvore, SAP_Consulta_Macro SessaoSAP)
         {
             this.arvore = arvore;
             this.key = key;

@@ -13,12 +13,12 @@ using System.Windows.Markup;
 namespace DLM.sapgui
 {
 
-    public class PEPConsultaSAP : INotifyPropertyChanged
+    public class PEP_Planejamento : INotifyPropertyChanged
     {
-        public CN47N_Datas Engenharia { get; set; } = new CN47N_Datas();
-        public CN47N_Datas Montagem { get; set; } = new CN47N_Datas();
-        public CN47N_Datas Fabrica { get; set; } = new CN47N_Datas();
-        public List<CN47N_Datas> LogisticaDatas { get; set; } = new List<CN47N_Datas>();
+        public CN47N Engenharia { get; set; } = new CN47N();
+        public CN47N Montagem { get; set; } = new CN47N();
+        public CN47N Fabrica { get; set; } = new CN47N();
+        public List<CN47N> LogisticaDatas { get; set; } = new List<CN47N>();
         public ConexaoSAP Pedido { get; set; } = new ConexaoSAP();
 
         public List<ZPP0100> Embarque { get; set; } = new List<ZPP0100>();
@@ -378,11 +378,11 @@ namespace DLM.sapgui
             }
         }
 
-        public PEPConsultaSAP()
+        public PEP_Planejamento()
         {
 
         }
-        public PEPConsultaSAP(string Codigo)
+        public PEP_Planejamento(string Codigo)
         {
             this.Codigo = Codigo;
             AjustaPEP();
@@ -398,7 +398,7 @@ namespace DLM.sapgui
             this.Codigo = PEP;
         }
 
-        public PEPConsultaSAP(string Codigo, List<ZPMP> Producao,List<ZPP0100> Embarque, CN47N_Datas Fabrica, ConexaoSAP Pedido)
+        public PEP_Planejamento(string Codigo, List<ZPMP> Producao,List<ZPP0100> Embarque, CN47N Fabrica, ConexaoSAP Pedido)
         {
             this.Codigo = Codigo;
             this.AjustaPEP();
@@ -408,7 +408,7 @@ namespace DLM.sapgui
             this.Fabrica = Fabrica;
             if (this.Fabrica == null)
             {
-                this.Fabrica = new CN47N_Datas();
+                this.Fabrica = new CN47N();
             }
             this.Pedido = Pedido;
 

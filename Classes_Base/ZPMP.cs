@@ -20,7 +20,7 @@ namespace DLM.sapgui
         }
 
 
-        private PEPConsultaSAP _PEP { get; set; }
+        private PEP_Planejamento _PEP { get; set; }
 
 
         public DLM.db.Linha GetLinha()
@@ -63,13 +63,13 @@ namespace DLM.sapgui
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
-        public PEPConsultaSAP PEP
+        public PEP_Planejamento PEP
         {
             get
             {
                 if (_PEP == null)
                 {
-                    _PEP = new PEPConsultaSAP();
+                    _PEP = new PEP_Planejamento();
                 }
                 return _PEP;
             }
@@ -112,7 +112,7 @@ namespace DLM.sapgui
 
         public ZPMP(DLM.db.Linha l)
         {
-            this.PEP = new PEPConsultaSAP(l[(int)TAB_ZPMP.ELEMENTO_PEP].Valor);
+            this.PEP = new PEP_Planejamento(l[(int)TAB_ZPMP.ELEMENTO_PEP].Valor);
             this.centro = l[(int)TAB_ZPMP.CENTRO].Valor;
             this.material = l[(int)TAB_ZPMP.MATERIAL].Valor;
             this.tamanho_dimensao = l[(int)TAB_ZPMP.TAMANHO_DIMENSAO].Valor;

@@ -9,7 +9,7 @@ using DLM.vars;
 
 namespace DLM.sapgui
 {
-   public class CN47N_Datas
+   public class CN47N
     {
         public DLM.db.Linha GetLinha()
         {
@@ -31,13 +31,13 @@ namespace DLM.sapgui
         {
             return PEP.Codigo;
         }
-        public PEPConsultaSAP PEP
+        public PEP_Planejamento PEP
         {
             get
             {
                 if(_PEP==null)
                 {
-                    _PEP = new PEPConsultaSAP();
+                    _PEP = new PEP_Planejamento();
                 }
                 return _PEP;
             }
@@ -46,7 +46,7 @@ namespace DLM.sapgui
                 _PEP = value;
             }
         }
-        private PEPConsultaSAP _PEP { get; set; }
+        private PEP_Planejamento _PEP { get; set; }
 
         public string Status { get; private set; } = "";
         public string Texto_Operacao { get; private set; } = "";
@@ -56,13 +56,13 @@ namespace DLM.sapgui
         public DateTime Inicio_Previsto { get; private set; } = Cfg.Init.DataDummy();
         public DateTime Fim_Previsto { get; private set; } = Cfg.Init.DataDummy();
 
-        public CN47N_Datas()
+        public CN47N()
         {
             Status = "NÃO TEM";
         }
-        public CN47N_Datas(SAP.Middleware.Connector.IRfcStructure s)
+        public CN47N(SAP.Middleware.Connector.IRfcStructure s)
         {
-            this.PEP = new PEPConsultaSAP(s.GetValue("ELEM_PEP").ToString());
+            this.PEP = new PEP_Planejamento(s.GetValue("ELEM_PEP").ToString());
             this.Texto_Operacao = s.GetValue("POST1").ToString();
             this.Data_Inicio_Base = s.GetValue("PSTRT").Data();
             this.Data_Fim_Base = s.GetValue("PENDE").Data();
@@ -87,9 +87,9 @@ namespace DLM.sapgui
              * FIELD VIEND=0000-00-00 
              */
         }
-        public CN47N_Datas(DLM.db.Linha l)
+        public CN47N(DLM.db.Linha l)
         {
-            this.PEP = new PEPConsultaSAP(l[(int)Colunas.CN47N.WBS].ToString());
+            this.PEP = new PEP_Planejamento(l[(int)Colunas.CN47N.WBS].ToString());
             this.Status = l[(int)Colunas.CN47N.STATUS].ToString();
             this.Texto_Operacao = l[(int)Colunas.CN47N.TEXTO_OPERACAO].ToString();
             this.Data_Inicio_Base = l[(int)Colunas.CN47N.INICIO_BASE].Data();

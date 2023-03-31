@@ -1613,7 +1613,6 @@ namespace DLM.painel
         
             if (real != null)
             {
-
                 this.Material_REAL = true;
                 this.Real = real;
                 this.pep = real.pedido;
@@ -1829,7 +1828,7 @@ namespace DLM.painel
         {
             this.Pedidos = pedidos;
 
-            this.Pedidos[0].Getetapas();
+            //this.Pedidos[0].Getetapas();
         }
     }
 }

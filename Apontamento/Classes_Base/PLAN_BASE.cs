@@ -189,11 +189,6 @@ namespace DLM.painel
             this._etapas = new List<PLAN_ETAPA>();
             this._etapas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsWith(this.PEP)));
         }
-        public void Set(List<PLAN_SUB_ETAPA> lista)
-        {
-            this._subetapas = new List<PLAN_SUB_ETAPA>();
-            this._subetapas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsWith(this.PEP)));
-        }
         public void Set(List<PLAN_PEP> lista)
         {
             this._peps = new List<PLAN_PEP>();

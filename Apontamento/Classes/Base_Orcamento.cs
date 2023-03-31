@@ -269,10 +269,7 @@ namespace DLM.painel
             this.arquivos = l.Get("arquivos").Int();
             this.criacao = l.Get("criacao").Data();
             this.tipo = tipo;
-            if(this.descricao == "")
-            {
-                this.Titulo.Descricao = l.Get("nome").Valor;
-            }
+            this.Titulo.Descricao = l.Get("nome").Valor;
         }
     }
 }

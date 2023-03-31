@@ -14,45 +14,7 @@ namespace DLM.sapgui
 {
    public partial class Funcoes
     {
-        public static bool GravarZContratos(List<string> pedidos)
-        {
-            pedidos = pedidos.FindAll(x => x.Replace(" ", "") != "");
-            DLM.sapgui.Consulta sap = new Consulta();
-            var w = Conexoes.Utilz.Wait(pedidos.Count, "Procurando notas fiscais...");
-            var destino = Conexoes.Utilz.CriarPasta(Cfg.Init.DIR_APP, "SAP");
-            var CON = false;
-            if (Directory.Exists(destino))
-            {
-                foreach (var ST in pedidos)
-                {
-                    string arnome = ST.Replace(".", "").Replace("*", "") + Cfg.Init.SAP_ZCONTRATOSARQ;
-                    CON = sap.ZCONTRATOS(ST, destino, ST.Replace(".", "").Replace("*", "") + Cfg.Init.SAP_ZCONTRATOSARQ);
-                    if (CON)
-                    {
-                        DBases.GetDB().Apagar("Elemento_PEP", $"%{ST}%", Cfg.Init.db_comum, Cfg.Init.tb_zcontratos_notas_fiscais, true);
-                        DLM.painel.Consultas.MatarExcel(false);
-                        List<ZCONTRATOS> notas =  CargaExcel.ZCONTRATO(destino + arnome);
-                       DBases.GetDB().Cadastro(notas.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zcontratos_notas_fiscais);
-                    }
-                    else
-                    {
-                        w.Close();
-                        return CON;
-                    }
 
-                w.somaProgresso();
-                }
-            }
-            else
-            {
-                w.Close();
-
-                return false;
-            }
-
-            w.Close();
-            return CON;
-        }
         public static void RodaScript(List<string> Script, string Destino)
         {
 
@@ -82,13 +44,13 @@ namespace DLM.sapgui
                 }
             }
         }
-        public static List<CN47N_Datas> GetCronograma(string Pedido)
+        public static List<CN47N> GetCronograma(string Pedido)
         {
-            var Datas = new List<CN47N_Datas>();
+            var Datas = new List<CN47N>();
             var t = DLM.sap.RfcsSAP.ConsultarPedido(Pedido);
             foreach (var s in t)
             {
-                Datas.Add(new CN47N_Datas(s));
+                Datas.Add(new CN47N(s));
             }
             return Datas;
         }
@@ -107,7 +69,7 @@ namespace DLM.sapgui
             }
             return _pedidos;
         }
-        public static List<PLAN_PEP> converter(List<PEPConsultaSAP> origem/*, bool consultar_existentes = false*/)
+        public static List<PLAN_PEP> converter(List<PEP_Planejamento> origem/*, bool consultar_existentes = false*/)
         {
             var PEPS_DUMP = origem.Select(x =>
             new PLAN_PEP()

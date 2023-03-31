@@ -55,13 +55,13 @@ namespace DLM.sapgui
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
-        public PEPConsultaSAP PEP
+        public PEP_Planejamento PEP
         {
             get
             {
                 if (_PEP == null)
                 {
-                    _PEP = new PEPConsultaSAP();
+                    _PEP = new PEP_Planejamento();
                 }
                 return _PEP;
             }
@@ -72,7 +72,7 @@ namespace DLM.sapgui
                 NotifyPropertyChanged("PEP");
             }
         }
-        private PEPConsultaSAP _PEP { get; set; }
+        private PEP_Planejamento _PEP { get; set; }
         public string Material { get; private set; } = "";
         public bool Carga_Confirmada { get; private set; } = false;
         public string Status_Material { get; private set; } = "";
@@ -92,7 +92,7 @@ namespace DLM.sapgui
                 this.Desenho = l[Colunas.ZPP0066N.DESENHO].ToString().Replace(" ", "");
                 this.Num_Carga = l[Colunas.ZPP0066N.NUMCARGA].ToString().Replace(" ", "");
                 this.Quantidade =l[Colunas.ZPP0066N.QUANTIDADE].ToString();
-                this.PEP = new PEPConsultaSAP(l[Colunas.ZPP0066N.PEP].ToString().Replace(" ", ""));
+                this.PEP = new PEP_Planejamento(l[Colunas.ZPP0066N.PEP].ToString().Replace(" ", ""));
             }
             else
             {
@@ -103,7 +103,7 @@ namespace DLM.sapgui
                 this.Desenho = l[Colunas.ZPP0066N_Sem_Perfil.NumDesEngenharia].ToString().Replace(" ", "");
                 this.Num_Carga = l[Colunas.ZPP0066N_Sem_Perfil.NumCarga].ToString().Replace(" ", "");
                 this.Quantidade = l[Colunas.ZPP0066N_Sem_Perfil.QtdePacking].ToString();
-                this.PEP = new PEPConsultaSAP(l[Colunas.ZPP0066N_Sem_Perfil.Elemento_PEP].ToString().Replace(" ", ""));
+                this.PEP = new PEP_Planejamento(l[Colunas.ZPP0066N_Sem_Perfil.Elemento_PEP].ToString().Replace(" ", ""));
                 this.Nota_Fiscal = l[Colunas.ZPP0066N_Sem_Perfil.NFiscal].ToString().Replace(" ", "");
             }
 

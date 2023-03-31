@@ -12,27 +12,42 @@ using System.Windows.Media;
 
 namespace DLM.painel
 {
+    public class PLAN_PECA_ZPMP
+    {
+        public string PEP { get; private set; } = "";
+        public string Marca { get; private set; } = "";
+        public string Material { get; private set; } = "";
+        public string Grupo_Mercadoria { get; private set; } = "";
+        public PLAN_PECA_ZPMP(db.Linha L)
+        {
+            this.PEP = L.Get("pep").Valor;
+            this.Marca = L.Get("tamanho_dimensao").Valor;
+            this.Material = L.Get("Material").Valor;
+            this.Grupo_Mercadoria = L.Get("Grupo_Mercadoria").Valor;
+           
+        }
+    }
     public class PLAN_PECA
     {
         public Tipo_Embarque Tipo_Embarque { get; set; } = Tipo_Embarque.ZPP0100;
-       public void SetStatusByZPP0100(List<DLM.db.Linha> linhas)
+        public void SetStatusByZPP0100(List<DLM.db.Linha> linhas)
         {
             var lista = linhas.FindAll(x => x["Material"].Valor == this.material.ToString());
 
-            this.qtd_embarcada = lista.FindAll(x=>x["St_Conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x.Get("Qtd_Embarque").Double());
-            var marca = lista.Select(x => x["Tamanho_dimensao"].Valor).Distinct().ToList().FindAll(x=>x.Replace(" ","")!="");
+            this.qtd_embarcada = lista.FindAll(x => x["St_Conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x.Get("Qtd_Embarque").Double());
+            var marca = lista.Select(x => x["Tamanho_dimensao"].Valor).Distinct().ToList().FindAll(x => x.Replace(" ", "") != "");
 
-            if(marca.Count>0)
+            if (marca.Count > 0)
             {
                 var mm = marca[0];
-                if(this.material.ToString() == this.desenho | this.desenho=="")
+                if (this.material.ToString() == this.desenho | this.desenho == "")
                 {
                     this.desenho = mm;
                 }
             }
-         
+
             this.Tipo_Embarque = Tipo_Embarque.ZPP0100;
-          
+
         }
 
         public Tipo_Material Tipo { get; set; } = Tipo_Material.Real;
@@ -93,7 +108,7 @@ namespace DLM.painel
 
                         _imagem = Conexoes.BufferImagem.dialog_error;
                     }
-                  
+
                 }
                 return _imagem;
             }
@@ -249,34 +264,29 @@ namespace DLM.painel
         public double qtd_embarcada { get; private set; } = 0;
         public double qtd_produzida { get; private set; } = 0;
         public double peso_unitario { get; private set; } = 0;
-        private List<Logistica_Planejamento> _logistica { get; set; }
-        public List<Logistica_Planejamento> logistica
+        private List<PLAN_PECA_LOG> _logistica { get; set; }
+        public List<PLAN_PECA_LOG> logistica
         {
             get
             {
                 if (_logistica == null)
                 {
-                    _logistica = new List<Logistica_Planejamento>();
+                    _logistica = new List<PLAN_PECA_LOG>();
 
                     var consulta = DBases.GetDB().Consulta($"SELECT *  FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_zpp0066n_logistica} as pr where pr.pep ='{PEP}' and pr.material = '{material}'");
                     foreach (var linha in consulta.Linhas)
                     {
-                        this._logistica.Add(new Logistica_Planejamento(this, linha));
+                        this._logistica.Add(new PLAN_PECA_LOG(this, linha));
                     }
                 }
                 return _logistica;
 
             }
-            //set
-            //{
-            //    _logistica = value;
-
-            //}
         }
-        public void SetLogistica(List<Logistica_Planejamento> logs)
+        public void SetLogistica(List<PLAN_PECA_LOG> logs)
         {
             this._logistica = logs;
-            foreach(var s in this._logistica)
+            foreach (var s in this._logistica)
             {
                 s.peca = this;
             }
@@ -286,7 +296,7 @@ namespace DLM.painel
         {
             get
             {
-                if(desenho!="") return desenho;
+                if (desenho != "") return desenho;
 
 
                 return this.material.ToString();
@@ -314,8 +324,8 @@ namespace DLM.painel
         {
             get
             {
-                var s = Math.Round(peso_necessario - peso_produzido,2);
-               if(s>0)
+                var s = Math.Round(peso_necessario - peso_produzido, 2);
+                if (s > 0)
                 {
                     return s;
                 }
@@ -329,7 +339,7 @@ namespace DLM.painel
         {
             get
             {
-                if(total_fabricado== 0) { return 0; }
+                if (total_fabricado == 0) { return 0; }
                 double vv = 100;
                 return Math.Round(total_fabricado / vv, 2);
             }
@@ -364,10 +374,10 @@ namespace DLM.painel
         {
             get
             {
-                if(this.qtd_embarcada>0 && this.qtd_necessaria>0)
+                if (this.qtd_embarcada > 0 && this.qtd_necessaria > 0)
                 {
-                var s = Math.Round((double)(this.qtd_embarcada / this.qtd_necessaria) * 100, 2);
-                    if(s>0)
+                    var s = Math.Round((double)(this.qtd_embarcada / this.qtd_necessaria) * 100, 2);
+                    if (s > 0)
                     {
                         return 100;
                     }
@@ -419,8 +429,8 @@ namespace DLM.painel
         {
             get
             {
-                    return _codigo_materia_prima_sap;
-     
+                return _codigo_materia_prima_sap;
+
             }
             set
             {
@@ -446,7 +456,7 @@ namespace DLM.painel
         {
             if (this._bobina == null)
             {
-                if (this.codigo_materia_prima_sap.Replace("0","") == "")
+                if (this.codigo_materia_prima_sap.Replace("0", "") == "")
                 {
                     this._bobina = new Bobina();
 
@@ -454,7 +464,7 @@ namespace DLM.painel
                 else
                 {
                     var ts = Buffer.Bobinas.Find(x => x.SAP == this.codigo_materia_prima_sap);
-                    if(ts==null)
+                    if (ts == null)
                     {
                         var t = DBases.GetBancoRM().GetBobina(this.codigo_materia_prima_sap);
                         if (t != null)
@@ -470,7 +480,7 @@ namespace DLM.painel
 
                         }
                     }
-                  
+
                     else
                     {
                         this._bobina = ts;
@@ -508,7 +518,7 @@ namespace DLM.painel
                 this.desenho = peca.Get("desenho").Valor;
 
                 this.DENOMINDSTAND = peca.Get("DENOMINDSTAND").Valor;
-               
+
                 this.inicio = peca.Get("DATA_INICIO").Data();
                 this.fim = peca.Get("DATA_FIM").Data();
                 this.DESENHO_1 = peca.Get("DESENHO_1").Valor;
@@ -543,7 +553,7 @@ namespace DLM.painel
                     this.centro = s;
                 }
 
-                if(this.qtd_embarcada>0)
+                if (this.qtd_embarcada > 0)
                 {
                     this.ULTIMO_STATUS = "PARCIALMENTE EXPEDIDO";
                 }
@@ -551,15 +561,15 @@ namespace DLM.painel
                 {
                     this.ULTIMO_STATUS = peca.Get("ULTIMO_STATUS").Valor;
                 }
-                else if(this.qtd_necessaria> this.qtd_embarcada)
+                else if (this.qtd_necessaria > this.qtd_embarcada)
                 {
                     this.ULTIMO_STATUS = "FABRICADO";
                 }
-                else if(this.qtd_embarcada>=this.qtd_necessaria)
+                else if (this.qtd_embarcada >= this.qtd_necessaria)
                 {
                     this.ULTIMO_STATUS = "EMBARCADO";
                 }
-            
+
 
                 getComplexidade();
             }
@@ -609,7 +619,7 @@ namespace DLM.painel
             this.status_sistema_tarefa = peca.Get("status_sistema_tarefa").Valor;
             foreach (var t in logistica)
             {
-                this.logistica.Add(new Logistica_Planejamento(this, t));
+                this.logistica.Add(new PLAN_PECA_LOG(this, t));
             }
             if (logistica.Count > 0)
             {
@@ -692,7 +702,7 @@ namespace DLM.painel
             {
                 this.grupo_mercadoria = "ALMOX";
             }
-           
+
         }
 
         public PLAN_PECA()
@@ -700,14 +710,14 @@ namespace DLM.painel
 
         }
 
-        public PLAN_PECA(Logistica_Planejamento ps)
+        public PLAN_PECA(PLAN_PECA_LOG ps)
         {
             this.centro = ps.centro;
             this.PEP = ps.pep;
             this.material = ps.material;
             this.desenho = ps.desenho;
             this.texto_breve = ps.descricao;
-            
+
         }
     }
 

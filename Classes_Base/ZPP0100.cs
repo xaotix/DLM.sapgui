@@ -12,7 +12,7 @@ namespace DLM.sapgui
     public class ZPP0100
     {
         //public string booleano { get; set; } = "";
-        public PEPConsultaSAP PEP { get; set; } = new PEPConsultaSAP();
+        public PEP_Planejamento PEP { get; set; } = new PEP_Planejamento();
         public string Ordem_Embarque { get; set; } = "";
         public string Qtd_Embarque { get; set; } = "";
         public string Nro_Carga { get; set; } = "";
@@ -133,7 +133,7 @@ namespace DLM.sapgui
         {
             //this.booleano = l[Colunas.ZPP0100.booleano].ToString();
             this.Elemento_PEP = CargaExcel.TratarPEP(l[(int)TAB_ZPP0100.Elemento_PEP].ToString());
-            this.PEP = new PEPConsultaSAP(this.Elemento_PEP.ToString().Replace(" ", ""));
+            this.PEP = new PEP_Planejamento(this.Elemento_PEP.ToString().Replace(" ", ""));
             this.Ordem_Embarque = l[(int)TAB_ZPP0100.Ordem_Embarque].ToString();
             this.Qtd_Embarque = l[(int)TAB_ZPP0100.Qtd_Embarque].ToString();
             this.Nro_Carga = l[(int)TAB_ZPP0100.Nro_Carga].ToString();

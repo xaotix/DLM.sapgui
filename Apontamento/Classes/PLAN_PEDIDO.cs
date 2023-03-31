@@ -12,15 +12,13 @@ namespace DLM.painel
         public long id_montagem { get; set; } = 0;
         public double latitude { get; private set; } = 0;
         public double longitude { get; private set; } = 0;
-        private List<Logistica_Planejamento> _logistica_st { get; set; }
-        public List<Logistica_Planejamento> GetLogistica()
+        private List<PLAN_PECA_LOG> _logistica_st { get; set; }
+        public List<PLAN_PECA_LOG> GetLogistica()
         {
             if(_logistica_st==null)
             {
-
-                List<DLM.painel.PLAN_PECA> pcs = new List<DLM.painel.PLAN_PECA>();
-
-                _logistica_st = DLM.painel.Consultas.GetLogistica(null, this.GetPecas(), out pcs);
+                var orfas = new List<PLAN_PECA>();
+                _logistica_st = DLM.painel.Consultas.GetLogistica(this.GetPecas(), out orfas);
             }
             return _logistica_st;
         }
@@ -75,6 +73,7 @@ namespace DLM.painel
         public PLAN_PEDIDO(DLM.db.Linha L, PLAN_OBRA contrato)
         {
             this.PEP = L.Get("pedido").Valor;
+            this.Titulo.Descricao = L.Get("nome").Valor;
             this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
             this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();
             this.etapas_qtd = L.Get("etapas").Int();

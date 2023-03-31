@@ -15,78 +15,6 @@ namespace DLM.sapgui
 {
     public class ConexaoSAP
     {
-        public bool ZSD0031N(string pedido)
-        {
-            string arquivo = pedido.Replace(".", "") + "_" + Cfg.Init.SAP_ZSD0031NARQ;
-            var con = Consulta.ZSD0031N(pedido, Cfg.Init.GetDestinoSAP_Excel(), arquivo);
-            if (con)
-            {
-                if (File.Exists(Cfg.Init.GetDestinoSAP_Excel() + arquivo))
-                {
-                    var folha = CargaExcel.ZSD0031N(Cfg.Init.GetDestinoSAP_Excel() + arquivo);
-                    folha.PEP = pedido;
-                    if (folha.Carregado)
-                    {
-                        DLM.painel.Consultas.Salvar(folha, pedido);
-                    }
-                }
-            }
-            return con;
-        }
-        //public static string GravarTitulos(List<string> codigos_pedidos)
-        //{
-        //    var w = Conexoes.Utilz.Wait(codigos_pedidos.Count,"Gravando titulos...");
-
-        //    foreach (var Pedido in codigos_pedidos)
-        //    {
-        //        try
-        //        {
-        //            var consulta = DLM.sap.RfcsSAP.ConsultarPedido(Pedido);
-        //            if (consulta.Count == 0)
-        //            {
-        //                continue;
-        //            }
-        //            var lista = consulta.Select(x => x.Select(y => y.GetValue().ToString()).ToList()).ToList();
-
-        //            DBases.GetDB().Apagar("CHAVE", $"%{Pedido.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_titulos_planejamento, false);
-
-
-        //            List<string> linhas = new List<string>();
-        //            foreach (var ll in lista)
-        //            {
-        //                linhas.Add("('" + ll[1].Replace("'", "") + "','" + ll[2].Replace("'", "") + "')");
-        //            }
-        //            var sublista = DLM.painel.Consultas.quebrar_lista(linhas, 100);
-        //            foreach (var sub in sublista)
-        //            {
-        //                var SUBCOMANDO = $"INSERT INTO {Cfg.Init.db_comum}.{Cfg.Init.tb_titulos_planejamento}" +
-        //                                $"(CHAVE, DESCRICAO)" +
-        //                                $" VALUES ";
-
-        //                SUBCOMANDO = SUBCOMANDO + string.Join(",", sub);
-        //                DBases.GetDB().Comando(SUBCOMANDO);
-        //            }
-        //            w.somaProgresso();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            //return ex.Message;
-
-        //        }
-        //    }
-        //    w.Close();
-        //    return "";
-        //}
-
-
-
-        public void GravarPeps()
-        {
-            var peps = Funcoes.converter(this.PEPsConsultaSAP);
-            DLM.painel.Consultas.Apagar_peps(this.Contrato);
-
-            DBases.GetDB().Cadastro(peps.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
-        }
         public string Contrato
         {
             get
@@ -98,324 +26,195 @@ namespace DLM.sapgui
                 return "";
             }
         }
+        public string Codigo { get; private set; } = "";
 
-        private List<DLM.painel.PLAN_PEP> _PEPs { get; set; }
-        public List<DLM.painel.PLAN_PEP> PEPs
+        public CN47N GETPEPENG(string PEPFABRICA)
         {
-            get
-            {
-                if(_PEPs == null)
-                {
-                    _PEPs = CarregarPEPS();
-                }
-                return _PEPs;
-            }
-        }
-
-        public List<DLM.painel.PLAN_PEP> CarregarPEPS()
-        {
-            return DLM.painel.Consultas.GetPeps(new List<string> { this.Codigo });
-        }
-
-
-        public CN47N_Datas GETPEPFAB(string PEPFABRICA)
-        {
-            var T = this.Datas.Find(x => x.PEP.Codigo.ToUpper() == PEPFABRICA);
-            if (T != null)
-            {
-                return T;
-            }
-            return new CN47N_Datas();
-        }
-
-        public CN47N_Datas GETPEPENG(string PEPFABRICA)
-        {
-            var T = this.Datas.Find(x => x.PEP.Codigo.ToUpper() == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".EN").ToUpper());
+            var T = this.CN47N.Find(x => x.PEP.Codigo.ToUpper() == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".EN").ToUpper());
             if (T!=null)
             {
                 return T;
             }
-            return new DLM.sapgui.CN47N_Datas();
+            return new DLM.sapgui.CN47N();
         }
-        public CN47N_Datas GETPEPMONT(string PEPFABRICA)
+        public CN47N GETPEPMONT(string PEPFABRICA)
         {
-            var T = this.Datas.Find(x => x.PEP.Codigo.ToUpper() == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA,true) + ".MO").ToUpper());
+            var T = this.CN47N.Find(x => x.PEP.Codigo.ToUpper() == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA,true) + ".MO").ToUpper());
             if (T != null)
             {
                 return T;
             }
-            return new CN47N_Datas();
+            return new CN47N();
         }
-        public List<CN47N_Datas> GETPEPSLOG(string PEPFABRICA)
+        public List<CN47N> GETPEPSLOG(string PEPFABRICA)
         {
-            var T = this.Datas.FindAll(x => x.PEP.Codigo.ToUpper().Contains(Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".L"));
+            var T = this.CN47N.FindAll(x => x.PEP.Codigo.ToUpper().Contains(Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".L"));
             return T.ToList() ;
         }
         public string Descricao { get; set; } = "";
-        public double Peso_Total
-        {
-            get
-            {
-                return Producao.Sum(x => Conexoes.Utilz.Double(x.peso_necessario));
-            }
-        }
 
+        public List<PLAN_CONTRATO> Titulos { get; set; } = new List<PLAN_CONTRATO>();
 
-        public Consulta Consulta { get; private set; } = new Consulta();
-        public string Codigo { get; private set; } = "";
-        public List<ZPP0066N> Logistica { get; set; } = new List<ZPP0066N>();
-        public List<ZPP0100> Embarque { get; set; } = new List<ZPP0100>();
-
-        public List<CJI3> cji3 { get; set; } = new List<CJI3>();
+        public SAP_Consulta_Macro Consulta { get; private set; } = new SAP_Consulta_Macro();
+        public List<ZPP0100> ZPP0100 { get; set; } = new List<ZPP0100>();
         public List<ZPP0112> ZPP0112 { get; set; } = new List<ZPP0112>();
-        public List<FAGLL03> fagll03 { get; set; } = new List<FAGLL03>();
-
-        public List<ZPMP> Producao { get; set; } = new List<ZPMP>();
-        public List<CN47N_Datas> Datas { get; set; } = new List<CN47N_Datas>();
-        public List<PEPConsultaSAP> PEPsConsultaSAP { get; set; } = new List<PEPConsultaSAP>();
+        public List<ZPMP> ZPMP { get; set; } = new List<ZPMP>();
+        public List<CN47N> CN47N { get; set; } = new List<CN47N>();
+        public List<PEP_Planejamento> PEP_PLanejamento { get; set; } = new List<PEP_Planejamento>();
         public ConexaoSAP(string Pedido)
         {
             this.Codigo = Pedido + "*";
             //Pesquisar();
 
         }
-
-        public ConexaoSAP(DLM.painel.PLAN_PEDIDO PED)
-        {
-            this.Codigo = PED.pedido;
-            this._PEPs = PED.GetPeps();
-        }
         public ConexaoSAP()
         {
 
         }
 
-
-        public void LimparMateriais(bool zpmp, bool zpp0066n, bool zpp0100)
-        {
-            if(this.Codigo.Length<5)
-            {
-                return;
-            }
-            if(zpmp)
-            {
-                DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, false);
-            }
-            if(zpp0066n)
-            {
-                DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0066n_logistica, false);
-            }
-            if (zpp0100)
-            {
-                DBases.GetDB().Apagar("Elemento_PEP", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques, false);
-            }
-         
-            DBases.GetDB().Apagar("pep", $"%{Codigo.Replace("*", "")}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n, false);
-
-        }
-
-        public bool ConsultaSAP( bool CN47N = true, bool ZPMP = true, bool ZPP0066N = false, bool ZPP0100 = true)
+        public bool ConsultaSAP()
         {
             if (this.Codigo.Length < 10)
             {
                 return false;
             }
-            if (!DLM.painel.Consultas.MatarExcel(false)) { return false; }
+            this.ZPP0100 = new List<ZPP0100>();
+            this.ZPMP = new List<ZPMP>();
+            this.PEP_PLanejamento = new List<PEP_Planejamento>();
+            this.Titulos = new List<PLAN_CONTRATO>();
+
+            var tabela_zpmp = new db.Tabela();
+            var tabela_zpp0100 = new db.Tabela();
+            var tabela_cn47n = new DLM.db.Tabela();
+
+
+
+            var arq0100 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPP0100ARQ;
+            var arq_zpmp = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPMPARQ_SISTEMA;
+            var arq_cn47n = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_CN47NARQ;
+
+
+
+            //cronograma
+            if (Consulta.CN47N(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq_cn47n))
+            {
+                this.CN47N = CargaExcel.CN47N(Cfg.Init.GetDestinoSAP_Excel() + arq_cn47n, out tabela_cn47n);
+            }
             
-            var prod = false;
-            var data = false;
-            if (ZPMP)
+            //fábrica / engenharia
+            if (Consulta.ZPMP(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq_zpmp))
             {
-                prod = this.ZPMP();
+                this.ZPMP.AddRange(CargaExcel.ZPMP(Cfg.Init.GetDestinoSAP_Excel() + arq_zpmp, out tabela_zpmp));
+            }
+
+            //logística
+            if (Consulta.ZPP0100(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
+            {
+                this.ZPP0100 = CargaExcel.ZPP0100(Cfg.Init.GetDestinoSAP_Excel() + arq0100, out tabela_zpp0100);
             }
 
 
-            if (CN47N)
+            //monta o PEP_PLANEJAMENTO
+            if (this.ZPMP.Count>0  && this.CN47N.Count>0)
             {
-                data = SAP_Datas();
-            }
+                var peps_producao = this.ZPMP.Select(x => x.PEP.Codigo).Distinct().ToList();
+                peps_producao.AddRange(this.ZPMP.Select(x => x.PEP.Codigo).Distinct().ToList());
+                peps_producao = peps_producao.Distinct().ToList().OrderBy(x => x).ToList();
 
-
-            if (ZPP0066N | ZPP0100)
-            {
-                var log = this.ZPP0100( true, ZPP0066N, ZPP0100);
-
-                if (this.Codigo.StartsWith("*") && this.Logistica.Count > 0)
+                foreach (var pep in peps_producao)
                 {
-                    this.Codigo = this.Logistica[0].PEP.Codigo.Substring(0, 13);
+                    PEP_PLanejamento.Add(new PEP_Planejamento(
+                        pep,
+                        this.ZPMP.FindAll(x => x.PEP.Codigo == pep).ToList(),
+                        this.ZPP0100.FindAll(x => x.PEP.Codigo == pep).ToList(),
+                        this.CN47N.Find(x => x.PEP.Codigo == pep),
+                        this
+                        )
+                        );
+                }
+                DLM.painel.Consultas.MatarExcel(false);
+            }
+
+            //ajustes finais
+            if (tabela_zpmp.Linhas.Count > 0)
+            {
+                this.Descricao = tabela_zpmp[0][(int)TAB_ZPMP.DENOMINACAO].Valor;
+                var pdes = tabela_zpmp.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Pedido(x[(int)TAB_ZPMP.ELEMENTO_PEP].Valor,true)).Select(x => x.First()).ToList();
+                var pedidos = pdes
+                    .Select(x => $"{Conexoes.Utilz.PEP.Get.Pedido(x[(int)TAB_ZPMP.ELEMENTO_PEP].Valor,true)};{x[(int)TAB_ZPMP.DENOMINACAO].Valor}").Distinct().ToList().Select(x=>x.Split(';').ToList()).ToList();
+                foreach(var ped in pedidos)
+                {
+                    PLAN_CONTRATO titulo = new PLAN_CONTRATO();
+                    titulo.Contrato = ped[0];
+                    titulo.Descricao = ped[1];
+                    this.Titulos.Add(titulo);
+                    this.Titulos = this.Titulos.FindAll(x => x.Contrato.Length > 0);
                 }
             }
 
 
-            if (prod  && data)
-            {
-                GetPEPs();
-                DLM.painel.Consultas.MatarExcel(false);
-            }
-            else if(ZPMP && CN47N)
-            {
-                return false;
-            }
 
-
-
-            return true;
-
+            return PEP_PLanejamento.Count>0;
         }
 
         public void GravarMateriais()
         {
+            DBases.GetDB().Apagar("pep", $"%{this.Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento, false);
+            DBases.GetDB().Apagar("pep", $"%{this.Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, false);
+            DBases.GetDB().Apagar("Elemento_PEP", $"%{this.Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques, false);
+            DBases.GetDB().Apagar("pep", $"%{this.Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n, false);
+            DBases.GetDB().Apagar("contrato", $"%{this.Contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia,false);
 
-            if (this.Codigo.Length > 10 && (this.Producao.Count > 0 | this.Logistica.Count > 0 | this.Embarque.Count > 0))
+
+            if (this.PEP_PLanejamento.Count > 0)
             {
-                var count = this.Producao.Count + this.Logistica.Count + this.Embarque.Count;
+                var count = this.ZPMP.Count + this.ZPP0100.Count;
 
-                LimparMateriais(this.Producao.Count > 0, this.Logistica.Count > 0, this.Embarque.Count > 0);
-
-                if (this.Producao.Count > 0)
+                if (this.PEP_PLanejamento.Count > 0)
                 {
-                    var linhas = this.Producao.Select(x => x.GetLinha()).ToList();
-                    DBases.GetDB().Cadastro(linhas, Cfg.Init.db_comum, "zpmp_producao");
+                    var peps = Funcoes.converter(this.PEP_PLanejamento);
+                    DBases.GetDB().Cadastro(peps.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
+                }
+                if (this.ZPMP.Count > 0)
+                {
+                    DBases.GetDB().Cadastro(this.ZPMP.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao);
                 }
 
-                if (this.Logistica.Count > 0)
+                if (this.ZPP0100.Count > 0)
                 {
-                    var linhas = this.Logistica.Select(x => x.GetLinha()).ToList();
-                    DBases.GetDB().Cadastro(linhas, Cfg.Init.db_comum, "zpp0066n_logistica");
+                    DBases.GetDB().Cadastro(this.ZPP0100.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques);
                 }
 
-                if (this.Embarque.Count > 0)
+                if (this.CN47N.Count > 0)
                 {
-                    var linhas = this.Embarque.Select(x => x.GetLinha()).ToList();
-                    DBases.GetDB().Cadastro(linhas, Cfg.Init.db_comum, "zpp0100_embarques");
+                    DBases.GetDB().Cadastro(this.CN47N.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
+                }
+                if(this.Titulos.Count>0)
+                {
+                    DBases.GetDB().Cadastro(this.Titulos.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
                 }
 
-                if(this.Datas.Count>0)
-                {
-                    DBases.GetDB().Cadastro(this.Datas.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, "cn47n");
-                }
             }
         }
+
+
 
         public List<ZPP0112> GetZPP0112(long min, long max, bool salvar, string pedido = "")
         {
-            if (!DLM.painel.Consultas.MatarExcel(false)) { return new List<ZPP0112>(); }
-            //if (this.Codigo.Length < 3) { return new List<ZPP0112>(); }
-            var ARQ = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPP0112ARQ;
+            DLM.painel.Consultas.MatarExcel(false);
+            var arq_zpp0112 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPP0112ARQ;
 
-            if (Consulta.ZPP0112(Cfg.Init.GetDestinoSAP_Excel(), ARQ, min, max))
+            if (Consulta.ZPP0112(Cfg.Init.GetDestinoSAP_Excel(), arq_zpp0112, min, max))
             {
                 DLM.painel.Consultas.MatarExcel(false);
-                this.ZPP0112 = CargaExcel.ZPP0112(Cfg.Init.GetDestinoSAP_Excel() + ARQ);
+                this.ZPP0112 = CargaExcel.ZPP0112(Cfg.Init.GetDestinoSAP_Excel() + arq_zpp0112);
                 if (salvar)
                 {
                     DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0112, false);
-                    var w = Conexoes.Utilz.Wait(this.ZPP0112.Count, "Salvando..."); 
                     DBases.GetDB().Cadastro(this.ZPP0112.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpp0112);
-                    w.Close();
                 }
             }
             return this.ZPP0112;
-        }
-
-        public bool ZPP0100( bool sem_perfil, bool ZPP0066N, bool ZPP0100)
-        {
-            this.Logistica = new List<ZPP0066N>();
-            this.Embarque = new List<ZPP0100>();
-
-            var arq = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPP066NARQ;
-            var arq0100 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPP0100ARQ;
-
-            if (ZPP0066N)
-            {
-                if(sem_perfil)
-                {
-                    if (Consulta.ZPP0066N_SemPerfil(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq))
-                    {
-                        DLM.painel.Consultas.MatarExcel(false);
-                        this.Logistica = CargaExcel.ZPP0066N(Cfg.Init.GetDestinoSAP_Excel() + arq, true);
-                    }
-                }
-                else
-                {
-                    if (Consulta.ZPP0066N(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq))
-                    {
-                        DLM.painel.Consultas.MatarExcel(false);
-                        this.Logistica = CargaExcel.ZPP0066N(Cfg.Init.GetDestinoSAP_Excel() + arq, false);
-                    }
-                }
-            }
-
-            if (ZPP0100)
-            {
-                if (Consulta.ZPP0100(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
-                {
-                    DLM.painel.Consultas.MatarExcel(false);
-                    this.Embarque = CargaExcel.ZPP0100(Cfg.Init.GetDestinoSAP_Excel() + arq0100);
-                }
-            }
-
-
-            if (this.Logistica.Count > 0 | this.Embarque.Count > 0)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public bool ZPMP()
-        {
-             var arq = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPMPARQ_SISTEMA;
-            if (Consulta.ZPMP(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(),  arq))
-            {
-                DLM.db.Tabela tabela;
-                this.Producao = CargaExcel.ZPMP(Cfg.Init.GetDestinoSAP_Excel() + arq, out tabela);
-                if(tabela.Linhas.Count>0)
-                {
-                    this.Descricao = tabela[0][(int)TAB_ZPMP.DENOMINACAO].Valor;
-                }
-                return this.Producao.Count>0;
-            }
-            return false;
-        }
-
-        public bool SAP_Datas()
-        {
-            var arq = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_CN47NARQ;
-            if (Consulta.CN47N(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq))
-            {
-                this.Datas = CargaExcel.CN47N(Cfg.Init.GetDestinoSAP_Excel() + arq);
-                return true;
-            }
-            return false;
-        }
-
-
-
-
-        public bool MatarExcel(bool confirmar = false)
-        {
-            return DLM.painel.Consultas.MatarExcel(confirmar);
-        }
-
-        private void GetPEPs()
-        {
-            this.PEPsConsultaSAP = new List<PEPConsultaSAP>();
-
-            var peps_producao = this.Producao.Select(x => x.PEP.Codigo).Distinct().ToList();
-            peps_producao.AddRange(this.Producao.Select(x => x.PEP.Codigo).Distinct().ToList());
-            peps_producao = peps_producao.Distinct().ToList().OrderBy(x => x).ToList();
-            foreach (var pep in peps_producao)
-            {
-                PEPsConsultaSAP.Add(new PEPConsultaSAP(
-                    pep,
-                    this.Producao.FindAll(x => x.PEP.Codigo == pep).ToList(),
-                    this.Embarque.FindAll(x=>x.PEP.Codigo == pep).ToList(),
-                    this.Datas.Find(x => x.PEP.Codigo == pep),
-                    this
-                    )
-                    );
-            }
         }
     }
 }

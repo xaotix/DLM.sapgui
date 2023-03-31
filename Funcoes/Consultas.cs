@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace DLM.sapgui
 {
     //created a class for the SAP app, connection, and session objects as well as for common methods. 
-    public class Consulta
+    public class SAP_Consulta_Macro
     {
         public GuiSession NovaJanela()
         {
@@ -75,7 +75,7 @@ namespace DLM.sapgui
         {
             try
             {
-                DLM.sapgui.Consulta.SapGuiApp = new GuiApplication();
+                DLM.sapgui.SAP_Consulta_Macro.SapGuiApp = new GuiApplication();
 
 
                 string connectString = null;
@@ -87,7 +87,7 @@ namespace DLM.sapgui
                 {
                     connectString = env;
                 }
-                DLM.sapgui.Consulta.SapConnection = DLM.sapgui.Consulta.SapGuiApp.OpenConnection(connectString, Sync: true); //creates connection
+                DLM.sapgui.SAP_Consulta_Macro.SapConnection = DLM.sapgui.SAP_Consulta_Macro.SapGuiApp.OpenConnection(connectString, Sync: true); //creates connection
                 //this.SessaoSAP = (GuiSession)SAPGUI_Medabil.Consulta.SapConnection.Sessions.Item(0); //creates the Gui session off the connection you made
             }
             catch (Exception)
@@ -141,7 +141,7 @@ namespace DLM.sapgui
                     return true;
                     }
                 }
-                if(DLM.sapgui.Consulta.Autologin)
+                if(DLM.sapgui.SAP_Consulta_Macro.Autologin)
                 {
                 Logar();
                 }
@@ -234,7 +234,7 @@ namespace DLM.sapgui
                         ExportaExcelNativo(destino, ARQUIVO, ctrl);
                     }
                     this.SessaoSAP.EndTransaction();
-
+                    DLM.painel.Consultas.MatarExcel(false);
                     return File.Exists(destino + ARQUIVO);
 
 
@@ -1573,8 +1573,6 @@ namespace DLM.sapgui
                     }
 
                     this.SessaoSAP.EndTransaction();
-                    return File.Exists(destino + ARQUIVO);
-
                 }
                 else
                 {
@@ -1598,9 +1596,125 @@ namespace DLM.sapgui
                 }
                 return false;
             }
-
+            DLM.painel.Consultas.MatarExcel(false);
+            return File.Exists(destino + ARQUIVO);
         }
 
+
+
+
+        /*ESSE CARA DÁ AS CARACTERÍSTICAS DAS PEÇAS*/
+        public bool ZPPCOOISN(string Pedido, string destino, string ARQUIVO, bool msgs = false, string layout = "")
+        {
+
+            try
+            {
+                if (File.Exists(destino + ARQUIVO))
+                {
+                    File.Delete(destino + ARQUIVO);
+                }
+                if (this.Carregar_sap())
+                {
+                    Retornar();
+                    this.SessaoSAP.StartTransaction("ZPPCOOISN");
+
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_PROJN-LOW")).Text = Pedido + "*";
+                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtP_VARI")).Text = @"";
+
+
+                    //session.findById("wnd[0]/usr/ctxtP_VARI").text = "/SISTEMA"
+                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtP_VARI")).Text = layout;
+
+
+
+                    ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
+
+
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO_ZPMP);
+                    if (!File.Exists(destino + ARQUIVO))
+                    {
+                        var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
+                        ExportaExcelNativo(destino, ARQUIVO, ctrl);
+                    }
+
+
+
+                }
+                else
+                {
+                    if (msgs)
+                    {
+
+                        MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    }
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                if (msgs)
+                {
+
+                    Conexoes.Utilz.Alerta(ex);
+                }
+                else
+                {
+                    DLM.log.Log(ex);
+                }
+                return false;
+            }
+            this.SessaoSAP.EndTransaction();
+            return File.Exists(destino + ARQUIVO);
+        }
+       
+        /*ESSE CARA DÁ O AVANÇO DE LOGÍSTICA NOVO*/
+        public bool ZPP0100(string Pedido, string destino, string ARQUIVO)
+        {
+
+            try
+            {
+                if (File.Exists(destino + ARQUIVO))
+                {
+                File.Delete(destino + ARQUIVO);
+                }
+                if (this.Carregar_sap())
+                {
+                    Retornar();
+                    this.SessaoSAP.StartTransaction("ZPP0100");
+             
+                    ((GuiButton)this.SessaoSAP.FindById("wnd[0]/usr/btn%#AUTOTEXT009")).Press();
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_POSID-LOW")).Text = Pedido;
+                    //((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-LOW")).Text = antes.Day.ToString().PadLeft(2, '0') + "." + antes.Month.ToString().PadLeft(2, '0') + "." + antes.Year;
+                    //((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-HIGH")).Text = agora.Day.ToString().PadLeft(2, '0') + "." + agora.Month.ToString().PadLeft(2, '0') + "." + agora.Year;
+                    //09/04/2020 - removi as datas pq o zpp0100 nao precisa mais
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-LOW")).Text = "";
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-HIGH")).Text = "";
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtP_LAYOUT")).Text = "/COMPLETO";
+
+                    ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
+
+
+                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
+
+                    this.SessaoSAP.EndTransaction();
+
+                }
+                else
+                {
+                    //MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                DLM.log.Log(ex);
+                //MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return false;
+            }
+            DLM.painel.Consultas.MatarExcel(false);
+            return File.Exists(destino + ARQUIVO);
+        }
 
         /*ESSE CARA DÁ AS NOTAS FISCAIS DA OBRA*/
         public bool ZCONTRATOS(string Pedido, string destino, string ARQUIVO, bool msgs = false)
@@ -1661,121 +1775,6 @@ namespace DLM.sapgui
             }
 
         }
-
-        /*ESSE CARA DÁ AS CARACTERÍSTICAS DAS PEÇAS*/
-        public bool ZPPCOOISN(string Pedido, string destino, string ARQUIVO, bool msgs = false, string layout = "")
-        {
-
-            try
-            {
-                if (File.Exists(destino + ARQUIVO))
-                {
-                    File.Delete(destino + ARQUIVO);
-                }
-                if (this.Carregar_sap())
-                {
-                    Retornar();
-                    this.SessaoSAP.StartTransaction("ZPPCOOISN");
-
-                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_PROJN-LOW")).Text = Pedido + "*";
-                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtP_VARI")).Text = @"";
-
-
-                    //session.findById("wnd[0]/usr/ctxtP_VARI").text = "/SISTEMA"
-                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtP_VARI")).Text = layout;
-
-
-
-                    ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
-
-
-                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO_ZPMP);
-                    if (!File.Exists(destino + ARQUIVO))
-                    {
-                        var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
-                        ExportaExcelNativo(destino, ARQUIVO, ctrl);
-                    }
-
-                    this.SessaoSAP.EndTransaction();
-                    return File.Exists(destino + ARQUIVO);
-
-                }
-                else
-                {
-                    if (msgs)
-                    {
-
-                        MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                    }
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-
-                if (msgs)
-                {
-
-                    Conexoes.Utilz.Alerta(ex);
-                }
-                else
-                {
-                    DLM.log.Log(ex);
-                }
-                return false;
-            }
-
-        }
-       
-        /*ESSE CARA DÁ O AVANÇO DE LOGÍSTICA NOVO*/
-        public bool ZPP0100(string Pedido, string destino, string ARQUIVO)
-        {
-
-            try
-            {
-                if (File.Exists(destino + ARQUIVO))
-                {
-                File.Delete(destino + ARQUIVO);
-                }
-                if (this.Carregar_sap())
-                {
-                    Retornar();
-                    this.SessaoSAP.StartTransaction("ZPP0100");
-             
-                    ((GuiButton)this.SessaoSAP.FindById("wnd[0]/usr/btn%#AUTOTEXT009")).Press();
-                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_POSID-LOW")).Text = Pedido;
-                    //((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-LOW")).Text = antes.Day.ToString().PadLeft(2, '0') + "." + antes.Month.ToString().PadLeft(2, '0') + "." + antes.Year;
-                    //((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-HIGH")).Text = agora.Day.ToString().PadLeft(2, '0') + "." + agora.Month.ToString().PadLeft(2, '0') + "." + agora.Year;
-                    //09/04/2020 - removi as datas pq o zpp0100 nao precisa mais
-                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-LOW")).Text = "";
-                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-HIGH")).Text = "";
-                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtP_LAYOUT")).Text = "/COMPLETO";
-
-                    ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
-
-
-                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
-
-                    this.SessaoSAP.EndTransaction();
-                    return File.Exists(destino + ARQUIVO);
-
-                }
-                else
-                {
-                    //MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                DLM.log.Log(ex);
-                //MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                return false;
-            }
-
-        }
-
-
         /*ESSE CARA DÁ OS CUSTOS DA OBRA*/
         public bool CJI3(string Pedido, string destino, string ARQUIVO)
         {
@@ -2146,7 +2145,7 @@ namespace DLM.sapgui
             }
         }
 
-        public Consulta()
+        public SAP_Consulta_Macro()
         {
 
         }

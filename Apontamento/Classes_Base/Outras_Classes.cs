@@ -17,7 +17,6 @@ namespace DLM.painel
         {
             return Contrato + " - " +  Descricao;
         }
-        public Linha Linha { get; set; } = new Linha();
         public string Contrato { get; set; } = "";
         public string Descricao { get; set; } = "";
         public PLAN_CONTRATO()
@@ -131,8 +130,8 @@ namespace DLM.painel
         public string telefone { get; set; } = "";
         public string observacoes { get; set; } = "";
 
-        public List<Logistica_Planejamento> Pecas_Logistica { get; set; } = new List<Logistica_Planejamento>();
-        public Carga_Planejamento(string Carga,List<Logistica_Planejamento> planejamentos)
+        public List<PLAN_PECA_LOG> Pecas_Logistica { get; set; } = new List<PLAN_PECA_LOG>();
+        public Carga_Planejamento(string Carga,List<PLAN_PECA_LOG> planejamentos)
         {
             this.num_carga = Carga;
             this.Pecas_Logistica = planejamentos.FindAll(x => x.num_carga == Carga);
@@ -164,8 +163,8 @@ namespace DLM.painel
         }
         public string pack_list { get; private set; } = "";
 
-        public List<Logistica_Planejamento> Pecas_Logistica { get; set; } = new List<Logistica_Planejamento>();
-        public PackList_Planejamento(string Carga, List<Logistica_Planejamento> planejamentos)
+        public List<PLAN_PECA_LOG> Pecas_Logistica { get; set; } = new List<PLAN_PECA_LOG>();
+        public PackList_Planejamento(string Carga, List<PLAN_PECA_LOG> planejamentos)
         {
             this.pack_list = Carga;
             this.Pecas_Logistica = planejamentos.FindAll(x => x.pack_list == Carga);
@@ -219,7 +218,7 @@ namespace DLM.painel
 
 
 
-    public class Logistica_Planejamento
+    public class PLAN_PECA_LOG
     {
         public override string ToString()
         {
@@ -275,17 +274,17 @@ namespace DLM.painel
         public double Saldo_1202 { get; private set; } = 0;
         public double Saldo_1203 { get; private set; } = 0;
         public double Saldo_1204 { get; private set; } = 0;
-        public Logistica_Planejamento()
+        public PLAN_PECA_LOG()
         {
 
         }
-        public Logistica_Planejamento(PLAN_PECA peca, DLM.db.Linha l)
+        public PLAN_PECA_LOG(PLAN_PECA peca, DLM.db.Linha l)
         {
             this.peca = peca;
             GetDados(l);
 
         }
-        public Logistica_Planejamento(List<PLAN_PECA> pecas, DLM.db.Linha l, Tipo_Embarque tipo)
+        public PLAN_PECA_LOG(List<PLAN_PECA> pecas, DLM.db.Linha l, Tipo_Embarque tipo)
         {
             this.Tipo_Embarque = tipo;
 
@@ -354,12 +353,12 @@ namespace DLM.painel
         public string subetapa { get; set; } = "";
         public List<Carga_Planejamento> cargas { get; set; } = new List<Carga_Planejamento>();
 
-        public List<Logistica_Planejamento> Pecas_Logistica { get; set; } = new List<Logistica_Planejamento>();
+        public List<PLAN_PECA_LOG> Pecas_Logistica { get; set; } = new List<PLAN_PECA_LOG>();
         public SubEtapa_Logistica_Planejamento()
         {
 
         }
-        public SubEtapa_Logistica_Planejamento(string subetapa, List<Logistica_Planejamento> cargas)
+        public SubEtapa_Logistica_Planejamento(string subetapa, List<PLAN_PECA_LOG> cargas)
         {
             this.subetapa = subetapa;
             this.Pecas_Logistica = cargas.FindAll(x => x.subetapa == subetapa);
