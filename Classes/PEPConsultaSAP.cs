@@ -415,10 +415,6 @@ namespace DLM.sapgui
             this.Peso_Planejado = this.Producao.Sum(x => Conexoes.Utilz.Double(x.peso_necessario));
             this.Peso_Produzido = this.Producao.Sum(x => Conexoes.Utilz.Double(x.peso_produzido));
 
-            if (this.Producao.Count > 0)
-            {
-                this.Denominacao = this.Producao[0].denominacao;
-            }
 
             this.Engenharia = Pedido.GETPEPENG(this.Codigo);
 

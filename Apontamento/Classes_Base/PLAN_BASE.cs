@@ -104,7 +104,7 @@ namespace DLM.painel
         {
             if (_peps.Count == 0 && this.PEP.Length > 3)
             {
-                _peps = Consultas.GetPeps(new List<string> { this.PEP });
+                _peps = Consultas.GetPepsReal(new List<string> { this.PEP });
             }
 
 

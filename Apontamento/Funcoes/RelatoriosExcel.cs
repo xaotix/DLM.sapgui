@@ -14,214 +14,9 @@ namespace DLM.painel
 {
     public class Relatorios
     {
- 
-        private static int InserirGrafico(string nome, string titulo, OfficeOpenXml.ExcelWorksheet planilha, OfficeOpenXml.ExcelWorksheet planilha_grafico, int l0a, int c0a, int col, int lin, int larg, int altura, List<DLM.sapgui.Lancamento> Metas)
-        {
-
-            var lmin = l0a;
-            var cmin = c0a;
-
-
-            var totalp = Metas.Sum(x => x.previsto);
-            planilha_grafico.Cells[l0a, c0a].Value = "Previsto";
-            planilha_grafico.Cells[l0a + 1, c0a].Value = "Realizado";
-            foreach (var s in Metas.OrderBy(x => x.datasys))
-            {
-                var atualp = Math.Round(Metas.FindAll(x => x.datasys <= s.datasys).Sum(x => x.previsto) / totalp * 100, 2);
-                var atualr = Math.Round(Metas.FindAll(x => x.datasys <= s.datasys).Sum(x => x.realizado) / totalp * 100, 2);
-                planilha_grafico.Cells[l0a, c0a + 1].Value = s.data;
-                planilha_grafico.Cells[l0a + 1, c0a + 1].Value = atualp;
-                planilha_grafico.Cells[l0a + 2, c0a + 1].Value = atualr;
-                c0a++;
-            }
-            var n1 = planilha_grafico.Cells[lmin + 1, cmin + 1, lmin + 1, c0a].FullAddress;
-            var n2 = planilha_grafico.Cells[lmin + 2, cmin + 1, lmin + 2, c0a].FullAddress;
-
-            var header = planilha_grafico.Cells[lmin, cmin + 1, lmin, c0a].FullAddress;
-            var myChart = planilha.Drawings.AddChart(nome, eChartType.Line);
-
-            // Define series for the chart
-            var series = myChart.Series.Add(n1, header);
-            series.Header = "Previsto";
-            var series2 = myChart.Series.Add(n2, header);
-            series2.Header = "Realizado";
-            myChart.Border.Fill.Color = System.Drawing.Color.Green;
-            myChart.Title.Text = titulo;
-            myChart.Legend.Position = eLegendPosition.Left;
-            myChart.SetSize(larg, altura);
-            myChart.ShowDataLabelsOverMaximum = false;
-            myChart.YAxis.MaxValue = 100;
-            // Add to 6th row and to the 6th column
-            myChart.SetPosition(lin, 0, col, 0);
-            return c0a;
-        }
-        public static bool Exportar_Avanco_Fabrica(List<PLAN_SUB_ETAPA> subetapas, string destino, bool abrir = true)
-        {
-            if (!File.Exists(Vars.TEMPLATE_AVANCO_FABRICA))
-            {
-                if (abrir)
-                {
-                    MessageBox.Show(Vars.TEMPLATE_AVANCO_FABRICA + "\n template não encontrado.");
-
-                }
-                return false;
-            }
-
-
-            if (destino == "")
-            {
-                destino = Conexoes.Utilz.SalvarArquivo("xlsx");
-            }
-
-            if (destino == "" | destino == null)
-            {
-                return false;
-            }
-            try
-            {
-                if (File.Exists(destino)) { File.Delete(destino); };
-                File.Copy(Vars.TEMPLATE_AVANCO_FABRICA, destino);
-            }
-            catch (Exception EX)
-            {
-                if (abrir)
-                {
-                    MessageBox.Show(EX.Message);
-
-                }
-                return false;
-            }
-            if (subetapas.Count == 0)
-            {
-                if (abrir)
-                {
-                    MessageBox.Show("Nenhuma Subetapa carregada no Pedido.");
-
-                }
-                return false;
-            }
-
-            try
-            {
-                using (var pck = new OfficeOpenXml.ExcelPackage())
-                {
-                    using (Stream stream = new FileStream(destino,
-                                     FileMode.Open,
-                                     FileAccess.Read,
-                                     FileShare.ReadWrite))
-                    {
-                        pck.Load(stream);
-                    }
-
-
-                    OfficeOpenXml.ExcelWorksheet principal = pck.Workbook.Worksheets[1];
-                    string Planilha = principal.Name;
-                    OfficeOpenXml.ExcelWorksheet status = pck.Workbook.Worksheets[2];
-
-                    gravar_avanco_fabrica(subetapas, principal, status);
-
-                    pck.SaveAs(new FileInfo(destino));
-                    if (abrir)
-                    {
-
-                        Process.Start(destino);
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-                if (abrir)
-                {
-
-                    MessageBox.Show(ex.Message);
-                }
-            }
 
 
 
-            return true;
-        }
-        private static void gravar_avanco_fabrica(List<PLAN_SUB_ETAPA> subetapas, OfficeOpenXml.ExcelWorksheet principal, OfficeOpenXml.ExcelWorksheet status)
-        {
-            if (subetapas == null) { return; }
-            if (subetapas.Count == 0) { return; }
-            if (principal != null)
-            {
-                int l0 = 2;
-                int c0 = 1;
-                int l = 0;
-                var pds = subetapas.Select(x => x.pedido).Distinct().ToList();
-                //var pedidos = Consultas.GetTitulosObras().FindAll(x => pds.Find(y=>y==x.CHAVE)!=null);
-
-                var mindate = Cfg.Init.DataDummy();
-                foreach (var sub in subetapas)
-                {
-                    var ped = Consultas.GetTitulosObras().Find(x => x.Contrato == sub.contrato);
-                    if (ped == null)
-                    {
-                        ped = new PLAN_CONTRATO();
-                    }
-                    foreach (var pep in sub.peps.FindAll(x => !x.resumo_pecas.etapa_bloqueada))
-                    {
-                        principal.Cells[l0 + l, c0 + 0].Value = ped.Descricao;
-                        principal.Cells[l0 + l, c0 + 1].Value = pep.PEP;
-                        principal.Cells[l0 + l, c0 + 2].Value = pep.status_eng;
-                        principal.Cells[l0 + l, c0 + 3].Value = pep.status;
-                        principal.Cells[l0 + l, c0 + 4].Value = pep.resumo_pecas.status_usuario_pep;
-                        principal.Cells[l0 + l, c0 + 5].Value = pep.resumo_pecas.centro_producao;
-                        principal.Cells[l0 + l, c0 + 6].Value = pep.peso_planejado;
-                        if (sub.engenharia_cronograma > mindate)
-                        {
-                            principal.Cells[l0 + l, c0 + 7].Value = sub.engenharia_cronograma;
-                        }
-                        if (sub.engenharia_liberacao > mindate)
-                        {
-                            principal.Cells[l0 + l, c0 + 8].Value = sub.engenharia_liberacao;
-                        }
-                        if (pep.fabrica_cronograma > mindate)
-                        {
-                            principal.Cells[l0 + l, c0 + 9].Value = pep.fabrica_cronograma;
-                        }
-                        if (sub.resumo_pecas.Fim > mindate && sub.total_fabricado > 99)
-                        {
-                            principal.Cells[l0 + l, c0 + 10].Value = sub.resumo_pecas.Fim;
-                        }
-                        if (pep.logistica_cronograma > mindate)
-                        {
-                            principal.Cells[l0 + l, c0 + 11].Value = pep.logistica_cronograma;
-                        }
-                        if (sub.montagem_cronograma_inicio > mindate)
-                        {
-                            principal.Cells[l0 + l, c0 + 12].Value = sub.montagem_cronograma_inicio;
-                        }
-                        principal.Cells[l0 + l, c0 + 13].Value = sub.Montagem_Balanco ? 1 : 0;
-                        principal.Cells[l0 + l, c0 + 14].Value = pep.total_fabricado / 100;
-                        principal.Cells[l0 + l, c0 + 15].Value = pep.total_embarcado / 100;
-                        principal.Cells[l0 + l, c0 + 16].Value = sub.total_montado / 100;
-
-
-                        l++;
-                    }
-                }
-            }
-
-            if (status != null)
-            {
-                var t1 = subetapas.SelectMany(x => x.peps.Select(y => y.status)).ToList();
-                t1.AddRange(subetapas.SelectMany(x => x.peps.Select(y => y.status_eng)).ToList());
-                t1.AddRange(subetapas.SelectMany(x => x.peps.Select(y => y.resumo_pecas.status_usuario_pep)).ToList());
-                t1 = t1.Distinct().ToList();
-                var lista = DLM.painel.Consultas.GetStatus(t1);
-                int l0a = 2;
-                foreach (var t in lista)
-                {
-                    status.Cells[l0a, 1].Value = t.status;
-                    status.Cells[l0a, 2].Value = t.descricao;
-                    l0a++;
-                }
-            }
-        }
         public static bool Exportar_Datas_Fabrica(List<PLAN_PEP> peps, string descricao, string pedido = "", string local = "", bool abrir = false, bool gerar_pendentes = false, string Destino = null)
         {
 
@@ -1093,8 +888,7 @@ namespace DLM.painel
                         }
                     }
 
-                    /*AVANÇO FÁBRICA*/
-                    gravar_avanco_fabrica(subetapas, avanco_fabrica, descricoes);
+         
 
                     /*ESCONDE ABAS*/
                     try
@@ -1226,7 +1020,7 @@ namespace DLM.painel
 
                 if (pc.contrato.Length > 0)
                 {
-                    DBases.GetDB().Apagar("pep", $"%{pc.contrato}%", Cfg.Init.db_painel_de_obras2, "pecas", false);
+                    DBases.GetDB().Apagar("pep", $"%{pc.contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
                 }
             }
             try
@@ -1377,7 +1171,7 @@ namespace DLM.painel
                         w.somaProgresso();
                     }
 
-                    DBases.GetDB().Cadastro(linhas, Cfg.Init.db_painel_de_obras2, "pecas");
+                    DBases.GetDB().Cadastro(linhas, Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
                 }
 
             }
@@ -1442,7 +1236,7 @@ namespace DLM.painel
             var w = Conexoes.Utilz.Wait(10, "Consultando logística...");
 
 
-            var Pecas = DBases.GetDB().Consulta($"SELECT * FROM {Cfg.Init.db_painel_de_obras2}.{Cfg.Init.tb_pecas} AS pr WHERE pr.pep LIKE '%{contrato}%'").Linhas;
+            var Pecas = DBases.GetDB().Consulta("pep",contrato,Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas,false).Linhas;
 
             try
             {
@@ -1626,53 +1420,53 @@ namespace DLM.painel
             pecas_aba_excel.Cells[l0 + l, c0 + 42].Value = peca.DESENHO_1;
             pecas_aba_excel.Cells[l0 + l, c0 + 43].Value = peca.Tipo_Embarque;
         }
-        private static DLM.db.Linha GetLinhaDB(DateTime mindia, PLAN_PECA_LOG t, double qtd, double qtd_fab, double qtd_emb, double qtd_a_embarcar)
+        private static DLM.db.Linha GetLinhaDB(DateTime mindia, PLAN_PECA_LOG peca_log, double qtd, double qtd_fab, double qtd_emb, double qtd_a_embarcar)
         {
             DLM.db.Linha ldb = new DLM.db.Linha();
-            ldb.Add("pep", t.peca.PEP);
-            ldb.Add("centro", t.peca.centro);
-            ldb.Add("carreta", t.num_carga);
-            ldb.Add("ordem", t.pack_list);
-            ldb.Add("material", t.peca.material);
-            ldb.Add("descricao", t.peca.texto_breve);
+            ldb.Add("pep", peca_log.peca.PEP);
+            ldb.Add("centro", peca_log.peca.centro);
+            ldb.Add("carreta", peca_log.num_carga);
+            ldb.Add("ordem", peca_log.pack_list);
+            ldb.Add("material", peca_log.peca.material);
+            ldb.Add("descricao", peca_log.peca.texto_breve);
             ldb.Add("qtd_embarque", "");
             ldb.Add("qtd_carregada", qtd_emb);
-            ldb.Add("placa", t.placa);
-            ldb.Add("motorista", t.motorista);
-            ldb.Add("marca", t.peca.desenho);
-            ldb.Add("observacoes", t.observacoes);
+            ldb.Add("placa", peca_log.placa);
+            ldb.Add("motorista", peca_log.motorista);
+            ldb.Add("marca", peca_log.peca.desenho);
+            ldb.Add("observacoes", peca_log.observacoes);
             ldb.Add("qtd", qtd);
             ldb.Add("produzido", qtd_fab);
             ldb.Add("embarcado", qtd_emb);
             ldb.Add("qtd_a_embarcar", qtd_a_embarcar);
-            ldb.Add("comprimento", t.peca.comprimento);
-            ldb.Add("corte", t.peca.corte_largura);
-            ldb.Add("espessura", t.peca.espessura);
+            ldb.Add("comprimento", peca_log.peca.comprimento);
+            ldb.Add("corte", peca_log.peca.corte_largura);
+            ldb.Add("espessura", peca_log.peca.espessura);
             /*05/08/2020 - ajuste para pegar somente o peso total da quantidade embarcada*/
-            ldb.Add("peso_tot", t.peca.peso_necessario / t.peca.qtd_necessaria * qtd_emb);
-            ldb.Add("mercadoria", t.peca.grupo_mercadoria);
-            if (t.peca.inicio > mindia)
+            ldb.Add("peso_tot", peca_log.peca.peso_necessario / peca_log.peca.qtd_necessaria * qtd_emb);
+            ldb.Add("mercadoria", peca_log.peca.grupo_mercadoria);
+            if (peca_log.peca.inicio > mindia)
             {
-                ldb.Add("primeiro_apontamento_fab", t.peca.inicio);
+                ldb.Add("primeiro_apontamento_fab", peca_log.peca.inicio);
             }
-            if (t.peca.fim > mindia)
+            if (peca_log.peca.fim > mindia)
             {
-                ldb.Add("ultimo_apontamento_fab", t.peca.fim);
+                ldb.Add("ultimo_apontamento_fab", peca_log.peca.fim);
             }
 
-            ldb.Add("atualizado_em", t.peca.ultima_edicao);
-            ldb.Add("status_sap", t.peca.ULTIMO_STATUS);
-            ldb.Add("pintura", t.peca.TIPO_DE_PINTURA);
-            ldb.Add("esquema", t.peca.Esquema.ESQUEMA_COD);
-            ldb.Add("esquema_desc", t.peca.Esquema.Getdescricao());
-            ldb.Add("bobina", t.peca.bobina.SAP);
-            ldb.Add("face1", t.peca.bobina.cor1.Nome);
-            ldb.Add("face2", t.peca.bobina.cor2.Nome);
-            ldb.Add("complexidade", t.peca.Complexidade);
-            ldb.Add("denominacao", t.peca.DENOMINDSTAND);
-            ldb.Add("tipo", t.peca.Tipo);
-            ldb.Add("arquivo", t.peca.DESENHO_1);
-            ldb.Add("tipo_embarque", t.peca.Tipo_Embarque);
+            ldb.Add("atualizado_em", peca_log.peca.ultima_edicao);
+            ldb.Add("status_sap", peca_log.peca.ULTIMO_STATUS);
+            ldb.Add("pintura", peca_log.peca.TIPO_DE_PINTURA);
+            ldb.Add("esquema", peca_log.peca.Esquema.ESQUEMA_COD);
+            ldb.Add("esquema_desc", peca_log.peca.Esquema.Getdescricao());
+            ldb.Add("bobina", peca_log.peca.bobina.SAP);
+            ldb.Add("face1", peca_log.peca.bobina.cor1.Nome);
+            ldb.Add("face2", peca_log.peca.bobina.cor2.Nome);
+            ldb.Add("complexidade", peca_log.peca.Complexidade);
+            ldb.Add("denominacao", peca_log.peca.DENOMINDSTAND);
+            ldb.Add("tipo", peca_log.peca.Tipo);
+            ldb.Add("arquivo", peca_log.peca.DESENHO_1);
+            ldb.Add("tipo_embarque", peca_log.peca.Tipo_Embarque);
             return ldb;
         }
         public static bool ExportarListaPecasPMP(Pacote_PMP pacote, bool abrir = false, bool gerar_subetapas = false, bool gerar_grupos_mercadoria = false, bool gerar_avanco = false, bool gerar_pedidos = false, bool gerar_pecas = true)
@@ -1684,7 +1478,6 @@ namespace DLM.painel
                 if (abrir)
                 {
                     MessageBox.Show(template + "\n template não encontrado.");
-
                 }
                 return false;
             }
@@ -1710,13 +1503,11 @@ namespace DLM.painel
             }
 
             var pecas = new List<PLAN_PECA>();
-            var peds_peps = new List<PLAN_CONTRATO>();
 
             if (gerar_pecas && gerar_subetapas)
             {
                 pecas.AddRange(pacote.GetPecas());
                 var pedidosstr = pacote.Pedidos.Select(x => x.pep).Distinct().ToList();
-                peds_peps = Consultas.GetTitulosObras().FindAll(x => pedidosstr.Find(y => x.Contrato.Contains(y)) != null);
             }
 
             try
@@ -1732,25 +1523,24 @@ namespace DLM.painel
                     }
 
 
-                    OfficeOpenXml.ExcelWorksheet pecas_aba_excel = pck.Workbook.Worksheets[1];
-                    OfficeOpenXml.ExcelWorksheet subetapas_aba_excel = pck.Workbook.Worksheets[2];
-                    OfficeOpenXml.ExcelWorksheet pedidos_aba_excel = pck.Workbook.Worksheets[3];
-                    OfficeOpenXml.ExcelWorksheet mercadorias_aba_excel = pck.Workbook.Worksheets[4];
-                    OfficeOpenXml.ExcelWorksheet avanco_fabrica = pck.Workbook.Worksheets[5];
-                    OfficeOpenXml.ExcelWorksheet descricoes = pck.Workbook.Worksheets[6];
+                    var excel_peca = pck.Workbook.Worksheets[1];
+                    var excel_sub = pck.Workbook.Worksheets[2];
+                    var excel_pedidos = pck.Workbook.Worksheets[3];
+                    var mercadorias_aba_excel = pck.Workbook.Worksheets[4];
+                    var avanco_fabrica = pck.Workbook.Worksheets[5];
+                    var descricoes = pck.Workbook.Worksheets[6];
 
-                    string Planilha = pecas_aba_excel.Name;
+                    string Planilha = excel_peca.Name;
 
                     int l0 = 1;
                     int l = 1;
-                    int c0 = 1;
                     var w = Conexoes.Utilz.Wait(pecas.Count);
                     var TOT = pecas.Count;
                     var mindia = Cfg.Init.DataDummy();
                     double at = 0;
 
 
-                    List<SubEtapa_PMP> subetapas = new List<SubEtapa_PMP>();
+                    var subetapas = new List<SubEtapa_PMP>();
                     if (gerar_subetapas)
                     {
                         subetapas = pacote.Getsubetapas();
@@ -1762,154 +1552,132 @@ namespace DLM.painel
                         w = Conexoes.Utilz.Wait(subetapas.Count + 1, "Gravando Peças...(Isso pode demorar)");
                         int cont = 1;
                         int max = subetapas.Count;
-                        foreach (var sub in subetapas.OrderBy(x => x.pep))
+                        foreach(var ped in pacote.Pedidos)
                         {
-                            var peps = sub.Getpeps();
-                            foreach (var pep in peps)
+                            foreach (var sub in ped.Getsubetapas())
                             {
-                                foreach (var peca in pep.Getpecas())
+                                foreach (var pep in sub.Getpeps())
                                 {
-                                    var L1 = l0 + l;
-                                    try
+                                    foreach (var peca in pep.Getpecas())
                                     {
-                                        var ped = peds_peps.Find(x => x.Contrato == peca.contrato);
-                                        if (ped == null)
+                                        var L1 = l0 + l;
+                                        try
                                         {
-                                            ped = new PLAN_CONTRATO();
+                                            excel_peca.Cells[$"A{L1}"].Value = peca.contrato;
+                                            excel_peca.Cells[$"B{L1}"].Value = ped.descricao;
+                                            excel_peca.Cells[$"C{L1}"].Value = peca.pedido_completo;
+                                            excel_peca.Cells[$"D{L1}"].Value = peca.PEP;
+                                            excel_peca.Cells[$"E{L1}"].Value = peca.desenho;
+                                            excel_peca.Cells[$"F{L1}"].Value = peca.centro;
+                                            excel_peca.Cells[$"G{L1}"].Value = peca.qtd_necessaria;
+                                            excel_peca.Cells[$"H{L1}"].Value = peca.qtd_produzida;
+                                            excel_peca.Cells[$"I{L1}"].Value = peca.qtd_embarcada > 0 ? peca.qtd_embarcada : 0;
+                                            excel_peca.Cells[$"J{L1}"].Value = sub.Embarque.Necessario;
+                                            excel_peca.Cells[$"K{L1}"].Value = sub.Embarque.Embarcado;
+                                            excel_peca.Cells[$"L{L1}"].Value = peca.comprimento;
+                                            excel_peca.Cells[$"M{L1}"].Value = peca.corte_largura;
+                                            excel_peca.Cells[$"N{L1}"].Value = peca.espessura;
+                                            excel_peca.Cells[$"O{L1}"].Value = peca.material;
+                                            excel_peca.Cells[$"P{L1}"].Value = peca.texto_breve;
+                                            excel_peca.Cells[$"Q{L1}"].Value = peca.peso_necessario;
+                                            excel_peca.Cells[$"R{L1}"].Value = peca.peso_produzido;
+                                            excel_peca.Cells[$"S{L1}"].Value = peca.peso_a_produzir;
+                                            excel_peca.Cells[$"T{L1}"].Value = peca.grupo_mercadoria;
+                                            excel_peca.Cells[$"U{L1}"].Value = sub.liberado_engenharia / 100;
+                                            excel_peca.Cells[$"V{L1}"].Value = peca.fabricado_porcentagem;
+                                            excel_peca.Cells[$"W{L1}"].Value = peca.embarcado_porcentagem;
+                                            excel_peca.Cells[$"X{L1}"].Value = pep.ef > mindia ? pep.ef : null;
+                                            excel_peca.Cells[$"Y{L1}"].Value = pep.ff > mindia ? pep.ff : null;
+                                            excel_peca.Cells[$"Z{L1}"].Value = pep.li > mindia ? pep.li : null;
+                                            excel_peca.Cells[$"AA{L1}"].Value = pep.mi > mindia ? pep.mi : null;
+                                            excel_peca.Cells[$"AB{L1}"].Value = sub.mi_s> mindia ? sub.mi_s : null;
+                                            excel_peca.Cells[$"AC{L1}"].Value = peca.inicio > mindia ? peca.inicio : null;
+                                            excel_peca.Cells[$"AD{L1}"].Value = peca.fim > mindia ? peca.fim : null;
+                                            excel_peca.Cells[$"AE{L1}"].Value = peca.ultima_edicao;
+                                            excel_peca.Cells[$"AF{L1}"].Value = peca.ULTIMO_STATUS;
+                                            excel_peca.Cells[$"AG{L1}"].Value = peca.TIPO_DE_PINTURA;
+                                            excel_peca.Cells[$"AH{L1}"].Value = peca.esq_de_pintura;
+                                            excel_peca.Cells[$"AI{L1}"].Value = peca.Esquema.Getdescricao();
+                                            excel_peca.Cells[$"AJ{L1}"].Value = peca.codigo_materia_prima_sap;
+                                            excel_peca.Cells[$"AK{L1}"].Value = peca.bobina.cor1;
+                                            excel_peca.Cells[$"AL{L1}"].Value = peca.bobina.cor2;
+                                            excel_peca.Cells[$"AM{L1}"].Value = peca.tipo_aco;
+                                            excel_peca.Cells[$"AN{L1}"].Value = peca.Complexidade;
+                                            excel_peca.Cells[$"AO{L1}"].Value = peca.DENOMINDSTAND;
+                                            excel_peca.Cells[$"AP{L1}"].Value = peca.Tipo.ToString();
+                                            excel_peca.Cells[$"AQ{L1}"].Value = peca.arquivo;
                                         }
-                                        pecas_aba_excel.Cells[$"A{L1}"].Value = peca.contrato;
-                                        pecas_aba_excel.Cells[$"B{L1}"].Value = ped.Descricao;
-                                        pecas_aba_excel.Cells[$"C{L1}"].Value = peca.pedido_completo;
-                                        pecas_aba_excel.Cells[$"D{L1}"].Value = peca.PEP;
-                                        pecas_aba_excel.Cells[$"E{L1}"].Value = peca.desenho;
-                                        pecas_aba_excel.Cells[$"F{L1}"].Value = peca.centro;
-                                        pecas_aba_excel.Cells[$"G{L1}"].Value = peca.qtd_necessaria;
-                                        pecas_aba_excel.Cells[$"H{L1}"].Value = peca.qtd_produzida;
-                                        pecas_aba_excel.Cells[$"I{L1}"].Value = peca.qtd_embarcada > 0 ? peca.qtd_embarcada : 0;
-                                        pecas_aba_excel.Cells[$"J{L1}"].Value = sub.Embarque.Necessario;
-                                        pecas_aba_excel.Cells[$"K{L1}"].Value = sub.Embarque.Embarcado;
-                                        pecas_aba_excel.Cells[$"L{L1}"].Value = peca.comprimento;
-                                        pecas_aba_excel.Cells[$"M{L1}"].Value = peca.corte_largura;
-                                        pecas_aba_excel.Cells[$"N{L1}"].Value = peca.espessura;
-                                        pecas_aba_excel.Cells[$"O{L1}"].Value = peca.material;
-                                        pecas_aba_excel.Cells[$"P{L1}"].Value = peca.texto_breve;
-                                        pecas_aba_excel.Cells[$"Q{L1}"].Value = peca.peso_necessario;
-                                        pecas_aba_excel.Cells[$"R{L1}"].Value = peca.peso_produzido;
-                                        pecas_aba_excel.Cells[$"S{L1}"].Value = peca.peso_a_produzir;
-                                        pecas_aba_excel.Cells[$"T{L1}"].Value = peca.grupo_mercadoria;
-                                        pecas_aba_excel.Cells[$"U{L1}"].Value = sub.liberado_engenharia / 100;
-                                        pecas_aba_excel.Cells[$"V{L1}"].Value = peca.fabricado_porcentagem;
-                                        pecas_aba_excel.Cells[$"W{L1}"].Value = peca.embarcado_porcentagem;
-                                        pecas_aba_excel.Cells[$"X{L1}"].Value = pep.ef > mindia ? pep.ef : null;
-                                        pecas_aba_excel.Cells[$"Y{L1}"].Value = pep.ff;
-                                        pecas_aba_excel.Cells[$"Z{L1}"].Value = pep.li;
-                                        pecas_aba_excel.Cells[$"AA{L1}"].Value = pep.mi;
-                                        pecas_aba_excel.Cells[$"AB{L1}"].Value = sub.mi_s;
-                                        pecas_aba_excel.Cells[$"AC{L1}"].Value = peca.inicio;
-                                        pecas_aba_excel.Cells[$"AD{L1}"].Value = peca.fim;
-                                        pecas_aba_excel.Cells[$"AE{L1}"].Value = peca.ultima_edicao;
-                                        pecas_aba_excel.Cells[$"AF{L1}"].Value = peca.ULTIMO_STATUS;
-                                        pecas_aba_excel.Cells[$"AG{L1}"].Value = peca.TIPO_DE_PINTURA;
-                                        pecas_aba_excel.Cells[$"AH{L1}"].Value = peca.esq_de_pintura;
-                                        pecas_aba_excel.Cells[$"AI{L1}"].Value = peca.Esquema.Getdescricao();
-                                        pecas_aba_excel.Cells[$"AJ{L1}"].Value = peca.codigo_materia_prima_sap;
-                                        pecas_aba_excel.Cells[$"AK{L1}"].Value = peca.bobina.cor1;
-                                        pecas_aba_excel.Cells[$"AL{L1}"].Value = peca.bobina.cor2;
-                                        pecas_aba_excel.Cells[$"AM{L1}"].Value = peca.tipo_aco;
-                                        pecas_aba_excel.Cells[$"AN{L1}"].Value = peca.Complexidade;
-                                        pecas_aba_excel.Cells[$"AO{L1}"].Value = peca.DENOMINDSTAND;
-                                        pecas_aba_excel.Cells[$"AP{L1}"].Value = peca.Tipo.ToString();
-                                        pecas_aba_excel.Cells[$"AQ{L1}"].Value = peca.arquivo;
+                                        catch (Exception)
+                                        {
+                                        }
 
+                                        l++;
                                     }
-                                    catch (Exception)
-                                    {
-
-
-                                    }
-
-                                    l++;
-
-
-
-
-                                    //l++;
                                 }
+                                cont++;
+                                w.somaProgresso(sub.etapa + " - Gravando Peças...");
                             }
-                            cont++;
-                            w.somaProgresso(sub.etapa + " - Gravando Peças...");
-
                         }
 
                     }
 
 
                     /*SUBETAPAS*/
-                    if (subetapas_aba_excel != null && gerar_subetapas)
+                    if (excel_sub != null && gerar_subetapas)
                     {
                         l0 = 1;
                         l = 1;
                         w = Conexoes.Utilz.Wait(subetapas.Count, "Carregando SubEtapas...");
-
-
-
-                        foreach (var subetapa in subetapas.OrderBy(x => x.etapa))
+                        foreach(var ped in pacote.Pedidos)
                         {
-                            try
+                            foreach (var sub in ped.Getsubetapas())
                             {
-                                var pedido = Consultas.GetTitulosObras().Find(x => x.Contrato == subetapa.contrato);
-                                if (pedido == null)
+                                try
                                 {
-                                    pedido = new PLAN_CONTRATO();
+                                    var L1 = l0 + l;
+                                    excel_sub.Cells[$"A{L1}"].Value = sub.contrato;
+                                    excel_sub.Cells[$"B{L1}"].Value = ped.descricao;
+                                    excel_sub.Cells[$"C{L1}"].Value = sub.pedido;
+                                    excel_sub.Cells[$"D{L1}"].Value = sub.pep;
+                                    excel_sub.Cells[$"E{L1}"].Value = sub.tipo.ToString();
+                                    excel_sub.Cells[$"F{L1}"].Value = sub.Real.resumo_pecas.etapa_bloqueada ? 1 : 0;
+                                    excel_sub.Cells[$"G{L1}"].Value = sub.peso;
+                                    excel_sub.Cells[$"H{L1}"].Value = sub.Real.liberado_engenharia / 100;
+                                    excel_sub.Cells[$"I{L1}"].Value = sub.total_fabricado / 100;
+                                    excel_sub.Cells[$"J{L1}"].Value = sub.total_embarcado / 100;
+                                    excel_sub.Cells[$"K{L1}"].Value = sub.Embarque.Peso_Necessario;
+                                    excel_sub.Cells[$"L{L1}"].Value = sub.Embarque.Peso_Embarcado;
+                                    excel_sub.Cells[$"M{L1}"].Value = sub.Embarque.Porcentagem_Embarcado;
+                                    excel_sub.Cells[$"N{L1}"].Value = sub.Real.total_montado / 100;
+                                    excel_sub.Cells[$"O{L1}"].Value = sub.ei > mindia ? sub.ei : null;
+                                    excel_sub.Cells[$"P{L1}"].Value = sub.ef > mindia ? sub.ef : null;
+                                    excel_sub.Cells[$"Q{L1}"].Value = sub.fi > mindia ? sub.fi : null;
+                                    excel_sub.Cells[$"R{L1}"].Value = sub.ff > mindia ? sub.ff : null;
+                                    excel_sub.Cells[$"S{L1}"].Value = sub.li > mindia ? sub.li : null;
+                                    excel_sub.Cells[$"T{L1}"].Value = sub.lf > mindia ? sub.lf : null;
+                                    excel_sub.Cells[$"U{L1}"].Value = sub.mi_s > mindia ? sub.mi_s : null;
+                                    excel_sub.Cells[$"V{L1}"].Value = sub.mf_s > mindia ? sub.mf_s : null;
+                                    excel_sub.Cells[$"W{L1}"].Value = sub.mi > mindia ? sub.mf : null;
+                                    excel_sub.Cells[$"X{L1}"].Value = sub.mf > mindia ? sub.mf : null;
+                                    excel_sub.Cells[$"Y{L1}"].Value = sub.Real.ultima_consulta_sap > mindia ? sub.Real.ultima_consulta_sap : null;
+                                    excel_sub.Cells[$"Z{L1}"].Value = sub.Real.resumo_pecas.Inicio > mindia ? sub.Real.resumo_pecas.Inicio : null;
+                                    excel_sub.Cells[$"AA{L1}"].Value = sub.Real.resumo_pecas.Fim > mindia ? sub.Real.resumo_pecas.Fim : null;
+                                    excel_sub.Cells[$"AB{L1}"].Value = sub.Real.update_montagem.ToUpper().Replace(" ", "").Replace("MONTAGEM:", "");
+                                    excel_sub.Cells[$"AC{L1}"].Value = sub.Real.montagem_engenheiro;
                                 }
-                                var L1 = l0 + l;
-
-
-                                subetapas_aba_excel.Cells[$"A{L1}"].Value = subetapa.contrato;
-                                subetapas_aba_excel.Cells[$"B{L1}"].Value = pedido.Descricao;
-                                subetapas_aba_excel.Cells[$"C{L1}"].Value = subetapa.pedido;
-                                subetapas_aba_excel.Cells[$"D{L1}"].Value = subetapa.pep;
-                                subetapas_aba_excel.Cells[$"E{L1}"].Value = subetapa.tipo.ToString();
-                                subetapas_aba_excel.Cells[$"F{L1}"].Value = subetapa.Real.resumo_pecas.etapa_bloqueada ? 1 : 0;
-                                subetapas_aba_excel.Cells[$"G{L1}"].Value = subetapa.peso;
-                                subetapas_aba_excel.Cells[$"H{L1}"].Value = subetapa.Real.liberado_engenharia / 100;
-                                subetapas_aba_excel.Cells[$"I{L1}"].Value = subetapa.total_fabricado / 100;
-                                subetapas_aba_excel.Cells[$"J{L1}"].Value = subetapa.total_embarcado / 100;
-                                subetapas_aba_excel.Cells[$"K{L1}"].Value = subetapa.Embarque.Peso_Necessario;
-                                subetapas_aba_excel.Cells[$"L{L1}"].Value = subetapa.Embarque.Peso_Embarcado;
-                                subetapas_aba_excel.Cells[$"M{L1}"].Value = subetapa.Embarque.Porcentagem_Embarcado;
-                                subetapas_aba_excel.Cells[$"N{L1}"].Value = subetapa.Real.total_montado / 100;
-                                subetapas_aba_excel.Cells[$"O{L1}"].Value = subetapa.ei > mindia ? subetapa.ei : null;
-                                subetapas_aba_excel.Cells[$"P{L1}"].Value = subetapa.ef > mindia ? subetapa.ef : null;
-                                subetapas_aba_excel.Cells[$"Q{L1}"].Value = subetapa.fi > mindia ? subetapa.fi : null;
-                                subetapas_aba_excel.Cells[$"R{L1}"].Value = subetapa.ff > mindia ? subetapa.ff : null;
-                                subetapas_aba_excel.Cells[$"S{L1}"].Value = subetapa.li > mindia ? subetapa.li : null;
-                                subetapas_aba_excel.Cells[$"T{L1}"].Value = subetapa.lf > mindia ? subetapa.lf : null;
-                                subetapas_aba_excel.Cells[$"U{L1}"].Value = subetapa.mi_s > mindia ? subetapa.mi_s : null;
-                                subetapas_aba_excel.Cells[$"V{L1}"].Value = subetapa.mf_s > mindia ? subetapa.mf_s : null;
-                                subetapas_aba_excel.Cells[$"W{L1}"].Value = subetapa.mi > mindia ? subetapa.mf : null;
-                                subetapas_aba_excel.Cells[$"X{L1}"].Value = subetapa.mf > mindia ? subetapa.mf : null;
-                                subetapas_aba_excel.Cells[$"Y{L1}"].Value = subetapa.Real.ultima_consulta_sap > mindia ? subetapa.Real.ultima_consulta_sap : null;
-                                subetapas_aba_excel.Cells[$"Z{L1}"].Value = subetapa.Real.resumo_pecas.Inicio > mindia ? subetapa.Real.resumo_pecas.Inicio : null;
-                                subetapas_aba_excel.Cells[$"AA{L1}"].Value = subetapa.Real.resumo_pecas.Fim > mindia ? subetapa.Real.resumo_pecas.Fim : null;
-                                subetapas_aba_excel.Cells[$"AB{L1}"].Value = subetapa.Real.update_montagem.ToUpper().Replace(" ", "").Replace("MONTAGEM:", "");
-                                subetapas_aba_excel.Cells[$"AC{L1}"].Value = subetapa.Real.montagem_engenheiro;
-
-
+                                catch (Exception)
+                                {
+                                }
+                                w.somaProgresso();
+                                l++;
                             }
-                            catch (Exception)
-                            {
-
-
-                            }
-                            w.somaProgresso();
-                            l++;
                         }
+                 
 
                     }
 
                     /*PEDIDOS*/
-                    if (pedidos_aba_excel != null && gerar_pedidos)
+                    if (excel_pedidos != null && gerar_pedidos)
                     {
 
                         var peds = subetapas.Select(x => x.contrato).Distinct().ToList();
@@ -1918,7 +1686,6 @@ namespace DLM.painel
                         var pedidos_sistema = pacote.Pedidos.FindAll(x => x.Material_REAL).Select(x => x.Real).ToList();
 
                         l0 = 2;
-                        c0 = 1;
                         l = 1;
                         pedidos_sistema = pedidos_sistema.FindAll(x => pedss.FindAll(y => y == x.pedido) != null);
                         if (pedidos_sistema.Count > 0)
@@ -1933,40 +1700,33 @@ namespace DLM.painel
                             try
                             {
 
-                                pedidos_aba_excel.Cells[$"A{L1}"].Value = pedido.Titulo.Descricao;
-                                pedidos_aba_excel.Cells[$"B{L1}"].Value = pedido.pedido;
-                                pedidos_aba_excel.Cells[$"C{L1}"].Value = pedido.exportacao ? 1 : 0;
-                                pedidos_aba_excel.Cells[$"D{L1}"].Value = pedido.peso_planejado;
+                                excel_pedidos.Cells[$"A{L1}"].Value = pedido.Titulo.Descricao;
+                                excel_pedidos.Cells[$"B{L1}"].Value = pedido.pedido;
+                                excel_pedidos.Cells[$"C{L1}"].Value = pedido.exportacao ? 1 : 0;
+                                excel_pedidos.Cells[$"D{L1}"].Value = pedido.peso_planejado;
 
-                                pedidos_aba_excel.Cells[$"E{L1}"].Value = pedido.engenharia_previsto / 100;
-                                pedidos_aba_excel.Cells[$"F{L1}"].Value = pedido.liberado_engenharia / 100;
-                                pedidos_aba_excel.Cells[$"G{L1}"].Value = (pedido.engenharia_previsto / 100) - (pedido.liberado_engenharia / 100);
+                                excel_pedidos.Cells[$"E{L1}"].Value = pedido.engenharia_previsto / 100;
+                                excel_pedidos.Cells[$"F{L1}"].Value = pedido.liberado_engenharia / 100;
+                                excel_pedidos.Cells[$"G{L1}"].Value = (pedido.engenharia_previsto / 100) - (pedido.liberado_engenharia / 100);
 
-                                pedidos_aba_excel.Cells[$"H{L1}"].Value = pedido.fabrica_previsto / 100;
-                                pedidos_aba_excel.Cells[$"I{L1}"].Value = pedido.total_fabricado / 100;
-                                pedidos_aba_excel.Cells[$"J{L1}"].Value = (pedido.fabrica_previsto / 100) - (pedido.total_fabricado / 100);
-
-
-                                pedidos_aba_excel.Cells[$"K{L1}"].Value = pedido.embarque_previsto / 100;
-                                pedidos_aba_excel.Cells[$"L{L1}"].Value = pedido.total_embarcado / 100;
-                                pedidos_aba_excel.Cells[$"M{L1}"].Value = (pedido.embarque_previsto / 100) - (pedido.total_embarcado / 100);
-
-                                pedidos_aba_excel.Cells[$"N{L1}"].Value = pedido.montagem_previsto / 100;
-                                pedidos_aba_excel.Cells[$"O{L1}"].Value = pedido.total_montado / 100;
-                                pedidos_aba_excel.Cells[$"P{L1}"].Value = (pedido.montagem_previsto / 100) - (pedido.total_montado / 100);
-
-                                pedidos_aba_excel.Cells[$"Q{L1}"].Value = pedido.status_montagem != "SEM APONTAMENTO" ? 1 : 0;
-                                pedidos_aba_excel.Cells[$"R{L1}"].Value = pedido.montagem_engenheiro;
+                                excel_pedidos.Cells[$"H{L1}"].Value = pedido.fabrica_previsto / 100;
+                                excel_pedidos.Cells[$"I{L1}"].Value = pedido.total_fabricado / 100;
+                                excel_pedidos.Cells[$"J{L1}"].Value = (pedido.fabrica_previsto / 100) - (pedido.total_fabricado / 100);
 
 
+                                excel_pedidos.Cells[$"K{L1}"].Value = pedido.embarque_previsto / 100;
+                                excel_pedidos.Cells[$"L{L1}"].Value = pedido.total_embarcado / 100;
+                                excel_pedidos.Cells[$"M{L1}"].Value = (pedido.embarque_previsto / 100) - (pedido.total_embarcado / 100);
 
+                                excel_pedidos.Cells[$"N{L1}"].Value = pedido.montagem_previsto / 100;
+                                excel_pedidos.Cells[$"O{L1}"].Value = pedido.total_montado / 100;
+                                excel_pedidos.Cells[$"P{L1}"].Value = (pedido.montagem_previsto / 100) - (pedido.total_montado / 100);
 
-
+                                excel_pedidos.Cells[$"Q{L1}"].Value = pedido.status_montagem != "SEM APONTAMENTO" ? 1 : 0;
+                                excel_pedidos.Cells[$"R{L1}"].Value = pedido.montagem_engenheiro;
                             }
                             catch (Exception)
                             {
-
-
                             }
                             if (dif - at > 1)
                             {
@@ -1977,152 +1737,42 @@ namespace DLM.painel
 
 
                             w.somaProgresso();
-
-                            //l++;
                         }
                     }
 
 
-
-                    ///*MERCADORIAS*/
-                    //if (subetapas != null && PECAS.Count > 0 && mercadorias_aba_excel != null && gerar_grupos_mercadoria)
-                    //{
-                    //    w = Conexoes.Utilz.Wait(subetapas.Count, "Criando Lista por Grupo de Mercadorias...");
-                    //    l0 = 1;
-                    //    l = 1;
-                    //    foreach (var t in subetapas.OrderBy(x => x.etapa))
-                    //    {
-                    //        foreach (var pep in t.Getpeps())
-                    //        {
-                    //            foreach (var grupo in pep.GetGrupos_Mercadoria())
-                    //            {
-                    //                try
-                    //                {
-
-                    //                    if (grupo.Peso_Total == 0)
-                    //                    {
-
-                    //                    }
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 0].Value = grupo.contrato;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 1].Value = grupo.descricao_obra;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 2].Value = grupo.pedido_completo;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 3].Value = grupo.pep;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 4].Value = grupo.centro;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 5].Value = grupo.descricao;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 6].Value = grupo.Qtd_Necessaria;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 7].Value = grupo.Qtd_Produzida;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 8].Value = grupo.Qtd_Embarcada;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 9].Value = grupo.Peso_Total;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 10].Value = t.Real.liberado_engenharia / 100;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 11].Value = grupo.Total_Fabricado / 100;
-                    //                    mercadorias_aba_excel.Cells[l0 + l, c0 + 12].Value = grupo.Total_Embarcado / 100;
-                    //                    if (pep.Real.fabrica_cronograma > mindia)
-                    //                    {
-                    //                        mercadorias_aba_excel.Cells[l0 + l, c0 + 13].Value = pep.Real.fabrica_cronograma;
-
-                    //                    }
-                    //                    if (pep.Real.logistica_cronograma > mindia)
-                    //                    {
-                    //                        mercadorias_aba_excel.Cells[l0 + l, c0 + 14].Value = pep.Real.logistica_cronograma;
-
-                    //                    }
-                    //                }
-                    //                catch (Exception)
-                    //                {
-                    //                }
-                    //                w.somaProgresso();
-                    //                l++;
-                    //            }
-                    //        }
-                    //        w.somaProgresso();
-                    //    }
-                    //}
-                    //else if(gerar_grupos_mercadoria)
-                    //{
-                    //    List<Grupo_Mercadoria> mercadorias = Classificadores.GetGrupo_Mercadorias(PECAS);
-
-
-                    //    /*novo mercadorias*/
-                    //    if (mercadorias.Count > 0 && mercadorias_aba_excel != null)
-                    //    {
-                    //        w = Conexoes.Utilz.Wait(mercadorias.Count, "Criando Lista por Grupo de Mercadorias...");
-                    //        l0 = 1;
-                    //        l = 1;
-                    //        var L1 = l0 + l;
-                    //        foreach (var grupo in mercadorias)
-                    //        {
-                    //            try
-                    //            {
-                    //                mercadorias_aba_excel.Cells[$"A{L1}"].Value = grupo.contrato;
-                    //                mercadorias_aba_excel.Cells[$"B{L1}"].Value = grupo.descricao_obra;
-                    //                mercadorias_aba_excel.Cells[$"C{L1}"].Value = grupo.pedido_completo;
-                    //                mercadorias_aba_excel.Cells[$"D{L1}"].Value = grupo.pep;
-                    //                mercadorias_aba_excel.Cells[$"E{L1}"].Value = grupo.centro;
-                    //                mercadorias_aba_excel.Cells[$"F{L1}"].Value = grupo.descricao;
-                    //                mercadorias_aba_excel.Cells[$"G{L1}"].Value = grupo.Qtd_Necessaria;
-                    //                mercadorias_aba_excel.Cells[$"H{L1}"].Value = grupo.Qtd_Produzida;
-                    //                mercadorias_aba_excel.Cells[$"I{L1}"].Value = grupo.Qtd_Embarcada;
-                    //                mercadorias_aba_excel.Cells[$"J{L1}"].Value = grupo.Peso_Total;
-                    //                if (grupo.Total_Fabricado > 0)
-                    //                {
-                    //                    mercadorias_aba_excel.Cells[$"L{L1}"].Value = 100;
-                    //                }
-                    //                if (grupo.Total_Fabricado > 0)
-                    //                {
-                    //                    mercadorias_aba_excel.Cells[$"L{L1}"].Value = grupo.Total_Fabricado / 100;
-                    //                }
-                    //                if (grupo.Total_Embarcado > 0)
-                    //                {
-                    //                    mercadorias_aba_excel.Cells[$"M{L1}"].Value = grupo.Total_Embarcado / 100;
-                    //                }
-                    //            }
-                    //            catch (Exception)
-                    //            {
-                    //            }
-                    //            w.somaProgresso();
-                    //            l++;
-                    //        }
-                    //    }
-                    //}
-
-
-                    ///*AVANÇO FÁBRICA*/
-                    //if (gerar_avanco)
-                    //{
-                    //    gravar_avanco_fabrica(subetapas.FindAll(x => x.Material_REAL).Select(x => x.Real).ToList(), avanco_fabrica, descricoes);
-                    //}
 
                     /*ESCONDE ABAS*/
                     try
                     {
                         if (subetapas == null)
                         {
-                            if (pecas_aba_excel.Hidden == OfficeOpenXml.eWorkSheetHidden.Visible)
+                            if (excel_peca.Hidden == OfficeOpenXml.eWorkSheetHidden.Visible)
                             {
-                                pecas_aba_excel.Select();
+                                excel_peca.Select();
                             }
-                            subetapas_aba_excel.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
-                            pedidos_aba_excel.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
+                            excel_sub.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
+                            excel_pedidos.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
                         }
                         else if (subetapas.Count == 0)
                         {
-                            if (pecas_aba_excel.Hidden == OfficeOpenXml.eWorkSheetHidden.Visible)
+                            if (excel_peca.Hidden == OfficeOpenXml.eWorkSheetHidden.Visible)
                             {
-                                pecas_aba_excel.Select();
+                                excel_peca.Select();
                             }
-                            subetapas_aba_excel.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
-                            pedidos_aba_excel.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
+                            excel_sub.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
+                            excel_pedidos.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
                         }
 
 
 
                         if (pecas.Count == 0)
                         {
-                            if (subetapas_aba_excel.Hidden == OfficeOpenXml.eWorkSheetHidden.Visible)
+                            if (excel_sub.Hidden == OfficeOpenXml.eWorkSheetHidden.Visible)
                             {
-                                subetapas_aba_excel.Select();
+                                excel_sub.Select();
                             }
-                            pecas_aba_excel.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
+                            excel_peca.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
                             mercadorias_aba_excel.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
                         }
 
@@ -2136,15 +1786,15 @@ namespace DLM.painel
                         //}
                         if (!gerar_pedidos)
                         {
-                            pedidos_aba_excel.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
+                            excel_pedidos.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
                         }
                         if (!gerar_subetapas)
                         {
-                            subetapas_aba_excel.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
+                            excel_sub.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
                         }
                         if (!gerar_pecas)
                         {
-                            pecas_aba_excel.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
+                            excel_peca.Hidden = OfficeOpenXml.eWorkSheetHidden.VeryHidden;
                         }
                     }
                     catch (Exception)

@@ -159,11 +159,11 @@ namespace DLM.sapgui
 
         public void GravarMateriais()
         {
-            DBases.GetDB().Apagar("pep", $"%{this.Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento, false);
-            DBases.GetDB().Apagar("pep", $"%{this.Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, false);
-            DBases.GetDB().Apagar("Elemento_PEP", $"%{this.Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques, false);
-            DBases.GetDB().Apagar("pep", $"%{this.Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n, false);
-            DBases.GetDB().Apagar("contrato", $"%{this.Contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia,false);
+            DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
+            DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao);
+            DBases.GetDB().Apagar("Elemento_PEP", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques);
+            DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
+            DBases.GetDB().Apagar("contrato", $"%{Contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
 
 
             if (this.PEP_PLanejamento.Count > 0)
@@ -210,7 +210,7 @@ namespace DLM.sapgui
                 this.ZPP0112 = CargaExcel.ZPP0112(Cfg.Init.GetDestinoSAP_Excel() + arq_zpp0112);
                 if (salvar)
                 {
-                    DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0112, false);
+                    DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0112);
                     DBases.GetDB().Cadastro(this.ZPP0112.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpp0112);
                 }
             }

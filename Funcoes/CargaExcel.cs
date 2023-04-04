@@ -18,30 +18,26 @@ namespace DLM.sapgui
         public static int max_tasks { get; set; } = 700;
         public static List<ZCONTRATOS> ZCONTRATO(string arquivo)
         {
-            ConcurrentBag<ZCONTRATOS> retorno = new ConcurrentBag<ZCONTRATOS>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            var retorno = new ConcurrentBag<ZCONTRATOS>();
+            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZCONTRATOS(l))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
         public static List<ZPP0100> ZPP0100(string arquivo, out DLM.db.Tabela tabela)
         {
-            ConcurrentBag<ZPP0100> retorno = new ConcurrentBag<ZPP0100>();
+            var retorno = new ConcurrentBag<ZPP0100>();
             tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(tabela.Linhas, max_tasks))
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPP0100(l))));
@@ -49,25 +45,21 @@ namespace DLM.sapgui
                 Task.WaitAll(Tarefas.ToArray());
                 Tarefas.Clear();
             }
-
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
         public static List<ZPP0112> ZPP0112(string arquivo)
         {
-            ConcurrentBag<ZPP0112> retorno = new ConcurrentBag<ZPP0112>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            var retorno = new ConcurrentBag<ZPP0112>();
+            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPP0112(l))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
         public static List<FAGLB03> FAGLB03(string arquivo, string empresa_de = "1100", string empresa_ate = "1200", int ano = 2022, string conta = "3111003011", bool cadastrar = true)
@@ -96,14 +88,13 @@ namespace DLM.sapgui
         }
         public static List<AVANCO_FATURAMENTO> Cadastro_AVANCO_FATURAMENTO()
         {
-            List<AVANCO_FATURAMENTO> retorno = new List<AVANCO_FATURAMENTO>();
+            var retorno = new List<AVANCO_FATURAMENTO>();
             string arquivo = Conexoes.Utilz.Abrir_String("xlsx");
             if (arquivo == null) { return new List<AVANCO_FATURAMENTO>(); }
             var selecao = Conexoes.Utilz.Excel.GetTabelaPrompt(arquivo);
 
             if (selecao.Linhas.Count > 0)
             {
-
                 foreach (var l in selecao.Linhas)
                 {
                     var pedido = l.Get("C1").Valor;
@@ -120,8 +111,7 @@ namespace DLM.sapgui
                 if (retorno.Count > 0)
                 {
                     var cadastro = retorno.GetTabela();
-
-                    DBases.GetDB().Apagar(new db.Linha(new List<db.Celula> { new db.Celula("id", "%%") }), Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento, "And", false);
+                    DBases.GetDB().Apagar("id", "%%", Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
                     DBases.GetDB().Cadastro(cadastro.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
                     Conexoes.Utilz.Alerta($"Avanço sincronizado! {retorno.Count} itens cadastrados.");
                 }
@@ -129,79 +119,68 @@ namespace DLM.sapgui
                 {
                     Conexoes.Utilz.Alerta("Nenhum item de avanço encontrado na aba selecionada.");
                 }
-
             }
             return retorno;
         }
         public static List<FAGLL03> FAGLL03(string arquivo, string pedido)
         {
-            ConcurrentBag<FAGLL03> retorno = new ConcurrentBag<FAGLL03>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            var retorno = new ConcurrentBag<FAGLL03>();
+            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new FAGLL03(pedido, l))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
             return retorno.ToList().FindAll(x => x.N_documento.Replace(" ", "") != "");
         }
         public static List<CJI3> CJI3(string arquivo)
         {
-            ConcurrentBag<CJI3> retorno = new ConcurrentBag<CJI3>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            var retorno = new ConcurrentBag<CJI3>();
+            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new CJI3(l))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
 
         public static List<ZPMP> ZPMP(string arquivo, out DLM.db.Tabela tabela)
         {
-            var retorno = new List<ZPMP>();
+            var retorno = new ConcurrentBag<ZPMP>();
             tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(tabela.Linhas, max_tasks))
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
-                    retorno.Add(new ZPMP(l));
+                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPMP(l))));
                 }
+                Task.WaitAll(Tarefas.ToArray());
             }
-            retorno = retorno.FindAll(x => x.PEP.Codigo.Length > 0).ToList();
-            return retorno;
+            return retorno.ToList().FindAll(x => x.PEP.Codigo.Length > 0).ToList();
         }
         public static List<ZPP0066N> ZPP0066N(string arquivo, bool semperfil)
         {
-            ConcurrentBag<ZPP0066N> retorno = new ConcurrentBag<ZPP0066N>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-
-            var sublista = DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks);
-            foreach (var sub in sublista)
+            var retorno = new ConcurrentBag<ZPP0066N>();
+            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPP0066N(l, semperfil))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
             return retorno.ToList().FindAll(x => x.Material != "").ToList();
         }
         public static List<PLAN_PECA_ZPMP> ZPPCOOISN(string destino, string Pedido, bool buffer = false)
@@ -341,7 +320,8 @@ namespace DLM.sapgui
 
             if (File.Exists(dest + arq))
             {
-                DLM.painel.Consultas.LimparCOOISN(Pedido);
+                DBases.GetDB().Apagar("pep", $"%{Pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn);
+
                 var arquivo = dest + arq;
                 var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
                 var listacooisn = t.Linhas.Select(x => new List<object> {
@@ -369,10 +349,10 @@ namespace DLM.sapgui
                             /*21*/"",
                             /*22*/x[(int)TAB_ZPPCOOISN.DESENHO_2].ToString(),
                         }).Distinct().ToList();
-                //w.SetProgresso(1, retorno.Count());
+
                 var min = Cfg.Init.DataDummy();
                 var pcs = pecas.FindAll(x => x.Material.ToString().StartsWith("31"));
-                List<DLM.db.Linha> linhas = new List<DLM.db.Linha>();
+                var linhas = new List<DLM.db.Linha>();
                 foreach (var peca in pcs)
                 {
 
@@ -399,10 +379,8 @@ namespace DLM.sapgui
                     if (curr.Count > 0)
                     {
                         var Dts = curr.Select(x => Conexoes.Extensoes.Data(x[5].ToString())).OrderBy(x => x).ToList().FindAll(x => x > Cfg.Init.DataDummy());
-                        //Dts = Dts.OrderBy(x => x).ToList();
-
-                        var inicio = Cfg.Init.DataDummy();
-                        var fim = Cfg.Init.DataDummy();
+                        DateTime? inicio = Cfg.Init.DataDummy();
+                        DateTime? fim = Cfg.Init.DataDummy();
                         string ultimo_status = "";
                         if (Dts.Count > 0)
                         {
@@ -469,36 +447,15 @@ namespace DLM.sapgui
                         var denominstand = curr[0][1].ToString();
 
                         var valores = new List<DLM.db.Celula>();
-                        if (denominstand != "")
-                        {
-                            valores.Add(new DLM.db.Celula("DENOMINDSTAND", denominstand));
-                        }
-                        if (desenho != "")
-                        {
-                            valores.Add(new DLM.db.Celula("DESENHO_1", desenho));
-                        }
-                        if (tipo_pintura != "")
-                        {
-                            valores.Add(new DLM.db.Celula("TIPO_DE_PINTURA", tipo_pintura));
-                        }
-                        if (inicio > min)
-                        {
-                            valores.Add(new DLM.db.Celula("DATA_INICIO", inicio > min ? inicio.ToShortDateString() : ""));
-                        }
-                        if (fim > min)
-                        {
-                            valores.Add(new DLM.db.Celula("DATA_FIM", fim > min ? fim.ToShortDateString() : ""));
-                        }
-
+                        valores.Add(new DLM.db.Celula("DENOMINDSTAND", denominstand));
+                        valores.Add(new DLM.db.Celula("DESENHO_1", desenho));
+                        valores.Add(new DLM.db.Celula("TIPO_DE_PINTURA", tipo_pintura));
+                        valores.Add(new DLM.db.Celula("DATA_INICIO", inicio > min ? inicio : null));
                         valores.Add(new DLM.db.Celula("ULTIMO_STATUS", ultimo_status));
-                        if (aco != "")
-                        {
-                            valores.Add(new DLM.db.Celula("TIPO_ACO", aco));
-                        }
-                        if (codigo_materia_prima != "")
-                        {
-                            valores.Add(new DLM.db.Celula("CODIGO_MATERIA_PRIMA_SAP", codigo_materia_prima));
-                        }
+                        valores.Add(new DLM.db.Celula("DATA_FIM", fim > min ? fim : null));
+                        valores.Add(new DLM.db.Celula("TIPO_ACO", aco));
+                        valores.Add(new DLM.db.Celula("CODIGO_MATERIA_PRIMA_SAP", codigo_materia_prima));
+
                         if (curr_marca != null)
                         {
                             double esp = Conexoes.Utilz.Double(curr_marca[15]);
@@ -525,36 +482,15 @@ namespace DLM.sapgui
 
                             var superficie = Conexoes.Utilz.Double(curr_marca[11]);
                             var comprimento = Conexoes.Utilz.Double(curr_marca[9]);
+
                             /*04/04/2019 - novas caracteristicas adicionadas*/
-                            if (corte > 0)
-                            {
-                                valores.Add(new DLM.db.Celula("CORTE_LARGURA", corte));
-                            }
-
-                            if (comprimento > 0)
-                            {
-                                valores.Add(new DLM.db.Celula("COMPRIMENTO", comprimento));
-                            }
+                            valores.Add(new DLM.db.Celula("MARCA", marca));
+                            valores.Add(new DLM.db.Celula("CORTE_LARGURA", corte));
+                            valores.Add(new DLM.db.Celula("COMPRIMENTO", comprimento));
                             valores.Add(new DLM.db.Celula("ESQ_DE_PINTURA", curr_marca[10]));
-                            if (superficie > 0)
-                            {
-                                valores.Add(new DLM.db.Celula("SUPERFICIE", superficie));
-                            }
-                            if (furos > 0)
-                            {
-                                valores.Add(new DLM.db.Celula("FURACOES", furos));
-                            }
-                            if (marca != "")
-                            {
-                                valores.Add(new DLM.db.Celula("MARCA", marca));
-                            }
-
-                            if (esp > 0)
-                            {
-                                valores.Add(new DLM.db.Celula("ESPESSURA", esp));
-                            }
-
-
+                            valores.Add(new DLM.db.Celula("SUPERFICIE", superficie));
+                            valores.Add(new DLM.db.Celula("FURACOES", furos));
+                            valores.Add(new DLM.db.Celula("ESPESSURA", esp));
                         }
 
                         valores.Add(new DLM.db.Celula("material", peca.Material));

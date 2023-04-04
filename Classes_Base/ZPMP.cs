@@ -40,6 +40,7 @@ namespace DLM.sapgui
 
             l.Add(nameof(qtd_necessaria), qtd_necessaria);
             l.Add(nameof(qtd_produzida), qtd_produzida);
+            l.Add(nameof(peso_unitario), peso_unitario);
 
 
 
@@ -81,14 +82,24 @@ namespace DLM.sapgui
             }
         }
 
-        public string denominacao { get; private set; } = "";
+
         public string centro { get; private set; } = "";
         public string centro_producao { get; private set; } = "";
         public string tamanho_dimensao { get; private set; } = "";
         public string material { get; private set; } = "";
         public string texto_breve { get; private set; } = "";
         public string grupo_mercadoria { get; private set; } = "";
-        public double peso_unitario { get; private set; } = 0;
+        public double peso_unitario
+        {
+           get
+            {
+                if(qtd_necessaria>0 && peso_necessario>0)
+                {
+                    return peso_necessario / qtd_necessaria;
+                }
+                return 0;
+            }
+        }
         public double peso_necessario { get; private set; } = 0;
         public double peso_produzido { get; private set; } =0;
         public double qtd_necessaria { get; private set; } = 0;
@@ -120,8 +131,6 @@ namespace DLM.sapgui
             this.qtd_necessaria = l[(int)TAB_ZPMP.QTD_NECESS].Double();
             this.peso_necessario = l[(int)TAB_ZPMP.PESO_NECESS].Double();
             this.peso_produzido = l[(int)TAB_ZPMP.PESO_PRODUZIDO].Double();
-            this.peso_unitario = l[(int)TAB_ZPMP.UNIDADE].Double();
-            this.denominacao = l[(int)TAB_ZPMP.DENOMINACAO].Valor;
             this.grupo_mercadoria = l[(int)TAB_ZPMP.DENOM_GRUPO_MERC].Valor;
         }
     }

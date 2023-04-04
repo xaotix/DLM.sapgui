@@ -29,6 +29,12 @@ namespace DLM.painel
     }
     public class PLAN_PECA
     {
+        private ImageSource _imagem { get; set; } = null;
+        private string _desenho { get; set; } = "";
+        private string _esq_de_pintura { get; set; } = "";
+        private string _arquivo { get; set; }
+        private double _qtd_embarcada { get; set; } = 0;
+
         public Tipo_Embarque Tipo_Embarque { get; set; } = Tipo_Embarque.ZPP0100;
         public void SetStatusByZPP0100(List<DLM.db.Linha> linhas)
         {
@@ -74,7 +80,6 @@ namespace DLM.painel
 
             }
         }
-        private ImageSource _imagem { get; set; } = null;
         public ImageSource imagem
         {
             get
@@ -139,7 +144,6 @@ namespace DLM.painel
                 return "";
             }
         }
-        private string _arquivo { get; set; }
         public string arquivo
         {
             get
@@ -260,7 +264,6 @@ namespace DLM.painel
 
         public double qtd_necessaria { get; private set; } = 0;
         public double espessura { get; private set; } = 0;
-        private double _qtd_embarcada { get; set; } = 0;
         public double qtd_embarcada { get; private set; } = 0;
         public double qtd_produzida { get; private set; } = 0;
         public double peso_unitario { get; private set; } = 0;
@@ -291,7 +294,6 @@ namespace DLM.painel
                 s.peca = this;
             }
         }
-        private string _desenho { get; set; } = "";
         public string marca
         {
             get
@@ -394,7 +396,6 @@ namespace DLM.painel
         public double comprimento { get; private set; } = 0;
         public int furacoes { get; private set; } = 0;
         public double superficie { get; private set; } = 0;
-        private string _esq_de_pintura { get; set; } = "";
         public string esq_de_pintura
         {
             get
@@ -599,66 +600,9 @@ namespace DLM.painel
                 this.ultima_edicao = peca["ultima_edicao"].Data();
                 this.centro = peca.Get("unidade_fabril").Valor;
                 this.codigo_materia_prima_sap = peca.Get("materia_prima").Valor;
-
             }
         }
-        public PLAN_PECA(DLM.db.Linha peca, List<DLM.db.Linha> logistica)
-        {
-            this.Tipo = Tipo_Material.Real;
-            this.PEP = peca.Get("pep").Valor;
-            this.material = peca.Get("material").Valor;
-            this.texto_breve = peca.Get("texto_breve").Valor;
-            this.grupo_mercadoria = peca.Get("grupo_mercadoria").Valor;
-            this.peso_necessario = peca.Get("peso_necessario").Double(6);
-            this.peso_produzido = peca.Get("peso_produzido").Double(6);
-            this.qtd_necessaria = peca.Get("qtd_necessaria").Double();
-            this.qtd_mercadoria_entrada = peca.Get("qtd_mercadoria_entrada").Long();
-            this.saldo_peso_produzido = peca.Get("saldo_peso_produzido").Double();
-            this.status_sistema_pep = peca.Get("status_sistema_pep").Valor;
-            this.status_usuario_pep = peca.Get("status_usuario_pep").Valor;
-            this.status_sistema_tarefa = peca.Get("status_sistema_tarefa").Valor;
-            foreach (var t in logistica)
-            {
-                this.logistica.Add(new PLAN_PECA_LOG(this, t));
-            }
-            if (logistica.Count > 0)
-            {
-                this.desenho = logistica[0].Get("desenho").Valor;
-            }
 
-            this.peso_unitario = (peso_necessario / qtd_necessaria);
-            this.qtd_embarcada = this.logistica.FindAll(x => x.carga_confirmada).Sum(x => x.quantidade);
-            this.peso_embarcado = qtd_embarcada * this.peso_unitario;
-            this.qtd_produzida = (int)Math.Round(peso_produzido / peso_unitario);
-
-            this.ultima_edicao = peca["ultima_edicao"].Data();
-
-            this.DENOMINDSTAND = peca.Get("DENOMINDSTAND").Valor;
-            this.DESENHO_1 = peca.Get("DESENHO_1").Valor;
-            this.TIPO_DE_PINTURA = peca.Get("TIPO_DE_PINTURA").Valor;
-
-
-
-
-
-
-
-            this.inicio = peca.Get("DATA_INICIO").Data();
-            this.fim = peca.Get("DATA_FIM").Data();
-
-            this.ULTIMO_STATUS = peca.Get("ULTIMO_STATUS").Valor;
-
-            this.pep_cooisn = peca.Get("pep_cooisn").Valor;
-            this.centro = peca.Get("centro").Valor;
-            var s = peca.Get("centro_producao").Valor;
-            if (s != "")
-            {
-                this.centro = s;
-            }
-
-            getComplexidade();
-
-        }
 
         private void getComplexidade()
         {

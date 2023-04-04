@@ -393,21 +393,8 @@ namespace DLM.painel
             }
         }
 
-        private List<Grupo_Mercadoria> _Grupos_Mercadoria { get; set; }
-        public List<Grupo_Mercadoria> GetGrupos_Mercadoria()
-        {
 
 
-            if (_Grupos_Mercadoria == null)
-            {
-                _Grupos_Mercadoria = Classificadores.GetGrupo_Mercadorias(this.Getpecas());
-            }
-            return _Grupos_Mercadoria;
-        }
-        public void mudartipo()
-        {
-            _mudartipo();
-        }
         public ImageSource imagem
         {
             get
@@ -806,10 +793,7 @@ namespace DLM.painel
             }
         }
 
-        public List<PLAN_PECA> Getpecas()
-        {
-            return Getpeps().SelectMany(x => x.Getpecas()).ToList();
-        }
+
 
         public double peso
         {
@@ -1371,41 +1355,7 @@ namespace DLM.painel
         private List<Grupo_Mercadoria> _Grupos_Mercadoria { get; set; }
 
 
-        public void mudartipo(Tipo_Material tipo)
-        {
-           if(tipo == Tipo_Material.Consolidado && Material_CONS)
-            {
-                this.tipo = tipo;
-            }
-           else if (tipo == Tipo_Material.Orçamento && Material_ORC)
-            {
-                this.tipo = tipo;
-            }
-            else if (tipo == Tipo_Material.Real && Material_REAL)
-            {
-                this.tipo = tipo;
-            }
-           else
-            {
-                return;
-            }
 
-            foreach (var p in this.Getetapas().FindAll(x => x.pep.StartsWith(this.pep)))
-            {
-                p._forcartipo(this.tipo);
-            }
-            foreach (var p in this.Getsubetapas().FindAll(x => x.pep.StartsWith(this.pep)))
-            {
-                p._forcartipo(this.tipo);
-            }
-            foreach (var p in this.Getpeps().FindAll(x => x.pep.StartsWith(this.pep)))
-            {
-                p._forcartipo(this.tipo);
-            }
-            NotifyPropertyChanged("peso");
-            NotifyPropertyChanged("total_embarcado");
-            NotifyPropertyChanged("total_fabricado");
-        }
         public void mudartipo()
         {
             this._mudartipo();
@@ -1494,25 +1444,7 @@ namespace DLM.painel
         {
             if (_etapas == null)
             {
-                _etapas = new List<Etapa_PMP>();
-                var reais = Real.Getetapas();
-                var orcs = Orcamento.Getetapas_orcamento();
-                var cons = Consolidada.Getetapas_orcamento();
-                var lista = reais.Select(x => x.PEP).Distinct().ToList();
-                lista.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
-                lista.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
-
-                lista = lista.Distinct().ToList().OrderBy(x => x).ToList();
-                foreach (var s in lista)
-                {
-                    var real = reais.Find(x => x.PEP == s);
-                    var orc = orcs.Find(x => x.PEP == s);
-                    var con = cons.Find(x => x.PEP == s);
-                    if (real != null | orc != null | con != null)
-                    {
-                        _etapas.Add(new Etapa_PMP(this, real, orc, con));
-                    }
-                }
+                return new List<Etapa_PMP>();
             }
             return _etapas;
         }
@@ -1520,30 +1452,7 @@ namespace DLM.painel
         {
             if (_subetapas == null)
             {
-                _subetapas = new List<SubEtapa_PMP>();
-                var reais = Real.GetSubEtapas();
-                var orcs = Orcamento.GetSubetapas();
-                var cons = Consolidada.GetSubetapas();
-
-                var lista = reais.Select(x => x.PEP).Distinct().ToList();
-                var embs = Consultas.GetResumoEmbarquesPEP(lista, Consultas.Tipo_ZPP0100_Resumo.Subetapa);
-                lista.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
-                lista.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
-
-                lista = lista.Distinct().ToList().OrderBy(x => x).ToList();
-                foreach (var s in lista)
-                {
-                    var real = reais.Find(x => x.PEP == s);
-                    var orc = orcs.Find(x => x.PEP == s);
-                    var con = cons.Find(x => x.PEP == s);
-                    var emb = embs.Find(x => x.PEP == s);
-                    if (real != null | orc != null | con != null)
-                    {
-                        _subetapas.Add(new SubEtapa_PMP(this, real, orc, con,emb));
-                    }
-
-                }
-
+                return new List<SubEtapa_PMP>();
             }
             return _subetapas;
         }
@@ -1551,57 +1460,36 @@ namespace DLM.painel
         {
             if (_peps == null)
             {
-                _peps = new List<PEP_PMP>();
-                var reais = Real.GetPeps();
-                var orcs = Orcamento.GetPEPs();
-                var cons = Consolidada.GetPEPs();
-                var lista = reais.Select(x => x.PEP).Distinct().ToList();
-                var embs = Consultas.GetResumoEmbarquesPEP(lista, Consultas.Tipo_ZPP0100_Resumo.PEP);
-                lista.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
-                lista.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
-
-                lista = lista.Distinct().ToList().OrderBy(x => x).ToList();
-                foreach (var s in lista)
-                {
-                    var real = reais.Find(x => x.PEP == s);
-                    var orc = orcs.Find(x => x.PEP == s);
-                    var con = cons.Find(x => x.PEP == s);
-                    var emb = embs.Find(x => x.PEP == s);
-                    if (real != null | orc != null | con!=null)
-                    {
-                        _peps.Add(new PEP_PMP(this, real, orc, con,emb));
-                    }
-
-                }
+                return new List<PEP_PMP>();
             }
             return _peps;
         }
-        public void Set(List<PLAN_PECA> pecas)
+        public void Set(List<PLAN_PECA> itens)
         {
             this._pecas = new List<PLAN_PECA>();
-            this._pecas.AddRange(pecas.FindAll(x => x.PEP.StartsWith(this.pep)));
+            this._pecas.AddRange(itens.FindAll(x => x.PEP.StartsWith(this.pep)));
         }
-        public void Set(List<SubEtapa_PMP> pecas)
+        public void Set(List<SubEtapa_PMP> itens)
         {
             this._subetapas = new List<SubEtapa_PMP>();
-            this._subetapas.AddRange(pecas.FindAll(x => x.pep.StartsWith(this.pep)));
+            this._subetapas.AddRange(itens.FindAll(x => x.pep.StartsWith(this.pep)));
         }
-        public void Set(List<PEP_PMP> pecas)
+        public void Set(List<PEP_PMP> itens)
         {
             this._peps = new List<PEP_PMP>();
-            this._peps.AddRange(pecas.FindAll(x => x.pep.StartsWith(this.pep)));
+            this._peps.AddRange(itens.FindAll(x => x.pep.StartsWith(this.pep)));
         }
-        public void Set(List<Etapa_PMP> pecas)
+        public void Set(List<Etapa_PMP> itens)
         {
             this._etapas = new List<Etapa_PMP>();
-            this._etapas.AddRange(pecas.FindAll(x => x.pep.StartsWith(this.pep)));
+            this._etapas.AddRange(itens.FindAll(x => x.pep.StartsWith(this.pep)));
         }
         private List<PLAN_PECA> _pecas { get; set; }
         public List<PLAN_PECA> Getpecas()
         {
             if (_pecas == null)
             {
-                _pecas = DLM.painel.Consultas.GetPecasPMP(new List<Pedido_PMP> { this });
+                return new List<PLAN_PECA>();
             }
             return _pecas;
         }
@@ -1673,21 +1561,7 @@ namespace DLM.painel
                 tipo = Tipo_Material.Orçamento;
                 ultima_edicao = orcamento.ultima_consulta_sap;
             }
-
-            //if(real.ultima_consulta_sap> consolidado.ultima_consulta_sap)
-            //{
-            //    ultima_edicao = real.ultima_consulta_sap;
-            //}
-            //else if(consolidado.ultima_consulta_sap> orcamento.ultima_consulta_sap)
-            //{
-            //    ultima_edicao = consolidado.ultima_consulta_sap;
-            //}
-            //else
-            //{
-            //    ultima_edicao = orcamento.ultima_consulta_sap;
-            //}
         }
-
         public Pedido_PMP()
         {
 
@@ -1702,14 +1576,17 @@ namespace DLM.painel
         private List<Etapa_PMP> _etapas { get; set; }
         private List<SubEtapa_PMP> _subetapas { get; set; }
         private List<PEP_PMP> _peps { get; set; }
-
         private List<PLAN_PECA> _pecas { get; set; }
 
         public List<PLAN_PECA> GetPecas()
         {
             if(_pecas ==null)
             {
-                _pecas = DLM.painel.Consultas.GetPecasPMP(this.Pedidos);
+                _pecas = Consultas.GetPecasPMP(this.Pedidos);
+                foreach(var pedido in this.Pedidos)
+                {
+                    pedido.Set(_pecas);
+                }
             }
             return _pecas;
         }
@@ -1719,9 +1596,9 @@ namespace DLM.painel
             if (_peps == null)
             {
                 _peps = new List<PEP_PMP>();
-                var reais = Consultas.GetPeps(this.Pedidos.Select(x => x.pep).Distinct().ToList());
-                var orcs = DLM.painel.Consultas.GetPEPsPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), false);
-                var cons = DLM.painel.Consultas.GetPEPsPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), true);
+                var reais = Consultas.GetPepsReal(this.Pedidos.Select(x => x.pep).Distinct().ToList());
+                var orcs =  Consultas.GetPEPsPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), false);
+                var cons =  Consultas.GetPEPsPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), true);
                 var lista = reais.Select(x => x.PEP).Distinct().ToList();
                 var embs = Consultas.GetResumoEmbarquesPEP(lista, Consultas.Tipo_ZPP0100_Resumo.PEP);
                 lista.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
@@ -1755,9 +1632,9 @@ namespace DLM.painel
                 var etp = GetEtapas();
                 _subetapas = new List<SubEtapa_PMP>();
                 var reais = this.Pedidos.SelectMany(x => x.Real.GetSubEtapas()).ToList();
-                    
-                var orcs = Consultas.GetSubEtapasPGO(this.Pedidos.Select(x=>x.pep).Distinct().ToList(),false);
-                var cons = Consultas.GetSubEtapasPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), true);
+                var pedidos = this.Pedidos.Select(x => x.pep).Distinct().ToList();
+                var orcs = Consultas.GetSubEtapasPGO(pedidos, false);
+                var cons = Consultas.GetSubEtapasPGO(pedidos, true);
 
                 var lista = reais.Select(x => x.PEP).Distinct().ToList();
                 var embs = Consultas.GetResumoEmbarquesPEP(lista, Consultas.Tipo_ZPP0100_Resumo.Subetapa);
@@ -1766,10 +1643,10 @@ namespace DLM.painel
                 lista.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
 
                 lista = lista.Distinct().ToList().OrderBy(x => x).ToList();
-                foreach (var ped in this.Pedidos)
+                foreach (var pedido in this.Pedidos)
                 {
-                    var etps = lista.FindAll(x => x.StartsWith(ped.pep));
-                    var etapas = etp.FindAll(x => x.pep.StartsWith(ped.pep));
+                    var etps = lista.FindAll(x => x.StartsWith(pedido.pep));
+                    var etapas = etp.FindAll(x => x.pep.StartsWith(pedido.pep));
                     foreach (var s in etps)
                     {
                         var real = reais.Find(x => x.PEP == s);
@@ -1778,13 +1655,13 @@ namespace DLM.painel
                         var emb = embs.Find(x => x.PEP == s);
                         if (real != null | orc != null | con != null)
                         {
-                            var nnn = new SubEtapa_PMP(ped, real, orc, con,emb);
+                            var nnn = new SubEtapa_PMP(pedido, real, orc, con,emb);
                             _subetapas.Add(nnn);
                         
                         }
                     }
 
-                   ped.Set(_subetapas);
+                   pedido.Set(_subetapas);
                 }
                 
             }
@@ -1804,9 +1681,9 @@ namespace DLM.painel
                 lista.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
 
                 lista = lista.Distinct().ToList().OrderBy(x => x).ToList();
-                foreach(var ped in this.Pedidos)
+                foreach(var pedido in this.Pedidos)
                 {
-                    var etps = lista.FindAll(x => x.StartsWith(ped.pep));
+                    var etps = lista.FindAll(x => x.StartsWith(pedido.pep));
                     foreach (var s in etps)
                     {
                         var real = reais.Find(x => x.PEP == s);
@@ -1814,10 +1691,10 @@ namespace DLM.painel
                         var con = cons.Find(x => x.PEP == s);
                         if (real != null | orc != null | con != null)
                         {
-                            _etapas.Add(new Etapa_PMP(ped, real, orc, con));
+                            _etapas.Add(new Etapa_PMP(pedido, real, orc, con));
                         }
                     }
-                    ped.Set(_etapas);
+                    pedido.Set(_etapas);
                 }
 
             }
