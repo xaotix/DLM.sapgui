@@ -38,10 +38,24 @@ namespace DLM.painel
         public Tipo_Embarque Tipo_Embarque { get; set; } = Tipo_Embarque.ZPP0100;
         public void SetStatusByZPP0100(List<DLM.db.Linha> linhas)
         {
-            var lista = linhas.FindAll(x => x["Material"].Valor == this.material.ToString());
+            var lista_fim = linhas.FindAll(x => x["Material"].Valor == this.material.ToString());
+            if(lista_fim.Count==0)
+            {
+                lista_fim = linhas.FindAll(x => x["Tamanho_dimensao"].Valor == this.marca);
+            }
 
-            this.qtd_embarcada = lista.FindAll(x => x["St_Conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x.Get("Qtd_Embarque").Double());
-            var marca = lista.Select(x => x["Tamanho_dimensao"].Valor).Distinct().ToList().FindAll(x => x.Replace(" ", "") != "");
+            if (lista_fim.Count == 0)
+            {
+                lista_fim = linhas.FindAll(x => x["Tamanho_dimensao"].Valor.Contains(this.marca));
+            }
+
+            if (lista_fim.Count == 0)
+            {
+
+            }
+
+                this.qtd_embarcada = lista_fim.FindAll(x => x["St_Conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x.Get("Qtd_Embarque").Double());
+            var marca = lista_fim.Select(x => x["Tamanho_dimensao"].Valor).Distinct().ToList().FindAll(x => x.Replace(" ", "") != "");
 
             if (marca.Count > 0)
             {

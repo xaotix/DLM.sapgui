@@ -894,7 +894,7 @@ namespace DLM.painel
                 }
             }
 
-            var sem_peca = retorno.FindAll(x => x.peca == null).ToList();
+            var sem_peca = retorno.FindAll(x => x.peca.material == "").ToList();
             var grp_sem_peca = sem_peca.GroupBy(x => x.pep + "/" + x.material + "/" + x.desenho).ToList().Select(x => x.ToList()).ToList();
             foreach (var s in grp_sem_peca)
             {

@@ -237,7 +237,7 @@ namespace DLM.painel
 
 
         public Tipo_Embarque Tipo_Embarque { get; set; } = Tipo_Embarque.ZPP0066N;
-        
+
         private PLAN_PECA _peca { get; set; } = new PLAN_PECA();
         public PLAN_PECA peca
         {
@@ -293,13 +293,6 @@ namespace DLM.painel
                 GetDados_0100(l);
 
             }
-//            if(this.material.Length>0 && this.pep.Length > 0)
-//            {
-//                this.peca = pecas.Find(x =>
-//Conexoes.Utilz.PEP.Get.Subetapa(x.pep, true) == Conexoes.Utilz.PEP.Get.Subetapa(this.pep, true)
-//&& x.material == this.material
-//);
-//            }
 
 
 
