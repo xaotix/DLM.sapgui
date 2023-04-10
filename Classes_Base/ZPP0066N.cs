@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DLM.sapgui
 {
-    public class ZPP0066N : INotifyPropertyChanged
+    public class ZPP0066N : Notificar
     {
         public override string ToString()
         {
@@ -37,24 +37,7 @@ namespace DLM.sapgui
             return l;
         }
 
-        #region Properties
-        [Browsable(false)]
-        public event PropertyChangedEventHandler PropertyChanged;
-        [Browsable(false)]
-        public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        [Browsable(false)]
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
+
         public PEP_Planejamento PEP
         {
             get

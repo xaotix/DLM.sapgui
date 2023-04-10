@@ -1,4 +1,5 @@
-﻿using DLM.sapgui;
+﻿using Conexoes;
+using DLM.sapgui;
 using DLM.vars;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Windows.Media;
 
 namespace DLM.painel
 {
-    public class Base_PMP: INotifyPropertyChanged
+    public class Base_PMP: Notificar
     {
         public override string ToString()
         {
@@ -36,24 +37,7 @@ namespace DLM.painel
                     break;
             }
         }
-        #region Properties
-        [Browsable(false)]
-        public event PropertyChangedEventHandler PropertyChanged;
-        [Browsable(false)]
-        public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        [Browsable(false)]
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
+
         public void _mudartipo()
         {
             if(tipo == Tipo_Material.Real)

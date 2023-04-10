@@ -278,11 +278,13 @@ namespace DLM.painel
         {
 
         }
-        public PLAN_PECA_LOG(PLAN_PECA peca, DLM.db.Linha l)
+        public PLAN_PECA_LOG(PLAN_PECA peca, DLM.db.Linha l =null)
         {
             this.peca = peca;
-            GetDados(l);
-
+            if(l!=null)
+            {
+                GetDados(l);
+            }
         }
         public PLAN_PECA_LOG(List<PLAN_PECA> pecas, DLM.db.Linha l, Tipo_Embarque tipo)
         {

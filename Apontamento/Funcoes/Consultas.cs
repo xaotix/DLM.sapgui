@@ -585,14 +585,11 @@ namespace DLM.painel
 
                 var Tarefas = new List<Task>();
                 var st_base = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_04_obra);
-                var titulos = GetTitulosObras();
-
 
                 foreach (var obra in _obras)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() =>
                     {
-                        obra.Set(titulos, true);
                         var igual = st_base.Filtrar("pep", obra.PEP, true);
                         if (igual.Count > 0)
                         {
@@ -630,14 +627,113 @@ namespace DLM.painel
         {
             if (contrato.Length < 4) { return; }
             DBases.Painel_Criar_Cache(contrato);
-            Consultas.Pecas_Criar_Cache(contrato);
+
+
+            DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
+            var Pecas = Consultas.GetPecasReal(new List<string> { contrato });
+
+
+            if (Pecas.Count == 0)
+            {
+                return;
+            }
+
+
+            var w = Conexoes.Utilz.Wait(10, $"Logística...{Pecas.Count} [{contrato}]");
+
+            var orfas = new List<PLAN_PECA>();
+            var logistica = DLM.painel.Consultas.GetLogistica(Pecas, out orfas);
+
+            Pecas.AddRange(orfas);
+            Pecas = Pecas.OrderBy(x => x.ToString()).ToList();
+
+
+            w.SetProgresso(1, Pecas.Count, "Mapeando peças...");
+            var mindia = Cfg.Init.DataDummy();
+
+
+            var linhas = new List<DLM.db.Linha>();
+            foreach (var peca in Pecas.OrderBy(x => x.PEP))
+            {
+                var lp = new PLAN_PECA_LOG(peca);
+                if (peca.logistica.Count == 0)
+                {
+                    var ldb = GetLinhaDB(mindia, lp, peca.qtd_necessaria, peca.qtd_produzida, 0, peca.qtd_necessaria);
+                    linhas.Add(ldb);
+                }
+                else
+                {
+                    var qtd_a_embarcar = peca.qtd_necessaria - peca.logistica.FindAll(x => x.carga_confirmada).Sum(x => x.quantidade);
+                    var qtd_a_fabricar = peca.qtd_necessaria - peca.qtd_produzida;
+                    var qtd_a_embarcar_produzida = peca.qtd_produzida - (peca.qtd_embarcada > 0 ? peca.qtd_embarcada : 0);
+                    var qtd_fab = qtd_a_fabricar <= 0 ? qtd_a_embarcar : qtd_a_embarcar_produzida;
+                    var resto = peca.qtd_necessaria - peca.logistica.FindAll(x => x.carga_confirmada).Sum(x => x.quantidade);
+
+                    if (resto < 0)
+                    {
+                        resto = 0;
+                    }
+
+                    if (qtd_a_embarcar > 0)
+                    {
+                        linhas.Add(GetLinhaDB(mindia, lp, resto, qtd_fab, 0, qtd_a_embarcar));
+                    }
+                    foreach (var plog in peca.logistica.FindAll(x => x.carga_confirmada))
+                    {
+                        linhas.Add(GetLinhaDB(mindia, plog, plog.quantidade, plog.quantidade, plog.quantidade, 0));
+                    }
+                }
+                w.somaProgresso();
+            }
+            DBases.GetDB().Cadastro(linhas, Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
+
+
+            w.Close();
+
         }
 
-        public static void Pecas_Criar_Cache(string contrato)
+
+        private static DLM.db.Linha GetLinhaDB(DateTime mindia, PLAN_PECA_LOG peca_log, double qtd, double qtd_fab, double qtd_emb, double qtd_a_embarcar)
         {
-            DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
-            var pecas = Consultas.GetPecasReal(new List<string> { contrato });
-            DLM.painel.Relatorios.ExportarEmbarque(pecas, false, null, null, true, false);
+            var ldb = new DLM.db.Linha();
+            ldb.Add("pep", peca_log.peca.PEP);
+            ldb.Add("centro", peca_log.peca.centro);
+            ldb.Add("carreta", peca_log.num_carga);
+            ldb.Add("ordem", peca_log.pack_list);
+            ldb.Add("material", peca_log.peca.material);
+            ldb.Add("descricao", peca_log.peca.texto_breve);
+            ldb.Add("qtd_embarque", "");
+            ldb.Add("qtd_carregada", qtd_emb);
+            ldb.Add("placa", peca_log.placa);
+            ldb.Add("motorista", peca_log.motorista);
+            ldb.Add("marca", peca_log.peca.desenho);
+            ldb.Add("observacoes", peca_log.observacoes);
+            ldb.Add("qtd", qtd);
+            ldb.Add("produzido", qtd_fab);
+            ldb.Add("embarcado", qtd_emb);
+            ldb.Add("qtd_a_embarcar", qtd_a_embarcar);
+            ldb.Add("comprimento", peca_log.peca.comprimento);
+            ldb.Add("corte", peca_log.peca.corte_largura);
+            ldb.Add("espessura", peca_log.peca.espessura);
+            /*05/08/2020 - ajuste para pegar somente o peso total da quantidade embarcada*/
+            ldb.Add("peso_tot", peca_log.peca.peso_necessario / peca_log.peca.qtd_necessaria * qtd_emb);
+            ldb.Add("mercadoria", peca_log.peca.grupo_mercadoria);
+            ldb.Add("primeiro_apontamento_fab", peca_log.peca.inicio > mindia ? peca_log.peca.inicio : null);
+            ldb.Add("ultimo_apontamento_fab", peca_log.peca.fim > mindia ? peca_log.peca.fim : null);
+            ldb.Add("atualizado_em", peca_log.peca.ultima_edicao);
+            ldb.Add("status_sap", peca_log.peca.ULTIMO_STATUS);
+            ldb.Add("pintura", peca_log.peca.TIPO_DE_PINTURA);
+            ldb.Add("esquema", peca_log.peca.Esquema.ESQUEMA_COD);
+            ldb.Add("esquema_desc", peca_log.peca.Esquema.Getdescricao());
+            ldb.Add("bobina", peca_log.peca.bobina.SAP);
+            ldb.Add("face1", peca_log.peca.bobina.cor1.Nome);
+            ldb.Add("face2", peca_log.peca.bobina.cor2.Nome);
+            ldb.Add("complexidade", peca_log.peca.Complexidade);
+            ldb.Add("denominacao", peca_log.peca.DENOMINDSTAND);
+            ldb.Add("tipo", peca_log.peca.Tipo);
+            ldb.Add("arquivo", peca_log.peca.DESENHO_1);
+            ldb.Add("tipo_embarque", peca_log.peca.Tipo_Embarque);
+            return ldb;
         }
 
         public static List<PLAN_PEDIDO> GetPedidos(bool reset = false)

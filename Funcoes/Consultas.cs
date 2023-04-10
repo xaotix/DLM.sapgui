@@ -2083,7 +2083,6 @@ namespace DLM.sapgui
         /*ESSE CARA TENTA EXPORTAR EM EXCEL A TELA QUE ESTÁ EM EXECUÇÃO NO SAP*/
         private void ExportarExcel(string destino, string NOME, string SCRIPT_ORIGEM)
         {
-
             var SCR = Biblioteca_Daniel.Arquivo_Pasta.Buffer_Texto.retorna_arquivo(SCRIPT_ORIGEM).Select(X => X.Replace("$NOME$", NOME).Replace("$TAM$", (NOME.Length-1).ToString()).Replace("$DESTINO$", destino)).ToList();
             Funcoes.RodaScript(SCR, destino);
 

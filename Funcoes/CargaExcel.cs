@@ -34,7 +34,7 @@ namespace DLM.sapgui
         public static List<ZPP0100> ZPP0100(string arquivo, out DLM.db.Tabela tabela)
         {
             var retorno = new ConcurrentBag<ZPP0100>();
-            tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            tabela = Utilz.Excel.GetTabela(arquivo, true);
             foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();

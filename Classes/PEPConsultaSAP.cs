@@ -13,7 +13,7 @@ using System.Windows.Markup;
 namespace DLM.sapgui
 {
 
-    public class PEP_Planejamento : INotifyPropertyChanged
+    public class PEP_Planejamento : Notificar
     {
         public CN47N Engenharia { get; set; } = new CN47N();
         public CN47N Montagem { get; set; } = new CN47N();
@@ -36,24 +36,7 @@ namespace DLM.sapgui
                 NotifyPropertyChanged("id");
             }
         }
-        #region Properties
-        [Browsable(false)]
-        public event PropertyChangedEventHandler PropertyChanged;
-        [Browsable(false)]
-        public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        [Browsable(false)]
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
+
         private string _Codigo { get; set; } = "";
         public string Codigo
         {

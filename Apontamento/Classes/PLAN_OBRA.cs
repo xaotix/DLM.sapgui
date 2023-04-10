@@ -106,6 +106,9 @@ namespace DLM.painel
     }
     public class PLAN_OBRA : PLAN_BASE
     {
+        private List<Conexoes.MSAP_PEP> _peps_eng { get; set; }
+        private List<Conexoes.MSAP_Pedido> _Pedidos_Eng { get; set; }
+
         public ImageSource Imagem
         {
             get
@@ -188,7 +191,6 @@ namespace DLM.painel
 
 
 
-        private List<Conexoes.MSAP_Pedido> _Pedidos_Eng { get; set; }
         public List<Conexoes.MSAP_Pedido> pedidos_eng
         {
             get
@@ -201,7 +203,6 @@ namespace DLM.painel
             }
         }
 
-        private List<Conexoes.MSAP_PEP> _peps_eng { get; set; }
         public List<Conexoes.MSAP_PEP> peps_eng
         {
             get
@@ -230,6 +231,7 @@ namespace DLM.painel
             this.Linha = L;
             string pedido_principal = L.Get("pedido_principal").Valor;
             this.PEP = pedido_principal.Replace(".C00", ".P").Replace(".P00","").Replace(".G00","");
+            this.Titulo.Descricao = L.Get("nome").Valor;
             this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");
             this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
             this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();

@@ -12,7 +12,7 @@ using DLM.vars;
 namespace DLM.sapgui
 {
 
-    public class ZPMP : INotifyPropertyChanged
+    public class ZPMP : Notificar
     {
         public override string ToString()
         {
@@ -46,24 +46,7 @@ namespace DLM.sapgui
 
             return l;
         }
-        #region Properties
-        [Browsable(false)]
-        public event PropertyChangedEventHandler PropertyChanged;
-        [Browsable(false)]
-        public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        [Browsable(false)]
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
+
         public PEP_Planejamento PEP
         {
             get

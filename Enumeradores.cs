@@ -152,6 +152,16 @@ namespace DLM.sapgui
         Data = 24,
         Ordem_Prod_ = 25,
         Apontamento_Fert = 26,
+        /*itens novos - 10/04/2023 */
+        End_Logistico = 27,
+        CentroProducao = 28,
+        N_do_item = 29,
+        Sequencia_Item = 30,
+        Ordem_Venda = 31,
+        Remessa = 32,
+        Nota_Fiscal = 33,
+        Data_NF = 34,
+
     }
     public enum TAB_ZCONTRATOS
     {

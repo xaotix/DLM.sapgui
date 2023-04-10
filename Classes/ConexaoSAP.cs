@@ -153,18 +153,11 @@ namespace DLM.sapgui
             }
 
 
-
-            return PEP_PLanejamento.Count>0;
-        }
-
-        public void GravarMateriais()
-        {
             DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
             DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao);
             DBases.GetDB().Apagar("Elemento_PEP", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques);
             DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
             DBases.GetDB().Apagar("contrato", $"%{Contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
-
 
             if (this.PEP_PLanejamento.Count > 0)
             {
@@ -189,13 +182,14 @@ namespace DLM.sapgui
                 {
                     DBases.GetDB().Cadastro(this.CN47N.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
                 }
-                if(this.Titulos.Count>0)
+                if (this.Titulos.Count > 0)
                 {
                     DBases.GetDB().Cadastro(this.Titulos.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
                 }
-
             }
+            return this.PEP_PLanejamento.Count>0;
         }
+
 
 
 
