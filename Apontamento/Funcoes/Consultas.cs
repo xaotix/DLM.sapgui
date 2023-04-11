@@ -28,39 +28,7 @@ namespace DLM.painel
         private static List<string> _pedidos_clean { get; set; }
         private static List<PLAN_CONTRATO> _titulos_obras { get; set; }
 
-        public static List<Carga_Planejamento> getCargas(List<PLAN_PECA_LOG> logs)
-        {
-            List<Carga_Planejamento> retorno = new List<Carga_Planejamento>();
 
-            foreach (var s in logs.Select(x => x.num_carga).Distinct().ToList())
-            {
-                retorno.Add(new Carga_Planejamento(s, logs));
-            }
-
-            return retorno;
-        }
-        public static List<SubEtapa_Logistica_Planejamento> getSubEtapasLogistica(List<PLAN_PECA_LOG> logs)
-        {
-            List<SubEtapa_Logistica_Planejamento> retorno = new List<SubEtapa_Logistica_Planejamento>();
-
-            foreach (var s in logs.Select(x => x.subetapa).Distinct().ToList())
-            {
-                retorno.Add(new SubEtapa_Logistica_Planejamento(s, logs));
-            }
-
-            return retorno;
-        }
-        public static List<PackList_Planejamento> getPackLists(List<PLAN_PECA_LOG> logs)
-        {
-            List<PackList_Planejamento> retorno = new List<PackList_Planejamento>();
-
-            foreach (var s in logs.Select(x => x.pack_list).Distinct().ToList())
-            {
-                retorno.Add(new PackList_Planejamento(s, logs));
-            }
-
-            return retorno;
-        }
         public static List<ORC_PED> GetObrasPGO(bool consolidadas = false)
         {
             List<ORC_PED> retorno = new List<ORC_PED>();
@@ -100,47 +68,7 @@ namespace DLM.painel
             }
             return retorno;
         }
-        public static List<ORC_PED> GetObrasPGO(string chave, bool consolidadas = false, bool consolidadas_x_real = false)
-        {
-            if (chave.Length < 5) { return new List<ORC_PED>(); }
-            List<ORC_PED> retorno = new List<ORC_PED>();
-            string tab = $"{Cfg.Init.db_orcamento}.pmp_orc_resumo as pr";
-            if (consolidadas)
-            {
-                tab = $"{Cfg.Init.db_orcamento}.pmp_orc_resumo_consolidada as pr";
-                if (consolidadas_x_real)
-                {
-                    tab = $"{Cfg.Init.db_comum}.painel_x_consolidada as pr";
-                }
-            }
-            var s = DBases.GetDBPGO().Consulta($"SELECT * from {tab} where pr.pedido like '%{chave}% '");
-            foreach (var p in s.Linhas)
-            {
-                var ped = new ORC_PED(p, consolidadas ? Tipo_Material.Consolidado : Tipo_Material.Orçamento);
-                if (!consolidadas)
-                {
-                    ped.GetDatas();
-                }
-                retorno.Add(ped);
-            }
 
-            if (consolidadas)
-            {
-                var pacotes = DBases.GetDBPGO().Consulta($"SELECT * from {Cfg.Init.db_orcamento}.{Cfg.Init.tb_pmp_orc_consolidada_arquivos_peps} where pr.pedido like '%{chave}% '").Linhas;
-                foreach (var pedido in retorno)
-                {
-                    var pcks = pacotes.FindAll(x => x.Get("pedido").Valor == pedido.PEP);
-                    var arqs = pcks.Select(x => x.Get("arquivo").Valor).Distinct().ToList();
-                    foreach (var arq in arqs)
-                    {
-                        var peps = pcks.FindAll(x => x.Get("arquivo").Valor == arq).Select(x => x.Get("pep").Valor).Distinct().ToList();
-                        pedido.pacotes.Add(new ORC_PCK(arq, peps, pedido));
-                    }
-
-                }
-            }
-            return retorno;
-        }
         public static List<PLAN_PECA> GetPecasPMP(List<Pedido_PMP> pedidos)
         {
             List<PLAN_PECA> retorno = new List<PLAN_PECA>();
@@ -296,11 +224,7 @@ namespace DLM.painel
             }
             return retorno;
         }
-        public enum Tipo_ZPP0100_Resumo
-        {
-            Subetapa,
-            PEP,
-        }
+
 
         public static List<ZPP0100_Resumo> GetResumoEmbarquesPEP(List<string> pedidos, int coluna = 24)
         {
@@ -308,7 +232,7 @@ namespace DLM.painel
 
             foreach (var pedido in pedidos)
             {
-                var comando = DBases.GetDB().Consulta($"call comum.getzpp0100_resumo('{pedido}',{coluna})");
+                var comando = DBases.GetDB().Consulta($"call {Cfg.Init.db_comum}.getzpp0100_resumo('{pedido}',{coluna})");
 
                 foreach (var p in comando.Linhas)
                 {
@@ -426,123 +350,6 @@ namespace DLM.painel
 
             DBases.GetDB().Apagar("pep", $"%{contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
         }
-
-
-
-
-        //public static List<StatusSAP_Planejamento> GetStatus(List<string> descricoes)
-        //{
-        //    List<string> fim = new List<string>();
-        //    foreach (var desc in descricoes)
-        //    {
-        //        fim.AddRange(desc.ToUpper().Split(' ').ToList().FindAll(x => x != "").Distinct().ToList());
-        //    }
-        //    fim = fim.Distinct().ToList().OrderBy(x => x).ToList();
-        //    List<StatusSAP_Planejamento> retorno = new List<StatusSAP_Planejamento>();
-        //    foreach (var ss in fim)
-        //    {
-        //        var tt = Buffer.GetStatus().Find(x => x.status == ss);
-        //        if (tt != null)
-        //        {
-        //            retorno.Add(tt);
-        //        }
-
-        //    }
-        //    return retorno;
-        //}
-
-        //public static List<Meta> GetMeta(List<PLAN_SUB_ETAPA> lista, Range_Meta range = Range_Meta.Mes, Tipo_Meta Tipo = Tipo_Meta.Tudo, Tipo_Filtro_Meta Filtro = Tipo_Filtro_Meta.Etapa)
-        //{
-        //    List<Meta> retorno = new List<Meta>();
-        //    DateTime min_sistema = Cfg.Init.DataDummy();
-
-
-        //    if (Tipo == Tipo_Meta.Engenharia)
-        //    {
-        //        var datas = lista.Select(x => x.engenharia_cronograma_inicio).ToList().FindAll(x => x > min_sistema).ToList();
-
-        //        datas.AddRange(lista.Select(x => x.engenharia_cronograma).ToList().FindAll(x => x > min_sistema).ToList());
-        //        if (datas.Count > 0)
-        //        {
-        //            DateTime inicio = (DateTime)datas.Min();
-        //            DateTime fim = (DateTime)datas.Max();
-        //            fim = new DateTime(fim.Year, fim.Month, DateTime.DaysInMonth(fim.Year, fim.Month));
-        //            DateTime f0 = new DateTime(inicio.Year, inicio.Month, 01);
-        //            f0 = GetRanges(lista, range, Tipo, Filtro, retorno, fim, f0);
-
-        //        }
-
-
-        //    }
-        //    else if (Tipo == Tipo_Meta.Fabrica)
-        //    {
-        //        var datas = lista.Select(x => x.resumo_pecas.Fim).ToList().FindAll(x => x > min_sistema).ToList();
-        //        datas.AddRange(lista.Select(x => x.resumo_pecas.Inicio).ToList().FindAll(x => x > min_sistema).ToList());
-        //        datas.AddRange(lista.Select(x => x.fabrica_cronograma_inicio).ToList().FindAll(x => x > min_sistema).ToList());
-        //        datas.AddRange(lista.Select(x => x.fabrica_cronograma).ToList().FindAll(x => x > min_sistema).ToList());
-        //        if (datas.Count > 0)
-        //        {
-        //            DateTime inicio = (DateTime)datas.Min();
-        //            DateTime fim = (DateTime)datas.Max();
-        //            fim = new DateTime(fim.Year, fim.Month, DateTime.DaysInMonth(fim.Year, fim.Month));
-        //            DateTime f0 = new DateTime(inicio.Year, inicio.Month, 01);
-        //            f0 = GetRanges(lista, range, Tipo, Filtro, retorno, fim, f0);
-
-        //        }
-        //    }
-
-
-        //    return retorno.FindAll(x => x.SubEtapas.Count > 0).ToList();
-        //}
-        //private static DateTime GetRanges(List<PLAN_SUB_ETAPA> lista, Range_Meta range, Tipo_Meta Tipo, Tipo_Filtro_Meta Filtro, List<Meta> retorno, DateTime fim, DateTime f0)
-        //{
-        //    if (range == Range_Meta.Mes)
-        //    {
-        //        while (f0 < fim)
-        //        {
-
-        //            DateTime f0_fim = new DateTime(f0.Year, f0.Month, DateTime.DaysInMonth(f0.Day, f0.Month));
-        //            Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
-        //            if (mm.Metas.Count > 0)
-        //            {
-        //                retorno.Add(mm);
-        //            }
-        //            f0 = f0.AddMonths(1);
-        //        }
-        //    }
-        //    else if (range == Range_Meta.Semana)
-        //    {
-        //        while (f0 < fim)
-        //        {
-
-        //            DateTime f0_fim = f0.AddDays(7);
-        //            Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
-        //            if (mm.Metas.Count > 0)
-        //            {
-        //                retorno.Add(mm);
-        //            }
-        //            f0 = f0.AddDays(7);
-        //        }
-        //    }
-
-        //    else if (range == Range_Meta.Ano)
-        //    {
-        //        while (f0 < fim)
-        //        {
-
-        //            DateTime f0_fim = f0.AddYears(1);
-        //            Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
-        //            if (mm.Metas.Count > 0)
-        //            {
-        //                retorno.Add(mm);
-        //            }
-        //            f0 = f0.AddYears(1);
-        //        }
-        //    }
-
-        //    return f0;
-        //}
-
 
 
 
@@ -974,7 +781,7 @@ namespace DLM.painel
 
             foreach (var pedido in pedidos)
             {
-                var lista_fab_0100 = DBases.GetDB().Consulta($"call comum.getzpp0100_cargas('{pedido}')");
+                var lista_fab_0100 = DBases.GetDB().Consulta($"call {Cfg.Init.db_comum}.getzpp0100_cargas('{pedido}')");
                 foreach (var linha in lista_fab_0100.Linhas)
                 {
                     retorno.Add(new PLAN_PECA_LOG(pecas, linha, Tipo_Embarque.ZPP0100));
@@ -1025,8 +832,8 @@ namespace DLM.painel
             var tabelas_embarques = new List<DLM.db.Tabela>();
             foreach (var pedido in lista_pedidos)
             {
-                var lista_pecas = DBases.GetDB().Consulta($"call comum.getpecas('{pedido}')");
-                var lista_embarques = DBases.GetDB().Consulta($"call comum.getPecasEmbarques('{pedido}')");
+                var lista_pecas = DBases.GetDB().Consulta($"call {Cfg.Init.db_comum}.getpecas('{pedido}')");
+                var lista_embarques = DBases.GetDB().Consulta($"call {Cfg.Init.db_comum}.getPecasEmbarques('{pedido}')");
                 tabelas_pecas.Add(lista_pecas);
                 tabelas_embarques.Add(lista_embarques);
             }
@@ -1100,38 +907,33 @@ namespace DLM.painel
             return new SolidColorBrush(Colors.LightBlue) { Opacity = opacidade };
         }
 
-        public static List<string> GetPedidosClean(List<string> contratos, bool reset)
+        public static List<string> GetPedidosClean(List<string> contratos, bool update)
         {
-            var pedidos = GetPedidosClean(reset);
-            List<string> retorno = new List<string>();
-            foreach (var contrato in contratos.Distinct().ToList().FindAll(x => x.Length > 5))
-            {
-                retorno.AddRange(pedidos.FindAll(x => x.Contains(contrato)));
-            }
-            return retorno.Distinct().ToList();
-        }
-        public static List<string> GetPedidosClean(bool update = false)
-        {
+
             if (_pedidos_clean == null | update)
             {
                 _pedidos_clean = new List<string>();
-                _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.cn47n AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x.Get("pedido").Valor).ToList());
+                _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_cn47n} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x.Get("pedido").Valor).ToList());
                 _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x.Get("pedido").Valor).ToList());
 
                 _pedidos_clean = _pedidos_clean.Distinct().ToList().FindAll(x => x.Length > 3);
             }
+            if(contratos!=null)
+            {
+                var _retorno = new List<string>();
+                foreach (var contrato in contratos.Distinct().ToList().FindAll(x => x.Length > 5))
+                {
+                    _retorno.AddRange(_pedidos_clean.FindAll(x => x.Contains(contrato)));
+                }
+                _retorno = _retorno.Distinct().ToList();
+                return _retorno;
+            }
 
             return _pedidos_clean;
+
         }
-        public static void SetPeps(List<PLAN_SUB_ETAPA> subetapas)
-        {
-            var sem_peps = subetapas.FindAll(x => !x.carregou_peps);
-            var peps = DLM.painel.Consultas.GetPepsReal(sem_peps.Select(x => x.subetapa).Distinct().ToList());
-            foreach (var sub in sem_peps)
-            {
-                sub.Set(peps);
-            }
-        }
+
+
         public static bool MatarExcel(bool confirmar = false)
         {
             var t = Process.GetProcessesByName("EXCEL").ToList();
