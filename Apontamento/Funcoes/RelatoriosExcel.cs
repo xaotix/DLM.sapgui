@@ -197,7 +197,7 @@ namespace DLM.painel
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 1].Value = ped.Descricao;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 2].Value = t.pedido;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 3].Value = t.PEP;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 4].Value = t.resumo_pecas.etapa_bloqueada ? 1 : 0;
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 4].Value = t.resumo_pecas.etapa_bloqueada ? 1 : 0;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 5].Value = t.peso_planejado;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 6].Value = t.liberado_engenharia / 100;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 7].Value = t.total_fabricado / 100;
@@ -215,8 +215,8 @@ namespace DLM.painel
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 19].Value = t.Montagem_Balanco ? "X" : "";
                                 //subetapas_aba_excel.Cells[l0 + l, c0 + 20].Value = t.data_transsap > mindia ? t.data_transsap: null;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 21].Value = t.engenharia_liberacao > mindia ? t.engenharia_liberacao : null;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 22].Value = t.resumo_pecas.Inicio > mindia ? t.resumo_pecas.Inicio : null;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 23].Value = t.resumo_pecas.Fim > mindia ? t.resumo_pecas.Fim : null;
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 22].Value = t.resumo_pecas.Inicio > mindia ? t.resumo_pecas.Inicio : null;
+                                //subetapas_aba_excel.Cells[l0 + l, c0 + 23].Value = t.resumo_pecas.Fim > mindia ? t.resumo_pecas.Fim : null;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 24].Value = t.update_montagem.ToUpper().Replace("MONTAGEM: ", "");
                                 //subetapas_aba_excel.Cells[l0 + l, c0 + 25].Value = t.engenharia_projetista;
                                 //subetapas_aba_excel.Cells[l0 + l, c0 + 26].Value = t.engenharia_calculista;
@@ -317,7 +317,7 @@ namespace DLM.painel
                         w = Conexoes.Utilz.Wait(subetapas.Count, "Criando Lista por Grupo de Mercadorias...");
                         l0 = 1;
                         l = 1;
-                        foreach (var t in subetapas.OrderBy(x => x.etapa).ToList().FindAll(x => !x.resumo_pecas.etapa_bloqueada))
+                        foreach (var t in subetapas)
                         {
                             foreach (var pep in t.peps)
                             {
@@ -798,7 +798,7 @@ namespace DLM.painel
                                     excel_sub.Cells[$"C{L1}"].Value = sub.pedido;
                                     excel_sub.Cells[$"D{L1}"].Value = sub.pep;
                                     excel_sub.Cells[$"E{L1}"].Value = sub.tipo.ToString();
-                                    excel_sub.Cells[$"F{L1}"].Value = sub.Real.resumo_pecas.etapa_bloqueada ? 1 : 0;
+                                    //excel_sub.Cells[$"F{L1}"].Value = sub.Real.resumo_pecas.etapa_bloqueada ? 1 : 0;
                                     excel_sub.Cells[$"G{L1}"].Value = sub.peso;
                                     excel_sub.Cells[$"H{L1}"].Value = sub.Real.liberado_engenharia / 100;
                                     excel_sub.Cells[$"I{L1}"].Value = sub.total_fabricado / 100;
@@ -818,8 +818,8 @@ namespace DLM.painel
                                     excel_sub.Cells[$"W{L1}"].Value = sub.mi > mindia ? sub.mf : null;
                                     excel_sub.Cells[$"X{L1}"].Value = sub.mf > mindia ? sub.mf : null;
                                     excel_sub.Cells[$"Y{L1}"].Value = sub.Real.ultima_consulta_sap > mindia ? sub.Real.ultima_consulta_sap : null;
-                                    excel_sub.Cells[$"Z{L1}"].Value = sub.Real.resumo_pecas.Inicio > mindia ? sub.Real.resumo_pecas.Inicio : null;
-                                    excel_sub.Cells[$"AA{L1}"].Value = sub.Real.resumo_pecas.Fim > mindia ? sub.Real.resumo_pecas.Fim : null;
+                                    //excel_sub.Cells[$"Z{L1}"].Value = sub.Real.resumo_pecas.Inicio > mindia ? sub.Real.resumo_pecas.Inicio : null;
+                                    //excel_sub.Cells[$"AA{L1}"].Value = sub.Real.resumo_pecas.Fim > mindia ? sub.Real.resumo_pecas.Fim : null;
                                     excel_sub.Cells[$"AB{L1}"].Value = sub.Real.update_montagem.ToUpper().Replace(" ", "").Replace("MONTAGEM:", "");
                                     excel_sub.Cells[$"AC{L1}"].Value = sub.Real.montagem_engenheiro;
                                 }

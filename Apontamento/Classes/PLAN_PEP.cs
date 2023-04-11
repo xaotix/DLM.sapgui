@@ -107,11 +107,12 @@ namespace DLM.painel
         }
         private void GetObservacoes()
         {
-            if (this.resumo_pecas.etapa_bloqueada)
-            {
-                this._observacoes = "ETAPA BLOQUEADA";
-            }
-            else if (this.porcentagem_produzida > 99 && this.porcentagem_embarcada > 99)
+            //if (this.resumo_pecas.etapa_bloqueada)
+            //{
+            //    this._observacoes = "ETAPA BLOQUEADA";
+            //}
+            //else 
+            if (this.porcentagem_produzida > 99 && this.porcentagem_embarcada > 99)
             {
                 this._observacoes = "TOTALMENTE EMBARCADA";
             }

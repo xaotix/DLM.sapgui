@@ -94,7 +94,7 @@ namespace DLM.painel
 
             this.id_montagem = 1;
 
-            this.resumo_pecas = new Resumo_Pecas(Obras.Select(x => x.resumo_pecas).ToList());
+            //this.resumo_pecas = new Resumo_Pecas(Obras.Select(x => x.resumo_pecas).ToList());
 
             this.status_montagem = "EM ANDAMENTO";
 

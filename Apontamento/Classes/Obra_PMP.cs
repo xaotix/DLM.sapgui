@@ -442,21 +442,6 @@ namespace DLM.painel
                 return 0;
             }
         }
-        public string centro
-        {
-            get
-            {
-                if (Obra.tipo == Tipo_Material.Real && this.Material_REAL)
-                {
-                    return Real.resumo_pecas.centro_producao;
-                }
-                else if (Obra.tipo == Tipo_Material.Orçamento && this.Material_ORC)
-                {
-                    return Orcamento.centro;
-                }
-                return "";
-            }
-        }
         public Pedido_PMP Obra { get; set; } = new Pedido_PMP();
         public ORC_PEP Orcamento { get; set; } = new ORC_PEP();
         public ORC_PEP Consolidada { get; set; } = new ORC_PEP();
@@ -790,11 +775,12 @@ namespace DLM.painel
         {
             get
             {
-                if (Obra.tipo == Tipo_Material.Real && this.Material_REAL)
-                {
-                    return Real.resumo_pecas.centro_producao;
-                }
-                else if (Obra.tipo == Tipo_Material.Orçamento && this.Material_ORC)
+                //if (Obra.tipo == Tipo_Material.Real && this.Material_REAL)
+                //{
+                //    return Real.resumo_pecas.centro_producao;
+                //}
+                //else 
+                if (Obra.tipo == Tipo_Material.Orçamento && this.Material_ORC)
                 {
                     return Orcamento.centro;
                 }
@@ -1099,21 +1085,7 @@ namespace DLM.painel
                 return Math.Round(Getsubetapas().Sum(x => x.peso),2);
             }
         }
-        public string centro
-        {
-            get
-            {
-                if (Obra.tipo == Tipo_Material.Real && this.Material_REAL)
-                {
-                    return Real.resumo_pecas.centro_producao;
-                }
-                else if (Obra.tipo == Tipo_Material.Orçamento && this.Material_ORC)
-                {
-                    return Orcamento.centro;
-                }
-                return "";
-            }
-        }
+
 
 
         public List<SubEtapa_PMP> Getsubetapas()
@@ -1555,13 +1527,12 @@ namespace DLM.painel
 
     public class Pacote_PMP
     {
-        public List<Pedido_PMP> Pedidos { get; set; } = new List<Pedido_PMP>();
-
         private List<Etapa_PMP> _etapas { get; set; }
         private List<SubEtapa_PMP> _subetapas { get; set; }
         private List<PEP_PMP> _peps { get; set; }
         private List<PLAN_PECA> _pecas { get; set; }
 
+        public List<Pedido_PMP> Pedidos { get; set; } = new List<Pedido_PMP>();
         public List<PLAN_PECA> GetPecas()
         {
             if(_pecas ==null)
@@ -1574,7 +1545,6 @@ namespace DLM.painel
             }
             return _pecas;
         }
-
         public List<PEP_PMP> Getpeps()
         {
             if (_peps == null)
@@ -1584,7 +1554,7 @@ namespace DLM.painel
                 var orcs =  Consultas.GetPEPsPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), false);
                 var cons =  Consultas.GetPEPsPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), true);
                 var lista = reais.Select(x => x.PEP).Distinct().ToList();
-                var embs = Consultas.GetResumoEmbarquesPEP(lista, Consultas.Tipo_ZPP0100_Resumo.PEP);
+                var embs = Consultas.GetResumoEmbarquesPEP(lista, 24);
                 lista.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
                 lista.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
 
@@ -1605,7 +1575,6 @@ namespace DLM.painel
                     }
                     ped.Set(_peps);
                 }
-
             }
             return _peps;
         }
@@ -1621,7 +1590,7 @@ namespace DLM.painel
                 var cons = Consultas.GetSubEtapasPGO(pedidos, true);
 
                 var lista = reais.Select(x => x.PEP).Distinct().ToList();
-                var embs = Consultas.GetResumoEmbarquesPEP(lista, Consultas.Tipo_ZPP0100_Resumo.Subetapa);
+                var embs = Consultas.GetResumoEmbarquesPEP(lista, 21);
 
                 lista.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
                 lista.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
@@ -1641,7 +1610,6 @@ namespace DLM.painel
                         {
                             var nnn = new SubEtapa_PMP(pedido, real, orc, con,emb);
                             _subetapas.Add(nnn);
-                        
                         }
                     }
 
@@ -1651,7 +1619,6 @@ namespace DLM.painel
             }
             return _subetapas;
         }
-
         public List<Etapa_PMP> GetEtapas()
         {
             if(_etapas ==null)
@@ -1684,7 +1651,6 @@ namespace DLM.painel
             }
             return _etapas;
         }
-
         public Pacote_PMP(List<Pedido_PMP> pedidos)
         {
             this.Pedidos = pedidos;

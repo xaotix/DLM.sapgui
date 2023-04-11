@@ -302,20 +302,19 @@ namespace DLM.painel
             PEP,
         }
 
-        public static List<ZPP0100_Resumo> GetResumoEmbarquesPEP(List<string> pedidos, Tipo_ZPP0100_Resumo tipo)
+        public static List<ZPP0100_Resumo> GetResumoEmbarquesPEP(List<string> pedidos, int coluna = 24)
         {
-            string tabela = "zpp0100_peps";
-            if (tipo == Tipo_ZPP0100_Resumo.Subetapa)
-            {
-                tabela = "zpp0100_subetapas";
-            }
+            var retorno = new List<ZPP0100_Resumo>();
 
-            var comando = DBases.GetDB().Consulta(pedidos.Select(x => new Celula("pep", x)).ToList(), false, Cfg.Init.db_comum, tabela, "or");
-
-            List<ZPP0100_Resumo> retorno = new List<ZPP0100_Resumo>();
-            foreach (var p in comando.Linhas)
+            foreach (var pedido in pedidos)
             {
-                retorno.Add(new ZPP0100_Resumo(p));
+                var comando = DBases.GetDB().Consulta($"call comum.getzpp0100_resumo('{pedido}',{coluna})");
+
+                foreach (var p in comando.Linhas)
+                {
+                    retorno.Add(new ZPP0100_Resumo(p));
+                }
+
             }
 
             return retorno;
@@ -431,118 +430,118 @@ namespace DLM.painel
 
 
 
-        public static List<StatusSAP_Planejamento> GetStatus(List<string> descricoes)
-        {
-            List<string> fim = new List<string>();
-            foreach (var desc in descricoes)
-            {
-                fim.AddRange(desc.ToUpper().Split(' ').ToList().FindAll(x => x != "").Distinct().ToList());
-            }
-            fim = fim.Distinct().ToList().OrderBy(x => x).ToList();
-            List<StatusSAP_Planejamento> retorno = new List<StatusSAP_Planejamento>();
-            foreach (var ss in fim)
-            {
-                var tt = Buffer.GetStatus().Find(x => x.status == ss);
-                if (tt != null)
-                {
-                    retorno.Add(tt);
-                }
+        //public static List<StatusSAP_Planejamento> GetStatus(List<string> descricoes)
+        //{
+        //    List<string> fim = new List<string>();
+        //    foreach (var desc in descricoes)
+        //    {
+        //        fim.AddRange(desc.ToUpper().Split(' ').ToList().FindAll(x => x != "").Distinct().ToList());
+        //    }
+        //    fim = fim.Distinct().ToList().OrderBy(x => x).ToList();
+        //    List<StatusSAP_Planejamento> retorno = new List<StatusSAP_Planejamento>();
+        //    foreach (var ss in fim)
+        //    {
+        //        var tt = Buffer.GetStatus().Find(x => x.status == ss);
+        //        if (tt != null)
+        //        {
+        //            retorno.Add(tt);
+        //        }
 
-            }
-            return retorno;
-        }
+        //    }
+        //    return retorno;
+        //}
 
-        public static List<Meta> GetMeta(List<PLAN_SUB_ETAPA> lista, Range_Meta range = Range_Meta.Mes, Tipo_Meta Tipo = Tipo_Meta.Tudo, Tipo_Filtro_Meta Filtro = Tipo_Filtro_Meta.Etapa)
-        {
-            List<Meta> retorno = new List<Meta>();
-            DateTime min_sistema = Cfg.Init.DataDummy();
-
-
-            if (Tipo == Tipo_Meta.Engenharia)
-            {
-                var datas = lista.Select(x => x.engenharia_cronograma_inicio).ToList().FindAll(x => x > min_sistema).ToList();
-
-                datas.AddRange(lista.Select(x => x.engenharia_cronograma).ToList().FindAll(x => x > min_sistema).ToList());
-                if (datas.Count > 0)
-                {
-                    DateTime inicio = (DateTime)datas.Min();
-                    DateTime fim = (DateTime)datas.Max();
-                    fim = new DateTime(fim.Year, fim.Month, DateTime.DaysInMonth(fim.Year, fim.Month));
-                    DateTime f0 = new DateTime(inicio.Year, inicio.Month, 01);
-                    f0 = GetRanges(lista, range, Tipo, Filtro, retorno, fim, f0);
-
-                }
+        //public static List<Meta> GetMeta(List<PLAN_SUB_ETAPA> lista, Range_Meta range = Range_Meta.Mes, Tipo_Meta Tipo = Tipo_Meta.Tudo, Tipo_Filtro_Meta Filtro = Tipo_Filtro_Meta.Etapa)
+        //{
+        //    List<Meta> retorno = new List<Meta>();
+        //    DateTime min_sistema = Cfg.Init.DataDummy();
 
 
-            }
-            else if (Tipo == Tipo_Meta.Fabrica)
-            {
-                var datas = lista.Select(x => x.resumo_pecas.Fim).ToList().FindAll(x => x > min_sistema).ToList();
-                datas.AddRange(lista.Select(x => x.resumo_pecas.Inicio).ToList().FindAll(x => x > min_sistema).ToList());
-                datas.AddRange(lista.Select(x => x.fabrica_cronograma_inicio).ToList().FindAll(x => x > min_sistema).ToList());
-                datas.AddRange(lista.Select(x => x.fabrica_cronograma).ToList().FindAll(x => x > min_sistema).ToList());
-                if (datas.Count > 0)
-                {
-                    DateTime inicio = (DateTime)datas.Min();
-                    DateTime fim = (DateTime)datas.Max();
-                    fim = new DateTime(fim.Year, fim.Month, DateTime.DaysInMonth(fim.Year, fim.Month));
-                    DateTime f0 = new DateTime(inicio.Year, inicio.Month, 01);
-                    f0 = GetRanges(lista, range, Tipo, Filtro, retorno, fim, f0);
+        //    if (Tipo == Tipo_Meta.Engenharia)
+        //    {
+        //        var datas = lista.Select(x => x.engenharia_cronograma_inicio).ToList().FindAll(x => x > min_sistema).ToList();
 
-                }
-            }
+        //        datas.AddRange(lista.Select(x => x.engenharia_cronograma).ToList().FindAll(x => x > min_sistema).ToList());
+        //        if (datas.Count > 0)
+        //        {
+        //            DateTime inicio = (DateTime)datas.Min();
+        //            DateTime fim = (DateTime)datas.Max();
+        //            fim = new DateTime(fim.Year, fim.Month, DateTime.DaysInMonth(fim.Year, fim.Month));
+        //            DateTime f0 = new DateTime(inicio.Year, inicio.Month, 01);
+        //            f0 = GetRanges(lista, range, Tipo, Filtro, retorno, fim, f0);
+
+        //        }
 
 
-            return retorno.FindAll(x => x.SubEtapas.Count > 0).ToList();
-        }
-        private static DateTime GetRanges(List<PLAN_SUB_ETAPA> lista, Range_Meta range, Tipo_Meta Tipo, Tipo_Filtro_Meta Filtro, List<Meta> retorno, DateTime fim, DateTime f0)
-        {
-            if (range == Range_Meta.Mes)
-            {
-                while (f0 < fim)
-                {
+        //    }
+        //    else if (Tipo == Tipo_Meta.Fabrica)
+        //    {
+        //        var datas = lista.Select(x => x.resumo_pecas.Fim).ToList().FindAll(x => x > min_sistema).ToList();
+        //        datas.AddRange(lista.Select(x => x.resumo_pecas.Inicio).ToList().FindAll(x => x > min_sistema).ToList());
+        //        datas.AddRange(lista.Select(x => x.fabrica_cronograma_inicio).ToList().FindAll(x => x > min_sistema).ToList());
+        //        datas.AddRange(lista.Select(x => x.fabrica_cronograma).ToList().FindAll(x => x > min_sistema).ToList());
+        //        if (datas.Count > 0)
+        //        {
+        //            DateTime inicio = (DateTime)datas.Min();
+        //            DateTime fim = (DateTime)datas.Max();
+        //            fim = new DateTime(fim.Year, fim.Month, DateTime.DaysInMonth(fim.Year, fim.Month));
+        //            DateTime f0 = new DateTime(inicio.Year, inicio.Month, 01);
+        //            f0 = GetRanges(lista, range, Tipo, Filtro, retorno, fim, f0);
 
-                    DateTime f0_fim = new DateTime(f0.Year, f0.Month, DateTime.DaysInMonth(f0.Day, f0.Month));
-                    Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
-                    if (mm.Metas.Count > 0)
-                    {
-                        retorno.Add(mm);
-                    }
-                    f0 = f0.AddMonths(1);
-                }
-            }
-            else if (range == Range_Meta.Semana)
-            {
-                while (f0 < fim)
-                {
+        //        }
+        //    }
 
-                    DateTime f0_fim = f0.AddDays(7);
-                    Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
-                    if (mm.Metas.Count > 0)
-                    {
-                        retorno.Add(mm);
-                    }
-                    f0 = f0.AddDays(7);
-                }
-            }
 
-            else if (range == Range_Meta.Ano)
-            {
-                while (f0 < fim)
-                {
+        //    return retorno.FindAll(x => x.SubEtapas.Count > 0).ToList();
+        //}
+        //private static DateTime GetRanges(List<PLAN_SUB_ETAPA> lista, Range_Meta range, Tipo_Meta Tipo, Tipo_Filtro_Meta Filtro, List<Meta> retorno, DateTime fim, DateTime f0)
+        //{
+        //    if (range == Range_Meta.Mes)
+        //    {
+        //        while (f0 < fim)
+        //        {
 
-                    DateTime f0_fim = f0.AddYears(1);
-                    Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
-                    if (mm.Metas.Count > 0)
-                    {
-                        retorno.Add(mm);
-                    }
-                    f0 = f0.AddYears(1);
-                }
-            }
+        //            DateTime f0_fim = new DateTime(f0.Year, f0.Month, DateTime.DaysInMonth(f0.Day, f0.Month));
+        //            Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
+        //            if (mm.Metas.Count > 0)
+        //            {
+        //                retorno.Add(mm);
+        //            }
+        //            f0 = f0.AddMonths(1);
+        //        }
+        //    }
+        //    else if (range == Range_Meta.Semana)
+        //    {
+        //        while (f0 < fim)
+        //        {
 
-            return f0;
-        }
+        //            DateTime f0_fim = f0.AddDays(7);
+        //            Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
+        //            if (mm.Metas.Count > 0)
+        //            {
+        //                retorno.Add(mm);
+        //            }
+        //            f0 = f0.AddDays(7);
+        //        }
+        //    }
+
+        //    else if (range == Range_Meta.Ano)
+        //    {
+        //        while (f0 < fim)
+        //        {
+
+        //            DateTime f0_fim = f0.AddYears(1);
+        //            Meta mm = new Meta(lista, f0, f0_fim, Tipo, Filtro);
+        //            if (mm.Metas.Count > 0)
+        //            {
+        //                retorno.Add(mm);
+        //            }
+        //            f0 = f0.AddYears(1);
+        //        }
+        //    }
+
+        //    return f0;
+        //}
 
 
 

@@ -206,6 +206,8 @@ namespace DLM.painel
         }
         public double Peso_Necessario { get; set; } = 0;
         public double Peso_Embarcado { get; set; } = 0;
+        public DateTime? INI_DT_NF { get; set; }
+        public DateTime? FIM_DT_NF { get; set; }
         public ZPP0100_Resumo(db.Linha L)
         {
             this.CopiarVars(L);
