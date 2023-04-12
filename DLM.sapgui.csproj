@@ -168,8 +168,6 @@
     <Compile Include="Apontamento\Classes\PLAN_PEP.cs" />
     <Compile Include="Apontamento\Classes\PLAN_SUB_ETAPA.cs" />
     <Compile Include="Apontamento\Classes_Base\Colunas.cs" />
-    <Compile Include="Apontamento\Classes_Base\Data_Meta.cs" />
-    <Compile Include="Apontamento\Classes_Base\Descricao_PEP.cs" />
     <Compile Include="Apontamento\Classes_Base\Outras_Classes.cs" />
     <Compile Include="Apontamento\Classes_Base\PLAN_BASE.cs" />
     <Compile Include="Apontamento\Classes_Base\StatusSAP_Planejamento.cs" />

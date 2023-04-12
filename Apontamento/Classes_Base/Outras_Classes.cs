@@ -15,7 +15,7 @@ namespace DLM.painel
     {
         public override string ToString()
         {
-            return Contrato + " - " +  Descricao;
+            return Contrato + " - " + Descricao;
         }
         public string Contrato { get; set; } = "";
         public string Descricao { get; set; } = "";
@@ -32,12 +32,12 @@ namespace DLM.painel
             }
             else
             {
-                var cont = L.Get("numerocontrato").Valor;
+                var numero = L.Get("numerocontrato").Valor;
                 var revisao = L.Get("revisao").Valor;
                 var descricao = L.Get("descricao").Valor;
 
                 this.Contrato = L.Get("pedido").Valor + ".PGO";
-                this.Descricao = "[PGO] - [" + cont + "." + revisao + "] " + descricao;
+                this.Descricao = $"[PGO] - [{numero}.{revisao}]{descricao}";
             }
         }
     }
@@ -98,7 +98,7 @@ namespace DLM.painel
         {
             get
             {
-                return Math.Round(this.Pecas_Logistica.Sum(x => x.peso),4);
+                return Math.Round(this.Pecas_Logistica.Sum(x => x.peso), 4);
             }
         }
         private List<PackList_Planejamento> _pack_lists { get; set; }
@@ -106,7 +106,7 @@ namespace DLM.painel
         {
             get
             {
-                if(_pack_lists==null)
+                if (_pack_lists == null)
                 {
                     _pack_lists = new List<PackList_Planejamento>();
                     var ss = Pecas_Logistica.Select(x => x.pack_list).Distinct().ToList();
@@ -115,7 +115,7 @@ namespace DLM.painel
                         _pack_lists.Add(new PackList_Planejamento(s, Pecas_Logistica));
                     }
                 }
-               
+
                 return _pack_lists;
             }
         }
@@ -131,18 +131,18 @@ namespace DLM.painel
         public string observacoes { get; set; } = "";
 
         public List<PLAN_PECA_LOG> Pecas_Logistica { get; set; } = new List<PLAN_PECA_LOG>();
-        public Carga_Planejamento(string Carga,List<PLAN_PECA_LOG> planejamentos)
+        public Carga_Planejamento(string Carga, List<PLAN_PECA_LOG> planejamentos)
         {
             this.num_carga = Carga;
             this.Pecas_Logistica = planejamentos.FindAll(x => x.num_carga == Carga);
             this.carga_confirmada = this.Pecas_Logistica.Count == this.Pecas_Logistica.FindAll(x => x.carga_confirmada == true).Count;
-            var dts = this.Pecas_Logistica.Select(x => x.data).Distinct().ToList().FindAll(x => x != "01/01/0001" && x !="");
-            if(dts.Count>0)
+            var dts = this.Pecas_Logistica.Select(x => x.data).Distinct().ToList().FindAll(x => x != "01/01/0001" && x != "");
+            if (dts.Count > 0)
             {
                 this.data = dts.Select(x => Conexoes.Extensoes.Data(x)).Max().ToShortDateString();
 
             }
-            if(this.Pecas_Logistica.Count>0)
+            if (this.Pecas_Logistica.Count > 0)
             {
                 this.placa = this.Pecas_Logistica[0].placa;
                 this.motorista = this.Pecas_Logistica[0].motorista;
@@ -195,9 +195,9 @@ namespace DLM.painel
         public double Embarcado { get; set; } = 0;
         public double Porcentagem_Embarcado
         {
-           get
+            get
             {
-                if(Peso_Necessario > 0)
+                if (Peso_Necessario > 0)
                 {
                     return Peso_Embarcado / Peso_Necessario;
                 }
@@ -250,9 +250,9 @@ namespace DLM.painel
             set
             {
                 _peca = value;
-                if(value!=null)
+                if (value != null)
                 {
-                this.peso = Math.Round(peca.peso_unitario * this.quantidade, 4);
+                    this.peso = Math.Round(peca.peso_unitario * this.quantidade, 4);
 
                 }
             }
@@ -280,10 +280,10 @@ namespace DLM.painel
         {
 
         }
-        public PLAN_PECA_LOG(PLAN_PECA peca, DLM.db.Linha l =null)
+        public PLAN_PECA_LOG(PLAN_PECA peca, DLM.db.Linha l = null)
         {
             this.peca = peca;
-            if(l!=null)
+            if (l != null)
             {
                 GetDados(l);
             }
@@ -312,8 +312,8 @@ namespace DLM.painel
             this.nota_fiscal = l.Get("nota_fiscal").Valor;
             this.quantidade = l.Get("quantidade").Double();
 
-            this.subetapa = Conexoes.Utilz.PEP.Get.Subetapa(this.pep,true);
-         
+            this.subetapa = Conexoes.Utilz.PEP.Get.Subetapa(this.pep, true);
+
         }
         private void GetDados_0100(DLM.db.Linha l)
         {
@@ -343,43 +343,7 @@ namespace DLM.painel
         }
     }
 
-    public class SubEtapa_Logistica_Planejamento
-    {
-        public string data_min { get; set; } = "";
-        public string data_max { get; set; } = "";
-        public string subetapa { get; set; } = "";
-        public List<Carga_Planejamento> cargas { get; set; } = new List<Carga_Planejamento>();
 
-        public List<PLAN_PECA_LOG> Pecas_Logistica { get; set; } = new List<PLAN_PECA_LOG>();
-        public SubEtapa_Logistica_Planejamento()
-        {
-
-        }
-        public SubEtapa_Logistica_Planejamento(string subetapa, List<PLAN_PECA_LOG> cargas)
-        {
-            this.subetapa = subetapa;
-            this.Pecas_Logistica = cargas.FindAll(x => x.subetapa == subetapa);
-            this.cargas = new List<Carga_Planejamento>();
-            var ss = Pecas_Logistica.Select(x => x.num_carga).Distinct().ToList();
-            foreach (var s in ss)
-            {
-                this.cargas.Add(new Carga_Planejamento(s, Pecas_Logistica));
-            }
-
-            var dts = this.Pecas_Logistica.Select(x => x.data).Distinct().ToList().FindAll(x=>x != "01/01/0001" && x!="");
-            if(dts.Count>0)
-            {
-                var dtss = dts.Select(x => Conexoes.Extensoes.Data(x)).ToList();
-                if(dtss.Count>0)
-                {
-                this.data_max = dtss.Max().ToShortDateString().Replace("01/01/0001","");
-                this.data_min = dtss.Min().ToShortDateString().Replace("01/01/0001", "");
-
-                }
-            }
-        }
-
-    }
 
     public class Grupo_Mercadoria
     {
@@ -542,7 +506,7 @@ namespace DLM.painel
                 _centro_producao = value;
             }
         }
-       
+
         private string _centro_producao { get; set; } = "";
         public int fases { get; set; } = 0;
         public int subfases { get; set; } = 0;
@@ -682,7 +646,7 @@ namespace DLM.painel
         {
             this.pecas = pecas;
             this.peso_total = pecas.Sum(x => x.peso_necessario);
-            this.comprimento_total = Math.Round(pecas.Sum(x => x.comprimento)/1000,4);
+            this.comprimento_total = Math.Round(pecas.Sum(x => x.comprimento) / 1000, 4);
             this.quantidade = pecas.Sum(x => x.qtd_necessaria);
             this.furacoes = pecas.Sum(x => x.furacoes);
             if (pecas.Count > 0)
@@ -693,90 +657,90 @@ namespace DLM.painel
             }
         }
     }
-        public class Materia_Prima
+    public class Materia_Prima
+    {
+        public override string ToString()
         {
-            public override string ToString()
-            {
-                return "#" + this.espessura + (this.corte > 0 ? (" - " + this.corte) : "") + (this.codigo != "" ? (" - " + this.codigo) : "");
-            }
-            public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
+            return "#" + this.espessura + (this.corte > 0 ? (" - " + this.corte) : "") + (this.codigo != "" ? (" - " + this.codigo) : "");
+        }
+        public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
 
-            public double peso_total { get; set; } = 0;
-            public double comprimento_total { get; set; } = 0;
-            public double espessura { get; set; } = 0;
-            public int furacoes { get; set; } = 0;
+        public double peso_total { get; set; } = 0;
+        public double comprimento_total { get; set; } = 0;
+        public double espessura { get; set; } = 0;
+        public int furacoes { get; set; } = 0;
         public double corte { get; set; } = 0;
-            public string material { get; set; } = "";
-            public string codigo { get; set; } = "";
+        public string material { get; set; } = "";
+        public string codigo { get; set; } = "";
 
         public double quantidade { get; set; } = 0;
 
-            public Conexoes.Bobina Bobina { get; set; } = new Conexoes.Bobina();
+        public Conexoes.Bobina Bobina { get; set; } = new Conexoes.Bobina();
 
-            public Materia_Prima(List<PLAN_PECA> pecas)
+        public Materia_Prima(List<PLAN_PECA> pecas)
+        {
+            this.pecas = pecas;
+            if (pecas.Count > 0)
             {
-                this.pecas = pecas;
-                if (pecas.Count > 0)
-                {
-                    this.peso_total = pecas.Sum(x => x.peso_necessario);
-                    this.comprimento_total = Math.Round(pecas.Sum(x => x.comprimento)/1000,4);
+                this.peso_total = pecas.Sum(x => x.peso_necessario);
+                this.comprimento_total = Math.Round(pecas.Sum(x => x.comprimento) / 1000, 4);
                 this.quantidade = pecas.Sum(x => x.qtd_necessaria);
                 this.furacoes = pecas.Sum(x => x.furacoes);
 
-                    var cortes = pecas.Select(x => x.corte_largura).Distinct().ToList();
-                    var espessuras = pecas.Select(x => x.espessura).Distinct().ToList();
-                    var materiais = pecas.Select(x => x.tipo_aco).Distinct().ToList();
-                    var codigos = pecas.Select(x => x.codigo_materia_prima_sap).Distinct().ToList();
-                    if (cortes.Count == 1)
-                    {
-                        corte = cortes[0];
-                    }
-                    if (espessuras.Count == 1)
-                    {
-                        this.espessura = espessuras[0];
-                    }
-                    if (materiais.Count == 1)
-                    {
-                        this.material = materiais[0];
-                    }
-                    if (codigos.Count == 1)
-                    {
-                        this.codigo = codigos[0];
-                    this.Bobina = DBases.GetBancoRM().GetBobina(this.codigo);
-                        if (this.Bobina == null)
-                        {
-                            this.Bobina = new Conexoes.Bobina();
-                        }
-                    }
-                }
-            }
-
-            public Materia_Prima()
-            {
-
-            }
-
-        }
-        public class Unidade_fabril
-        {
-            public override string ToString()
-            {
-                return descricao + " - " + Peso_Total + " Kg";
-            }
-            public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
-            public double Peso_Total { get; set; } = 0;
-            public string descricao { get; set; } = "";
-            public Unidade_fabril(List<PLAN_PECA> pecas)
-            {
-                this.pecas = pecas;
-                if (this.pecas.Count > 0)
+                var cortes = pecas.Select(x => x.corte_largura).Distinct().ToList();
+                var espessuras = pecas.Select(x => x.espessura).Distinct().ToList();
+                var materiais = pecas.Select(x => x.tipo_aco).Distinct().ToList();
+                var codigos = pecas.Select(x => x.codigo_materia_prima_sap).Distinct().ToList();
+                if (cortes.Count == 1)
                 {
-                    this.descricao = pecas[0].centro;
+                    corte = cortes[0];
                 }
-                this.Peso_Total = Math.Round(pecas.Sum(x => x.peso_necessario), 2);
+                if (espessuras.Count == 1)
+                {
+                    this.espessura = espessuras[0];
+                }
+                if (materiais.Count == 1)
+                {
+                    this.material = materiais[0];
+                }
+                if (codigos.Count == 1)
+                {
+                    this.codigo = codigos[0];
+                    this.Bobina = DBases.GetBancoRM().GetBobina(this.codigo);
+                    if (this.Bobina == null)
+                    {
+                        this.Bobina = new Conexoes.Bobina();
+                    }
+                }
             }
         }
 
+        public Materia_Prima()
+        {
+
+        }
 
     }
+    public class Unidade_fabril
+    {
+        public override string ToString()
+        {
+            return descricao + " - " + Peso_Total + " Kg";
+        }
+        public List<PLAN_PECA> pecas { get; set; } = new List<PLAN_PECA>();
+        public double Peso_Total { get; set; } = 0;
+        public string descricao { get; set; } = "";
+        public Unidade_fabril(List<PLAN_PECA> pecas)
+        {
+            this.pecas = pecas;
+            if (this.pecas.Count > 0)
+            {
+                this.descricao = pecas[0].centro;
+            }
+            this.Peso_Total = Math.Round(pecas.Sum(x => x.peso_necessario), 2);
+        }
+    }
+
+
+}
 
