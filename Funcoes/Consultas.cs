@@ -1369,7 +1369,7 @@ namespace DLM.sapgui
             string arquivo = Cfg.Init.GetDestinoSAP_Excel() + nome;
             string destino = Conexoes.Utilz.getPasta(arquivo);
 
-            if (arquivo.Existe())
+            if (arquivo.Exists())
             {
                if(!arquivo.Apagar())
                 {
@@ -1430,7 +1430,7 @@ namespace DLM.sapgui
 
                     this.SessaoSAP.EndTransaction();
 
-                    if (arquivo.Existe())
+                    if (arquivo.Exists())
                     {
                         return Conexoes.Utilz.Excel.GetTabela(arquivo);
                     }
@@ -1459,7 +1459,7 @@ namespace DLM.sapgui
             DLM.db.Tabela retorno = new db.Tabela();
 
             DLM.painel.Consultas.MatarExcel(false);
-            if (arquivo.Existe())
+            if (arquivo.Exists())
             {
                 if (!arquivo.Apagar())
                 {
@@ -1955,7 +1955,7 @@ namespace DLM.sapgui
             //session.findById("wnd[0]/tbar[0]/btn[15]").press
             Press("wnd[0]/tbar[0]/btn[15]");
 
-            if(cadastrar && arquivo.Existe())
+            if(cadastrar && arquivo.Exists())
             {
                 var valores = CargaExcel.FAGLB03(arquivo, empresa_de,empresa_ate,ano,conta, cadastrar);
                 return valores;
@@ -2130,7 +2130,7 @@ namespace DLM.sapgui
 
 
                 var arquivo = destino + NOME;
-                if(!arquivo.Existe() && tentativas == 0)
+                if(!arquivo.Exists() && tentativas == 0)
                 {
                     ctrl = this.SessaoSAP.FindById("wnd[0]/usr/shell/shellcont/shell",false);
                     tentativas++;
