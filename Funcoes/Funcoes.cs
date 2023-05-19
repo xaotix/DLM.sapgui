@@ -30,7 +30,7 @@ namespace DLM.sapgui
                     Biblioteca_Daniel.Arquivo_Pasta.Buffer_Texto.gravar_arquivo(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp, Script.ToList());
                     Process scriptProc = new Process();
                     scriptProc.StartInfo.FileName = Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp.getNome() + ".vbs";
-                    scriptProc.StartInfo.WorkingDirectory = Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp.getPasta(); //<---very important 
+                    scriptProc.StartInfo.WorkingDirectory = Utilz.getPasta(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp); //<---very important 
                                                                                                                        //scriptProc.StartInfo.Arguments = "//B //Nologo vbscript.vbs";
                     scriptProc.StartInfo.WindowStyle = ProcessWindowStyle.Maximized; //prevent console window from popping up
                     scriptProc.Start();

@@ -1367,7 +1367,7 @@ namespace DLM.sapgui
             var dt_ate = $"{ate.Day}.{ate.Month}.{ate.Year}";
             string nome = $"MB51_{dt_de}_a_{dt_ate}.xlsx";
             string arquivo = Cfg.Init.GetDestinoSAP_Excel() + nome;
-            string destino = Conexoes.Utilz.getPasta(arquivo);
+            string destino = Utilz.getPasta(arquivo);
 
             if (arquivo.Exists())
             {
@@ -1454,7 +1454,7 @@ namespace DLM.sapgui
             var dt_ate = $"{ate.Day}.{ate.Month}.{ate.Year}";
             string nome = $"ZPPCOOISN_{dt_de}_a_{dt_ate}.xlsx";
             string arquivo = Cfg.Init.GetDestinoSAP_Excel() + nome;
-            string destino = Conexoes.Utilz.getPasta(arquivo);
+            string destino = Utilz.getPasta(arquivo);
 
             DLM.db.Tabela retorno = new db.Tabela();
 
@@ -1877,7 +1877,7 @@ namespace DLM.sapgui
 
 
 
-            string pasta = arquivo.getPasta();
+            string pasta = Utilz.getPasta(arquivo);
             string nome = arquivo.getNome();
             string ext = arquivo.getExtensao();
 
