@@ -1371,7 +1371,7 @@ namespace DLM.sapgui
 
             if (arquivo.Exists())
             {
-               if(!arquivo.Apagar())
+               if(!arquivo.Delete())
                 {
                     return retorno;
                 }
@@ -1461,7 +1461,7 @@ namespace DLM.sapgui
             DLM.painel.Consultas.MatarExcel(false);
             if (arquivo.Exists())
             {
-                if (!arquivo.Apagar())
+                if (!arquivo.Delete())
                 {
                     return retorno;
                 }
@@ -1870,16 +1870,16 @@ namespace DLM.sapgui
             string arquivo = $"{Cfg.Init.DIR_APPDATA}FAGLB03.{ano}.{conta}.{empresa_de}.{empresa_ate}.{Cfg.Init.DATA_TEXT}.txt";
 
 
-            if (!Conexoes.Utilz.Apagar(arquivo))
+            if (!arquivo.Delete())
             {
                 return new List<FAGLB03>();
             }
 
 
 
-            string pasta = Conexoes.Utilz.getPasta(arquivo);
-            string nome = Conexoes.Utilz.getNome(arquivo);
-            string ext = Conexoes.Utilz.getExtensao(arquivo);
+            string pasta = arquivo.getPasta();
+            string nome = arquivo.getNome();
+            string ext = arquivo.getExtensao();
 
             //session.findById("wnd[0]/tbar[0]/okcd").text = "faglb03"
             this.SessaoSAP.StartTransaction("faglb03");
@@ -1941,7 +1941,7 @@ namespace DLM.sapgui
             SetTexto("wnd[1]/usr/ctxtDY_PATH", pasta);
 
             //session.findById("wnd[1]/usr/ctxtDY_FILENAME").text = "faglb03.txt"
-            SetTexto("wnd[1]/usr/ctxtDY_FILENAME", $"{nome}{ext}");
+            SetTexto("wnd[1]/usr/ctxtDY_FILENAME", $"{nome}.{ext}");
 
             //session.findById("wnd[1]/tbar[0]/btn[11]").press
             Press("wnd[1]/tbar[0]/btn[11]");
