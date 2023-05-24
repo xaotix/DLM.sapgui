@@ -312,7 +312,7 @@ namespace DLM.sapgui
         private static void Carregar_ZPPCOOISN_Layout(string Pedido, List<PLAN_PECA_ZPMP> pecas, string dest = null, string arq = null)
         {
             if (Pedido.Length < 6) { return; }
-            if (dest == null) { dest = Cfg.Init.DIR_APP.CriarPasta("SAP"); }
+            if (dest == null) { dest = Cfg.Init.DIR_APP.GetSubPasta("SAP"); }
             if (arq == null) { arq = Pedido.Replace("*", "").Replace("%", "") + Cfg.Init.SAP_ZPPCOOISNARQ; }
             if (pecas == null) { return; }
 
