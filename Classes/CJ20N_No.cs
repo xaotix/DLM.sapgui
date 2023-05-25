@@ -32,19 +32,19 @@ namespace DLM.sapgui
                 switch (this.tipo)
                 {
                     case CJ20N_Tipo.Pedido:
-                return Conexoes.BufferImagem.folder_green;
+                return BufferImagem.folder_green;
                     case CJ20N_Tipo.Etapa:
-                        return Conexoes.BufferImagem.folder;
+                        return BufferImagem.folder;
                     case CJ20N_Tipo.SubEtapa:
-                        return Conexoes.BufferImagem.folder_txt;
+                        return BufferImagem.folder_txt;
                     case CJ20N_Tipo.PEP:
-                        return Conexoes.BufferImagem.folder_downloads;
+                        return BufferImagem.folder_downloads;
                     case CJ20N_Tipo.Tarefa:
-                        return Conexoes.BufferImagem.circulo_verde_16x16;
+                        return BufferImagem.circulo_verde_16x16;
                     case CJ20N_Tipo.Desconhecido:
-                        return Conexoes.BufferImagem.circulo_vermelho_16x16;
+                        return BufferImagem.circulo_vermelho_16x16;
                 }
-                return Conexoes.BufferImagem.circulo_16x16;
+                return BufferImagem.circulo_16x16;
             }
         }
 

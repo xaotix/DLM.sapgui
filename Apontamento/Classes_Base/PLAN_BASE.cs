@@ -359,35 +359,35 @@ namespace DLM.painel
             {
                 //if (this.resumo_pecas.etapa_bloqueada | this.status_montagem == "TRANCADA")
                 //{
-                //    return Conexoes.BufferImagem._lock;
+                //    return BufferImagem._lock;
                 //}
                 if (this is PLAN_OBRAS)
                 {
-                    return Conexoes.BufferImagem.folder_new;
+                    return BufferImagem.folder_new;
                 }
                 else if (this is PLAN_OBRA)
                 {
-                    return Conexoes.BufferImagem.folder_red;
+                    return BufferImagem.folder_red;
                 }
                 else if (this is PLAN_PEDIDO)
                 {
-                    return Conexoes.BufferImagem.folder_green;
+                    return BufferImagem.folder_green;
                 }
                 else if (this is PLAN_ETAPA)
                 {
-                    return Conexoes.BufferImagem.folder;
+                    return BufferImagem.folder;
                 }
                 else if (this is PLAN_ETAPA)
                 {
-                    return Conexoes.BufferImagem.folder_txt;
+                    return BufferImagem.folder_txt;
                 }
                 else if (this is PLAN_SUB_ETAPA)
                 {
-                    return Conexoes.BufferImagem.folder_bookmark;
+                    return BufferImagem.folder_bookmark;
 
                 }
 
-                return Conexoes.BufferImagem.circulo_16x16;
+                return BufferImagem.circulo_16x16;
 
             }
         }
@@ -782,7 +782,7 @@ namespace DLM.painel
             {
                 //if (resumo_pecas.etapa_bloqueada)
                 //{
-                //    return Conexoes.BufferImagem._lock;
+                //    return BufferImagem._lock;
                 //}
 
                 if (liberado_engenharia == 100)
@@ -806,7 +806,7 @@ namespace DLM.painel
             {
                 //if (resumo_pecas.etapa_bloqueada)
                 //{
-                //    return Conexoes.BufferImagem._lock;
+                //    return BufferImagem._lock;
                 //}
                 if (total_embarcado == 100)
                 {
@@ -829,7 +829,7 @@ namespace DLM.painel
             {
                 //if (resumo_pecas.etapa_bloqueada)
                 //{
-                //    return Conexoes.BufferImagem._lock;
+                //    return BufferImagem._lock;
                 //}
                 if (total_fabricado == 100)
                 {
@@ -852,11 +852,11 @@ namespace DLM.painel
             {
                 //if (resumo_pecas.etapa_bloqueada)
                 //{
-                //    return Conexoes.BufferImagem._lock;
+                //    return BufferImagem._lock;
                 //}
                 if (exportacao)
                 {
-                    return Conexoes.BufferImagem.globo;
+                    return BufferImagem.globo;
                 }
                 if (total_montado == 100 | status_montagem == "CONCLUÍDA" | status_montagem == "ENTREGUE")
                 {
@@ -868,7 +868,7 @@ namespace DLM.painel
                 }
                 if (status_montagem == "TRANCADA")
                 {
-                    return Conexoes.BufferImagem._lock;
+                    return BufferImagem._lock;
 
                 }
                 if (atraso_montagem > 0)

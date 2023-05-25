@@ -102,30 +102,30 @@ namespace DLM.painel
                 {
                     if (Tipo == Tipo_Material.Real)
                     {
-                        //_imagem =  Conexoes.BufferImagem.R_VERDE;
+                        //_imagem =  BufferImagem.R_VERDE;
                         if (File.Exists(arquivo))
                         {
-                            _imagem = Conexoes.BufferImagem.R_VERDE;
+                            _imagem = BufferImagem.R_VERDE;
                         }
                         else
                         {
-                            _imagem = Conexoes.BufferImagem.R_PRETO;
+                            _imagem = BufferImagem.R_PRETO;
                         }
                     }
                     else if (Tipo == Tipo_Material.Consolidado)
                     {
 
-                        _imagem = Conexoes.BufferImagem.C_VERDE;
+                        _imagem = BufferImagem.C_VERDE;
                     }
                     else if (Tipo == Tipo_Material.Orçamento)
                     {
 
-                        _imagem = Conexoes.BufferImagem.O_VERDE;
+                        _imagem = BufferImagem.O_VERDE;
                     }
                     else
                     {
 
-                        _imagem = Conexoes.BufferImagem.dialog_error;
+                        _imagem = BufferImagem.dialog_error;
                     }
 
                 }

@@ -169,19 +169,19 @@ namespace DLM.painel
             {
                 if(Material_ORC && Material_REAL)
                 {
-                    return Conexoes.BufferImagem.O_AZUL;
+                    return BufferImagem.O_AZUL;
 
                 }
                 else if (Material_ORC && Material_CONS)
                 {
-                    return Conexoes.BufferImagem.O_LARANJA;
+                    return BufferImagem.O_LARANJA;
 
                 }
                 else if (Material_ORC)
                 {
-                    return Conexoes.BufferImagem.O_VERDE;
+                    return BufferImagem.O_VERDE;
                 }
-              return  Conexoes.BufferImagem.O_PRETO;
+              return  BufferImagem.O_PRETO;
             }
         }
         public ImageSource imagem_CONS
@@ -190,19 +190,19 @@ namespace DLM.painel
             {
                 if (Material_CONS && Material_REAL)
                 {
-                    return Conexoes.BufferImagem.C_AZUL;
+                    return BufferImagem.C_AZUL;
 
                 }
                 else if (Material_CONS && Material_ORC)
                 {
-                    return Conexoes.BufferImagem.C_LARANJA;
+                    return BufferImagem.C_LARANJA;
 
                 }
                 else if (Material_CONS)
                 {
-                    return Conexoes.BufferImagem.C_VERDE;
+                    return BufferImagem.C_VERDE;
                 }
-                return Conexoes.BufferImagem.C_PRETO;
+                return BufferImagem.C_PRETO;
             }
         }
         public ImageSource imagem_REAL
@@ -211,18 +211,18 @@ namespace DLM.painel
             {
                 if (Material_REAL && Material_CONS)
                 {
-                    return Conexoes.BufferImagem.R_AZUL;
+                    return BufferImagem.R_AZUL;
                 }
                 else if (Material_REAL && Material_ORC)
                 {
-                    return Conexoes.BufferImagem.R_LARANJA;
+                    return BufferImagem.R_LARANJA;
 
                 }
                 else if (Material_REAL)
                 {
-                    return Conexoes.BufferImagem.R_VERDE;
+                    return BufferImagem.R_VERDE;
                 }
-                return Conexoes.BufferImagem.R_PRETO;
+                return BufferImagem.R_PRETO;
             }
         }
         public Base_PMP()
@@ -397,7 +397,7 @@ namespace DLM.painel
 
                     return imagem_ORC;
                 }
-                return Conexoes.BufferImagem.dialog_error;
+                return BufferImagem.dialog_error;
             }
         }
 
@@ -758,7 +758,7 @@ namespace DLM.painel
 
                     return imagem_ORC;
                 }
-                return Conexoes.BufferImagem.dialog_error;
+                return BufferImagem.dialog_error;
             }
         }
 
@@ -1072,7 +1072,7 @@ namespace DLM.painel
 
                     return imagem_ORC;
                 }
-                return Conexoes.BufferImagem.dialog_error;
+                return BufferImagem.dialog_error;
             }
         }
 
@@ -1349,7 +1349,7 @@ namespace DLM.painel
 
                     return imagem_CONS;
                 }
-                return Conexoes.BufferImagem.dialog_error;
+                return BufferImagem.dialog_error;
             }
         }
 
