@@ -33,30 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Biblioteca_Daniel">
-      <HintPath>..\..\DLLS\Biblioteca_Daniel.dll</HintPath>
-    </Reference>
-    <Reference Include="Calculos">
-      <HintPath>..\..\DLLS\Calculos.dll</HintPath>
-    </Reference>
-    <Reference Include="clipper_library">
-      <HintPath>..\..\DLLS\clipper_library.dll</HintPath>
-    </Reference>
-    <Reference Include="Comum">
-      <HintPath>..\..\DLLS\Comum.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetZip">
-      <HintPath>..\..\DLLS\DotNetZip.dll</HintPath>
-    </Reference>
     <Reference Include="EPPlus, Version=4.5.2.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DLLS\EPPlus.dll</HintPath>
-    </Reference>
-    <Reference Include="ExplorerPLM">
-      <HintPath>..\..\DLLS\ExplorerPLM.exe</HintPath>
-    </Reference>
-    <Reference Include="FluentFTP">
-      <HintPath>..\..\DLLS\FluentFTP.dll</HintPath>
+      <HintPath>..\DLLS\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="Interop.SAPFEWSELib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -68,20 +47,8 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\DLLS\Interop.SapROTWr.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip">
-      <HintPath>..\..\DLLS\Ionic.Zip.dll</HintPath>
-    </Reference>
     <Reference Include="MiniProfiler">
       <HintPath>..\..\DLLS\MiniProfiler.dll</HintPath>
-    </Reference>
-    <Reference Include="mysql.data">
-      <HintPath>..\..\DLLS\mysql.data.dll</HintPath>
-    </Reference>
-    <Reference Include="netDxf">
-      <HintPath>..\..\DLLS\netDxf.dll</HintPath>
-    </Reference>
-    <Reference Include="netDxfMBS">
-      <HintPath>..\..\DLLS\netDxfMBS.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -114,9 +81,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="TecnoUtilz">
-      <HintPath>..\..\DLLS\TecnoUtilz.dll</HintPath>
-    </Reference>
     <Reference Include="Telerik.Windows.Controls, Version=2017.2.503.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLLS\Telerik.Windows.Controls.dll</HintPath>
@@ -272,7 +236,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Conexoes\DLM.csproj">
+    <ProjectReference Include="..\DLM\DLM.csproj">
       <Project>{def82547-9fab-457e-89bf-c10ed1dd9162}</Project>
       <Name>DLM</Name>
     </ProjectReference>

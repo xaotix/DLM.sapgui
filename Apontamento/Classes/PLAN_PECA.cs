@@ -173,10 +173,10 @@ namespace DLM.painel
                         var pasta = Cfg.Init.DIR_SAP_PDF_DESENHOS + contrato + pedido + "_" + etapa + subetapa + @"\";
                         if (!Directory.Exists(pasta))
                         {
-                            var pastas = Biblioteca_Daniel.Arquivo_Pasta.Listar_Pastas(Cfg.Init.DIR_SAP_PDF_DESENHOS, contrato + pedido + "_" + etapa + subetapa + "*");
+                            var pastas = Cfg.Init.DIR_SAP_PDF_DESENHOS.GetPastas(contrato + pedido + "_" + etapa + subetapa + "*");
                             foreach (var p in pastas)
                             {
-                                var arq = pasta + @"\" + desenho + ".pdf";
+                                var arq = $"{pasta}{desenho}.pdf";
                                 if (File.Exists(arq))
                                 {
                                     this._arquivo = arq;

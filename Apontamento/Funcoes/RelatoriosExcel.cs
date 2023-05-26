@@ -1,13 +1,10 @@
 ﻿using Conexoes;
 using DLM.vars;
-using OfficeOpenXml.Drawing.Chart;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace DLM.painel
@@ -84,12 +81,12 @@ namespace DLM.painel
                     }
 
 
-                    OfficeOpenXml.ExcelWorksheet pecas_aba_excel = pck.Workbook.Worksheets[1];
-                    OfficeOpenXml.ExcelWorksheet subetapas_aba_excel = pck.Workbook.Worksheets[2];
-                    OfficeOpenXml.ExcelWorksheet pedidos_aba_excel = pck.Workbook.Worksheets[3];
-                    OfficeOpenXml.ExcelWorksheet mercadorias_aba_excel = pck.Workbook.Worksheets[4];
-                    OfficeOpenXml.ExcelWorksheet avanco_fabrica = pck.Workbook.Worksheets[5];
-                    OfficeOpenXml.ExcelWorksheet descricoes = pck.Workbook.Worksheets[6];
+                    var pecas_aba_excel = pck.Workbook.Worksheets[1];
+                    var subetapas_aba_excel = pck.Workbook.Worksheets[2];
+                    var pedidos_aba_excel = pck.Workbook.Worksheets[3];
+                    var mercadorias_aba_excel = pck.Workbook.Worksheets[4];
+                    var avanco_fabrica = pck.Workbook.Worksheets[5];
+                    var descricoes = pck.Workbook.Worksheets[6];
 
                     string Planilha = pecas_aba_excel.Name;
 
@@ -484,7 +481,7 @@ namespace DLM.painel
 
             if (Destino == null)
             {
-                Destino = Biblioteca_Daniel.Arquivo_Pasta.salvar("XLSX", "SELECIONE O DESTINO");
+                Destino = Conexoes.Utilz.SalvarArquivo("XLSX", "SELECIONE O DESTINO");
             }
             if (Destino == null)
             {
@@ -643,7 +640,7 @@ namespace DLM.painel
                 return false;
             }
 
-            string Destino = Biblioteca_Daniel.Arquivo_Pasta.salvar("XLSX", "SELECIONE O DESTINO");
+            string Destino = Conexoes.Utilz.SalvarArquivo("XLSX");
             if (Destino == "")
             {
                 return false;

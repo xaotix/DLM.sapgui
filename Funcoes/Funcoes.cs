@@ -27,7 +27,7 @@ namespace DLM.sapgui
                         File.Delete(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp);
 
                     }
-                    Biblioteca_Daniel.Arquivo_Pasta.Buffer_Texto.gravar_arquivo(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp, Script.ToList());
+                    Conexoes.Utilz.Arquivo.Gravar(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp, Script.ToList());
                     Process scriptProc = new Process();
                     scriptProc.StartInfo.FileName = Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp.getNome() + ".vbs";
                     scriptProc.StartInfo.WorkingDirectory = Utilz.getPasta(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp); //<---very important 

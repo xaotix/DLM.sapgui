@@ -1,5 +1,4 @@
-﻿using OfficeOpenXml;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -31,7 +30,7 @@ namespace DLM.painel
 
         public static List<ORC_PED> GetObrasPGO(bool consolidadas = false)
         {
-            List<ORC_PED> retorno = new List<ORC_PED>();
+            var retorno = new List<ORC_PED>();
             string tab = $"pmp_orc_resumo";
             if (consolidadas)
             {
