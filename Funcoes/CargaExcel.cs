@@ -480,14 +480,14 @@ namespace DLM.sapgui
 
                             }
 
-                            var superficie = Conexoes.Utilz.Double(curr_marca[11]);
-                            var comprimento = Conexoes.Utilz.Double(curr_marca[9]);
+                            var superficie = curr_marca[11].Double();
+                            var comprimento = curr_marca[9].Double();
 
                             /*04/04/2019 - novas caracteristicas adicionadas*/
                             valores.Add(new DLM.db.Celula("MARCA", marca));
                             valores.Add(new DLM.db.Celula("CORTE_LARGURA", corte));
                             valores.Add(new DLM.db.Celula("COMPRIMENTO", comprimento));
-                            valores.Add(new DLM.db.Celula("ESQ_DE_PINTURA", curr_marca[10]));
+                            valores.Add(new DLM.db.Celula("ESQ_DE_PINTURA", curr_marca[10].ToString()));
                             valores.Add(new DLM.db.Celula("SUPERFICIE", superficie));
                             valores.Add(new DLM.db.Celula("FURACOES", furos));
                             valores.Add(new DLM.db.Celula("ESPESSURA", esp));
