@@ -1,15 +1,8 @@
 ﻿using Conexoes;
 using DLM.painel;
 using DLM.vars;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static DLM.painel.Colunas;
 
 namespace DLM.sapgui
 {

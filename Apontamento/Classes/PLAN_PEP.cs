@@ -1,13 +1,5 @@
-﻿using Conexoes;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Linq;
-using System.Windows.Media;
-using System.IO;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
 using DLM.vars;
 
 namespace DLM.painel

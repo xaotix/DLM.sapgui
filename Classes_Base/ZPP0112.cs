@@ -1,11 +1,4 @@
-﻿using DLM.painel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DLM.sapgui
+﻿namespace DLM.sapgui
 {
     public class ZPP0112
     {
