@@ -443,15 +443,15 @@ namespace DLM.sapgui
                         var tipo_pintura = curr[0][3].ToString();
                         var denominstand = curr[0][1].ToString();
 
-                        var valores = new List<DLM.db.Celula>();
-                        valores.Add(new DLM.db.Celula("DENOMINDSTAND", denominstand));
-                        valores.Add(new DLM.db.Celula("DESENHO_1", desenho));
-                        valores.Add(new DLM.db.Celula("TIPO_DE_PINTURA", tipo_pintura));
-                        valores.Add(new DLM.db.Celula("DATA_INICIO", inicio > min ? inicio : null));
-                        valores.Add(new DLM.db.Celula("ULTIMO_STATUS", ultimo_status));
-                        valores.Add(new DLM.db.Celula("DATA_FIM", fim > min ? fim : null));
-                        valores.Add(new DLM.db.Celula("TIPO_ACO", aco));
-                        valores.Add(new DLM.db.Celula("CODIGO_MATERIA_PRIMA_SAP", codigo_materia_prima));
+                        var valores = new db.Linha();
+                        valores.Add("DENOMINDSTAND", denominstand);
+                        valores.Add("DESENHO_1", desenho);
+                        valores.Add("TIPO_DE_PINTURA", tipo_pintura);
+                        valores.Add("DATA_INICIO", inicio > min ? inicio : null);
+                        valores.Add("ULTIMO_STATUS", ultimo_status);
+                        valores.Add("DATA_FIM", fim > min ? fim : null);
+                        valores.Add("TIPO_ACO", aco);
+                        valores.Add("CODIGO_MATERIA_PRIMA_SAP", codigo_materia_prima);
 
                         if (curr_marca != null)
                         {
@@ -481,19 +481,19 @@ namespace DLM.sapgui
                             var comprimento = curr_marca[9].Double();
 
                             /*04/04/2019 - novas caracteristicas adicionadas*/
-                            valores.Add(new DLM.db.Celula("MARCA", marca));
-                            valores.Add(new DLM.db.Celula("CORTE_LARGURA", corte));
-                            valores.Add(new DLM.db.Celula("COMPRIMENTO", comprimento));
-                            valores.Add(new DLM.db.Celula("ESQ_DE_PINTURA", curr_marca[10].ToString()));
-                            valores.Add(new DLM.db.Celula("SUPERFICIE", superficie));
-                            valores.Add(new DLM.db.Celula("FURACOES", furos));
-                            valores.Add(new DLM.db.Celula("ESPESSURA", esp));
+                            valores.Add("MARCA", marca);
+                            valores.Add("CORTE_LARGURA", corte);
+                            valores.Add("COMPRIMENTO", comprimento);
+                            valores.Add("ESQ_DE_PINTURA", curr_marca[10].ToString());
+                            valores.Add("SUPERFICIE", superficie);
+                            valores.Add("FURACOES", furos);
+                            valores.Add("ESPESSURA", esp);
                         }
 
-                        valores.Add(new DLM.db.Celula("material", peca.Material));
-                        valores.Add(new DLM.db.Celula("pep", peca.PEP));
+                        valores.Add("material", peca.Material);
+                        valores.Add("pep", peca.PEP);
 
-                        linhas.Add(new DLM.db.Linha(valores));
+                        linhas.Add(valores);
                     }
                 }
                 DBases.GetDB().Cadastro(linhas, Cfg.Init.db_comum, "zppcooisn");

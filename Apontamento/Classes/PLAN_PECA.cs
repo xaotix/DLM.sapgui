@@ -137,11 +137,11 @@ namespace DLM.painel
                 return new List<DLM.db.Celula>();
             }
 
-            var retorno = new List<DLM.db.Celula>();
+            var retorno = new db.Linha();
             retorno.AddRange(valores);
-            retorno.Add(new DLM.db.Celula("material", this.material));
-            retorno.Add(new DLM.db.Celula("pep", this.PEP));
-            return retorno;
+            retorno.Add("material", this.material);
+            retorno.Add("pep", this.PEP);
+            return retorno.Celulas;
         }
 
         public DateTime ultima_edicao { get; private set; } = Cfg.Init.DataDummy();
