@@ -10,11 +10,11 @@ namespace DLM.painel
         {
 
         }
-        public StatusSAP_Planejamento(DLM.db.Linha L)
+        public StatusSAP_Planejamento(DLM.db.Linha linha)
         {
-            this.id = L["id"].Int();
-            this.descricao = L.Get("descricao").Valor;
-            this.status = L.Get("status").Valor;
+            this.id = linha["id"].Int();
+            this.descricao = linha["descricao"].Valor;
+            this.status = linha["status"].Valor;
         }
     }
 }

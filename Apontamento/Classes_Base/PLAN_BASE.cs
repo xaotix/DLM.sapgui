@@ -11,20 +11,20 @@ namespace DLM.painel
     public class PLAN_BASE
     {
         public DateTime mindia { get; set; } = Cfg.Init.DataDummy();
-        public void SetBase(DLM.db.Linha l)
+        public void SetBase(DLM.db.Linha linha)
         {
-            this.eini = l.Get("eini").Data();
-            this.efim = l.Get("efim").Data();
-            this.fini = l.Get("fini").Data();
-            this.ffim = l.Get("ffim").Data();
-            this.lini = l.Get("lini").Data();
-            this.lfim = l.Get("lfim").Data();
-            this.mini = l.Get("mini").Data();
-            this.mfim = l.Get("mfim").Data();
-            this.eng_base_st = l.Get("es").Double();
-            this.fab_base_st = l.Get("fs").Double();
-            this.log_base_st = l.Get("ls").Double();
-            this.mon_base_st = l.Get("ms").Double();
+            this.eini =        linha["eini"].Data();
+            this.efim =        linha["efim"].Data();
+            this.fini =        linha["fini"].Data();
+            this.ffim =        linha["ffim"].Data();
+            this.lini =        linha["lini"].Data();
+            this.lfim =        linha["lfim"].Data();
+            this.mini =        linha["mini"].Data();
+            this.mfim =        linha["mfim"].Data();
+            this.eng_base_st = linha["es"].Double();
+            this.fab_base_st = linha["fs"].Double();
+            this.log_base_st = linha["ls"].Double();
+            this.mon_base_st = linha["ms"].Double();
         }
         public string descricao
         {

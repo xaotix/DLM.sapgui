@@ -162,10 +162,10 @@ namespace DLM.painel
                 }
             }
 
-            var s = DBases.GetDBPGO().Consulta($"SELECT * from {Cfg.Init.db_orcamento}.{tab} as prod where {chave}");
-            foreach (var ss in s.Linhas)
+            var tabela = DBases.GetDBPGO().Consulta($"SELECT * from {Cfg.Init.db_orcamento}.{tab} as prod where {chave}");
+            foreach (var linha in tabela.Linhas)
             {
-                PLAN_PECA pc = new PLAN_PECA(ss, true);
+                PLAN_PECA pc = new PLAN_PECA(linha, true);
 
                 if (consolidada)
                 {
@@ -196,9 +196,9 @@ namespace DLM.painel
 
 
             var consulta = DBases.GetDBPGO().Consulta(chave_pedidos);
-            foreach (var ss in consulta.Linhas)
+            foreach (var linha in consulta.Linhas)
             {
-                ORC_ETP pc = new ORC_ETP(ss);
+                ORC_ETP pc = new ORC_ETP(linha);
                 if (!consolidada)
                 {
                     pc.GetDatas();
@@ -287,13 +287,13 @@ namespace DLM.painel
             }
 
 
-            var s = DBases.GetDBPGO().Consulta(chave_pedidos);
+            var tabela = DBases.GetDBPGO().Consulta(chave_pedidos);
 
 
 
-            foreach (var ss in s.Linhas)
+            foreach (var linha in tabela.Linhas)
             {
-                ORC_PEP pc = new ORC_PEP(ss);
+                ORC_PEP pc = new ORC_PEP(linha);
                 if (!consolidada)
                 {
                     pc.GetDatas();
@@ -351,10 +351,10 @@ namespace DLM.painel
                 var lista_fab = DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
                 var retorno = new ConcurrentBag<PLAN_CONTRATO>();
                 var Tarefas = new List<Task>();
-                foreach (var s in lista_fab.Linhas)
+                foreach (var linha in lista_fab.Linhas)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() =>
-                    retorno.Add(new PLAN_CONTRATO(s))
+                    retorno.Add(new PLAN_CONTRATO(linha))
                     ));
                 }
                 Task.WaitAll(Tarefas.ToArray());
@@ -374,9 +374,9 @@ namespace DLM.painel
                 _obras = new List<PLAN_OBRA>();
                 var consulta = DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_obras_copia);
 
-                foreach (var t in consulta.Linhas)
+                foreach (var linha in consulta.Linhas)
                 {
-                    _obras.Add(new PLAN_OBRA(t));
+                    _obras.Add(new PLAN_OBRA(linha));
                 }
 
                 var Tarefas = new List<Task>();
@@ -543,9 +543,9 @@ namespace DLM.painel
                 consulta = DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pedidos_copia);
 
                 var Tarefas = new List<Task>();
-                foreach (var t in consulta.Linhas)
+                foreach (var linha in consulta.Linhas)
                 {
-                    lista.Add(new PLAN_PEDIDO(t, new PLAN_OBRA()));
+                    lista.Add(new PLAN_PEDIDO(linha, new PLAN_OBRA()));
                 }
                 Task.WaitAll(Tarefas.ToArray());
                 _pedidos.AddRange(lista);

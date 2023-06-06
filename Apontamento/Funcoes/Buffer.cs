@@ -158,9 +158,9 @@ namespace DLM.painel
             {
                 _Status = new List<StatusSAP_Planejamento>();
                 var lista_log = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_status_sap);
-                foreach (var t in lista_log.Linhas)
+                foreach (var linha in lista_log.Linhas)
                 {
-                    _Status.Add(new StatusSAP_Planejamento(t));
+                    _Status.Add(new StatusSAP_Planejamento(linha));
                 }
             }
             return _Status;

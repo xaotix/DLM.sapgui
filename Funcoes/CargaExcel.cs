@@ -92,11 +92,11 @@ namespace DLM.sapgui
 
             if (selecao.Linhas.Count > 0)
             {
-                foreach (var l in selecao.Linhas)
+                foreach (var linha in selecao.Linhas)
                 {
-                    var pedido = l.Get("C1").Valor;
-                    var valor_contrato = l.Get("C6").Valor;
-                    var valor_f_direto = l.Get("C7").Valor;
+                    var pedido = linha.Get("C1").Valor;
+                    var valor_contrato = linha.Get("C6").Valor;
+                    var valor_f_direto = linha.Get("C7").Valor;
 
                     var novo = new AVANCO_FATURAMENTO(pedido, valor_contrato, valor_f_direto);
                     if (novo.Pedido.Length == 13)
@@ -172,9 +172,9 @@ namespace DLM.sapgui
             foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
-                foreach (var l in sub)
+                foreach (var linha in sub)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPP0066N(l, semperfil))));
+                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPP0066N(linha, semperfil))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
             }
@@ -516,8 +516,8 @@ namespace DLM.sapgui
         }
         public static DLM.sapgui.FolhaMargem ZSD0031N(string arquivo)
         {
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            var plan = t.Linhas;
+            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            var plan = tabela.Linhas;
             DLM.sapgui.FolhaMargem ret = new DLM.sapgui.FolhaMargem();
             try
             {

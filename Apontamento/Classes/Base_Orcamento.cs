@@ -87,13 +87,13 @@ namespace DLM.painel
 
         }
 
-        public ORC_SUB(DLM.db.Linha l)
+        public ORC_SUB(DLM.db.Linha linha)
         {
-            this.Linha = l;
-            this.id_obra = l["id_obra"].Int();
-            this.PEP = l.Get("pep").Valor;
-            this.peso_planejado = l.Get("peso_total").Double();
-            this.quantidade = l.Get("quantidade").Int();
+            this.Linha = linha;
+            this.id_obra = linha["id_obra"].Int();
+            this.PEP = linha["pep"].Valor;
+            this.peso_planejado = linha.Get("peso_total").Double();
+            this.quantidade = linha.Get("quantidade").Int();
         }
     }
 
@@ -134,13 +134,13 @@ namespace DLM.painel
         {
 
         }
-        public ORC_ETP(DLM.db.Linha l)
+        public ORC_ETP(DLM.db.Linha linha)
         {
-            this.Linha = l;
-            this.id_obra = l["id_obra"].Int();
-            this.PEP = l.Get("pep").Valor;
-            this.peso_planejado = l.Get("peso_total").Double();
-            this.quantidade = l.Get("quantidade").Double();
+            this.Linha = linha;
+            this.id_obra =          linha["id_obra"].Int();
+            this.PEP =              linha["pep"].Valor;
+            this.peso_planejado =   linha["peso_total"].Double();
+            this.quantidade =       linha["quantidade"].Double();
         
         }
     }
@@ -152,16 +152,16 @@ namespace DLM.painel
         {
 
         }
-        public ORC_PEP(DLM.db.Linha l)
+        public ORC_PEP(DLM.db.Linha linha)
         {
-            this.Linha = l;
+            this.Linha = linha;
 
-            this.id_obra = l["id_obra"].Int();
-            this.PEP = l.Get("pep").Valor;
-            this.pep_inicial = l.Get("pep_inicial").Valor;
-            this.centro = l.Get("centro").Valor;
-            this.peso_planejado = l.Get("peso_total").Double();
-            this.quantidade = l.Get("quantidade").Double();
+            this.id_obra =          linha["id_obra"].Int();
+            this.PEP =              linha["pep"].Valor;
+            this.pep_inicial =      linha["pep_inicial"].Valor;
+            this.centro =           linha["centro"].Valor;
+            this.peso_planejado =   linha["peso_total"].Double();
+            this.quantidade =       linha["quantidade"].Double();
 
 
 
@@ -250,23 +250,23 @@ namespace DLM.painel
         }
 
         public DateTime criacao { get; set; } = Cfg.Init.DataDummy();
-        public ORC_PED(DLM.db.Linha l, Tipo_Material tipo)
+        public ORC_PED(DLM.db.Linha linha, Tipo_Material tipo)
         {
-            this.Linha = l;
-            this.id_obra = l["id_obra"].Int();
-            this.numerocontrato = l.Get("numerocontrato").Valor;
-            this.revisao = l.Get("revisao").Valor;
-            this.Titulo.Descricao = l.Get("descricao").Valor;
-            this.PEP = l.Get("pedido").Valor;
-            this.quantidade = l.Get("quantidade").Double();
-            this.peso_planejado = l.Get("peso_total").Double();
+            this.Linha = linha;
+            this.id_obra = linha["id_obra"].Int();
+            this.numerocontrato = linha.Get("numerocontrato").Valor;
+            this.revisao = linha.Get("revisao").Valor;
+            this.Titulo.Descricao = linha["descricao"].Valor;
+            this.PEP = linha.Get("pedido").Valor;
+            this.quantidade = linha.Get("quantidade").Double();
+            this.peso_planejado = linha.Get("peso_total").Double();
 
-            this.liberado_engenharia = l.Get("liberado_engenharia").Double();
-            this.peso_realizado = l.Get("peso_realizado").Double();
-            this.arquivos = l.Get("arquivos").Int();
-            this.criacao = l.Get("criacao").Data();
+            this.liberado_engenharia = linha.Get("liberado_engenharia").Double();
+            this.peso_realizado = linha.Get("peso_realizado").Double();
+            this.arquivos = linha.Get("arquivos").Int();
+            this.criacao = linha.Get("criacao").Data();
             this.tipo = tipo;
-            this.Titulo.Descricao = l.Get("nome").Valor;
+            this.Titulo.Descricao = linha.Get("nome").Valor;
         }
     }
 }

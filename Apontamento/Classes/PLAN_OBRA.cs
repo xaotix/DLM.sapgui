@@ -221,63 +221,63 @@ namespace DLM.painel
         {
 
         }
-        public PLAN_OBRA(DLM.db.Linha L)
+        public PLAN_OBRA(DLM.db.Linha linha)
         {
-            this.Linha = L;
-            string pedido_principal = L.Get("pedido_principal").Valor;
+            this.Linha = linha;
+            string pedido_principal = linha.Get("pedido_principal").Valor;
             this.PEP = pedido_principal.Replace(".C00", ".P").Replace(".P00","").Replace(".G00","");
-            this.Titulo.Descricao = L.Get("nome").Valor;
+            this.Titulo.Descricao = linha.Get("nome").Valor;
             this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");
-            this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
-            this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();
-            this.etapas_qtd = L.Get("etapas").Int();
-            this.pedidos_qtd = L.Get("pedidos").Int();
-            this.fabrica_cronograma = L.Get("fabrica_cronograma").Data();
-            this.latitude = L.Get("latitude").Double(8);
-            this.longitude = L.Get("longitude").Double(8);
-            this.nome = L["Nome"].Valor;
-            this.peso_embarcado = L.Get("peso_embarcado").Double();
-            this.peso_planejado = L.Get("peso_planejado").Double();
-            this.peso_produzido = L.Get("peso_produzido").Double();
-            this.total_embarcado = L.Get("total_embarcado").Double();
-            this.total_fabricado = L.Get("total_produzido").Double();
-            this.liberado_engenharia = L.Get("liberado_engenharia").Double();
-            this.peso_montado = L.Get("peso_montado").Double();
-            this.total_montado = L.Get("total_montado").Double();
-            this.ultima_edicao = L.Get("ultima_atualizacao").Data();
+            this.engenharia_cronograma = linha.Get("engenharia_cronograma").Data();
+            this.engenharia_liberacao = linha.Get("engenharia_liberacao").Data();
+            this.etapas_qtd = linha.Get("etapas").Int();
+            this.pedidos_qtd = linha.Get("pedidos").Int();
+            this.fabrica_cronograma = linha.Get("fabrica_cronograma").Data();
+            this.latitude = linha.Get("latitude").Double(8);
+            this.longitude = linha.Get("longitude").Double(8);
+            this.nome = linha["Nome"].Valor;
+            this.peso_embarcado = linha.Get("peso_embarcado").Double();
+            this.peso_planejado = linha.Get("peso_planejado").Double();
+            this.peso_produzido = linha.Get("peso_produzido").Double();
+            this.total_embarcado = linha.Get("total_embarcado").Double();
+            this.total_fabricado = linha.Get("total_produzido").Double();
+            this.liberado_engenharia = linha.Get("liberado_engenharia").Double();
+            this.peso_montado = linha.Get("peso_montado").Double();
+            this.total_montado = linha.Get("total_montado").Double();
+            this.ultima_edicao = linha.Get("ultima_atualizacao").Data();
 
-            this.dados_montagem = L.Get("total_montado").Valor != "";
+            this.dados_montagem = linha.Get("total_montado").Valor != "";
 
-            this.montagem_inicio = L.Get("montagem_inicio").Data();
-            this.montagem_fim = L.Get("montagem_fim").Data();
+            this.montagem_inicio = linha.Get("montagem_inicio").Data();
+            this.montagem_fim = linha.Get("montagem_fim").Data();
 
-            this.ultima_consulta_sap = L.Get("ultima_consulta_sap").Data();
-
-
-
-            this.engenharia_previsto = L.Get("es").Double();
-            this.fabrica_previsto = L.Get("fs").Double();
-            this.embarque_previsto = L.Get("ls").Double();
-            this.montagem_previsto = L.Get("ms").Double();
+            this.ultima_consulta_sap = linha.Get("ultima_consulta_sap").Data();
 
 
-            this.atraso_embarque = L.Get("atraso_embarque").Int();
-            this.atraso_engenharia = L.Get("atraso_engenharia").Int();
-            this.atraso_fabrica = L.Get("atraso_fabrica").Int();
-            this.atraso_montagem = L.Get("atraso_montagem").Int();
 
-            this.id_montagem = L.Get("id_montagem").Int();
-            this.status_montagem = L.Get("status_montagem").Valor;
+            this.engenharia_previsto = linha.Get("es").Double();
+            this.fabrica_previsto = linha.Get("fs").Double();
+            this.embarque_previsto = linha.Get("ls").Double();
+            this.montagem_previsto = linha.Get("ms").Double();
 
-            this.criado = L.Get("criado").Data();
 
-            DateTime mont = L.Get("update_montagem").Data();
+            this.atraso_embarque = linha.Get("atraso_embarque").Int();
+            this.atraso_engenharia = linha.Get("atraso_engenharia").Int();
+            this.atraso_fabrica = linha.Get("atraso_fabrica").Int();
+            this.atraso_montagem = linha.Get("atraso_montagem").Int();
+
+            this.id_montagem = linha.Get("id_montagem").Int();
+            this.status_montagem = linha.Get("status_montagem").Valor;
+
+            this.criado = linha.Get("criado").Data();
+
+            DateTime mont = linha.Get("update_montagem").Data();
             if (mont > Cfg.Init.DataDummy())
             {
                 this.update_montagem = "Montagem: " + mont.ToShortDateString();
             }
 
-            this.finalizado = (L.Get("finalizado").Valor.ToUpper() == "X");
+            this.finalizado = (linha.Get("finalizado").Valor.ToUpper() == "X");
 
         }
     }

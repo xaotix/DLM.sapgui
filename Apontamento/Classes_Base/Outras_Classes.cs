@@ -25,16 +25,16 @@ namespace DLM.painel
         {
             if (!orcamento)
             {
-                this.Contrato = L.Get("Contrato").Valor;
-                this.Descricao = L.Get("Descricao").Valor;
+                this.Contrato = L["contrato"].Valor;
+                this.Descricao = L["descricao"].Valor;
             }
             else
             {
-                var numero = L.Get("numerocontrato").Valor;
-                var revisao = L.Get("revisao").Valor;
-                var descricao = L.Get("descricao").Valor;
+                var numero = L["numerocontrato"].Valor;
+                var revisao = L["revisao"].Valor;
+                var descricao = L["descricao"].Valor;
 
-                this.Contrato = L.Get("pedido").Valor + ".PGO";
+                this.Contrato = L["pedido"].Valor + ".PGO";
                 this.Descricao = $"[PGO] - [{numero}.{revisao}]{descricao}";
             }
         }
@@ -299,42 +299,42 @@ namespace DLM.painel
 
 
         }
-        private void GetDados(DLM.db.Linha l)
+        private void GetDados(DLM.db.Linha linha)
         {
-            this.carga_confirmada = l.Get("carga_confirmada").Boolean();
-            this.num_carga = l.Get("num_carga").Valor;
-            this.pack_list = l.Get("pack_list").Valor;
-            this.pep = l.Get("pep").Valor;
-            this.material = l.Get("material").Valor;
-            this.desenho = l.Get("desenho").Valor;
-            this.nota_fiscal = l.Get("nota_fiscal").Valor;
-            this.quantidade = l.Get("quantidade").Double();
+            this.carga_confirmada = linha["carga_confirmada"].Boolean();
+            this.num_carga = linha["num_carga"].Valor;
+            this.pack_list = linha["pack_list"].Valor;
+            this.pep = linha["pep"].Valor;
+            this.material = linha["material"].Valor;
+            this.desenho = linha["desenho"].Valor;
+            this.nota_fiscal = linha["nota_fiscal"].Valor;
+            this.quantidade =  linha["quantidade"].Double();
 
             this.subetapa = Conexoes.Utilz.PEP.Get.Subetapa(this.pep, true);
 
         }
-        private void GetDados_0100(DLM.db.Linha l)
+        private void GetDados_0100(DLM.db.Linha linha)
         {
-            this.descricao = l.Get("Descricao").Valor;
-            this.carga_confirmada = l.Get("St_Conf_").Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA;
-            this.num_carga = "RN" + l.Get("Nro_Carga").Valor/*.PadLeft(5,'0')*/;
-            this.pack_list = "PL" + l.Get("Ordem_Embarque").Valor.PadLeft(5, '0');
-            this.pep = l.Get("Elemento_PEP").Valor;
-            this.material = l.Get("Material").Valor;
-            this.desenho = l.Get("Tamanho_dimensao").Valor;
-            this.etiqueta = l.Get("etiqueta").Valor;
-            this.etiqueta_impressa = l.Get("etiqueta_impressa").Valor.ToUpper() == "TRUE";
-            this.centro = l.Get("Centro").Valor;
-            this.quantidade = l.Get("Qtd_Embarque").Double();
+            this.descricao = linha["descricao"].Valor;
+            this.carga_confirmada = linha["st_conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA;
+            this.num_carga = "RN" + linha["nro_carga"].Valor/*.PadLeft(5,'0')*/;
+            this.pack_list = "PL" + linha["ordem_embarque"].Valor.PadLeft(5, '0');
+            this.pep = linha["elemento_pep"].Valor;
+            this.material = linha["Material"].Valor;
+            this.desenho =  linha["Tamanho_dimensao"].Valor;
+            this.etiqueta = linha["etiqueta"].Valor;
+            this.etiqueta_impressa = linha.Get("etiqueta_impressa").Valor.ToUpper() == "TRUE";
+            this.centro = linha.Get("centro").Valor;
+            this.quantidade = linha.Get("qtd_embarque").Double();
 
-            this.Saldo_1202 = l.Get("Sld_1202").Double();
-            this.Saldo_1203 = l.Get("Sld_1203").Double();
-            this.Saldo_1204 = l.Get("Sld_1204").Double();
+            this.Saldo_1202 = linha["sld_1202"].Double();
+            this.Saldo_1203 = linha["sld_1203"].Double();
+            this.Saldo_1204 = linha["sld_1204"].Double();
 
-            this.telefone = l.Get("telefone").Valor;
-            this.placa = l.Get("placa").Valor;
-            this.motorista = l.Get("motorista").Valor;
-            this.observacoes = l["observacoes"].Valor;
+            this.telefone =     linha["telefone"].Valor;
+            this.placa =        linha["placa"].Valor;
+            this.motorista =    linha["motorista"].Valor;
+            this.observacoes =  linha["observacoes"].Valor;
 
             this.subetapa = Conexoes.Utilz.PEP.Get.Subetapa(this.pep, true);
 
@@ -523,26 +523,26 @@ namespace DLM.painel
             return _pecas;
         }
 
-        public Resumo_Pecas(DLM.db.Linha L)
+        public Resumo_Pecas(DLM.db.Linha linha)
         {
-            this.Linha = L;
-            this.pep = L.Get("pep").Valor;
-            this.peso_necessario = L.Get("peso_necessario").Double();
-            this.qtd_necessaria = L.Get("qtd_necessaria").Double();
-            this.qtd_produzida = L.Get("qtd_produzida").Double();
-            this.qtd_embarcada = L.Get("qtd_embarcada").Double();
-            this.fases = L.Get("fases").Int();
-            this.subfases = L.Get("subfases").Int();
-            this.Inicio = L.Get("inicio").Data();
-            this.Fim = L.Get("fim").Data();
-            this.status_usuario_pep = L.Get("status_usuario_pep").Valor;
-            this.etapa_bloqueada = L.Get("etapa_bloqueada").Boolean();
-            this.status_sistema_pep = L.Get("status_sistema_pep").Valor;
+            this.Linha = linha;
+            this.pep = linha["pep"].Valor;
+            this.peso_necessario =    linha["peso_necessario"].Double();
+            this.qtd_necessaria =     linha["qtd_necessaria"].Double();
+            this.qtd_produzida =      linha["qtd_produzida"].Double();
+            this.qtd_embarcada =      linha["qtd_embarcada"].Double();
+            this.fases =              linha["fases"].Int();
+            this.subfases =           linha["subfases"].Int();
+            this.Inicio =             linha["inicio"].Data();
+            this.Fim =                linha["fim"].Data();
+            this.status_usuario_pep = linha["status_usuario_pep"].Valor;
+            this.etapa_bloqueada =    linha["etapa_bloqueada"].Boolean();
+            this.status_sistema_pep = linha["status_sistema_pep"].Valor;
 
 
             /*23/04/2019*/
-            this.centro = L.Get("centro").Valor;
-            this.centro_producao = L.Get("centro_producao").Valor;
+            this.centro = linha.Get("centro").Valor;
+            this.centro_producao = linha.Get("centro_producao").Valor;
         }
         public Resumo_Pecas(string pep)
         {
