@@ -90,7 +90,7 @@ namespace DLM.sapgui
             if (arquivo == null) { return new List<AVANCO_FATURAMENTO>(); }
             var selecao = Conexoes.Utilz.Excel.GetTabelaPrompt(arquivo);
 
-            if (selecao.Linhas.Count > 0)
+            if (selecao.Count > 0)
             {
                 foreach (var linha in selecao.Linhas)
                 {
@@ -188,7 +188,7 @@ namespace DLM.sapgui
             /*12/05/2022 - mudei a chamada para um procedure.*/
             var chamada = $"call comum.getzppcoisn_qtd_pcs('{Pedido.Replace("*", "").Replace(" ", "")}')";
             var consulta = DBases.GetDB().Consulta(chamada);
-            var peps = consulta.Linhas.Select(x => x.Get("pep").Valor).ToList();
+            var peps = consulta.Linhas.Select(x => x["pep"].Valor).ToList();
             foreach (var pep in peps)
             {
                 var pecas = DLM.painel.Consultas.GetPecasZPMP(pep).ToList();

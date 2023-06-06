@@ -129,7 +129,7 @@ namespace DLM.sapgui
             }
 
             //ajustes finais
-            if (tabela_zpmp.Linhas.Count > 0)
+            if (tabela_zpmp.Count > 0)
             {
                 this.Descricao = tabela_zpmp[0][(int)TAB_ZPMP.DENOMINACAO].Valor;
                 var pdes = tabela_zpmp.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Pedido(x[(int)TAB_ZPMP.ELEMENTO_PEP].Valor,true)).Select(x => x.First()).ToList();

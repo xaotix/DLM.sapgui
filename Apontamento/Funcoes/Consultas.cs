@@ -389,7 +389,7 @@ namespace DLM.painel
                         var igual = st_base.Filtrar("pep", obra.PEP, true);
                         if (igual.Count > 0)
                         {
-                            obra.SetBase(igual.Linhas.First());
+                            obra.SetBase(igual[0]);
                         }
                     }));
                 }
@@ -566,7 +566,7 @@ namespace DLM.painel
                         var igual = st_base.Filtrar("pep", t.PEP, true);
                         if (igual.Count > 0)
                         {
-                            t.SetBase(igual.Linhas.First());
+                            t.SetBase(igual[0]);
                         }
                     }));
                 }
@@ -689,7 +689,7 @@ namespace DLM.painel
                     var igual = st_base.Filtrar("pep", subetapa.PEP.ToUpper().Replace(".P00", ""), true);
                     if (igual.Count > 0)
                     {
-                        subetapa.SetBase(igual.Linhas.First());
+                        subetapa.SetBase(igual[0]);
                     }
                 }));
             }
@@ -750,7 +750,7 @@ namespace DLM.painel
                     var igual = consulta2.Filtrar("pep", ret.PEP, true);
                     if (igual.Count > 0)
                     {
-                        ret.SetBase(igual.Linhas.First());
+                        ret.SetBase(igual[0]);
                     }
                 }));
             }
