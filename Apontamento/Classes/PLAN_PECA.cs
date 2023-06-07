@@ -52,7 +52,7 @@ namespace DLM.painel
 
             }
 
-                this.qtd_embarcada = lista_fim.FindAll(x => x["St_Conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x.Get("Qtd_Embarque").Double());
+                this.qtd_embarcada = lista_fim.FindAll(x => x["St_Conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x["qtd_embarque"].Double());
             var marca = lista_fim.Select(x => x["Tamanho_dimensao"].Valor).Distinct().ToList().FindAll(x => x.Replace(" ", "") != "");
 
             if (marca.Count > 0)
@@ -518,38 +518,38 @@ namespace DLM.painel
             if (!orcamento)
             {
                 this.Tipo = Tipo_Material.Real;
-                this.material = linha.Get("material").Valor;
+                this.material = linha["material"].Valor;
                 this.PEP = linha["pep"].Valor;
-                this.texto_breve = linha.Get("texto_breve").Valor;
-                this.peso_unitario = linha.Get("peso_unitario").Double();
-                this.peso_necessario = linha.Get("peso_necessario").Double();
-                this.peso_produzido = linha.Get("peso_produzido").Double(6);
-                this.qtd_necessaria = linha.Get("qtd_necessaria").Double();
-                this.qtd_produzida = linha.Get("qtd_produzida").Double();
-                this.qtd_embarcada = linha.Get("qtd_embarcada").Double();
-                this.grupo_mercadoria = linha.Get("grupo_mercadoria").Valor;
-                this.desenho = linha.Get("desenho").Valor;
+                this.texto_breve = linha["texto_breve"].Valor;
+                this.peso_unitario = linha["peso_unitario"].Double();
+                this.peso_necessario = linha["peso_necessario"].Double();
+                this.peso_produzido = linha["peso_produzido"].Double(6);
+                this.qtd_necessaria = linha["qtd_necessaria"].Double();
+                this.qtd_produzida = linha["qtd_produzida"].Double();
+                this.qtd_embarcada = linha["qtd_embarcada"].Double();
+                this.grupo_mercadoria = linha["grupo_mercadoria"].Valor;
+                this.desenho = linha["desenho"].Valor;
 
-                this.DENOMINDSTAND = linha.Get("DENOMINDSTAND").Valor;
+                this.DENOMINDSTAND = linha["DENOMINDSTAND"].Valor;
 
-                this.inicio = linha.Get("data_inicio").Data();
-                this.fim = linha.Get("data_fim").Data();
-                this.DESENHO_1 = linha.Get("desenho_1").Valor;
-                this.TIPO_DE_PINTURA = linha.Get("tipo_de_pintura").Valor;
+                this.inicio = linha["data_inicio"].Data();
+                this.fim = linha["data_fim"].Data();
+                this.DESENHO_1 = linha["desenho_1"].Valor;
+                this.TIPO_DE_PINTURA = linha["tipo_de_pintura"].Valor;
 
                 /*04/04/2019 - novas caracterísricas*/
-                this.corte_largura = linha.Get("corte_largura").Double();
+                this.corte_largura = linha["corte_largura"].Double();
                 this.comprimento = linha["comprimento"].Double();
-                this.esq_de_pintura = linha.Get("esq_de_pintura").Valor;
-                this.superficie = linha.Get("superficie").Double();
-                this.furacoes = linha.Get("furacoes").Int();
-                this.espessura = linha.Get("espessura").Double();
-                this.tipo_aco = linha.Get("tipo_aco").Valor;
-                this.codigo_materia_prima_sap = linha.Get("codigo_materia_prima_sap").Valor;
+                this.esq_de_pintura = linha["esq_de_pintura"].Valor;
+                this.superficie = linha["superficie"].Double();
+                this.furacoes = linha["furacoes"].Int();
+                this.espessura = linha["espessura"].Double();
+                this.tipo_aco = linha["tipo_aco"].Valor;
+                this.codigo_materia_prima_sap = linha["codigo_materia_prima_sap"].Valor;
 
                 if (this.desenho == "" | this.desenho == this.material)
                 {
-                    this.desenho = linha.Get("marca").Valor;
+                    this.desenho = linha["marca"].Valor;
                 }
 
                 this.peso_embarcado = this.qtd_embarcada * peso_unitario;
@@ -557,10 +557,10 @@ namespace DLM.painel
                 /*porcentagens*/
 
                 this.ultima_edicao = linha["ultima_edicao"].Data();
-                this.pep_cooisn = linha.Get("pep_cooisn").Valor;
-                this.centro = linha.Get("centro").Valor;
+                this.pep_cooisn = linha["pep_cooisn"].Valor;
+                this.centro = linha["centro"].Valor;
 
-                var s = linha.Get("centro_producao").Valor;
+                var s = linha["centro_producao"].Valor;
                 if (s != "")
                 {
                     this.centro = s;
@@ -572,7 +572,7 @@ namespace DLM.painel
                 }
                 else if (this.qtd_necessaria > this.qtd_produzida)
                 {
-                    this.ULTIMO_STATUS = linha.Get("ULTIMO_STATUS").Valor;
+                    this.ULTIMO_STATUS = linha["ULTIMO_STATUS"].Valor;
                 }
                 else if (this.qtd_necessaria > this.qtd_embarcada)
                 {
@@ -591,27 +591,27 @@ namespace DLM.painel
             {
                 this.Tipo = Tipo_Material.Orçamento;
                 this.comprimento = linha["comp"].Double();
-                this.corte_largura = linha.Get("corte").Double();
-                this.desenho = linha.Get("marca").Valor;
-                this.DESENHO_1 = linha.Get("marca").Valor;
-                this.espessura = linha.Get("esp").Double();
-                this.esq_de_pintura = linha.Get("esquema").Valor;
-                this.furacoes = linha.Get("furos").Int();
-                this.grupo_mercadoria = linha.Get("grupo_mercadoria").Valor;
-                this.material = linha.Get("marca").Valor;
+                this.corte_largura = linha["corte"].Double();
+                this.desenho = linha["marca"].Valor;
+                this.DESENHO_1 = linha["marca"].Valor;
+                this.espessura = linha["esp"].Double();
+                this.esq_de_pintura = linha["esquema"].Valor;
+                this.furacoes = linha["furos"].Int();
+                this.grupo_mercadoria = linha["grupo_mercadoria"].Valor;
+                this.material = linha["marca"].Valor;
                 this.PEP = linha["pep"].Valor;
                 this.pep_cooisn = linha["pep"].Valor;
-                this.qtd_necessaria = linha.Get("quantidade").Double();
-                this.peso_unitario = linha.Get("peso").Double();
-                this.peso_necessario = linha.Get("peso").Double() * this.qtd_necessaria;
-                this.status_sistema_pep = linha.Get("marca").Valor;
-                this.superficie = linha.Get("superficie").Double();
+                this.qtd_necessaria = linha["quantidade"].Double();
+                this.peso_unitario = linha["peso"].Double();
+                this.peso_necessario = linha["peso"].Double() * this.qtd_necessaria;
+                this.status_sistema_pep = linha["marca"].Valor;
+                this.superficie = linha["superficie"].Double();
                 this.texto_breve = linha["descricao"].Valor;
-                this.tipo_aco = linha.Get("tipo_aco").Valor;
-                this.TIPO_DE_PINTURA = linha.Get("tratamento").Valor;
+                this.tipo_aco = linha["tipo_aco"].Valor;
+                this.TIPO_DE_PINTURA = linha["tratamento"].Valor;
                 this.ultima_edicao = linha["ultima_edicao"].Data();
-                this.centro = linha.Get("unidade_fabril").Valor;
-                this.codigo_materia_prima_sap = linha.Get("materia_prima").Valor;
+                this.centro = linha["unidade_fabril"].Valor;
+                this.codigo_materia_prima_sap = linha["materia_prima"].Valor;
             }
         }
 

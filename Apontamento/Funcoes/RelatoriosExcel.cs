@@ -536,15 +536,15 @@ namespace DLM.painel
 
                     foreach (var linha in Pecas)
                     {
-                        double qtd = linha.Get("qtd").Int();
-                        double peso_total = linha.Get("peso_tot").Double();
+                        double qtd = linha["qtd"].Int();
+                        double peso_total = linha["peso_tot"].Double();
                         double peso_unit = 0;
-                        var inicio = linha.Get("primeiro_apontamento_fab").Data();
-                        var fim = linha.Get("ultimo_apontamento_fab").Data();
-                        var atualizado = linha.Get("atualizado_em").Data();
-                        var qtd_carregada = linha.Get("qtd_carregada").Int();
-                        var qtd_fabricada = linha.Get("produzido").Int();
-                        var qtd_a_embarcar = linha.Get("qtd_a_embarcar").Int();
+                        var inicio = linha["primeiro_apontamento_fab"].Data();
+                        var fim = linha["ultimo_apontamento_fab"].Data();
+                        var atualizado = linha["atualizado_em"].Data();
+                        var qtd_carregada = linha["qtd_carregada"].Int();
+                        var qtd_fabricada = linha["produzido"].Int();
+                        var qtd_a_embarcar = linha["qtd_a_embarcar"].Int();
                         if (qtd > 0 && peso_total > 0)
                         {
                             peso_unit = peso_total / qtd;
@@ -558,24 +558,24 @@ namespace DLM.painel
                         pecas_aba_excel.Cells[l0 + l, c0 + 5].Value =  linha["descricao"].Valor;
                         pecas_aba_excel.Cells[l0 + l, c0 + 7].Value =  linha["qtd_a_embarcar"].Int(); //qtd a embarcar
                         pecas_aba_excel.Cells[l0 + l, c0 + 8].Value =  qtd_carregada; //qtd carregada
-                        pecas_aba_excel.Cells[l0 + l, c0 + 9].Value =  linha.Get("placa").Valor; //placa
-                        pecas_aba_excel.Cells[l0 + l, c0 + 10].Value = linha.Get("motorista").Valor; //motorista
-                        pecas_aba_excel.Cells[l0 + l, c0 + 11].Value = linha.Get("marca").Valor; //marca
+                        pecas_aba_excel.Cells[l0 + l, c0 + 9].Value =  linha["placa"].Valor; //placa
+                        pecas_aba_excel.Cells[l0 + l, c0 + 10].Value = linha["motorista"].Valor; //motorista
+                        pecas_aba_excel.Cells[l0 + l, c0 + 11].Value = linha["marca"].Valor; //marca
                         pecas_aba_excel.Cells[l0 + l, c0 + 12].Value = linha["observacoes"].Valor; //observações
                         pecas_aba_excel.Cells[l0 + l, c0 + 13].Value = qtd; //qtd
                         pecas_aba_excel.Cells[l0 + l, c0 + 14].Value = qtd_fabricada; //qtd fabricada
                         //pecas_aba_excel.Cells[l0 + l, c0 + 15].Value = pc.qtd_necessaria; //quantidade total necessária
                         pecas_aba_excel.Cells[l0 + l, c0 + 16].Value = linha["comprimento"].Double(); //comprimento
-                        pecas_aba_excel.Cells[l0 + l, c0 + 17].Value = linha.Get("corte").Double(); //corte
-                        pecas_aba_excel.Cells[l0 + l, c0 + 18].Value = linha.Get("espessura").Double(); //espessura
-                        pecas_aba_excel.Cells[l0 + l, c0 + 19].Value = linha.Get("material").Valor; //material
+                        pecas_aba_excel.Cells[l0 + l, c0 + 17].Value = linha["corte"].Double(); //corte
+                        pecas_aba_excel.Cells[l0 + l, c0 + 18].Value = linha["espessura"].Double(); //espessura
+                        pecas_aba_excel.Cells[l0 + l, c0 + 19].Value = linha["material"].Valor; //material
                         pecas_aba_excel.Cells[l0 + l, c0 + 20].Value = peso_unit; /*peso unitario*/
                         pecas_aba_excel.Cells[l0 + l, c0 + 21].Value = qtd * peso_unit;/*peso parcial nec*/
                         pecas_aba_excel.Cells[l0 + l, c0 + 22].Value = qtd_fabricada * peso_unit; //peso parcial fabricado
                         pecas_aba_excel.Cells[l0 + l, c0 + 23].Value = peso_embarcado;  // peso embarcado
                         pecas_aba_excel.Cells[l0 + l, c0 + 24].Value = (qtd * peso_unit) - (qtd_fabricada * peso_unit);//* - peso a produzir;
                         pecas_aba_excel.Cells[l0 + l, c0 + 25].Value = qtd_a_embarcar * peso_unit;// - peso a embarcar*;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 26].Value = linha.Get("mercadoria").Valor; //mercadoria
+                        pecas_aba_excel.Cells[l0 + l, c0 + 26].Value = linha["mercadoria"].Valor; //mercadoria
                         //pecas_aba_excel.Cells[l0 + l, c0 + 27].Value = pc.total_fabricado / 100; //porcentagem total fabricada
                         //pecas_aba_excel.Cells[l0 + l, c0 + 28].Value = pc.total_embarcado / 100; //porcentagem total embarcada
                         if (inicio > mindia)
@@ -587,18 +587,18 @@ namespace DLM.painel
                             pecas_aba_excel.Cells[l0 + l, c0 + 30].Value = fim;
                         }
                         pecas_aba_excel.Cells[l0 + l, c0 + 31].Value = atualizado;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 32].Value = linha.Get("status").Valor;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 33].Value = linha.Get("pintura").Valor;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 34].Value = linha.Get("esquema").Valor;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 35].Value = linha.Get("esquema_desc").Valor;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 36].Value = linha.Get("bobina").Valor;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 37].Value = linha.Get("face1").Valor;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 38].Value = linha.Get("face2").Valor;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 39].Value = linha.Get("complexidade").Valor;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 40].Value = linha.Get("denominacao").Valor;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 41].Value = linha.Get("tipo").Valor;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 42].Value = linha.Get("arquivo").Valor;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 43].Value = linha.Get("tipo_embarque").Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 32].Value = linha["status"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 33].Value = linha["pintura"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 34].Value = linha["esquema"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 35].Value = linha["esquema_desc"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 36].Value = linha["bobina"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 37].Value = linha["face1"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 38].Value = linha["face2"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 39].Value = linha["complexidade"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 40].Value = linha["denominacao"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 41].Value = linha["tipo"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 42].Value = linha["arquivo"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 43].Value = linha["tipo_embarque"].Valor;
 
                         l++;
                     }

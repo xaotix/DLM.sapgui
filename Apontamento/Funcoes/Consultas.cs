@@ -27,8 +27,8 @@ namespace DLM.painel
             {
                 tab = $"pmp_orc_resumo_consolidada";
             }
-            var s = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, tab);
-            foreach (var p in s.Linhas)
+            var consulta = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, tab);
+            foreach (var p in consulta.Linhas)
             {
                 var ped = new ORC_PED(p, consolidadas ? Tipo_Material.Consolidado : Tipo_Material.Orçamento);
                 if (!consolidadas)
@@ -46,11 +46,11 @@ namespace DLM.painel
                 var pacotes = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada_arquivos_peps).Linhas;
                 foreach (var pedido in retorno)
                 {
-                    var pcks = pacotes.FindAll(x => x.Get("pedido").Valor == pedido.PEP);
-                    var arqs = pcks.Select(x => x.Get("arquivo").Valor).Distinct().ToList();
+                    var pcks = pacotes.FindAll(x => x["pedido"].Valor == pedido.PEP);
+                    var arqs = pcks.Select(x => x["arquivo"].Valor).Distinct().ToList();
                     foreach (var arq in arqs)
                     {
-                        var peps = pcks.FindAll(x => x.Get("arquivo").Valor == arq).Select(x => x.Get("pep").Valor).Distinct().ToList();
+                        var peps = pcks.FindAll(x => x["arquivo"].Valor == arq).Select(x => x["pep"].Valor).Distinct().ToList();
                         pedido.pacotes.Add(new ORC_PCK(arq, peps, pedido));
                     }
 
@@ -222,11 +222,11 @@ namespace DLM.painel
 
             foreach (var pedido in pedidos)
             {
-                var comando = DBases.GetDB().Consulta($"call {Cfg.Init.db_comum}.getzpp0100_resumo('{pedido}',{coluna})");
+                var consulta = DBases.GetDB().Consulta($"call {Cfg.Init.db_comum}.getzpp0100_resumo('{pedido}',{coluna})");
 
-                foreach (var p in comando.Linhas)
+                foreach (var linha in consulta.Linhas)
                 {
-                    retorno.Add(new ZPP0100_Resumo(p));
+                    retorno.Add(new ZPP0100_Resumo(linha));
                 }
 
             }
@@ -621,10 +621,10 @@ namespace DLM.painel
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
-                    var igual = st_base.Filtrar("pep", etapa.PEP.ToUpper().Replace(".P00", ""), true);
-                    if (igual.Count > 0)
+                    var tabela = st_base.Filtrar("pep", etapa.PEP.ToUpper().Replace(".P00", ""), true);
+                    if (tabela.Count > 0)
                     {
-                        etapa.SetBase(igual.Linhas.First());
+                        etapa.SetBase(tabela[0]);
                     }
                 }));
             }
@@ -803,9 +803,9 @@ namespace DLM.painel
         {
             var consulta = Conexoes.DBases.GetDB().Consulta("pep", pep, Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao, false);
             var retorno = new List<PLAN_PECA_ZPMP>();
-            foreach (var l in consulta.Linhas)
+            foreach (var linha in consulta.Linhas)
             {
-                retorno.Add(new PLAN_PECA_ZPMP(l));
+                retorno.Add(new PLAN_PECA_ZPMP(linha));
             }
             return retorno;
         }
@@ -846,7 +846,7 @@ namespace DLM.painel
                 var plan_pecas = new List<PLAN_PECA>();
                 plan_pecas.AddRange(_pecas);
 
-                var peps_chaves = lista_embarques.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Subetapa(x.Get("Elemento_PEP").Valor, true)).ToList();
+                var peps_chaves = lista_embarques.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Subetapa(x["Elemento_PEP"].Valor, true)).ToList();
                 foreach (var pep in peps_chaves)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() =>
@@ -903,8 +903,8 @@ namespace DLM.painel
             if (_pedidos_clean == null | update)
             {
                 _pedidos_clean = new List<string>();
-                _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_cn47n} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x.Get("pedido").Valor).ToList());
-                _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x.Get("pedido").Valor).ToList());
+                _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_cn47n} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x["pedido"].Valor).ToList());
+                _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x["pedido"].Valor).ToList());
 
                 _pedidos_clean = _pedidos_clean.Distinct().ToList().FindAll(x => x.Length > 3);
             }

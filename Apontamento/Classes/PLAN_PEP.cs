@@ -255,18 +255,18 @@ namespace DLM.painel
             this.logistica_cronograma = Linha["logistica_cronograma"].Data();
             this.montagem_cronograma = Linha["montagem_cronograma"].Data();
 
-            this.engenharia_cronograma_inicio = Linha.Get("engenharia_cronograma_inicio").Data();
-            this.fabrica_cronograma_inicio = Linha.Get("fabrica_cronograma_inicio").Data();
-            this.logistica_cronograma_inicio = Linha.Get("logistica_cronograma_inicio").Data();
-            this.montagem_cronograma_inicio = Linha.Get("montagem_cronograma_inicio").Data();
+            this.engenharia_cronograma_inicio = Linha["engenharia_cronograma_inicio"].Data();
+            this.fabrica_cronograma_inicio = Linha["fabrica_cronograma_inicio"].Data();
+            this.logistica_cronograma_inicio = Linha["logistica_cronograma_inicio"].Data();
+            this.montagem_cronograma_inicio = Linha["montagem_cronograma_inicio"].Data();
 
 
-            this.id_status_pedido = Linha.Get("id_status_pedido").Int();
-            this.id_status_pep = Linha.Get("id_status_pedido").Int();
+            this.id_status_pedido = Linha["id_status_pedido"].Int();
+            this.id_status_pep = Linha["id_status_pedido"].Int();
 
             this.observacoes = Linha["observacoes"].Valor;
-            this.PEP = Linha.Get("pep").Valor;
-            this.pep_engenharia = Linha.Get("pep_engenharia").Valor;
+            this.PEP = Linha["pep"].Valor;
+            this.pep_engenharia = Linha["pep_engenharia"].Valor;
 
             this.peso_embarcado = Linha["peso_embarcado"].Double(6);
             this.peso_planejado = Linha["peso_planejado"].Double(6);
@@ -344,9 +344,6 @@ namespace DLM.painel
 
                 l.Add("montagem_cronograma", montagem_cronograma);
             }
-
-
-            //l.Add("descricao", descricao);
 
             if (engenharia_cronograma_inicio > data_min)
             {

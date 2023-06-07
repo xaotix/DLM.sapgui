@@ -94,9 +94,9 @@ namespace DLM.sapgui
             {
                 foreach (var linha in selecao.Linhas)
                 {
-                    var pedido = linha.Get("C1").Valor;
-                    var valor_contrato = linha.Get("C6").Valor;
-                    var valor_f_direto = linha.Get("C7").Valor;
+                    var pedido =         linha["C1"].Valor;
+                    var valor_contrato = linha["C6"].Valor;
+                    var valor_f_direto = linha["C7"].Valor;
 
                     var novo = new AVANCO_FATURAMENTO(pedido, valor_contrato, valor_f_direto);
                     if (novo.Pedido.Length == 13)
@@ -506,9 +506,9 @@ namespace DLM.sapgui
             var Tarefas = new List<Task>();
 
             tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var l in tabela.Linhas)
+            foreach (var linha in tabela.Linhas)
             {
-                Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new CN47N(l))));
+                Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new CN47N(linha))));
             }
             Task.WaitAll(Tarefas.ToArray());
 

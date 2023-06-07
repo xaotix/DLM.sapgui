@@ -315,26 +315,26 @@ namespace DLM.painel
         }
         private void GetDados_0100(DLM.db.Linha linha)
         {
-            this.descricao = linha["descricao"].Valor;
-            this.carga_confirmada = linha["st_conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA;
-            this.num_carga = "RN" + linha["nro_carga"].Valor/*.PadLeft(5,'0')*/;
-            this.pack_list = "PL" + linha["ordem_embarque"].Valor.PadLeft(5, '0');
-            this.pep = linha["elemento_pep"].Valor;
-            this.material = linha["Material"].Valor;
-            this.desenho =  linha["Tamanho_dimensao"].Valor;
-            this.etiqueta = linha["etiqueta"].Valor;
-            this.etiqueta_impressa = linha.Get("etiqueta_impressa").Valor.ToUpper() == "TRUE";
-            this.centro = linha.Get("centro").Valor;
-            this.quantidade = linha.Get("qtd_embarque").Double();
+            this.descricao =          linha["descricao"].Valor;
+            this.carga_confirmada =   linha["st_conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA;
+            this.num_carga = "RN" +   linha["nro_carga"].Valor/*.PadLeft(5,'0')*/;
+            this.pack_list = "PL" +   linha["ordem_embarque"].Valor.PadLeft(5, '0');
+            this.pep =                linha["elemento_pep"].Valor;
+            this.material =           linha["Material"].Valor;
+            this.desenho =            linha["Tamanho_dimensao"].Valor;
+            this.etiqueta =           linha["etiqueta"].Valor;
+            this.etiqueta_impressa =  linha["etiqueta_impressa"].Valor.ToUpper() == "TRUE";
+            this.centro =             linha["centro"].Valor;
+            this.quantidade =         linha["qtd_embarque"].Double();
 
-            this.Saldo_1202 = linha["sld_1202"].Double();
-            this.Saldo_1203 = linha["sld_1203"].Double();
-            this.Saldo_1204 = linha["sld_1204"].Double();
+            this.Saldo_1202 =         linha["sld_1202"].Double();
+            this.Saldo_1203 =         linha["sld_1203"].Double();
+            this.Saldo_1204 =         linha["sld_1204"].Double();
 
-            this.telefone =     linha["telefone"].Valor;
-            this.placa =        linha["placa"].Valor;
-            this.motorista =    linha["motorista"].Valor;
-            this.observacoes =  linha["observacoes"].Valor;
+            this.telefone =           linha["telefone"].Valor;
+            this.placa =              linha["placa"].Valor;
+            this.motorista =          linha["motorista"].Valor;
+            this.observacoes =        linha["observacoes"].Valor;
 
             this.subetapa = Conexoes.Utilz.PEP.Get.Subetapa(this.pep, true);
 
@@ -541,8 +541,8 @@ namespace DLM.painel
 
 
             /*23/04/2019*/
-            this.centro = linha.Get("centro").Valor;
-            this.centro_producao = linha.Get("centro_producao").Valor;
+            this.centro =             linha["centro"].Valor;
+            this.centro_producao =    linha["centro_producao"].Valor;
         }
         public Resumo_Pecas(string pep)
         {

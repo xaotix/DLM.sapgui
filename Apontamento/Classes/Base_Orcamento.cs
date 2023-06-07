@@ -10,20 +10,20 @@ namespace DLM.painel
     {
         public void GetDatas()
         {
-            this.engenharia_cronograma_inicio = Linha.Get("ei").Data();
-            this.engenharia_cronograma = Linha.Get("ef").Data();
+            this.engenharia_cronograma_inicio = Linha["ei"].Data();
+            this.engenharia_cronograma = Linha["ef"].Data();
 
-            this.fabrica_cronograma_inicio = Linha.Get("fi").Data();
-            this.fabrica_cronograma = Linha.Get("ff").Data();
+            this.fabrica_cronograma_inicio = Linha["fi"].Data();
+            this.fabrica_cronograma = Linha["ff"].Data();
 
-            this.logistica_cronograma_inicio = Linha.Get("li").Data();
-            this.logistica_cronograma = Linha.Get("lf").Data();
+            this.logistica_cronograma_inicio = Linha["li"].Data();
+            this.logistica_cronograma = Linha["lf"].Data();
 
-            this.montagem_cronograma_inicio = Linha.Get("mi").Data();
-            this.montagem_cronograma = Linha.Get("mf").Data();
+            this.montagem_cronograma_inicio = Linha["mi"].Data();
+            this.montagem_cronograma = Linha["mf"].Data();
 
-            this.mi_s = Linha.Get("mi_s").Data();
-            this.mf_s = Linha.Get("mf_s").Data();
+            this.mi_s = Linha["mi_s"].Data();
+            this.mf_s = Linha["mf_s"].Data();
         }
 
 
@@ -92,8 +92,8 @@ namespace DLM.painel
             this.Linha = linha;
             this.id_obra = linha["id_obra"].Int();
             this.PEP = linha["pep"].Valor;
-            this.peso_planejado = linha.Get("peso_total").Double();
-            this.quantidade = linha.Get("quantidade").Int();
+            this.peso_planejado = linha["peso_total"].Double();
+            this.quantidade = linha["quantidade"].Int();
         }
     }
 
@@ -253,20 +253,19 @@ namespace DLM.painel
         public ORC_PED(DLM.db.Linha linha, Tipo_Material tipo)
         {
             this.Linha = linha;
-            this.id_obra = linha["id_obra"].Int();
-            this.numerocontrato = linha.Get("numerocontrato").Valor;
-            this.revisao = linha.Get("revisao").Valor;
-            this.Titulo.Descricao = linha["descricao"].Valor;
-            this.PEP = linha.Get("pedido").Valor;
-            this.quantidade = linha.Get("quantidade").Double();
-            this.peso_planejado = linha.Get("peso_total").Double();
-
-            this.liberado_engenharia = linha.Get("liberado_engenharia").Double();
-            this.peso_realizado = linha.Get("peso_realizado").Double();
-            this.arquivos = linha.Get("arquivos").Int();
-            this.criacao = linha.Get("criacao").Data();
+            this.id_obra =                  linha["id_obra"].Int();
+            this.numerocontrato =           linha["numerocontrato"].Valor;
+            this.revisao =                  linha["revisao"].Valor;
+            this.Titulo.Descricao =         linha["descricao"].Valor;
+            this.PEP =                      linha["pedido"].Valor;
+            this.quantidade =               linha["quantidade"].Double();
+            this.peso_planejado =           linha["peso_total"].Double();
+            this.liberado_engenharia =      linha["liberado_engenharia"].Double();
+            this.peso_realizado =           linha["peso_realizado"].Double();
+            this.arquivos =                 linha["arquivos"].Int();
+            this.criacao =                  linha["criacao"].Data();
+            this.Titulo.Descricao =         linha["nome"].Valor;
             this.tipo = tipo;
-            this.Titulo.Descricao = linha.Get("nome").Valor;
         }
     }
 }
