@@ -369,13 +369,12 @@ namespace DLM.sapgui
 
                     }
                     curr.AddRange(curr_submateriais);
-                    curr = curr.OrderBy(x => Conexoes.Extensoes.Data(x[5].ToString())).ToList();
+                    curr = curr.OrderBy(x => x[5].ToString().Data()).ToList();
                     //08/04/2020
                     curr = curr.OrderBy(x => x[18].ToString()).ToList();
-                    //var  curr2 = curr.FindAll(x => Conexoes.Conexoes.Extensoes.Data(x[5].ToString()) > Cfg.Init.DataDummy());
                     if (curr.Count > 0)
                     {
-                        var Dts = curr.Select(x => Conexoes.Extensoes.Data(x[5].ToString())).OrderBy(x => x).ToList().FindAll(x => x > Cfg.Init.DataDummy());
+                        var Dts = curr.Select(x => x[5].ToString().Data()).OrderBy(x => x).ToList().FindAll(x => x > Cfg.Init.DataDummy());
                         DateTime? inicio = Cfg.Init.DataDummy();
                         DateTime? fim = Cfg.Init.DataDummy();
                         string ultimo_status = "";
@@ -386,7 +385,7 @@ namespace DLM.sapgui
                         }
                         for (int i = 0; i < curr.Count - 1; i++)
                         {
-                            var data = Conexoes.Extensoes.Data(curr[i][5].ToString());
+                            var data = curr[i][5].ToString().Data();
                             if (data > Cfg.Init.DataDummy())
                             {
                                 if (curr.Count > i + 1)
@@ -399,7 +398,7 @@ namespace DLM.sapgui
                                 }
                             }
                         }
-                        if (Conexoes.Extensoes.Data(curr.Last()[5].ToString()) > Cfg.Init.DataDummy())
+                        if (curr.Last()[5].ToString().Data() > Cfg.Init.DataDummy())
                         {
                             ultimo_status = curr.Last()[6].ToString();
                         }

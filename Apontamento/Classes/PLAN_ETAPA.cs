@@ -1,4 +1,5 @@
-﻿using DLM.vars;
+﻿using Conexoes;
+using DLM.vars;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -135,7 +136,7 @@ namespace DLM.painel
                 //    this.resumo_pecas.Fim = D1.Last();
                 //}
 
-                var apontamentos = this.subetapas.FindAll(x => x.update_montagem != "").Distinct().ToList().Select(x => Conexoes.Extensoes.Data(x.update_montagem.ToUpper().Replace(" ", "").Replace("MONTAGEM:", "")));
+                var apontamentos = this.subetapas.FindAll(x => x.update_montagem != "").Distinct().ToList().Select(x => x.update_montagem.ToUpper().Replace(" ", "").Replace("MONTAGEM:", "").Data());
                 if (apontamentos.Count() > 0)
                 {
                     this.update_montagem = apontamentos.Max().ToShortDateString();

@@ -137,7 +137,7 @@ namespace DLM.painel
             var dts = this.Pecas_Logistica.Select(x => x.data).Distinct().ToList().FindAll(x => x != "01/01/0001" && x != "");
             if (dts.Count > 0)
             {
-                this.data = dts.Select(x => Conexoes.Extensoes.Data(x)).Max().ToShortDateString();
+                this.data = dts.Select(x => x.Data()).Max().ToShortDateString();
 
             }
             if (this.Pecas_Logistica.Count > 0)
