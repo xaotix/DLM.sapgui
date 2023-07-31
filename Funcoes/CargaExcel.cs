@@ -466,7 +466,7 @@ namespace DLM.sapgui
                                     furos = curr_submateriais.Select(x => x[12].Int()).Max();
                                 }
 
-                                esp = Conexoes.Utilz.Double(curr_submateriais[0][15]);
+                                esp = curr_submateriais[0][15].Double();
 
 
                                 if (peca.Grupo_Mercadoria.Contains("PURLIN"))
@@ -517,7 +517,7 @@ namespace DLM.sapgui
         {
             var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
             var plan = tabela.Linhas;
-            DLM.sapgui.FolhaMargem ret = new DLM.sapgui.FolhaMargem();
+            var ret = new DLM.sapgui.FolhaMargem();
             try
             {
                 int max_col = 12;
@@ -527,83 +527,83 @@ namespace DLM.sapgui
                 if (plan.Count < 63) { return new DLM.sapgui.FolhaMargem(); }
                 if (plan.Max(x => x.Count) < max_col) { return new DLM.sapgui.FolhaMargem(); }
 
-                ret.receitabruta.material.valor = Conexoes.Utilz.Double(plan[19 - m][c12]);
-                ret.receitabruta.montagem.valor = Conexoes.Utilz.Double(plan[20 - m][c12]);
-                ret.receitabruta.projeto.valor = Conexoes.Utilz.Double(plan[21 - m][c12]);
+                ret.receitabruta.material.valor = plan[19 - m][c12].Double();
+                ret.receitabruta.montagem.valor = plan[20 - m][c12].Double();
+                ret.receitabruta.projeto.valor = plan[21 - m][c12].Double();
 
-                ret.impostos.IPI_Material.valor = Conexoes.Utilz.Double(plan[25 - m][c12]);
-                ret.impostos.ICMS_Material.valor = Conexoes.Utilz.Double(plan[26 - m][c12]);
-                ret.impostos.PIS_COFINS_Material.valor = Conexoes.Utilz.Double(plan[27 - m][c12]);
-                ret.impostos.PIS_COFINS_Montagem.valor = Conexoes.Utilz.Double(plan[28 - m][c12]);
-                ret.impostos.PIS_COFINS_Projeto.valor = Conexoes.Utilz.Double(plan[29 - m][c12]);
-                ret.impostos.ISS_Locacao_Equipamentos.valor = Conexoes.Utilz.Double(plan[30 - m][c12]);
-                ret.impostos.ISS_Supervisao.valor = Conexoes.Utilz.Double(plan[31 - m][c12]);
-                ret.impostos.ISS_Montagem.valor = Conexoes.Utilz.Double(plan[32 - m][c12]);
-                ret.impostos.ISS_Projeto.valor = Conexoes.Utilz.Double(plan[33 - m][c12]);
-                ret.impostos.CPRB_Servico.valor = Conexoes.Utilz.Double(plan[34 - m][c12]);
-                ret.impostos.CPRB_Material.valor = Conexoes.Utilz.Double(plan[35 - m][c12]);
+                ret.impostos.IPI_Material.valor = plan[25 - m][c12].Double();
+                ret.impostos.ICMS_Material.valor = plan[26 - m][c12].Double();
+                ret.impostos.PIS_COFINS_Material.valor = plan[27 - m][c12].Double();
+                ret.impostos.PIS_COFINS_Montagem.valor = plan[28 - m][c12].Double();
+                ret.impostos.PIS_COFINS_Projeto.valor = plan[29 - m][c12].Double();
+                ret.impostos.ISS_Locacao_Equipamentos.valor = plan[30 - m][c12].Double();
+                ret.impostos.ISS_Supervisao.valor = plan[31 - m][c12].Double();
+                ret.impostos.ISS_Montagem.valor = plan[32 - m][c12].Double();
+                ret.impostos.ISS_Projeto.valor = plan[33 - m][c12].Double();
+                ret.impostos.CPRB_Servico.valor = plan[34 - m][c12].Double();
+                ret.impostos.CPRB_Material.valor = plan[35 - m][c12].Double();
 
-                ret.impostos.IPI_Material.porcentagem = Conexoes.Utilz.Double(plan[25 - m][c4]);
-                ret.impostos.ICMS_Material.porcentagem = Conexoes.Utilz.Double(plan[26 - m][c4]);
-                ret.impostos.PIS_COFINS_Material.porcentagem = Conexoes.Utilz.Double(plan[27 - m][c4]);
-                ret.impostos.PIS_COFINS_Montagem.porcentagem = Conexoes.Utilz.Double(plan[28 - m][c4]);
-                ret.impostos.PIS_COFINS_Projeto.porcentagem = Conexoes.Utilz.Double(plan[29 - m][c4]);
-                ret.impostos.ISS_Locacao_Equipamentos.porcentagem = Conexoes.Utilz.Double(plan[30 - m][c4]);
-                ret.impostos.ISS_Supervisao.porcentagem = Conexoes.Utilz.Double(plan[31 - m][c4]);
-                ret.impostos.ISS_Montagem.porcentagem = Conexoes.Utilz.Double(plan[32 - m][c4]);
-                ret.impostos.ISS_Projeto.porcentagem = Conexoes.Utilz.Double(plan[33 - m][c4]);
-                ret.impostos.CPRB_Servico.porcentagem = Conexoes.Utilz.Double(plan[34 - m][c4]);
-                ret.impostos.CPRB_Material.porcentagem = Conexoes.Utilz.Double(plan[35 - m][c4]);
+                ret.impostos.IPI_Material.porcentagem = plan[25 - m][c4].Double();
+                ret.impostos.ICMS_Material.porcentagem = plan[26 - m][c4].Double();
+                ret.impostos.PIS_COFINS_Material.porcentagem = plan[27 - m][c4].Double();
+                ret.impostos.PIS_COFINS_Montagem.porcentagem = plan[28 - m][c4].Double();
+                ret.impostos.PIS_COFINS_Projeto.porcentagem = plan[29 - m][c4].Double();
+                ret.impostos.ISS_Locacao_Equipamentos.porcentagem = plan[30 - m][c4].Double();
+                ret.impostos.ISS_Supervisao.porcentagem = plan[31 - m][c4].Double();
+                ret.impostos.ISS_Montagem.porcentagem = plan[32 - m][c4].Double();
+                ret.impostos.ISS_Projeto.porcentagem = plan[33 - m][c4].Double();
+                ret.impostos.CPRB_Servico.porcentagem = plan[34 - m][c4].Double();
+                ret.impostos.CPRB_Material.porcentagem = plan[35 - m][c4].Double();
 
-                ret.receitaliquida.material.valor = Conexoes.Utilz.Double(plan[39 - m][c12]);
-                ret.receitaliquida.montagem.valor = Conexoes.Utilz.Double(plan[40 - m][c12]);
-                ret.receitaliquida.projeto.valor = Conexoes.Utilz.Double(plan[41 - m][c12]);
+                ret.receitaliquida.material.valor = plan[39 - m][c12].Double();
+                ret.receitaliquida.montagem.valor = plan[40 - m][c12].Double();
+                ret.receitaliquida.projeto.valor = plan[41 - m][c12].Double();
 
-                ret.custosmateriais.materiais.valor = Conexoes.Utilz.Double(plan[45 - m][c12]);
-                ret.custosmateriais.contingencia.valor = Conexoes.Utilz.Double(plan[46 - m][c12]);
+                ret.custosmateriais.materiais.valor = plan[45 - m][c12].Double();
+                ret.custosmateriais.contingencia.valor = plan[46 - m][c12].Double();
 
-                ret.total_custo_projeto.valor = Conexoes.Utilz.Double(plan[48 - m][c12]);
+                ret.total_custo_projeto.valor = plan[48 - m][c12].Double();
 
-                ret.custosmontagem.equipamentos.valor = Conexoes.Utilz.Double(plan[52 - m][c12]);
-                ret.custosmontagem.empreiteiros_despesas.valor = Conexoes.Utilz.Double(plan[53 - m][c12]);
-                ret.custosmontagem.supervisao.valor = Conexoes.Utilz.Double(plan[54 - m][c12]);
+                ret.custosmontagem.equipamentos.valor = plan[52 - m][c12].Double();
+                ret.custosmontagem.empreiteiros_despesas.valor = plan[53 - m][c12].Double();
+                ret.custosmontagem.supervisao.valor = plan[54 - m][c12].Double();
 
-                ret.gastoslogisticos.frete_rodoviario.valor = Conexoes.Utilz.Double(plan[61 - m][c12]);
-                ret.gastoslogisticos.verba_adicional.valor = Conexoes.Utilz.Double(plan[62 - m][c12]);
-                ret.gastoslogisticos.gastos_logisticos.valor = Conexoes.Utilz.Double(plan[63 - m][c12]);
-                ret.gastoslogisticos.outras_despesas.valor = Conexoes.Utilz.Double(plan[64 - m][c12]);
-                ret.gastoslogisticos.seguro_internacional.valor = Conexoes.Utilz.Double(plan[65 - m][c12]);
-                ret.gastoslogisticos.frete_aereo.valor = Conexoes.Utilz.Double(plan[66 - m][c12]);
-                ret.gastoslogisticos.frete_maritimo.valor = Conexoes.Utilz.Double(plan[67 - m][c12]);
-                ret.gastoslogisticos.frete_rodoviario_internacional.valor = Conexoes.Utilz.Double(plan[68 - m][c12]);
-                ret.gastoslogisticos.frete_rodoviario_nacional_exportacao.valor = Conexoes.Utilz.Double(plan[69 - m][c12]);
-                ret.gastoslogisticos.frete_maritimo_cabotagem.valor = Conexoes.Utilz.Double(plan[70 - m][c12]);
-                ret.gastoslogisticos.frete_rodoviario_nacional_cabotagem.valor = Conexoes.Utilz.Double(plan[71 - m][c12]);
+                ret.gastoslogisticos.frete_rodoviario.valor = plan[61 - m][c12].Double();
+                ret.gastoslogisticos.verba_adicional.valor = plan[62 - m][c12].Double();
+                ret.gastoslogisticos.gastos_logisticos.valor = plan[63 - m][c12].Double();
+                ret.gastoslogisticos.outras_despesas.valor = plan[64 - m][c12].Double();
+                ret.gastoslogisticos.seguro_internacional.valor = plan[65 - m][c12].Double();
+                ret.gastoslogisticos.frete_aereo.valor = plan[66 - m][c12].Double();
+                ret.gastoslogisticos.frete_maritimo.valor = plan[67 - m][c12].Double();
+                ret.gastoslogisticos.frete_rodoviario_internacional.valor = plan[68 - m][c12].Double();
+                ret.gastoslogisticos.frete_rodoviario_nacional_exportacao.valor = plan[69 - m][c12].Double();
+                ret.gastoslogisticos.frete_maritimo_cabotagem.valor = plan[70 - m][c12].Double();
+                ret.gastoslogisticos.frete_rodoviario_nacional_cabotagem.valor = plan[71 - m][c12].Double();
 
-                ret.despesasgerais.seguro.valor = Conexoes.Utilz.Double(plan[75 - m][c12]);
-                ret.despesasgerais.comissao.valor = Conexoes.Utilz.Double(plan[76 - m][c12]);
-                ret.despesasgerais.assessoria.valor = Conexoes.Utilz.Double(plan[77 - m][c12]);
-                ret.despesasgerais.custo_financeiro.valor = Conexoes.Utilz.Double(plan[78 - m][c12]);
-                ret.despesasgerais.supervisao_exportacao.valor = Conexoes.Utilz.Double(plan[79 - m][c12]);
-                ret.despesasgerais.creditos_debitos_material.valor = Conexoes.Utilz.Double(plan[80 - m][c12]);
-                ret.despesasgerais.creditos_debitos_projeto.valor = Conexoes.Utilz.Double(plan[81 - m][c12]);
-                ret.despesasgerais.creditos_debitos_montagem.valor = Conexoes.Utilz.Double(plan[82 - m][c12]);
-                ret.despesasgerais.projeto_exportacao.valor = Conexoes.Utilz.Double(plan[83 - m][c12]);
-                ret.despesasgerais.outros.valor = Conexoes.Utilz.Double(plan[84 - m][c12]);
+                ret.despesasgerais.seguro.valor = plan[75 - m][c12].Double();
+                ret.despesasgerais.comissao.valor = plan[76 - m][c12].Double();
+                ret.despesasgerais.assessoria.valor = plan[77 - m][c12].Double();
+                ret.despesasgerais.custo_financeiro.valor = plan[78 - m][c12].Double();
+                ret.despesasgerais.supervisao_exportacao.valor = plan[79 - m][c12].Double();
+                ret.despesasgerais.creditos_debitos_material.valor = plan[80 - m][c12].Double();
+                ret.despesasgerais.creditos_debitos_projeto.valor = plan[81 - m][c12].Double();
+                ret.despesasgerais.creditos_debitos_montagem.valor = plan[82 - m][c12].Double();
+                ret.despesasgerais.projeto_exportacao.valor = plan[83 - m][c12].Double();
+                ret.despesasgerais.outros.valor = plan[84 - m][c12].Double();
 
-                ret.despesasgerais.seguro.porcentagem = Conexoes.Utilz.Double(plan[75 - m][c4]);
-                ret.despesasgerais.comissao.porcentagem = Conexoes.Utilz.Double(plan[76 - m][c4]);
-                ret.despesasgerais.assessoria.porcentagem = Conexoes.Utilz.Double(plan[77 - m][c4]);
-                ret.despesasgerais.custo_financeiro.porcentagem = Conexoes.Utilz.Double(plan[78 - m][c4]);
-                ret.despesasgerais.supervisao_exportacao.porcentagem = Conexoes.Utilz.Double(plan[79 - m][c4]);
-                ret.despesasgerais.creditos_debitos_material.porcentagem = Conexoes.Utilz.Double(plan[80 - m][c4]);
-                ret.despesasgerais.creditos_debitos_projeto.porcentagem = Conexoes.Utilz.Double(plan[81 - m][c4]);
-                ret.despesasgerais.creditos_debitos_montagem.porcentagem = Conexoes.Utilz.Double(plan[82 - m][c4]);
-                ret.despesasgerais.projeto_exportacao.porcentagem = Conexoes.Utilz.Double(plan[83 - m][c4]);
-                ret.despesasgerais.outros.porcentagem = Conexoes.Utilz.Double(plan[84 - m][c4]);
+                ret.despesasgerais.seguro.porcentagem =                     plan[75 - m][c4].Double();
+                ret.despesasgerais.comissao.porcentagem =                   plan[76 - m][c4].Double();
+                ret.despesasgerais.assessoria.porcentagem =                 plan[77 - m][c4].Double();
+                ret.despesasgerais.custo_financeiro.porcentagem =           plan[78 - m][c4].Double();
+                ret.despesasgerais.supervisao_exportacao.porcentagem =      plan[79 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_material.porcentagem =  plan[80 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_projeto.porcentagem =   plan[81 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_montagem.porcentagem =  plan[82 - m][c4].Double();
+                ret.despesasgerais.projeto_exportacao.porcentagem =         plan[83 - m][c4].Double();
+                ret.despesasgerais.outros.porcentagem =                     plan[84 - m][c4].Double();
 
-                ret.margens.valor = Conexoes.Utilz.Double(plan[63][c12]);
-                ret.margens.porcentagem = Conexoes.Utilz.Double(plan[63][c4]);
+                ret.margens.valor = plan[63][c12].Double();
+                ret.margens.porcentagem = plan[63][c4].Double();
                 ret.Carregado = true;
             }
             catch (Exception)

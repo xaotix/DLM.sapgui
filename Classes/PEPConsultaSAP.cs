@@ -389,8 +389,8 @@ namespace DLM.sapgui
             }
             this.Pedido = Pedido;
 
-            this.Peso_Planejado = this.Producao.Sum(x => Conexoes.Utilz.Double(x.peso_necessario));
-            this.Peso_Produzido = this.Producao.Sum(x => Conexoes.Utilz.Double(x.peso_produzido));
+            this.Peso_Planejado = this.Producao.Sum(x => x.peso_necessario);
+            this.Peso_Produzido = this.Producao.Sum(x => x.peso_produzido);
 
 
             this.Engenharia = Pedido.GETPEPENG(this.Codigo);
@@ -458,7 +458,7 @@ namespace DLM.sapgui
                 var s = Producao.Find(x => x.material == t.Material);
                 if (s != null)
                 {
-                    this.Peso_Embarcado = this.Peso_Embarcado + (Conexoes.Utilz.Double(s.peso_necessario) / Conexoes.Utilz.Double(s.qtd_necessaria) * Conexoes.Utilz.Double(t.Qtd_Carregada));
+                    this.Peso_Embarcado = this.Peso_Embarcado + (s.peso_necessario / s.qtd_necessaria * t.Qtd_Carregada);
                 }
             }
 
