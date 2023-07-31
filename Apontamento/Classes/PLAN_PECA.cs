@@ -447,9 +447,8 @@ namespace DLM.painel
             }
             set
             {
-                var s = Conexoes.Utilz.Int(value).ToString();
+                var s = value.Int().ToString();
                 if (s.Replace("0", "") != "") { _codigo_materia_prima_sap = s; }
-
             }
         }
 

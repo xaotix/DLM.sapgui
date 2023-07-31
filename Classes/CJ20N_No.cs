@@ -296,20 +296,20 @@ namespace DLM.sapgui
                 
                 
 
-                List<string> keys = new List<string>();
+                var keys = new List<string>();
                 foreach(string s in lvl0)
                 {
                     keys.Add(s);
                 }
 
-                keys = keys.OrderBy(x => Conexoes.Utilz.Int(x)).ToList();
+                keys = keys.OrderBy(x => x.Int()).ToList();
 
 
 
-                foreach (string key in keys)
+                foreach (var key in keys)
                 {
 
-                    if (Conexoes.Utilz.Int(key) > Conexoes.Utilz.Int(this.key))
+                    if (key.Int() > this.key.Int())
                     {
                         var b = GetRaiz().nos.Find(x => x.key == key);
 

@@ -361,7 +361,7 @@ namespace DLM.sapgui
                     //ordena pela operação
                     curr = curr.OrderBy(x => x[18].ToString()).ToList();
 
-                    var curr_marca = curr.Find(x => Conexoes.Utilz.Int(x[18]) == 10);
+                    var curr_marca = curr.Find(x => x[18].Int() == 10);
                     var curr_submateriais = new List<List<object>>();
                     if (curr_marca != null)
                     {
@@ -454,16 +454,16 @@ namespace DLM.sapgui
 
                         if (curr_marca != null)
                         {
-                            double esp = Conexoes.Utilz.Double(curr_marca[15]);
-                            int furos = Conexoes.Utilz.Int(curr_marca[12]);
-                            string marca = curr_marca[13].ToString();
-                            double corte = Conexoes.Utilz.Double(curr_marca[8]);
+                            double esp =    curr_marca[15].Double();
+                            int furos =     curr_marca[12].Int();
+                            string marca =  curr_marca[13].ToString();
+                            double corte =  curr_marca[08].Double();
 
                             if (curr_submateriais.Count > 0)
                             {
                                 if (furos == 0)
                                 {
-                                    furos = curr_submateriais.Select(x => Conexoes.Utilz.Int(x[12])).Max();
+                                    furos = curr_submateriais.Select(x => x[12].Int()).Max();
                                 }
 
                                 esp = Conexoes.Utilz.Double(curr_submateriais[0][15]);
@@ -471,7 +471,7 @@ namespace DLM.sapgui
 
                                 if (peca.Grupo_Mercadoria.Contains("PURLIN"))
                                 {
-                                    corte = curr_submateriais.Select(x => Conexoes.Utilz.Double(x[8])).Max();
+                                    corte = curr_submateriais.Select(x => x[8].Double()).Max();
                                 }
 
                             }

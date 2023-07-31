@@ -1,4 +1,5 @@
-﻿using DLM.vars;
+﻿using Conexoes;
+using DLM.vars;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace DLM.painel
             {
                 var dt = DateTime.Now;
                 var ts = (DateTime)ultima_consulta_sap;
-                return Conexoes.Utilz.Int((dt - ts).TotalDays);
+                return (dt - ts).TotalDays.Int();
             }
         }
         public int total_atraso
