@@ -1432,7 +1432,7 @@ namespace DLM.sapgui
 
                     if (arquivo.Exists())
                     {
-                        return Conexoes.Utilz.Excel.GetTabela(arquivo);
+                        return Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo);
                     }
                 }
                 catch (Exception ex)
@@ -1498,7 +1498,7 @@ namespace DLM.sapgui
                     }
 
                     this.SessaoSAP.EndTransaction();
-                    return Conexoes.Utilz.Excel.GetTabela(arquivo);
+                    return Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo);
 
                 }
 
@@ -1867,7 +1867,7 @@ namespace DLM.sapgui
 
         public List<FAGLB03> FAGLB03(bool cadastrar,  int ano = 2022,  string conta = "3111003011", string empresa_de = "1100", string empresa_ate = "1200")
         {
-            string arquivo = $"{Cfg.Init.DIR_APPDATA}FAGLB03.{ano}.{conta}.{empresa_de}.{empresa_ate}.{Cfg.Init.DATA_TEXT}.txt";
+            var arquivo = $"{Cfg.Init.DIR_APPDATA}FAGLB03.{ano}.{conta}.{empresa_de}.{empresa_ate}.{Cfg.Init.DATA_TEXT}.txt";
 
 
             if (!arquivo.Delete())
@@ -1877,9 +1877,9 @@ namespace DLM.sapgui
 
 
 
-            string pasta = Utilz.getPasta(arquivo);
-            string nome = arquivo.getNome();
-            string ext = arquivo.getExtensao();
+            var pasta = Utilz.getPasta(arquivo);
+            var nome = arquivo.getNome();
+            var ext = arquivo.getExtensao();
 
             //session.findById("wnd[0]/tbar[0]/okcd").text = "faglb03"
             this.SessaoSAP.StartTransaction("faglb03");

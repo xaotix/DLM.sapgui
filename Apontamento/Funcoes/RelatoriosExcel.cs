@@ -14,14 +14,14 @@ namespace DLM.painel
 
         public static bool RelatorioAvanco(PLAN_BASE item, bool pecas = true, bool abrir = true)
         {
-            var destino = Conexoes.Utilz.SalvarArquivo("xlsx");
+            var destino = "xlsx".SalvarArquivo();
             if (destino == null) { return false; }
 
 
             RelatorioAvanco(item.GetPecas(), pecas ? item.GetSubEtapas() : new List<PLAN_SUB_ETAPA>(), destino, abrir);
             return File.Exists(destino);
         }
-        public static bool RelatorioAvanco(List<PLAN_PECA> Pecas, List<PLAN_SUB_ETAPA> subetapas = null, string Destino = "", bool abrir = true)
+        public static bool RelatorioAvanco(List<PLAN_PECA> Pecas, List<PLAN_SUB_ETAPA> subetapas = null, string destino = "", bool abrir = true)
         {
             if (Pecas.Count == 0 && subetapas == null)
             {
@@ -44,19 +44,19 @@ namespace DLM.painel
                 return false;
             }
 
-            if (Destino == "" | Destino == null)
+            if (destino == "" | destino == null)
             {
-                Destino = Conexoes.Utilz.SalvarArquivo("xlsx");
+                destino = "xlsx".SalvarArquivo();
 
             }
-            if (Destino == "")
+            if (destino == "")
             {
                 return false;
             }
             try
             {
-                if (File.Exists(Destino)) { File.Delete(Destino); };
-                File.Copy(Vars.TEMPLATE_SAIDA_PECAS_RESUMO, Destino);
+                if (File.Exists(destino)) { File.Delete(destino); };
+                File.Copy(Vars.TEMPLATE_SAIDA_PECAS_RESUMO, destino);
             }
             catch (Exception EX)
             {
@@ -72,7 +72,7 @@ namespace DLM.painel
             {
                 using (var pck = new OfficeOpenXml.ExcelPackage())
                 {
-                    using (Stream stream = new FileStream(Destino,
+                    using (Stream stream = new FileStream(destino,
                                      FileMode.Open,
                                      FileAccess.Read,
                                      FileShare.ReadWrite))
@@ -443,10 +443,10 @@ namespace DLM.painel
                     }
 
                     w.Close();
-                    pck.SaveAs(new FileInfo(Destino));
+                    pck.SaveAs(new FileInfo(destino));
                     if (abrir)
                     {
-                        Process.Start(Destino);
+                        Process.Start(destino);
                     }
                 }
             }
@@ -481,7 +481,7 @@ namespace DLM.painel
 
             if (Destino == null)
             {
-                Destino = Conexoes.Utilz.SalvarArquivo("XLSX", "SELECIONE O DESTINO");
+                Destino = "xlsx".SalvarArquivo();
             }
             if (Destino == null)
             {
@@ -640,7 +640,7 @@ namespace DLM.painel
                 return false;
             }
 
-            string Destino = Conexoes.Utilz.SalvarArquivo("XLSX");
+            var Destino = "xlsx".SalvarArquivo();
             if (Destino == "")
             {
                 return false;

@@ -16,7 +16,7 @@ namespace DLM.sapgui
         public static List<ZCONTRATOS> ZCONTRATO(string arquivo)
         {
             var retorno = new ConcurrentBag<ZCONTRATOS>();
-            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
             foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
@@ -31,7 +31,7 @@ namespace DLM.sapgui
         public static List<ZPP0100> ZPP0100(string arquivo, out DLM.db.Tabela tabela)
         {
             var retorno = new ConcurrentBag<ZPP0100>();
-            tabela = Utilz.Excel.GetTabela(arquivo, true);
+            tabela = Utilz.Excel.GetPrimeiraAba(arquivo, true);
             foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
@@ -47,7 +47,7 @@ namespace DLM.sapgui
         public static List<ZPP0112> ZPP0112(string arquivo)
         {
             var retorno = new ConcurrentBag<ZPP0112>();
-            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
             foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
@@ -122,7 +122,7 @@ namespace DLM.sapgui
         public static List<FAGLL03> FAGLL03(string arquivo, string pedido)
         {
             var retorno = new ConcurrentBag<FAGLL03>();
-            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
             foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
@@ -137,7 +137,7 @@ namespace DLM.sapgui
         public static List<CJI3> CJI3(string arquivo)
         {
             var retorno = new ConcurrentBag<CJI3>();
-            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
             foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
@@ -153,7 +153,7 @@ namespace DLM.sapgui
         public static List<ZPMP> ZPMP(string arquivo, out DLM.db.Tabela tabela)
         {
             var retorno = new ConcurrentBag<ZPMP>();
-            tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
             foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
@@ -168,7 +168,7 @@ namespace DLM.sapgui
         public static List<ZPP0066N> ZPP0066N(string arquivo, bool semperfil)
         {
             var retorno = new ConcurrentBag<ZPP0066N>();
-            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
             foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
@@ -320,7 +320,7 @@ namespace DLM.sapgui
                 DBases.GetDB().Apagar("pep", $"%{Pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn);
 
                 var arquivo = dest + arq;
-                var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+                var t = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
                 var listacooisn = t.Linhas.Select(x => new List<object> {
                             /*0*/x[(int)TAB_ZPPCOOISN.MATERIAL].ToString(),
                             /*1*/x[(int)TAB_ZPPCOOISN.DENOMINDSTAND].ToString(),
@@ -504,7 +504,7 @@ namespace DLM.sapgui
             var retorno = new ConcurrentBag<CN47N>();
             var Tarefas = new List<Task>();
 
-            tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
             foreach (var linha in tabela.Linhas)
             {
                 Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new CN47N(linha))));
@@ -515,7 +515,7 @@ namespace DLM.sapgui
         }
         public static DLM.sapgui.FolhaMargem ZSD0031N(string arquivo)
         {
-            var tabela = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
             var plan = tabela.Linhas;
             var ret = new DLM.sapgui.FolhaMargem();
             try
