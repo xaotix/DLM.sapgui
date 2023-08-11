@@ -903,8 +903,10 @@ namespace DLM.painel
             if (_pedidos_clean == null | update)
             {
                 _pedidos_clean = new List<string>();
-                _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_cn47n} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x["pedido"].Valor).ToList());
-                _pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x["pedido"].Valor).ToList());
+
+                _pedidos_clean.AddRange(DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pedidos_copia).Linhas.Select(x => x["pedido"].Valor).Distinct().ToList());
+                //_pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_cn47n} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x["pedido"].Valor).ToList());
+                //_pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x["pedido"].Valor).ToList());
 
                 _pedidos_clean = _pedidos_clean.Distinct().ToList().FindAll(x => x.Length > 3);
             }

@@ -12,26 +12,32 @@ namespace DLM.sapgui
    public partial class Funcoes
     {
 
-        public static void RodaScript(List<string> Script, string Destino)
+        public static void RodaScript(List<string> Script)
         {
 
             if (Script.Count() > 0)
             {
                 try
                 {
-                    if (File.Exists(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp))
+                    var ARQ_TMP = $"{Cfg.Init.DIR_SCRIPTS}DLMScript_{Conexoes.Utilz.RandomString(2)}.vbs";
+                    denovo:
+                    if (ARQ_TMP.Exists())
                     {
-                        File.Delete(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp);
-
+                       if(!ARQ_TMP.Delete(false))
+                        {
+                            ARQ_TMP = $"{Cfg.Init.DIR_SCRIPTS}DLMScript_{Conexoes.Utilz.RandomString(2)}.vbs";
+                            goto denovo;
+                        }
                     }
-                    Conexoes.Utilz.Arquivo.Gravar(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp, Script.ToList());
-                    Process scriptProc = new Process();
-                    scriptProc.StartInfo.FileName = Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp.getNome() + ".vbs";
-                    scriptProc.StartInfo.WorkingDirectory = Utilz.getPasta(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp); //<---very important 
-                                                                                                                       //scriptProc.StartInfo.Arguments = "//B //Nologo vbscript.vbs";
-                    scriptProc.StartInfo.WindowStyle = ProcessWindowStyle.Maximized; //prevent console window from popping up
+                    
+                    Conexoes.Utilz.Arquivo.Gravar(ARQ_TMP, Script.ToList());
+                    var scriptProc = new Process();
+                    scriptProc.StartInfo.FileName = ARQ_TMP;
+                    scriptProc.StartInfo.WorkingDirectory = Utilz.getPasta(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp); 
+
+                    scriptProc.StartInfo.WindowStyle = ProcessWindowStyle.Maximized; 
                     scriptProc.Start();
-                    scriptProc.WaitForExit(); // <-- Optional if you want program running until your script exit
+                    scriptProc.WaitForExit(); 
                     scriptProc.Close();
                 }
                 catch (Exception ex)

@@ -186,19 +186,39 @@ namespace DLM.sapgui
 
             //19/06/2020 - aumentei o filtro para pegar a subetapa. serão mais consultas, no entanto evita os erros.
             /*12/05/2022 - mudei a chamada para um procedure.*/
-            var chamada = $"call comum.getzppcoisn_qtd_pcs('{Pedido.Replace("*", "").Replace(" ", "")}')";
+            var ped = Pedido.Replace("*", "").Replace(" ", "");
+            var chamada = $"call comum.getzppcoisn_qtd_pcs('{ped}')";
             var consulta = DBases.GetDB().Consulta(chamada);
             var peps = consulta.Linhas.Select(x => x["pep"].Valor).ToList();
-            foreach (var pep in peps)
+
+            var total = consulta.Linhas.Select(x => x["pcs"].Int()).Sum();
+            if(total>1500)
             {
-                var pecas = DLM.painel.Consultas.GetPecasZPMP(pep).ToList();
+                foreach (var pep in peps)
+                {
+                    var pecas = DLM.painel.Consultas.GetPecasZPMP(pep).ToList();
+                    if (pecas.Count > 0)
+                    {
+                        DLM.painel.Consultas.MatarExcel(false);
+                        ZPPCOOISN(destino, pep, pecas, buffer);
+                        retorno.AddRange(pecas);
+                    }
+                }
+            }
+            else
+            {
+                /*11.08.2023 - simplificar chamadas -> pedidos com menos de 6 mil peças faz a coois completa*/
+                var pecas = DLM.painel.Consultas.GetPecasZPMP(ped).ToList();
                 if (pecas.Count > 0)
                 {
                     DLM.painel.Consultas.MatarExcel(false);
-                    ZPPCOOISN(destino, pep, pecas, buffer);
+                    ZPPCOOISN(destino, ped, pecas, buffer);
                     retorno.AddRange(pecas);
                 }
             }
+
+
+           
             return retorno;
         }
         private static void ZPPCOOISN(string dest, string Pedido, List<DLM.painel.PLAN_PECA_ZPMP> retorno, bool buffer = false)

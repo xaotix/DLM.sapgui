@@ -144,24 +144,7 @@ namespace DLM.painel
             return descricao;
         }
 
-        private List<string> _pedidos_clean { get; set; }
-        public List<string> pedidos_clean
-        {
-            get
-            {
-                if (_pedidos_clean == null)
-                {
-                    if (this.contrato == "")
-                    {
-                        return new List<string>();
-                    }
-                    _pedidos_clean = DLM.painel.Consultas.GetPedidosClean(new List<string> {this.contrato },false);
 
-
-                }
-                return _pedidos_clean;
-            }
-        }
         public List<PLAN_PEDIDO> pedidos
         {
             get
