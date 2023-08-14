@@ -587,7 +587,7 @@ namespace DLM.painel
                             pecas_aba_excel.Cells[l0 + l, c0 + 30].Value = fim;
                         }
                         pecas_aba_excel.Cells[l0 + l, c0 + 31].Value = atualizado;
-                        pecas_aba_excel.Cells[l0 + l, c0 + 32].Value = linha["status"].Valor;
+                        pecas_aba_excel.Cells[l0 + l, c0 + 32].Value = linha["status_sap"].Valor;
                         pecas_aba_excel.Cells[l0 + l, c0 + 33].Value = linha["pintura"].Valor;
                         pecas_aba_excel.Cells[l0 + l, c0 + 34].Value = linha["esquema"].Valor;
                         pecas_aba_excel.Cells[l0 + l, c0 + 35].Value = linha["esquema_desc"].Valor;
