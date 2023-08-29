@@ -360,11 +360,10 @@ namespace DLM.sapgui
                             /*15*/x[(int)TAB_ZPPCOOISN.ESPESSURA].ToString(),
                             /*16*/x[(int)TAB_ZPPCOOISN.TIPO_DE_ACO].ToString(),
                             /*17*/x[(int)TAB_ZPPCOOISN.MATERIA_PRIMA].ToString(),
-                            /*18*/x[(int)TAB_ZPPCOOISN.OPERACAO].ToString(),
-                            /*19*/x[(int)TAB_ZPPCOOISN.MARCA].ToString(),
-                            /*20*/TratarPEP(x[(int)TAB_ZPPCOOISN.ELEMENTO_PEP].ToString()),
-                            /*21*/"",
-                            /*22*/x[(int)TAB_ZPPCOOISN.DESENHO_2].ToString(),
+                            /*18*/x[(int)TAB_ZPPCOOISN.MARCA].ToString(),
+                            /*19*/TratarPEP(x[(int)TAB_ZPPCOOISN.ELEMENTO_PEP].ToString()),
+                            /*20*/"",
+                            /*21*/x[(int)TAB_ZPPCOOISN.DESENHO_2].ToString(),
                         }).Distinct().ToList();
 
                 var min = Cfg.Init.DataDummy();
