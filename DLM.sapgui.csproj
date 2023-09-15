@@ -45,9 +45,6 @@
     <Reference Include="Comum">
       <HintPath>..\..\DLLS\Comum.dll</HintPath>
     </Reference>
-    <Reference Include="Conexoes">
-      <HintPath>..\..\DLLS\Conexoes.dll</HintPath>
-    </Reference>
     <Reference Include="DotNetZip">
       <HintPath>..\..\DLLS\DotNetZip.dll</HintPath>
     </Reference>
@@ -277,6 +274,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DLM\DLM.csproj">
+      <Project>{def82547-9fab-457e-89bf-c10ed1dd9162}</Project>
+      <Name>DLM</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
