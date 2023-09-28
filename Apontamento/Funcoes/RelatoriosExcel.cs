@@ -147,8 +147,8 @@ namespace DLM.painel
                             pecas_aba_excel.Cells[l0 + l, c0 + 23].Value = t.esq_de_pintura;
                             pecas_aba_excel.Cells[l0 + l, c0 + 24].Value = t.Esquema.Getdescricao();
                             pecas_aba_excel.Cells[l0 + l, c0 + 25].Value = t.codigo_materia_prima_sap;
-                            pecas_aba_excel.Cells[l0 + l, c0 + 26].Value = t.bobina.cor1;
-                            pecas_aba_excel.Cells[l0 + l, c0 + 27].Value = t.bobina.cor2;
+                            pecas_aba_excel.Cells[l0 + l, c0 + 26].Value = t.bobina.Cor1;
+                            pecas_aba_excel.Cells[l0 + l, c0 + 27].Value = t.bobina.Cor2;
                             pecas_aba_excel.Cells[l0 + l, c0 + 28].Value = t.tipo_aco;
                             pecas_aba_excel.Cells[l0 + l, c0 + 29].Value = t.Complexidade;
                             pecas_aba_excel.Cells[l0 + l, c0 + 30].Value = t.DENOMINDSTAND;
@@ -756,8 +756,8 @@ namespace DLM.painel
                                             excel_peca.Cells[$"AH{L1}"].Value = peca.esq_de_pintura;
                                             excel_peca.Cells[$"AI{L1}"].Value = peca.Esquema.Getdescricao();
                                             excel_peca.Cells[$"AJ{L1}"].Value = peca.codigo_materia_prima_sap;
-                                            excel_peca.Cells[$"AK{L1}"].Value = peca.bobina.cor1;
-                                            excel_peca.Cells[$"AL{L1}"].Value = peca.bobina.cor2;
+                                            excel_peca.Cells[$"AK{L1}"].Value = peca.bobina.Cor1;
+                                            excel_peca.Cells[$"AL{L1}"].Value = peca.bobina.Cor2;
                                             excel_peca.Cells[$"AM{L1}"].Value = peca.tipo_aco;
                                             excel_peca.Cells[$"AN{L1}"].Value = peca.Complexidade;
                                             excel_peca.Cells[$"AO{L1}"].Value = peca.DENOMINDSTAND;
