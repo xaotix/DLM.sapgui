@@ -63,7 +63,7 @@ namespace DLM.sapgui
         {
             get
             {
-                return this.ano + "/" + this.mes.ToString().PadLeft(2, '0');
+                return this.ano + "/" + this.mes.String(2);
             }
         }
         [Browsable(false)]
@@ -72,7 +72,7 @@ namespace DLM.sapgui
         {
             get
             {
-                return this.ano + "/" + this.mes.ToString().PadLeft(2, '0') + "/" + this.dia.ToString().PadLeft(2, '0');
+                return this.ano + "/" + this.mes.String(2) + "/" + this.dia.String(2);
             }
         }
         [Browsable(false)]
@@ -86,7 +86,7 @@ namespace DLM.sapgui
         {
             get
             {
-                return ano + "/" + mes.ToString().PadLeft(2,'0') + " - " + Tipo_Lancamento.ToString();
+                return ano + "/" + mes.String(2) + " - " + Tipo_Lancamento.ToString();
             }
         }
         [ReadOnly(true)]

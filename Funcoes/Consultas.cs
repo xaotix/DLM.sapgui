@@ -1685,8 +1685,8 @@ namespace DLM.sapgui
              
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/usr/btn%#AUTOTEXT009")).Press();
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_POSID-LOW")).Text = Pedido;
-                    //((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-LOW")).Text = antes.Day.ToString().PadLeft(2, '0') + "." + antes.Month.ToString().PadLeft(2, '0') + "." + antes.Year;
-                    //((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-HIGH")).Text = agora.Day.ToString().PadLeft(2, '0') + "." + agora.Month.ToString().PadLeft(2, '0') + "." + agora.Year;
+                    //((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-LOW")).Text = antes.Day.String(2) + "." + antes.Month.String(2) + "." + antes.Year;
+                    //((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-HIGH")).Text = agora.Day.String(2) + "." + agora.Month.String(2) + "." + agora.Year;
                     //09/04/2020 - removi as datas pq o zpp0100 nao precisa mais
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-LOW")).Text = "";
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-HIGH")).Text = "";
@@ -2030,8 +2030,8 @@ namespace DLM.sapgui
 
                     ((GuiRadioButton)this.SessaoSAP.FindById("wnd[0]/usr/radX_AISEL")).Select();
 
-                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtSO_BUDAT-LOW")).Text = antes.Day.ToString().PadLeft(2, '0') + "." + antes.Month.ToString().PadLeft(2, '0') + "." + antes.Year;
-                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtSO_BUDAT-HIGH")).Text = agora.Day.ToString().PadLeft(2, '0') + "." + agora.Month.ToString().PadLeft(2, '0') + "." + agora.Year;
+                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtSO_BUDAT-LOW")).Text = antes.Day.String(2) + "." + antes.Month.String(2) + "." + antes.Year;
+                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtSO_BUDAT-HIGH")).Text = agora.Day.String(2) + "." + agora.Month.String(2) + "." + agora.Year;
 
                     ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtPA_VARI")).Text = "/PAINEL";
 
