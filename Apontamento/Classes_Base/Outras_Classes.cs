@@ -673,7 +673,7 @@ namespace DLM.painel
 
         public double quantidade { get; set; } = 0;
 
-        public Conexoes.Bobina Bobina { get; set; } = new Conexoes.Bobina();
+        public Bobina Bobina { get; set; } = new Bobina();
 
         public Materia_Prima(List<PLAN_PECA> pecas)
         {
@@ -707,7 +707,7 @@ namespace DLM.painel
                     this.Bobina = DBases.GetBancoRM().GetBobina(this.codigo);
                     if (this.Bobina == null)
                     {
-                        this.Bobina = new Conexoes.Bobina();
+                        this.Bobina = new Bobina();
                     }
                 }
             }

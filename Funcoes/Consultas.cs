@@ -1865,14 +1865,14 @@ namespace DLM.sapgui
         public static DateTime antes { get; set; } = DateTime.Now.AddYears(-4);
         public static DateTime agora { get; set; } = DateTime.Now.AddYears(1);
 
-        public List<FAGLB03> FAGLB03(bool cadastrar,  int ano = 2022,  string conta = "3111003011", string empresa_de = "1100", string empresa_ate = "1200")
+        public List<SAPFAGLB03> FAGLB03(bool cadastrar,  int ano = 2022,  string conta = "3111003011", string empresa_de = "1100", string empresa_ate = "1200")
         {
             var arquivo = $"{Cfg.Init.DIR_APPDATA}FAGLB03.{ano}.{conta}.{empresa_de}.{empresa_ate}.{Cfg.Init.DATA_TEXT}.txt";
 
 
             if (!arquivo.Delete())
             {
-                return new List<FAGLB03>();
+                return new List<SAPFAGLB03>();
             }
 
 
@@ -1962,7 +1962,7 @@ namespace DLM.sapgui
             }
 
 
-            return new List<FAGLB03>();
+            return new List<SAPFAGLB03>();
         }
         public void Press(string obj)
         {

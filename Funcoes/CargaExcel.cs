@@ -59,17 +59,17 @@ namespace DLM.sapgui
             }
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
-        public static List<FAGLB03> FAGLB03(string arquivo, string empresa_de = "1100", string empresa_ate = "1200", int ano = 2022, string conta = "3111003011", bool cadastrar = true)
+        public static List<SAPFAGLB03> FAGLB03(string arquivo, string empresa_de = "1100", string empresa_ate = "1200", int ano = 2022, string conta = "3111003011", bool cadastrar = true)
         {
             var linhas = Conexoes.Utilz.Arquivo.Ler(arquivo);
-            List<FAGLB03> retorno = new List<FAGLB03>();
+            List<SAPFAGLB03> retorno = new List<SAPFAGLB03>();
             foreach (var linha in linhas)
             {
                 var valores = linha.Split('|').ToList().Select(x => x.TrimStart().TrimEnd()).ToList();
 
                 if (valores.Count >= (int)TAB_FAGLB03.Dt_lcto)
                 {
-                    FAGLB03 pp = new FAGLB03(valores, empresa_de, empresa_ate, ano, conta);
+                    SAPFAGLB03 pp = new SAPFAGLB03(valores, empresa_de, empresa_ate, ano, conta);
                     retorno.Add(pp);
                 }
             }

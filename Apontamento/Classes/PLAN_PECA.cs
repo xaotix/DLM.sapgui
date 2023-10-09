@@ -74,7 +74,12 @@ namespace DLM.painel
             get
             {
                 var DUMMY = new SAP_ESQ_PIN() { ESQUEMA_DESCR = "", PINTURA = this.TIPO_DE_PINTURA };
-                if (this.TIPO_DE_PINTURA.ToUpper().Contains("SEM") | this.TIPO_DE_PINTURA.ToUpper().Contains("GALVANIZADO") | this.esq_de_pintura.Replace("0", "") == "" | this.TIPO_DE_PINTURA == "")
+                if (
+                    this.TIPO_DE_PINTURA.ToUpper().StartsWith("SEM") | 
+                    this.TIPO_DE_PINTURA.ToUpper().Contains("GALVANIZADO") | 
+                    this.esq_de_pintura.Replace("0", "") == "" | 
+                    this.TIPO_DE_PINTURA == ""
+                    )
                 {
                     return DUMMY;
                 }
@@ -468,36 +473,9 @@ namespace DLM.painel
         {
             if (this._bobina == null)
             {
-                if (this.codigo_materia_prima_sap.Replace("0", "") == "")
-                {
-                    this._bobina = new Bobina();
-
-                }
-                else
-                {
-                    var ts = Buffer.Bobinas.Find(x => x.SAP == this.codigo_materia_prima_sap);
-                    if (ts == null)
-                    {
-                        var t = DBases.GetBancoRM().GetBobina(this.codigo_materia_prima_sap);
-                        if (t != null)
-                        {
-                            Buffer.Bobinas.Add(t);
-                            this._bobina = t;
-                        }
-                        else
-                        {
-                            Bobina b = new Bobina() { SAP = this.codigo_materia_prima_sap };
-                            Buffer.Bobinas.Add(b);
-                            this._bobina = b;
-
-                        }
-                    }
-
-                    else
-                    {
-                        this._bobina = ts;
-                    }
-                }
+                var nbob = DBases.GetBancoRM().GetBobina(this.codigo_materia_prima_sap);
+                Buffer.Bobinas.Add(nbob);
+                this._bobina = nbob;
             }
         }
 
