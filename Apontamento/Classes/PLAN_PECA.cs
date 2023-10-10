@@ -439,7 +439,7 @@ namespace DLM.painel
                 {
                     return codigo_materia_prima_sap;
                 }
-                else return this.espessura.String() + (this.tipo_aco != "" ? " - " + this.tipo_aco : "");
+                else return this.espessura.String(2) + (this.tipo_aco != "" ? " - " + this.tipo_aco : "");
             }
         }
 
