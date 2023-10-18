@@ -1523,7 +1523,7 @@ namespace DLM.sapgui
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //DLM.log.Log(ex);
             }
@@ -1532,7 +1532,7 @@ namespace DLM.sapgui
                 ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtTCNT-PROF_DB")).Text = "PS0000000001";
                 ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //DLM.log.Log(ex);
             }
