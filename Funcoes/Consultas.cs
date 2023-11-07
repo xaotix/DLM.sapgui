@@ -1887,7 +1887,7 @@ namespace DLM.sapgui
 
             return new List<SAPFAGLB03>();
         }
-        /*ESSE CARA DÁ OS CUSTOS DA OBRA*/
+        /*CUSTOS DA OBRA*/
         public bool FAGLL03(List<string> peps, string destino, string ARQUIVO)
         {
 
@@ -1992,7 +1992,8 @@ namespace DLM.sapgui
 
 
 
-        public bool FB1LN(string arquivo, DateTime data, string layout = "PADRAOJR", bool msgs = false)
+        /*RELATÓRIO DE PARTIDAS INDIVIDUAIS DE FORNECEDORES*/
+        public bool FBL1N(string arquivo, DateTime data, string layout = "PADRAOJR", bool msgs = false)
         {
 
             var pasta = arquivo.getPasta();
@@ -2007,7 +2008,7 @@ namespace DLM.sapgui
                 {
                     Retornar();
                     //session.findById("wnd[0]/tbar[0]/okcd").Text = "/nfbl1n"
-                    this.SessaoSAP.StartTransaction("/nfbl1n");
+                    this.SessaoSAP.StartTransaction("fbl1n");
                     //session.findById("wnd[0]/mbar/menu[2]/menu[0]/menu[0]").Select
                     ((GuiMenu)this.SessaoSAP.FindById("wnd[0]/mbar/menu[2]/menu[0]/menu[0]")).Select();
                     //session.findById("wnd[1]/usr/txtV-LOW").Text = "PADRAOJR"
@@ -2030,8 +2031,9 @@ namespace DLM.sapgui
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = nomeArq;
                     //session.findById("wnd[1]/tbar[0]/btn[11]").press
                     ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[11]")).Press();
-
+                    this.SessaoSAP.EndTransaction();
                     Retornar();
+                    DLM.painel.Consultas.MatarExcel(false);
                 }
                 else
                 {
@@ -2058,6 +2060,80 @@ namespace DLM.sapgui
             return arquivo.Exists();
         }
 
+
+        public bool ZDRE(string arquivo, DateTime data, string unidade = "1200", bool msgs = false)
+        {
+
+            var pasta = arquivo.getPasta();
+            var nomeArq = arquivo.getNome(true);
+            try
+            {
+                if (File.Exists(arquivo))
+                {
+                    File.Delete(arquivo);
+                }
+                if (this.IsActive())
+                {
+                    Retornar();
+                     //session.findById("wnd[0]/tbar[0]/okcd").Text = "/nzdre"
+                    this.SessaoSAP.StartTransaction("zdre");
+                     //session.findById("wnd[0]/usr/txt$0F-RY00").Text = "2023"
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txt$0F-RY00")).Text = data.Year.String();
+                    //session.findById("wnd[0]/usr/ctxt$0FLLDNR").Text = "0L"
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxt$0FLLDNR")).Text = "0L";
+                    //session.findById("wnd[0]/usr/ctxt$0G_BUKV").Text = "1200"
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxt$0G_BUKV")).Text = unidade;
+                    //session.findById("wnd[0]/usr/ctxt$0G_BUKB").Text = "1200"
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxt$0G_BUKB")).Text = unidade;
+                    //session.findById("wnd[0]/usr/txt$0R-PERF").Text = Mes
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txt$0R-PERF")).Text = data.Month.String(2);
+                    //session.findById("wnd[0]/usr/txt$0R-PERT").Text = Mes
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txt$0R-PERT")).Text = data.Month.String(2);
+                    //session.findById("wnd[0]/tbar[1]/btn[8]").press
+                    ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
+
+                    //session.findById("wnd[0]/mbar/menu[6]/menu[5]/menu[2]/menu[1]").Select
+                    ((GuiMenu)this.SessaoSAP.FindById("wnd[0]/mbar/menu[6]/menu[5]/menu[2]/menu[1]")).Select();
+                    //session.findById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]").Select
+                    ((GuiMenu)this.SessaoSAP.FindById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]")).Select();
+
+                    //session.findById("wnd[1]/tbar[0]/btn[0]").press
+                    ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
+                    //session.findById("wnd[1]/usr/ctxtDY_PATH").Text = "C:\temp\"
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_PATH")).Text = pasta;
+                    //session.findById("wnd[1]/usr/ctxtDY_FILENAME").Text = "DRE.txt"
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = arquivo;
+                    //session.findById("wnd[1]/tbar[0]/btn[11]").press
+                    ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[11]")).Press();
+
+                    this.SessaoSAP.EndTransaction();
+                    Retornar();
+                    DLM.painel.Consultas.MatarExcel(false);
+                }
+                else
+                {
+                    if (msgs)
+                    {
+
+                        MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    }
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (msgs)
+                {
+                    Conexoes.Utilz.Alerta(ex);
+                }
+                else
+                {
+                    DLM.log.Log(ex);
+                }
+                return false;
+            }
+            return arquivo.Exists();
+        }
 
         public SAP_Consulta_Macro()
         {
