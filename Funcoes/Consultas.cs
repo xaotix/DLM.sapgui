@@ -12,6 +12,9 @@ namespace DLM.sapgui
     //created a class for the SAP app, connection, and session objects as well as for common methods. 
     public class SAP_Consulta_Macro
     {
+        public static DateTime antes { get; set; } = DateTime.Now.AddYears(-4);
+        public static DateTime agora { get; set; } = DateTime.Now.AddYears(1);
+
         public GuiSession NovaJanela()
         {
             //session.findById("wnd[0]/tbar[0]/okcd").text = "/o"
@@ -46,7 +49,7 @@ namespace DLM.sapgui
         }
         public GuiFrameWindow GetJanela()
         {
-            if (!this.Carregar_sap()) { return null; }
+            if (!this.IsActive()) { return null; }
             try
             {
                 return ((GuiFrameWindow)this.SessaoSAP.FindById("wnd[0]"));
@@ -56,7 +59,6 @@ namespace DLM.sapgui
             }
             return null;
         }
-        public static bool Autologin { get; set; } = false;
         public GuiSession SessaoSAP
         {
             get
@@ -97,83 +99,38 @@ namespace DLM.sapgui
 
         }
 
-        private void Login(string myclient = "800", string mylogin = "ma1516", string mypass = "", string mylang = "PT")
-        {
-            GuiTextField client = (GuiTextField)this.SessaoSAP.ActiveWindow.FindByName("RSYST-MANDT", "GuiTextField");
-            GuiTextField login = (GuiTextField)this.SessaoSAP.ActiveWindow.FindByName("RSYST-BNAME", "GuiTextField");
-            GuiTextField pass = (GuiTextField)this.SessaoSAP.ActiveWindow.FindByName("RSYST-BCODE", "GuiPasswordField");
-            GuiTextField language = (GuiTextField)this.SessaoSAP.ActiveWindow.FindByName("RSYST-LANGU", "GuiTextField");
 
-            client.SetFocus();
-            client.Text = myclient;
-            login.SetFocus();
-            login.Text = mylogin;
-            pass.SetFocus();
-            pass.Text = mypass;
-            language.SetFocus();
-            language.Text = mylang;
 
-            //Press the green checkmark button which is about the same as the enter key 
-            GuiButton btn = (GuiButton)SessaoSAP.FindById("/app/con[0]/ses[0]/wnd[0]/tbar[0]/btn[0]");
-            btn.SetFocus();
-            btn.Press();
 
-        }
-        public void Logar(string ma = "", string senha = "")
-
-        {
-            Conexoes.Utilz.Matar("saplogon.exe");
-            Conexoes.Utilz.Matar("ConsultaAvanco.exe");
-            Conexoes.Utilz.Matar("saplogon");
-            this.openSap("PRODUCAO");
-            this.Login("800", ma, senha, "PT");
-        }
-        
         /*ESSE CARA TENTA ABRIR UMA INSTÂNCIA PENDURADA NA GUI DO SAP*/
-        public bool Carregar_sap()
+        public bool IsActive()
         {
             try
             {
-                if(SessaoSAP!=null)
+                if (SessaoSAP != null)
                 {
-                   if (SessaoSAP.IsActive)
+                    if (SessaoSAP.IsActive)
                     {
-                    return true;
+                        return true;
                     }
                 }
-                if(DLM.sapgui.SAP_Consulta_Macro.Autologin)
-                {
-                Logar();
-                }
-                //if(SessaoSAP==null)
-                //{
-                //    var secoes = GetSecoes();
-                //    if(secoes.Count>0)
-                //    {
-                //        SessaoSAP = secoes.Last();
-                //    }
-                //}
-
-
                 return SessaoSAP != null;
             }
-            catch (Exception )
+            catch (Exception)
             {
 
-                return false;  
+                return false;
             }
-
-
         }
         public List<GuiSession> GetSecoes()
         {
-            List<GuiSession> retorno = new List<GuiSession>();
-            var s = GetConexao();
-            if(s==null)
+            var retorno = new List<GuiSession>();
+            var conn = GetConexao();
+            if(conn==null)
             {
                 return new List<GuiSession>();
             }
-            foreach(GuiSession gui in s.Sessions)
+            foreach(GuiSession gui in conn.Sessions)
             {
                 retorno.Add(gui);
             }
@@ -184,7 +141,7 @@ namespace DLM.sapgui
         {
             try
             {
-                SapROTWr.CSapROTWrapper sapROT = new SapROTWr.CSapROTWrapper();
+                var sapROT = new SapROTWr.CSapROTWrapper();
                 object objSapGui = sapROT.GetROTEntry("SAPGUI");
 
                 object objEngine = objSapGui.GetType().InvokeMember("GetScriptingEngine", System.Reflection.BindingFlags.InvokeMethod, null, objSapGui, null);
@@ -204,17 +161,14 @@ namespace DLM.sapgui
             return null;
         }
 
-        /*ESSE CARA DÁ O CRONOGRAMA*/
-        public bool CN47N(string Pedido, string destino, string ARQUIVO, bool msgs = false)
+        /*CRONOGRAMA*/
+        public bool CN47N(string Pedido, string destino, string nomeArq, bool msgs = false)
         {
-
+            var arquivo = $"{destino}{nomeArq}";
             try
             {
-                if (File.Exists(destino + ARQUIVO))
-                {
-                    File.Delete(destino + ARQUIVO);
-                }
-                if (this.Carregar_sap())
+                arquivo.Delete();
+                if (this.IsActive())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("CN47N");
@@ -227,15 +181,15 @@ namespace DLM.sapgui
                     //((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
 
 
-                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO);
-                    if (!File.Exists(destino + ARQUIVO))
+                    ExportarExcel(destino, nomeArq, Cfg.Init.SAP_SCRIPT_IMPRESSAO);
+                    if (!File.Exists(arquivo))
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/cntlALVCONTAINER/shellcont/shell", false);
-                        ExportaExcelNativo(destino, ARQUIVO, ctrl);
+                        ExportaExcelNativo(destino, nomeArq, ctrl);
                     }
                     this.SessaoSAP.EndTransaction();
                     DLM.painel.Consultas.MatarExcel(false);
-                    return File.Exists(destino + ARQUIVO);
+                    return File.Exists(arquivo);
 
 
                 }
@@ -258,20 +212,12 @@ namespace DLM.sapgui
             }
 
         }
-
-        /*ABRE O PROJETO*/
-        public GuiTree SetNo(string num)
-        {
-            
-
-            return null;
-        }
+        
         public void Esc()
         {
             try
             {
                 ((GuiFrameWindow)this.SessaoSAP.FindById("wnd[0]")).SendVKey(12);
-
             }
             catch (Exception)
             {
@@ -312,15 +258,181 @@ namespace DLM.sapgui
             }
 
         }
-        public CJ20N_No CJ20NGetProjeto(string Projeto,bool esconder_erros = false)
+        public void Desbloqueia_Secao()
         {
-           var w = Conexoes.Utilz.Wait(5, "Abrindo projeto...." + Projeto);
+            this.SessaoSAP.UnlockSessionUI();
+        }
+        public void Bloquear_Secao()
+        {
+            this.SessaoSAP.LockSessionUI();
+        }
+        public void Retornar()
+        {
+            try
+            {
+                var st = (this.SessaoSAP.FindById("wnd[0]/usr/btnSTARTBUTTON"));
+                if (st != null)
+                {
+                    ((GuiButton)st).Press();
+                }
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
+                ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtTCNT-PROF_DB")).Text = "PS0000000001";
+                ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
+            }
+            catch (Exception)
+            {
+            }
+        }
+        public void Press(string obj)
+        {
+            ((GuiButton)this.SessaoSAP.FindById(obj)).Press();
+        }
+        public void SetTexto(string obj, string valor)
+        {
+            ((GuiCTextField)this.SessaoSAP.FindById(obj)).Text = valor;
+        }
+        public void SendKey(int key, string wind = "wnd[0]")
+        {
+            ((GuiFrameWindow)this.SessaoSAP.FindById(wind)).SendVKey(key);
+        }
+        /*cancelar: session.findById("wnd[0]/tbar[0]/btn[3]").press*/
+        /*ESSE CARA TENTA EXPORTAR EM EXCEL A TELA QUE ESTÁ EM EXECUÇÃO NO SAP*/
+        private void ExportarExcel(string destino, string NOME, string SCRIPT_ORIGEM)
+        {
+            var SCR = Conexoes.Utilz.Arquivo.Ler(SCRIPT_ORIGEM).Select(X => X.Replace("$NOME$", NOME).Replace("$TAM$", (NOME.Length - 1).ToString()).Replace("$DESTINO$", destino)).ToList();
+            Funcoes.RodaScript(SCR);
+
+        }
+        private void ExportaExcelNativo(string destino, string NOME, object ctrl)
+        {
+            try
+            {
+                /*CN47N*/
+                if (ctrl == null)
+                {
+                    ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/cntlALVCONTAINER/shellcont/shell", false);
+                }
+                /*ZPP066N*/
+                if (ctrl == null)
+                {
+                    ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell/shellcont/shell", false);
+                }
+                /*ZPMP*/
+                if (ctrl == null)
+                {
+                    ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
+                }
+                if (ctrl == null)
+                {
+                    //MessageBox.Show("Não conseguir exportar em excel o arquivo " + destino + "\nNão encontrei a chamada de menu do SAP para exportação. Contacte suporte.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                int tentativas = 0;
+            denovo:
+                var shellToolbarContextButton = ((GuiShell)ctrl);
+                var btnToolbarContextButton = shellToolbarContextButton as GuiGridView;
+                btnToolbarContextButton?.ContextMenu();
+                btnToolbarContextButton?.SelectContextMenuItem("&XXL");
+
+
+                ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
+
+
+
+                ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_PATH")).Text = destino;
+                ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = NOME;
+                ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[11]")).Press();
+
+
+                var arquivo = destino + NOME;
+                if (!arquivo.Exists() && tentativas == 0)
+                {
+                    ctrl = this.SessaoSAP.FindById("wnd[0]/usr/shell/shellcont/shell", false);
+                    tentativas++;
+                    goto denovo;
+                }
+            }
+            catch (Exception ex)
+            {
+                DLM.log.Log(ex);
+                //throw;
+            }
+        }
+        public string GetTipo(string componente)
+        {
+            var comp = this.SessaoSAP.FindById(componente);
+            if (comp != null)
+            {
+                return comp.Type.ToString();
+            }
+            return "";
+        }
+
+
+
+        public CJ20N_No CJ20N_GetRaiz(string key)
+        {
+            GuiTree tt = null;
+
+            try
+            {
+                tt = ((GuiTree)this.SessaoSAP.FindById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell"));
+
+                // session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").topNode = "000002"
+                tt.TopNode = key;
+                // session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").selectedNode = "000002"
+                tt.SelectedNode = key;
+                // session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").expandNode "000002"
+                //tt.ExpandNode(key);
+                //session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").nodeContextMenu "000002"
+                tt.NodeContextMenu(key);
+
+                string pep = "";
+                string desc = "";
+                string chave_pep = "";
+
+                desc = tt.GetNodeTextByKey(key);
+                pep = tt.GetItemText(key, "TECH_KEY");
+
+                CJ20N_No Raiz = new CJ20N_No(pep, desc, key, chave_pep, tt, this);
+                if (Raiz.tipo == CJ20N_Tipo.Desconhecido | Raiz.tipo == CJ20N_Tipo.Tarefa)
+                {
+                    try
+                    {
+                        Raiz.chave_pep = ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/subDETAIL_AREA:SAPLCNPB_M:1010/subVIEW_AREA:SAPLCONW:1001/tabsTABSTRIP_1000/tabpARBD/ssubSUBSCR_1000:SAPLCONW:1310/ctxtAFVGD-PROJN")).Text;
+
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                }
+
+                return Raiz;
+
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return null;
+
+        }
+        public CJ20N_No CJ20N_GetProjeto(string Projeto, bool esconder_erros = false)
+        {
+            var w = Conexoes.Utilz.Wait(5, "Abrindo projeto...." + Projeto);
             this.CJ20N_Sair(false);
             w.somaProgresso();
             try
             {
 
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     // session.findById("wnd[0]/tbar[0]/okcd").text = "cj20n"
                     this.SessaoSAP.StartTransaction("CJ20N");
@@ -394,7 +506,7 @@ namespace DLM.sapgui
 
                     w.somaProgresso();
                     string key = "000002";
-                    CJ20N_No Raiz = GetRaiz(key);
+                    CJ20N_No Raiz = CJ20N_GetRaiz(key);
 
                     w.Close();
                     return Raiz;
@@ -420,147 +532,6 @@ namespace DLM.sapgui
                 return null;
             }
         }
-
-        public void Desbloqueia_Secao()
-        {
-            this.SessaoSAP.UnlockSessionUI();
-        }
-
-        public void Bloquear_Secao()
-        {
-            this.SessaoSAP.LockSessionUI();
-        }
-
-        public CJ20N_No GetRaiz(string key)
-        {
-            GuiTree tt = null;
-
-            try
-            {
-                tt = ((GuiTree)this.SessaoSAP.FindById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell"));
-
-                // session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").topNode = "000002"
-                tt.TopNode = key;
-                // session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").selectedNode = "000002"
-                tt.SelectedNode = key;
-                // session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").expandNode "000002"
-                //tt.ExpandNode(key);
-                //session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").nodeContextMenu "000002"
-                tt.NodeContextMenu(key);
-
-                string pep = "";
-                string desc = "";
-                string chave_pep = "";
-
-                desc = tt.GetNodeTextByKey(key);
-                pep = tt.GetItemText(key, "TECH_KEY");
-
-                CJ20N_No Raiz = new CJ20N_No(pep, desc, key, chave_pep, tt, this);
-                if (Raiz.tipo == CJ20N_Tipo.Desconhecido | Raiz.tipo == CJ20N_Tipo.Tarefa)
-                {
-                    try
-                    {
-                        Raiz.chave_pep = ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/subDETAIL_AREA:SAPLCNPB_M:1010/subVIEW_AREA:SAPLCONW:1001/tabsTABSTRIP_1000/tabpARBD/ssubSUBSCR_1000:SAPLCONW:1310/ctxtAFVGD-PROJN")).Text;
-
-                    }
-                    catch (Exception)
-                    {
-
-                    }
-                }
-
-                return Raiz;
-
-            }
-            catch (Exception)
-            {
-
-            }
-
-            return null;
-
-        }
-
-        public void CJ20N_Explode_Arvore()
-        {
-            try
-            {
-                //tive que fazer essa gambiarra pq não dava pra explodir por C#
-                List<string> lista = new List<string>();
-                lista.Add("If Not IsObject(application) Then");
-                lista.Add("   Set SapGuiAuto  = GetObject(\"SAPGUI\")");
-                lista.Add("   Set application = SapGuiAuto.GetScriptingEngine");
-                lista.Add("End If");
-                lista.Add("If Not IsObject(connection) Then");
-                lista.Add("   Set connection = application.Children(0)");
-                lista.Add("End If");
-                lista.Add("If Not IsObject(session) Then");
-                lista.Add("   Set session    = connection.Children(0)");
-                lista.Add("End If");
-                lista.Add("If IsObject(WScript) Then");
-                lista.Add("   WScript.ConnectObject session,     \"on\"");
-                lista.Add("   WScript.ConnectObject application, \"on\"");
-                lista.Add("End If");
-                // lista.Add("session.findById(\"wnd[0]\").resizeWorkingPane 189,33,false");
-                lista.Add("session.findById(\"wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell\").selectedNode = \"000002\"");
-                lista.Add("session.findById(\"wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell\").pressButton \"EBLM\"");
-                lista.Add("session.findById(\"wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell\").pressButton \"ABLM\"");
-
-                Funcoes.RodaScript(lista);
-                ////session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").selectedNode = "000002"
-                //var dsd = this.SessaoSAP.FindById("wwnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell");
-                ////session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell").pressButton "EBLM"
-                //((GuiToolbarControl)this.SessaoSAP.FindById("wwnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell")).PressButton("EBLM");
-                ////session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell").pressButton "ABLM"
-                //((GuiToolbarControl)this.SessaoSAP.FindById("wwnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell")).PressButton("ABLM");
-            }
-            catch (Exception)
-            {
-
-
-            }
-        }
-
-        public void CJ20N_Collapse_Arvore()
-        {
-            try
-            {
-                //tive que fazer essa gambiarra pq não dava pra explodir por C#
-                List<string> lista = new List<string>();
-                lista.Add("If Not IsObject(application) Then");
-                lista.Add("   Set SapGuiAuto  = GetObject(\"SAPGUI\")");
-                lista.Add("   Set application = SapGuiAuto.GetScriptingEngine");
-                lista.Add("End If");
-                lista.Add("If Not IsObject(connection) Then");
-                lista.Add("   Set connection = application.Children(0)");
-                lista.Add("End If");
-                lista.Add("If Not IsObject(session) Then");
-                lista.Add("   Set session    = connection.Children(0)");
-                lista.Add("End If");
-                lista.Add("If IsObject(WScript) Then");
-                lista.Add("   WScript.ConnectObject session,     \"on\"");
-                lista.Add("   WScript.ConnectObject application, \"on\"");
-                lista.Add("End If");
-                // lista.Add("session.findById(\"wnd[0]\").resizeWorkingPane 189,33,false");
-                lista.Add("session.findById(\"wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell\").selectedNode = \"000002\"");
-                //lista.Add("session.findById(\"wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell\").pressButton \"EBLM\"");
-                lista.Add("session.findById(\"wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell\").pressButton \"ABLM\"");
-
-                Funcoes.RodaScript(lista);
-                ////session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").selectedNode = "000002"
-                //var dsd = this.SessaoSAP.FindById("wwnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell");
-                ////session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell").pressButton "EBLM"
-                //((GuiToolbarControl)this.SessaoSAP.FindById("wwnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell")).PressButton("EBLM");
-                ////session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell").pressButton "ABLM"
-                //((GuiToolbarControl)this.SessaoSAP.FindById("wwnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[0]/shell")).PressButton("ABLM");
-            }
-            catch (Exception)
-            {
-
-
-            }
-        }
-
         public bool CJ20N_Sair(bool salvar,bool esconder_erros = true)
         {
             if(salvar)
@@ -570,7 +541,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
 
                     // session.findById("wnd[0]/mbar/menu[0]/menu[7]").select
@@ -617,7 +588,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
 
                     //'salvar
@@ -695,7 +666,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
 
                     //session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").selectContextMenuItem "CREATE_ACT_W"
@@ -762,14 +733,13 @@ namespace DLM.sapgui
             }
 
         }
-        public bool CJ20N_EditarPEP(CJ20N_No no,
-            string novo_nome = null, string nova_descricao = null, string centro =null, string divisao = null, bool atualizar_tarefa = true, bool escondermsgs = false)
+        public bool CJ20N_EditarPEP(CJ20N_No no, string novo_nome = null, string nova_descricao = null, string centro =null, string divisao = null, bool atualizar_tarefa = true, bool escondermsgs = false)
         {
 
             try
             {
 
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     //tem que pegar os filhos antes de renomear, se não ele perde o vínculo
                     var filhos = no.Getfilhos();
@@ -990,7 +960,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     //session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").selectContextMenuItem "CREATE_WBS"
                     ((GuiTree)this.SessaoSAP.FindById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell")).SelectContextMenuItem("CREATE_WBS");
@@ -1117,17 +1087,8 @@ namespace DLM.sapgui
             }
 
         }
-        public string GetTipo(string componente)
-        {
-           var s = this.SessaoSAP.FindById(componente);
-            if(s!=null)
-            {
-                return s.Type.ToString();
-            }
-            return "";
-        }
-
-        /*ESSE CARA DÁ A FOLHA MARGEM*/
+        
+        /*FOLHA MARGEM*/
         public bool ZSD0031N(string Pedido, string destino, string ARQUIVO, bool msgs = false)
         {
 
@@ -1137,7 +1098,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("zsd0031n");
@@ -1192,7 +1153,7 @@ namespace DLM.sapgui
             }
 
         }
-        /*ESSE CARA DÁ O AVANÇO DE LOGÍSTICA*/
+        /*AVANÇO DE LOGÍSTICA*/
         public bool ZPP0066N(string Pedido, string destino, string ARQUIVO, bool msgs=false)
         {
 
@@ -1203,7 +1164,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPP0066N");
@@ -1252,7 +1213,7 @@ namespace DLM.sapgui
             }
 
         }
-        /*ESSE CARA DÁ O AVANÇO DE LOGÍSTICA COM AS NOTAS FISCAIS*/
+        /*AVANÇO DE LOGÍSTICA COM AS NOTAS FISCAIS*/
         public bool ZPP0066N_SemPerfil(string Pedido, string destino, string ARQUIVO, bool msgs = false)
         {
 
@@ -1263,7 +1224,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPP0066N");
@@ -1314,7 +1275,7 @@ namespace DLM.sapgui
             }
 
         }
-        /*ESSE CARA DÁ OS DADOS DO EMBARQUE ZPP0112*/
+        /*DADOS DO EMBARQUE ZPP0112*/
         public bool ZPP0112(string destino, string ARQUIVO, long min, long max)
         {
 
@@ -1324,7 +1285,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPP0112");
@@ -1356,7 +1317,7 @@ namespace DLM.sapgui
             }
 
         }
-        /*ESSE CARA DÁ A MOVIMENTAÇÃO DE TINTAS DO ALMOX PARA A FÁBRICA*/
+        /*MOVIMENTAÇÃO DE TINTAS DO ALMOX PARA A FÁBRICA*/
         public DLM.db.Tabela MB51(DateTime de, DateTime ate)
         {
 
@@ -1376,7 +1337,7 @@ namespace DLM.sapgui
                     return retorno;
                 }
             }
-            if (this.Carregar_sap())
+            if (this.IsActive())
             {
                 this.Bloquear_Secao();
                 try
@@ -1447,7 +1408,7 @@ namespace DLM.sapgui
 
             return retorno;
         }
-        /*ESSE CARA DÁ A MOVIMENTAÇÃO DE ORDENS DE PRODUÇÃO DE UM RANGE DE DATAS*/
+        /*MOVIMENTAÇÃO DE ORDENS DE PRODUÇÃO DE UM RANGE DE DATAS*/
         public DLM.db.Tabela ZPPCOOISN(DateTime de, DateTime ate)
         {
             var dt_de = $"{de.Day}.{de.Month}.{de.Year}";
@@ -1473,7 +1434,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(arquivo);
                 }
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPPCOOISN");
@@ -1509,36 +1470,7 @@ namespace DLM.sapgui
             }
             return retorno;
         }
-
-
-
-        public void Retornar()
-        {
-            try
-            {
-                var st = (this.SessaoSAP.FindById("wnd[0]/usr/btnSTARTBUTTON"));
-                if (st != null)
-                {
-                    ((GuiButton)st).Press();
-                }
-
-            }
-            catch (Exception)
-            {
-                //DLM.log.Log(ex);
-            }
-            try
-            {
-                ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtTCNT-PROF_DB")).Text = "PS0000000001";
-                ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
-            }
-            catch (Exception)
-            {
-                //DLM.log.Log(ex);
-            }
-        }
-
-        /*ESSE CARA DÁ O AVANÇO DE LOGÍSTICA*/
+        /*AVANÇO DE FÁBRICA*/
         public bool ZPMP(string Pedido, string destino, string ARQUIVO, bool msgs = false, string LAYOUT = @"/SISTEMA")
         {
    
@@ -1548,7 +1480,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPMP");
@@ -1599,11 +1531,7 @@ namespace DLM.sapgui
             DLM.painel.Consultas.MatarExcel(false);
             return File.Exists(destino + ARQUIVO);
         }
-
-
-
-
-        /*ESSE CARA DÁ AS CARACTERÍSTICAS DAS PEÇAS*/
+        /*CARACTERÍSTICAS DAS PEÇAS*/
         public bool ZPPCOOISN(string Pedido, string destino, string ARQUIVO, bool msgs = false, string layout = "")
         {
 
@@ -1613,7 +1541,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPPCOOISN");
@@ -1667,8 +1595,7 @@ namespace DLM.sapgui
             this.SessaoSAP.EndTransaction();
             return File.Exists(destino + ARQUIVO);
         }
-       
-        /*ESSE CARA DÁ O AVANÇO DE LOGÍSTICA NOVO*/
+        /*AVANÇO DE LOGÍSTICA NOVO*/
         public bool ZPP0100(string Pedido, string destino, string ARQUIVO)
         {
 
@@ -1678,7 +1605,7 @@ namespace DLM.sapgui
                 {
                 File.Delete(destino + ARQUIVO);
                 }
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPP0100");
@@ -1715,8 +1642,7 @@ namespace DLM.sapgui
             DLM.painel.Consultas.MatarExcel(false);
             return File.Exists(destino + ARQUIVO);
         }
-
-        /*ESSE CARA DÁ AS NOTAS FISCAIS DA OBRA*/
+        /*NOTAS FISCAIS DA OBRA*/
         public bool ZCONTRATOS(string Pedido, string destino, string ARQUIVO, bool msgs = false)
         {
 
@@ -1726,7 +1652,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("zcontratos");
@@ -1775,7 +1701,7 @@ namespace DLM.sapgui
             }
 
         }
-        /*ESSE CARA DÁ OS CUSTOS DA OBRA*/
+        /*CUSTOS DA OBRA*/
         public bool CJI3(string Pedido, string destino, string ARQUIVO)
         {
 
@@ -1785,7 +1711,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     Retornar();
                     Retornar();
@@ -1861,10 +1787,7 @@ namespace DLM.sapgui
             }
 
         }
-
-        public static DateTime antes { get; set; } = DateTime.Now.AddYears(-4);
-        public static DateTime agora { get; set; } = DateTime.Now.AddYears(1);
-
+        /*SALDOS DA CONTRA DO RAZÃO*/
         public List<SAPFAGLB03> FAGLB03(bool cadastrar,  int ano = 2022,  string conta = "3111003011", string empresa_de = "1100", string empresa_ate = "1200")
         {
             var arquivo = $"{Cfg.Init.DIR_APPDATA}FAGLB03.{ano}.{conta}.{empresa_de}.{empresa_ate}.{Cfg.Init.DATA_TEXT}.txt";
@@ -1964,18 +1887,6 @@ namespace DLM.sapgui
 
             return new List<SAPFAGLB03>();
         }
-        public void Press(string obj)
-        {
-            ((GuiButton)this.SessaoSAP.FindById(obj)).Press();
-        }
-        public void SetTexto(string obj, string valor)
-        {
-            ((GuiCTextField)this.SessaoSAP.FindById(obj)).Text = valor;
-        }
-        public void SendKey(int key, string wind = "wnd[0]")
-        {
-            ((GuiFrameWindow)this.SessaoSAP.FindById(wind)).SendVKey(key);
-        }
         /*ESSE CARA DÁ OS CUSTOS DA OBRA*/
         public bool FAGLL03(List<string> peps, string destino, string ARQUIVO)
         {
@@ -1986,7 +1897,7 @@ namespace DLM.sapgui
                 {
                     File.Delete(destino + ARQUIVO);
                 }
-                if (this.Carregar_sap())
+                if (this.IsActive())
                 {
                     Retornar();
                     Retornar();
@@ -2079,70 +1990,7 @@ namespace DLM.sapgui
 
         }
 
-        /*cancelar: session.findById("wnd[0]/tbar[0]/btn[3]").press*/
-        /*ESSE CARA TENTA EXPORTAR EM EXCEL A TELA QUE ESTÁ EM EXECUÇÃO NO SAP*/
-        private void ExportarExcel(string destino, string NOME, string SCRIPT_ORIGEM)
-        {
-            var SCR = Conexoes.Utilz.Arquivo.Ler(SCRIPT_ORIGEM).Select(X => X.Replace("$NOME$", NOME).Replace("$TAM$", (NOME.Length-1).ToString()).Replace("$DESTINO$", destino)).ToList();
-            Funcoes.RodaScript(SCR);
 
-        }
-
-        private void ExportaExcelNativo(string destino, string NOME, object ctrl)
-        {
-            try
-            {
-                /*CN47N*/
-                if (ctrl == null)
-                {
-                    ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/cntlALVCONTAINER/shellcont/shell", false);
-                }
-                /*ZPP066N*/
-                if (ctrl == null)
-                {
-                    ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell/shellcont/shell", false);
-                }
-                /*ZPMP*/
-                if (ctrl == null)
-                {
-                    ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
-                }
-                if (ctrl == null)
-                {
-                    //MessageBox.Show("Não conseguir exportar em excel o arquivo " + destino + "\nNão encontrei a chamada de menu do SAP para exportação. Contacte suporte.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                int tentativas = 0;
-                denovo:
-                var shellToolbarContextButton = ((GuiShell)ctrl);
-                var btnToolbarContextButton = shellToolbarContextButton as GuiGridView;
-                btnToolbarContextButton?.ContextMenu();
-                btnToolbarContextButton?.SelectContextMenuItem("&XXL");
-
-
-                ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
-
-
-
-                ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_PATH")).Text = destino;
-                ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = NOME;
-                ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[11]")).Press();
-
-
-                var arquivo = destino + NOME;
-                if(!arquivo.Exists() && tentativas == 0)
-                {
-                    ctrl = this.SessaoSAP.FindById("wnd[0]/usr/shell/shellcont/shell",false);
-                    tentativas++;
-                    goto denovo;
-                }
-            }
-            catch (Exception ex)
-            {
-                DLM.log.Log(ex);
-                //throw;
-            }
-        }
 
         public SAP_Consulta_Macro()
         {
