@@ -2091,18 +2091,19 @@ namespace DLM.sapgui
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txt$0R-PERT")).Text = data.Month.String(2);
                     //session.findById("wnd[0]/tbar[1]/btn[8]").press
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
+                    
+                    //session.findById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]").Select
+                    //((GuiMenu)this.SessaoSAP.FindById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]")).Select();
 
+                    //menu de impressão
                     //session.findById("wnd[0]/mbar/menu[6]/menu[5]/menu[2]/menu[1]").Select
                     ((GuiMenu)this.SessaoSAP.FindById("wnd[0]/mbar/menu[6]/menu[5]/menu[2]/menu[1]")).Select();
-                    //session.findById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]").Select
-                    ((GuiMenu)this.SessaoSAP.FindById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]")).Select();
-
                     //session.findById("wnd[1]/tbar[0]/btn[0]").press
                     ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[0]")).Press();
                     //session.findById("wnd[1]/usr/ctxtDY_PATH").Text = "C:\temp\"
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_PATH")).Text = pasta;
                     //session.findById("wnd[1]/usr/ctxtDY_FILENAME").Text = "DRE.txt"
-                    ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = arquivo;
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = nomeArq;
                     //session.findById("wnd[1]/tbar[0]/btn[11]").press
                     ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[11]")).Press();
 
