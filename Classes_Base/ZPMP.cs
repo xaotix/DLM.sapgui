@@ -101,6 +101,7 @@ namespace DLM.sapgui
         {
             this.PEP = new PEP_Planejamento(l[(int)TAB_ZPMP.ELEMENTO_PEP].Valor);
             this.centro = l[(int)TAB_ZPMP.CENTRO].Valor;
+            this.centro_producao = l[(int)TAB_ZPMP.CENTRO_PRODUCAO].Valor;
             this.material = l[(int)TAB_ZPMP.MATERIAL].Valor;
             this.tamanho_dimensao = l[(int)TAB_ZPMP.TAMANHO_DIMENSAO].Valor;
             this.texto_breve = l[(int)TAB_ZPMP.TEXTO_BREVE].Valor;

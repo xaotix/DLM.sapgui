@@ -64,8 +64,15 @@ namespace DLM.painel
                 }
             }
 
+           if(lista_fim.Count>0)
+            {
+                var centro = lista_fim[0]["CentroProducao"].Int();
+                if(centro>0)
+                {
+                    this.centro = centro.ToString();
+                }
+            }
             this.Tipo_Embarque = Tipo_Embarque.ZPP0100;
-
         }
 
         public Tipo_Material Tipo { get; set; } = Tipo_Material.Real;
@@ -537,10 +544,10 @@ namespace DLM.painel
                 this.pep_cooisn = linha["pep_cooisn"].Valor;
                 this.centro = linha["centro"].Valor;
 
-                var s = linha["centro_producao"].Valor;
-                if (s != "")
+                var centro = linha["centro_producao"].Valor;
+                if (centro != "")
                 {
-                    this.centro = s;
+                    this.centro = centro;
                 }
 
                 if (this.qtd_embarcada > 0)
@@ -635,12 +642,9 @@ namespace DLM.painel
             {
                 this.grupo_mercadoria = "ALMOX";
             }
-
         }
-
         public PLAN_PECA()
         {
-
         }
 
         public PLAN_PECA(PLAN_PECA_LOG ps)
@@ -650,9 +654,6 @@ namespace DLM.painel
             this.material = ps.material;
             this.desenho = ps.desenho;
             this.texto_breve = ps.descricao;
-
         }
     }
-
-
 }
