@@ -521,9 +521,12 @@ namespace DLM.painel
             ldb.Add("pintura", peca_log.peca.TIPO_DE_PINTURA);
             ldb.Add("esquema", peca_log.peca.Esquema.ESQUEMA_COD);
             ldb.Add("esquema_desc", peca_log.peca.Esquema.Getdescricao());
-            ldb.Add("bobina", peca_log.peca.bobina.SAP);
-            ldb.Add("face1", peca_log.peca.bobina.Cor1.Nome);
-            ldb.Add("face2", peca_log.peca.bobina.Cor2.Nome);
+            if(peca_log.peca.bobina!=null)
+            {
+                ldb.Add("bobina", peca_log.peca.bobina.SAP);
+                ldb.Add("face1", peca_log.peca.bobina.Cor1.Nome);
+                ldb.Add("face2", peca_log.peca.bobina.Cor2.Nome);
+            }
             ldb.Add("complexidade", peca_log.peca.Complexidade);
             ldb.Add("denominacao", peca_log.peca.DENOMINDSTAND);
             ldb.Add("tipo", peca_log.peca.Tipo);

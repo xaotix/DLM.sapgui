@@ -441,7 +441,7 @@ namespace DLM.sapgui
 
                         var pdfs = curr.Select(x => x[2].ToString()).ToList();
 
-                        pdfs.AddRange(curr.Select(x => x[22].ToString()).ToList());
+                        pdfs.AddRange(curr.Select(x => x[21].ToString()).ToList());
                         pdfs = pdfs.Distinct().ToList().FindAll(x => x.Length > 0);
 
                         string desenho = pdfs.Find(x => x.ToUpper().Contains(Cfg.Init.DWG_FAB_FILTRO));

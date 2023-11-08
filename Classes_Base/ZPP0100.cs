@@ -22,7 +22,9 @@ namespace DLM.sapgui
         public double Peso_item_Tot { get; set; } = 0;
         public string Nome_da_Obra { get; set; } = "";
         public string Elemento_PEP { get; set; } = "";
-        public string Centro { get; set; } = "";
+        public int Centro { get; set; } = 0;
+        public int CentroProducao { get; set; } = 0;
+
         public bool Etq_Impressa { get; set; } = false;
         public string Etq_Volume { get; set; } = "";
         public string Status { get; set; } = "";
@@ -36,7 +38,6 @@ namespace DLM.sapgui
         public string Ordem_Prod_ { get; set; } = "";
         public string Apontamento_Fert { get; set; } = "";
         public string End_Logistico { get; set; } = "";
-        public string CentroProducao { get; set; } = "";
         public string N_do_item { get; set; } = "";
         public string Sequencia_Item { get; set; } = "";
         public string Ordem_Venda { get; set; } = "";
@@ -88,8 +89,12 @@ namespace DLM.sapgui
             }
             //l.Add("Nome_da_Obra", this.Nome_da_Obra);
             l.Add("Centro", this.Centro);
+            if (this.CentroProducao > 0)
+            {
+                l.Add("CentroProducao", this.CentroProducao);
+            }
 
-            if(Etq_Impressa)
+            if (Etq_Impressa)
             {
                 l.Add("Etq_Impressa", this.Etq_Impressa);
             }
@@ -134,7 +139,7 @@ namespace DLM.sapgui
                 l.Add("Data_NF", this.Data_NF);
             }
 
-            if (Nota_Fiscal>0)
+            if (Nota_Fiscal > 0)
             {
                 l.Add("Nota_Fiscal", this.Nota_Fiscal);
             }
@@ -147,7 +152,9 @@ namespace DLM.sapgui
         }
         public ZPP0100(DLM.db.Linha l)
         {
-            //this.booleano = l[Colunas.ZPP0100.booleano].Valor;
+            this.Centro = l[(int)TAB_ZPP0100.Centro].Int();
+            this.CentroProducao = l[(int)TAB_ZPP0100.CentroProducao].Int();
+
             this.Elemento_PEP = CargaExcel.TratarPEP(l[(int)TAB_ZPP0100.Elemento_PEP].Valor);
             this.PEP = new PEP_Planejamento(this.Elemento_PEP.Replace(" ", ""));
             this.Ordem_Embarque = l[(int)TAB_ZPP0100.Ordem_Embarque].Int();
@@ -162,7 +169,7 @@ namespace DLM.sapgui
             this.Comprimento = l[(int)TAB_ZPP0100.Comprimento].Double();
             this.Peso_item_Tot = l[(int)TAB_ZPP0100.Peso_item_Tot].Double();
             this.Nome_da_Obra = l[(int)TAB_ZPP0100.Nome_da_Obra].Valor;
-            this.Centro = l[(int)TAB_ZPP0100.Centro].Valor;
+
             this.Etq_Impressa = l[(int)TAB_ZPP0100.Etq_Impressa].Boolean();
             this.Etq_Volume = l[(int)TAB_ZPP0100.Etq_Volume].Valor;
             this.Status = l[(int)TAB_ZPP0100.Status].Valor;
@@ -179,7 +186,6 @@ namespace DLM.sapgui
 
 
             this.End_Logistico = l[(int)TAB_ZPP0100.End_Logistico].Valor;
-            this.CentroProducao = l[(int)TAB_ZPP0100.CentroProducao].Valor;
             this.N_do_item = l[(int)TAB_ZPP0100.N_do_item].Valor;
             this.Sequencia_Item = l[(int)TAB_ZPP0100.Sequencia_Item].Valor;
             this.Ordem_Venda = l[(int)TAB_ZPP0100.Ordem_Venda].Valor;
