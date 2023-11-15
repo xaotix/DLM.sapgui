@@ -367,7 +367,7 @@ namespace DLM.sapgui
                         }).Distinct().ToList();
 
                 var min = Cfg.Init.DataDummy();
-                var pcs = pecas.FindAll(x => x.Material.ToString().StartsWith("31"));
+                var pcs = pecas.FindAll(x => x.Material.ToString().StartsW("31"));
                 var linhas = new List<DLM.db.Linha>();
                 foreach (var peca in pcs)
                 {

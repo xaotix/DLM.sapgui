@@ -1,4 +1,5 @@
-﻿using DLM.sapgui;
+﻿using Conexoes;
+using DLM.sapgui;
 using DLM.vars;
 using System;
 using System.Collections.Generic;
@@ -114,7 +115,7 @@ namespace DLM.painel
         }
         public void Set(List<ORC_SUB> subs)
         {
-            this._subetapas = subs.FindAll(x => x.PEP.StartsWith(this.PEP));
+            this._subetapas = subs.FindAll(x => x.PEP.StartsW(this.PEP));
         }
 
         private List<ORC_SUB> _subetapas { get; set; }

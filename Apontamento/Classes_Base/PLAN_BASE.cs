@@ -1,4 +1,5 @@
-﻿using DLM.db;
+﻿using Conexoes;
+using DLM.db;
 using DLM.sapgui;
 using DLM.vars;
 using System;
@@ -150,7 +151,7 @@ namespace DLM.painel
         public void Set(List<PLAN_PECA> lista)
         {
             this._pecas = new List<PLAN_PECA>();
-            this._pecas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsWith(this.PEP)));
+            this._pecas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsW(this.PEP)));
             if (this.carregou_etapas)
             {
                 foreach (var et in this.Getetapas())
@@ -185,12 +186,12 @@ namespace DLM.painel
         public void Set(List<PLAN_ETAPA> lista)
         {
             this._etapas = new List<PLAN_ETAPA>();
-            this._etapas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsWith(this.PEP)));
+            this._etapas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsW(this.PEP)));
         }
         public void Set(List<PLAN_PEP> lista)
         {
             this._peps = new List<PLAN_PEP>();
-            this._peps.AddRange(lista.FindAll(x => x.PEP.StartsWith(this.PEP)));
+            this._peps.AddRange(lista.FindAll(x => x.PEP.StartsW(this.PEP)));
         }
 
         public bool carregou_etapas

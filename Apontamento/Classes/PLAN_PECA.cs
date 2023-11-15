@@ -82,7 +82,7 @@ namespace DLM.painel
             {
                 var DUMMY = new SAP_ESQ_PIN() { ESQUEMA_DESCR = "", PINTURA = this.TIPO_DE_PINTURA };
                 if (
-                    this.TIPO_DE_PINTURA.ToUpper().StartsWith("SEM") | 
+                    this.TIPO_DE_PINTURA.ToUpper().StartsW("SEM") | 
                     this.TIPO_DE_PINTURA.ToUpper().Contains("GALVANIZADO") | 
                     this.esq_de_pintura.Replace("0", "") == "" | 
                     this.TIPO_DE_PINTURA == ""
@@ -602,23 +602,23 @@ namespace DLM.painel
 
         private void getComplexidade()
         {
-            if (DENOMINDSTAND.Replace(" ", "").StartsWith("SS") | DENOMINDSTAND.Replace(" ", "").EndsWith("SS"))
+            if (DENOMINDSTAND.Replace(" ", "").StartsW("SS") | DENOMINDSTAND.Replace(" ", "").EndsWith("SS"))
             {
                 Complexidade = "Super Simples";
             }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("S") | DENOMINDSTAND.Replace(" ", "").EndsWith("S"))
+            else if (DENOMINDSTAND.Replace(" ", "").StartsW("S") | DENOMINDSTAND.Replace(" ", "").EndsWith("S"))
             {
                 Complexidade = "Simples";
             }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("M") | DENOMINDSTAND.Replace(" ", "").EndsWith("M"))
+            else if (DENOMINDSTAND.Replace(" ", "").StartsW("M") | DENOMINDSTAND.Replace(" ", "").EndsWith("M"))
             {
                 Complexidade = "Média";
             }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("C") | DENOMINDSTAND.Replace(" ", "").EndsWith("C"))
+            else if (DENOMINDSTAND.Replace(" ", "").StartsW("C") | DENOMINDSTAND.Replace(" ", "").EndsWith("C"))
             {
                 Complexidade = "Complexa";
             }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsWith("H") | DENOMINDSTAND.Replace(" ", "").EndsWith("H"))
+            else if (DENOMINDSTAND.Replace(" ", "").StartsW("H") | DENOMINDSTAND.Replace(" ", "").EndsWith("H"))
             {
                 Complexidade = "Hiper Complexa";
             }
@@ -634,11 +634,11 @@ namespace DLM.painel
             {
                 this.grupo_mercadoria = "PARAFUSO";
             }
-            else if (this.material.ToString().StartsWith("10"))
+            else if (this.material.ToString().StartsW("10"))
             {
                 this.grupo_mercadoria = "ALMOX NÃO FATURÁVEL";
             }
-            else if (this.material.ToString().StartsWith("11"))
+            else if (this.material.ToString().StartsW("11"))
             {
                 this.grupo_mercadoria = "ALMOX";
             }
