@@ -50,7 +50,7 @@ namespace DLM.sapgui
         public static List<CN47N> GetCronograma(string Pedido)
         {
             var Datas = new List<CN47N>();
-            var t = DLM.sap.RfcsSAP.ConsultarPedido(Pedido);
+            var t = DLM.SAP.ConsultarPedido(Pedido);
             foreach (var s in t)
             {
                 Datas.Add(new CN47N(s));
@@ -63,7 +63,7 @@ namespace DLM.sapgui
             if(_pedidos==null)
             {
                 _pedidos = new List<PLAN_PEDIDO>();
-                var ss = DLM.sap.RfcsSAP.ListarObras(true);
+                var ss = DLM.SAP.ListarObras(true);
                foreach(var s in ss)
                 {
                     PLAN_PEDIDO pp = new PLAN_PEDIDO(s);

@@ -2,6 +2,7 @@
 using Conexoes;
 using System;
 using DLM.vars;
+using SAP.Middleware.Connector;
 
 namespace DLM.sapgui
 {
@@ -56,7 +57,7 @@ namespace DLM.sapgui
         {
             Status = "NÃO TEM";
         }
-        public CN47N(SAP.Middleware.Connector.IRfcStructure s)
+        public CN47N(IRfcStructure s)
         {
             this.PEP = new PEP_Planejamento(s.GetValue("ELEM_PEP").ToString());
             this.Texto_Operacao = s.GetValue("POST1").ToString();
