@@ -57,21 +57,7 @@ namespace DLM.sapgui
             }
             return Datas;
         }
-        private  static List<PLAN_PEDIDO> _pedidos { get; set; }
-        public static List<PLAN_PEDIDO> GetPedidos()
-        {
-            if(_pedidos==null)
-            {
-                _pedidos = new List<PLAN_PEDIDO>();
-                var ss = DLM.SAP.ListarObras(true);
-               foreach(var s in ss)
-                {
-                    PLAN_PEDIDO pp = new PLAN_PEDIDO(s);
-                    _pedidos.Add(pp);
-                }
-            }
-            return _pedidos;
-        }
+
         public static List<PLAN_PEP> converter(List<PEP_Planejamento> origem/*, bool consultar_existentes = false*/)
         {
             var PEPS_DUMP = origem.Select(x =>

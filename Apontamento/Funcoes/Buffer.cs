@@ -118,12 +118,12 @@ namespace DLM.painel
                 _ObrasPorSegmento = new List<PLAN_OBRAS>();
 
                 var segs = Consultas.GetObras().Select(x => x.setor_atividade).Distinct().ToList().OrderBy(x => x).ToList();
-                var familias = DBases.GetSegmentos().FindAll(y => segs.Find(z => z == y.COD) != null).Select(x => x.FAMILIA).Distinct().ToList();
+                var familias = DBases.GetSegmentos().FindAll(y => segs.Find(z => z == y.id.ToString()) != null).Select(x => x.FAMILIA).Distinct().ToList();
 
                 foreach (var fam in familias)
                 {
                     List<PLAN_OBRA> obras = new List<PLAN_OBRA>();
-                    var segmentos = DBases.GetSegmentos().FindAll(x => x.FAMILIA == fam).Select(x => x.COD).Distinct().ToList();
+                    var segmentos = DBases.GetSegmentos().FindAll(x => x.FAMILIA == fam).Select(x => x.id.ToString()).Distinct().ToList();
                     string nome = DBases.GetSegmentos().Find(x => x.FAMILIA == fam).FAMILIA_DESC;
                     foreach (var ss in segmentos)
                     {

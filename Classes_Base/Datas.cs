@@ -8,6 +8,8 @@ namespace DLM.sapgui
 {
    public class CN47N
     {
+        private PEP_Planejamento _PEP { get; set; }
+
         public DLM.db.Linha GetLinha()
         {
             DLM.db.Linha retorno = new DLM.db.Linha();
@@ -43,7 +45,6 @@ namespace DLM.sapgui
                 _PEP = value;
             }
         }
-        private PEP_Planejamento _PEP { get; set; }
 
         public string Status { get; private set; } = "";
         public string Texto_Operacao { get; private set; } = "";
