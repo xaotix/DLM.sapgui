@@ -50,8 +50,8 @@ namespace DLM.sapgui
         public static List<CN47N> GetCronograma(string Pedido)
         {
             var Datas = new List<CN47N>();
-            var t = DLM.SAP.ConsultarPedido(Pedido);
-            foreach (var s in t)
+            var tabela = DLM.SAP.ConsultarProjetoWBS(Pedido);
+            foreach (var s in tabela.ToList())
             {
                 Datas.Add(new CN47N(s));
             }
