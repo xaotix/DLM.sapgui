@@ -113,92 +113,94 @@ namespace DLM.sapgui
 
 
 
-                //monta o PEP_PLANEJAMENTO
-                if (this.ZPMP.Count > 0 && this.CN47N.Count > 0)
-                {
-                    var peps_producao = this.ZPMP.Select(x => x.PEP.Codigo).Distinct().ToList();
-                    peps_producao.AddRange(this.ZPMP.Select(x => x.PEP.Codigo).Distinct().ToList());
-                    peps_producao = peps_producao.Distinct().ToList().OrderBy(x => x).ToList();
-
-                    foreach (var pep in peps_producao)
-                    {
-                        PEP_PLanejamento.Add(new PEP_Planejamento(
-                            pep,
-                            this.ZPMP.FindAll(x => x.PEP.Codigo == pep).ToList(),
-                            this.ZPP0100.FindAll(x => x.PEP.Codigo == pep).ToList(),
-                            this.CN47N.Find(x => x.PEP.Codigo == pep),
-                            this
-                            )
-                            );
-                    }
-                    DLM.painel.Consultas.MatarExcel(false);
-                }
-
-                //ajustes finais
-                if (tabela_zpmp.Count > 0)
-                {
-                    this.Descricao = tabela_zpmp[0][(int)TAB_ZPMP.DENOMINACAO].Valor;
-                    var pdes = tabela_zpmp.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Pedido(x[(int)TAB_ZPMP.ELEMENTO_PEP].Valor, true)).Select(x => x.First()).ToList();
-                    var pedidos = pdes
-                        .Select(x => $"{Conexoes.Utilz.PEP.Get.Pedido(x[(int)TAB_ZPMP.ELEMENTO_PEP].Valor, true)};{x[(int)TAB_ZPMP.DENOMINACAO].Valor}").Distinct().ToList().Select(x => x.Split(';').ToList()).ToList();
-                    foreach (var ped in pedidos)
-                    {
-                        PLAN_CONTRATO titulo = new PLAN_CONTRATO();
-                        titulo.Contrato = ped[0];
-                        titulo.Descricao = ped[1];
-                        this.Titulos.Add(titulo);
-                        this.Titulos = this.Titulos.FindAll(x => x.Contrato.Length > 0);
-                    }
-                }
-
-
-                DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
-                DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao);
-                DBases.GetDB().Apagar("Elemento_PEP", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques);
-                DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
-                DBases.GetDB().Apagar("contrato", $"%{Contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
-
-                if (this.PEP_PLanejamento.Count > 0)
-                {
-                    var count = this.ZPMP.Count + this.ZPP0100.Count;
-
-                    if (this.PEP_PLanejamento.Count > 0)
-                    {
-                        var peps = Funcoes.converter(this.PEP_PLanejamento);
-                        DBases.GetDB().Cadastro(peps.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
-                    }
-                    if (this.ZPMP.Count > 0)
-                    {
-                        DBases.GetDB().Cadastro(this.ZPMP.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao);
-                    }
-
-                    if (this.ZPP0100.Count > 0)
-                    {
-                        DBases.GetDB().Cadastro(this.ZPP0100.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques);
-                    }
-
-                    if (this.CN47N.Count > 0)
-                    {
-                        DBases.GetDB().Cadastro(this.CN47N.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
-                    }
-                    if (this.Titulos.Count > 0)
-                    {
-                        DBases.GetDB().Cadastro(this.Titulos.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
-                    }
-                }
-
+                
 
 
             }
             else
             {
-                Conexoes.Utilz.Alerta($"Não foi possível rodar a ZPMP para o contrato {this.Codigo}");
+                //Conexoes.Utilz.Alerta($"Não foi possível rodar a ZPMP para o contrato {this.Codigo}");
             }
 
-            
+
+            //monta o PEP_PLANEJAMENTO
+            if (/*this.ZPMP.Count > 0 && */this.CN47N.Count > 0)
+            {
+                var peps_producao = this.ZPMP.Select(x => x.PEP.Codigo).Distinct().ToList();
+                peps_producao.AddRange(this.ZPMP.Select(x => x.PEP.Codigo).Distinct().ToList());
+                peps_producao.AddRange(this.CN47N.FindAll(x=> Conexoes.Utilz.PEP.Get.PEP(x.PEP.Codigo).StartsW("F")).Select(x => x.PEP.Codigo));
+                peps_producao = peps_producao.Distinct().ToList().OrderBy(x => x).ToList();
+
+                foreach (var pep in peps_producao)
+                {
+                    PEP_PLanejamento.Add(new PEP_Planejamento(
+                        pep,
+                        this.ZPMP.FindAll(x => x.PEP.Codigo == pep).ToList(),
+                        this.ZPP0100.FindAll(x => x.PEP.Codigo == pep).ToList(),
+                        this.CN47N.Find(x => x.PEP.Codigo == pep),
+                        this
+                        )
+                        );
+                }
+                DLM.painel.Consultas.MatarExcel(false);
+            }
+
+            //ajustes finais
+            if (tabela_zpmp.Count > 0)
+            {
+                this.Descricao = tabela_zpmp[0][(int)TAB_ZPMP.DENOMINACAO].Valor;
+                var pdes = tabela_zpmp.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Pedido(x[(int)TAB_ZPMP.ELEMENTO_PEP].Valor, true)).Select(x => x.First()).ToList();
+                var pedidos = pdes
+                    .Select(x => $"{Conexoes.Utilz.PEP.Get.Pedido(x[(int)TAB_ZPMP.ELEMENTO_PEP].Valor, true)};{x[(int)TAB_ZPMP.DENOMINACAO].Valor}").Distinct().ToList().Select(x => x.Split(';').ToList()).ToList();
+                foreach (var ped in pedidos)
+                {
+                    var titulo = new PLAN_CONTRATO();
+                    titulo.Contrato = ped[0];
+                    titulo.Descricao = ped[1];
+                    this.Titulos.Add(titulo);
+                    this.Titulos = this.Titulos.FindAll(x => x.Contrato.Length > 0);
+                }
+            }
 
 
-           
+            DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
+            DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao);
+            DBases.GetDB().Apagar("Elemento_PEP", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques);
+            DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
+            DBases.GetDB().Apagar("contrato", $"%{Contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
+
+            if (this.PEP_PLanejamento.Count > 0)
+            {
+                var count = this.ZPMP.Count + this.ZPP0100.Count;
+
+                if (this.PEP_PLanejamento.Count > 0)
+                {
+                    var peps = Funcoes.converter(this.PEP_PLanejamento);
+                    DBases.GetDB().Cadastro(peps.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
+                }
+                if (this.ZPMP.Count > 0)
+                {
+                    DBases.GetDB().Cadastro(this.ZPMP.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao);
+                }
+
+                if (this.ZPP0100.Count > 0)
+                {
+                    DBases.GetDB().Cadastro(this.ZPP0100.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques);
+                }
+
+                if (this.CN47N.Count > 0)
+                {
+                    DBases.GetDB().Cadastro(this.CN47N.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
+                }
+                if (this.Titulos.Count > 0)
+                {
+                    DBases.GetDB().Cadastro(this.Titulos.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
+                }
+            }
+
+
+
+
             return this.PEP_PLanejamento.Count>0;
         }
 
