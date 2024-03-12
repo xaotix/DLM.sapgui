@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace DLM.painel
 {
-    public class Base_PMP: Notificar
+    public class Base_PMP : Notificar
     {
         public override string ToString()
         {
@@ -36,29 +36,29 @@ namespace DLM.painel
 
         public void _mudartipo()
         {
-            if(tipo == Tipo_Material.Real)
+            if (tipo == Tipo_Material.Real)
             {
-                if(Material_CONS)
+                if (Material_CONS)
                 {
                     tipo = Tipo_Material.Consolidado;
                 }
-                else if(Material_ORC)
+                else if (Material_ORC)
                 {
                     tipo = Tipo_Material.Orçamento;
                 }
             }
-            else if(tipo == Tipo_Material.Orçamento)
+            else if (tipo == Tipo_Material.Orçamento)
             {
                 if (Material_REAL)
                 {
                     tipo = Tipo_Material.Real;
                 }
-               else if (Material_CONS)
+                else if (Material_CONS)
                 {
                     tipo = Tipo_Material.Consolidado;
                 }
             }
-            else if(tipo == Tipo_Material.Consolidado)
+            else if (tipo == Tipo_Material.Consolidado)
             {
                 if (Material_ORC)
                 {
@@ -163,7 +163,7 @@ namespace DLM.painel
         {
             get
             {
-                if(Material_ORC && Material_REAL)
+                if (Material_ORC && Material_REAL)
                 {
                     return BufferImagem.O_AZUL;
 
@@ -177,7 +177,7 @@ namespace DLM.painel
                 {
                     return BufferImagem.O_VERDE;
                 }
-              return  BufferImagem.O_PRETO;
+                return BufferImagem.O_PRETO;
             }
         }
         public ImageSource imagem_CONS
@@ -232,11 +232,11 @@ namespace DLM.painel
         {
             get
             {
-                if(tipo == Tipo_Material.Consolidado | tipo == Tipo_Material.Real)
+                if (tipo == Tipo_Material.Consolidado | tipo == Tipo_Material.Real)
                 {
                     return Real.engenharia_cronograma_inicio;
                 }
-                else if(tipo == Tipo_Material.Orçamento)
+                else if (tipo == Tipo_Material.Orçamento)
                 {
                     return Orcamento.engenharia_cronograma_inicio;
                 }
@@ -399,7 +399,7 @@ namespace DLM.painel
 
         public List<PLAN_PECA> Getpecas()
         {
-          return Obra.Getpecas().FindAll(x => x.Tipo == tipo).FindAll(x => x.PEP.StartsWith(this.pep));
+            return Obra.Getpecas().FindAll(x => x.Tipo == tipo).FindAll(x => x.PEP.StartsWith(this.pep));
         }
         public double total_embarcado
         {
@@ -419,7 +419,7 @@ namespace DLM.painel
         {
             get
             {
-                if(Real.peso_planejado>0 && (tipo == Tipo_Material.Consolidado | tipo == Tipo_Material.Real))
+                if (Real.peso_planejado > 0 && (tipo == Tipo_Material.Consolidado | tipo == Tipo_Material.Real))
                 {
                     return Real.peso_planejado;
                 }
@@ -455,18 +455,18 @@ namespace DLM.painel
             }
             this.Obra = obra;
 
-            if(real != null)
+            if (real != null)
             {
                 this.Real = real;
                 this.Material_REAL = true;
                 this.pep = real.PEP;
                 this.descricao = real.descricao;
             }
-            if(orcamento != null)
+            if (orcamento != null)
             {
                 this.Orcamento = orcamento;
                 this.Material_ORC = true;
-                if(this.pep=="")
+                if (this.pep == "")
                 {
                     this.pep = this.Orcamento.PEP;
                 }
@@ -485,10 +485,10 @@ namespace DLM.painel
 
             if (this.Material_REAL)
             {
-            var sub = this.Obra.Getsubetapas().Find(x => this.pep.StartsWith(x.pep));
-                if(sub!=null)
+                var sub = this.Obra.Getsubetapas().Find(x => this.pep.StartsWith(x.pep));
+                if (sub != null)
                 {
-                    if(sub.liberado_engenharia>0)
+                    if (sub.liberado_engenharia > 0)
                     {
                         tipo = Tipo_Material.Real;
                         return;
@@ -723,7 +723,7 @@ namespace DLM.painel
                 return this.Real.total_montado;
             }
         }
-        
+
         public void mudartipo()
         {
             this._mudartipo();
@@ -806,27 +806,27 @@ namespace DLM.painel
                 this.Embarque = Embarque;
             }
 
-            if (real!=null)
+            if (real != null)
             {
-            this.Real = real;
+                this.Real = real;
                 this.Material_REAL = true;
                 this.pep = Real.PEP;
                 this.descricao = real.Titulo.Descricao;
 
             }
 
-            if (orcamento!=null)
+            if (orcamento != null)
             {
                 this.Material_ORC = true;
                 this.Orcamento = orcamento;
-                if(this.pep == "")
+                if (this.pep == "")
                 {
                     this.pep = this.Orcamento.PEP;
                 }
             }
 
 
-            if(consolidada!=null)
+            if (consolidada != null)
             {
                 this.Material_CONS = true;
                 this.Consolidada = consolidada;
@@ -835,11 +835,11 @@ namespace DLM.painel
                     this.pep = this.Consolidada.PEP;
                 }
             }
-     
 
-            if(this.Material_REAL)
+
+            if (this.Material_REAL)
             {
-                if(this.Real.liberado_engenharia > 0)
+                if (this.Real.liberado_engenharia > 0)
                 {
                     tipo = Tipo_Material.Real;
                 }
@@ -852,14 +852,14 @@ namespace DLM.painel
             {
                 tipo = Tipo_Material.Consolidado;
             }
-            else if(this.Material_ORC)
+            else if (this.Material_ORC)
             {
                 tipo = Tipo_Material.Orçamento;
             }
         }
 
     }
-    public class Etapa_PMP :Base_PMP
+    public class Etapa_PMP : Base_PMP
     {
         public DateTime? ei
         {
@@ -1072,13 +1072,13 @@ namespace DLM.painel
             }
         }
 
- 
+
 
         public double peso
         {
             get
             {
-                return Math.Round(Getsubetapas().Sum(x => x.peso),2);
+                return Math.Round(Getsubetapas().Sum(x => x.peso), 2);
             }
         }
 
@@ -1096,7 +1096,7 @@ namespace DLM.painel
         public ORC_ETP Consolidada { get; set; } = new ORC_ETP();
         public PLAN_ETAPA Real { get; set; } = new PLAN_ETAPA();
 
-        public Etapa_PMP(Pedido_PMP obra, PLAN_ETAPA real, ORC_ETP orcamento , ORC_ETP consolidada)
+        public Etapa_PMP(Pedido_PMP obra, PLAN_ETAPA real, ORC_ETP orcamento, ORC_ETP consolidada)
         {
             this.Obra = obra;
             if (real != null)
@@ -1118,7 +1118,7 @@ namespace DLM.painel
             }
 
 
-            if(consolidada!=null)
+            if (consolidada != null)
             {
                 this.Material_CONS = true;
                 this.Consolidada = consolidada;
@@ -1301,7 +1301,16 @@ namespace DLM.painel
         {
             get
             {
-                return Real.peso_planejado;
+                var peso_plan = Real.peso_planejado;
+                if (peso_plan > 0)
+                {
+                    return peso_plan;
+                }
+                else if (Consolidada.peso_planejado > 0)
+                {
+                    return Consolidada.peso_planejado;
+                }
+                return 0;
             }
         }
         private List<Grupo_Mercadoria> _Grupos_Mercadoria { get; set; }
@@ -1450,7 +1459,7 @@ namespace DLM.painel
         public ORC_PED Consolidada { get; set; } = new ORC_PED();
         public Pedido_PMP(PLAN_PEDIDO real, ORC_PED orcamento, ORC_PED consolidado)
         {
-        
+
             if (real != null)
             {
                 this.Material_REAL = true;
@@ -1458,29 +1467,29 @@ namespace DLM.painel
                 this.pep = real.pedido;
                 this.descricao = real.Titulo.Descricao;
             }
-            if (orcamento!=null)
+            if (orcamento != null)
             {
-            this.Orcamento = orcamento;
-            this.Material_ORC = true;
-                if(pep=="")
+                this.Orcamento = orcamento;
+                this.Material_ORC = true;
+                if (pep == "")
                 {
                     this.pep = Orcamento.PEP;
                     this.descricao = orcamento.descricao;
                 }
             }
 
-            if(consolidado!=null)
+            if (consolidado != null)
             {
                 this.Consolidada = consolidado;
                 this.Material_CONS = true;
-                if(this.pep == "")
+                if (this.pep == "")
                 {
                     this.pep = this.Consolidada.PEP;
                     this.descricao = this.Consolidada.descricao;
                 }
             }
 
-            if(this.Orcamento!=null && descricao=="")
+            if (this.Orcamento != null && descricao == "")
             {
                 this.descricao = this.Orcamento.descricao;
             }
@@ -1488,10 +1497,13 @@ namespace DLM.painel
             {
                 this.descricao = this.Consolidada.descricao;
             }
-            if(descricao=="" | descricao == pep)
+
+
+
+            if (descricao == "" | descricao == pep)
             {
                 var ped = DLM.SAP.GetPedido(this.pep);
-                if(ped!=null)
+                if (ped != null)
                 {
                     this.descricao = ped.Descricao;
                 }
@@ -1538,10 +1550,10 @@ namespace DLM.painel
         public List<Pedido_PMP> Pedidos { get; set; } = new List<Pedido_PMP>();
         public List<PLAN_PECA> GetPecas()
         {
-            if(_pecas ==null)
+            if (_pecas == null)
             {
                 _pecas = Consultas.GetPecasPMP(this.Pedidos);
-                foreach(var pedido in this.Pedidos)
+                foreach (var pedido in this.Pedidos)
                 {
                     pedido.Set(_pecas);
                 }
@@ -1554,8 +1566,8 @@ namespace DLM.painel
             {
                 _peps = new List<PEP_PMP>();
                 var reais = Consultas.GetPepsReal(this.Pedidos.Select(x => x.pep).Distinct().ToList());
-                var orcs =  Consultas.GetPEPsPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), false);
-                var cons =  Consultas.GetPEPsPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), true);
+                var orcs = new List<ORC_PEP>();
+                var cons = Consultas.GetPEPsPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), true);
                 var lista = reais.Select(x => x.PEP).Distinct().ToList();
                 var embs = Consultas.GetResumoEmbarquesPEP(lista, 24);
                 lista.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
@@ -1570,7 +1582,7 @@ namespace DLM.painel
                         var real = reais.Find(x => x.PEP == s);
                         var orc = orcs.Find(x => x.PEP == s);
                         var con = cons.Find(x => x.PEP == s);
-                        var emb =  embs.Find(x => x.PEP == s);
+                        var emb = embs.Find(x => x.PEP == s);
                         if (real != null | orc != null | con != null)
                         {
                             _peps.Add(new PEP_PMP(ped, real, orc, con, emb));
@@ -1592,8 +1604,12 @@ namespace DLM.painel
                 var orcs = Consultas.GetSubEtapasPGO(pedidos, false);
                 var cons = Consultas.GetSubEtapasPGO(pedidos, true);
 
-                var lista = reais.Select(x => x.PEP).Distinct().ToList();
-                var embs = Consultas.GetResumoEmbarquesPEP(lista, 21);
+                var lista = reais.FindAll(x=> x.peso_embarcado>0).Select(x => x.PEP).Distinct().ToList();
+                var embs = new List<ZPP0100_Resumo>();
+                if (lista.Count > 0)
+                {
+                    embs = Consultas.GetResumoEmbarquesPEP(lista, 21);
+                }
 
                 lista.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
                 lista.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
@@ -1611,23 +1627,23 @@ namespace DLM.painel
                         var emb = embs.Find(x => x.PEP == s);
                         if (real != null | orc != null | con != null)
                         {
-                            var nnn = new SubEtapa_PMP(pedido, real, orc, con,emb);
+                            var nnn = new SubEtapa_PMP(pedido, real, orc, con, emb);
                             _subetapas.Add(nnn);
                         }
                     }
 
-                   pedido.Set(_subetapas);
+                    pedido.Set(_subetapas);
                 }
-                
+
             }
             return _subetapas;
         }
         public List<Etapa_PMP> GetEtapas()
         {
-            if(_etapas ==null)
+            if (_etapas == null)
             {
                 _etapas = new List<Etapa_PMP>();
-                var reais = Consultas.GetEtapas(this.Pedidos.Select(x=>x.pep).Distinct().ToList());
+                var reais = Consultas.GetEtapas(this.Pedidos.Select(x => x.pep).Distinct().ToList());
                 var orcs = DLM.painel.Consultas.GetEtapasPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), false);
                 var cons = DLM.painel.Consultas.GetEtapasPGO(this.Pedidos.Select(x => x.pep).Distinct().ToList(), true);
                 var lista = reais.Select(x => x.PEP).Distinct().ToList();
@@ -1635,7 +1651,7 @@ namespace DLM.painel
                 lista.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
 
                 lista = lista.Distinct().ToList().OrderBy(x => x).ToList();
-                foreach(var pedido in this.Pedidos)
+                foreach (var pedido in this.Pedidos)
                 {
                     var etps = lista.FindAll(x => x.StartsWith(pedido.pep));
                     foreach (var s in etps)

@@ -216,20 +216,36 @@ namespace DLM.painel
         }
 
 
-        public static List<ZPP0100_Resumo> GetResumoEmbarquesPEP(List<string> pedidos, int coluna = 24)
+        public static List<ZPP0100_Resumo> GetResumoEmbarquesPEP(List<string> peps, int coluna = 24)
         {
             var retorno = new List<ZPP0100_Resumo>();
 
-            foreach (var pedido in pedidos)
-            {
-                var consulta = DBases.GetDB().Consulta($"call {Cfg.Init.db_comum}.getzpp0100_resumo('{pedido}',{coluna})");
+            var subs = peps.GroupBy(x => Conexoes.Utilz.PEP.Get.Pedido(x, true)).ToList();
 
-                foreach (var linha in consulta.Linhas)
+            foreach (var sub in subs)
+            {
+                var peps_grp = sub.ToList();
+                var st_sub = DBases.GetDB().Consulta($"call {Cfg.Init.db_comum}.getzpp0100_resumo('{sub.Key}',{coluna})");
+                if (st_sub.Linhas.Count > 0)
                 {
-                    retorno.Add(new ZPP0100_Resumo(linha));
+                    foreach (var linha in st_sub.Linhas)
+                    {
+                        retorno.Add(new ZPP0100_Resumo(linha));
+                    }
+                    //foreach (var pedido in sub.ToList())
+                    //{
+                    //    //var consulta = DBases.GetDB().Consulta($"call {Cfg.Init.db_comum}.getzpp0100_resumo('{pedido}',{coluna})");
+                    //    var consulta = st_sub.Filtrar(true, "pep", pedido);
+                    //    foreach (var linha in consulta.Linhas)
+                    //    {
+                    //        retorno.Add(new ZPP0100_Resumo(linha));
+                    //    }
+                    //}
+
                 }
 
             }
+
 
             return retorno;
         }
@@ -521,7 +537,7 @@ namespace DLM.painel
             ldb.Add("pintura", peca_log.peca.TIPO_DE_PINTURA);
             ldb.Add("esquema", peca_log.peca.Esquema.ESQUEMA_COD);
             ldb.Add("esquema_desc", peca_log.peca.Esquema.Getdescricao());
-            if(peca_log.peca.bobina!=null)
+            if (peca_log.peca.bobina != null)
             {
                 ldb.Add("bobina", peca_log.peca.bobina.SAP);
                 ldb.Add("face1", peca_log.peca.bobina.Cor1.Nome);
@@ -913,7 +929,7 @@ namespace DLM.painel
 
                 _pedidos_clean = _pedidos_clean.Distinct().ToList().FindAll(x => x.Length > 3);
             }
-            if(contratos!=null)
+            if (contratos != null)
             {
                 var _retorno = new List<string>();
                 foreach (var contrato in contratos.Distinct().ToList().FindAll(x => x.Length > 5))
