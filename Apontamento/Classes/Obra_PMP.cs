@@ -1477,7 +1477,6 @@ namespace DLM.painel
                 {
                     this.pep = this.Consolidada.PEP;
                     this.descricao = this.Consolidada.descricao;
-
                 }
             }
 
@@ -1488,6 +1487,14 @@ namespace DLM.painel
             if (this.Consolidada != null && descricao == "")
             {
                 this.descricao = this.Consolidada.descricao;
+            }
+            if(descricao=="" | descricao == pep)
+            {
+                var ped = DLM.SAP.GetPedido(this.pep);
+                if(ped!=null)
+                {
+                    this.descricao = ped.Descricao;
+                }
             }
             if (this.Material_REAL)
             {
