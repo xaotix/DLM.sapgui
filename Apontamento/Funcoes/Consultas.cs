@@ -420,15 +420,16 @@ namespace DLM.painel
                 obras = new List<string>();
             }
             obras = obras.Distinct().ToList().FindAll(x => x.Length > 0);
+            var obras_lista = GetObras(reset);
             if (obras.Count == 0)
             {
-                return GetObras(reset);
+                return obras_lista;
             }
 
             var retorno = new List<PLAN_OBRA>();
             foreach (var obra in obras)
             {
-                retorno.AddRange(GetObras(reset).FindAll(x => x.PEP.Contains(obra)));
+                retorno.AddRange(obras_lista.FindAll(x => x.PEP.Contains(obra)));
             }
             retorno = retorno.GroupBy(x => x.PEP).Select(x => x.First()).ToList();
 
@@ -924,9 +925,6 @@ namespace DLM.painel
                 _pedidos_clean = new List<string>();
 
                 _pedidos_clean.AddRange(DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pedidos_copia).Linhas.Select(x => x["pedido"].Valor).Distinct().ToList());
-                //_pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_cn47n} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x["pedido"].Valor).ToList());
-                //_pedidos_clean.AddRange(DBases.GetDB().Consulta($"SELECT LEFT(pr.pep,13) AS pedido FROM {Cfg.Init.db_comum}.{Cfg.Init.tb_pep_planejamento} AS pr GROUP BY LEFT(pr.pep,13)").Linhas.Select(x => x["pedido"].Valor).ToList());
-
                 _pedidos_clean = _pedidos_clean.Distinct().ToList().FindAll(x => x.Length > 3);
             }
             if (contratos != null)

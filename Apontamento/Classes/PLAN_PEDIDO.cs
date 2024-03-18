@@ -72,7 +72,7 @@ namespace DLM.painel
         public PLAN_PEDIDO(DLM.db.Linha linha, PLAN_OBRA contrato)
         {
             this.PEP = linha["pedido"].Valor;
-            this.Titulo.Descricao = linha["nome"].Valor;
+            this.descricao = linha["nome"].Valor;
             this.engenharia_cronograma = linha["engenharia_cronograma"].Data();
             this.engenharia_liberacao = linha["engenharia_liberacao"].Data();
             this.etapas_qtd = linha["etapas"].Int();

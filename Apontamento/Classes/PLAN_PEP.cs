@@ -276,11 +276,6 @@ namespace DLM.painel
 
             this.status_eng = Linha["status_eng"].Valor;
             this.status = Linha["status"].Valor;
-
-
-            this.Titulo.Descricao = this.descricao;
-            this.Titulo.Contrato = this.PEP;
-
         }
         public DLM.db.Linha GetLinha()
         {

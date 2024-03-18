@@ -25,8 +25,7 @@ namespace DLM.painel
             this.obras = Obras;
 
             this.PEP = $"{this.obras.Count} Obras";
-            this.Titulo.Contrato = contrato;
-            this.Titulo.Descricao = nome;
+            this.descricao = nome;
 
             this.engenharia_cronograma = Obras.Max(x => x.engenharia_cronograma);
             this.engenharia_liberacao = Obras.Max(x => x.engenharia_cronograma);
@@ -34,7 +33,7 @@ namespace DLM.painel
             this.pedidos_qtd = Obras.Sum(x => x.pedidos_qtd);
             this.fabrica_cronograma = Obras.Max(x => x.fabrica_cronograma);
 
-            this.nome = Obras.Count() + " OBRAS";
+            this.descricao = Obras.Count() + " OBRAS";
 
             this.peso_planejado = Math.Round(Obras.Sum(x => x.peso_planejado));
             this.peso_produzido = Math.Round(Obras.Sum(x => x.peso_produzido));
@@ -96,7 +95,7 @@ namespace DLM.painel
 
             if(nome!="")
             {
-                this.nome = nome;
+                this.descricao = nome;
             }
         }
     }
@@ -127,7 +126,7 @@ namespace DLM.painel
         {
             get
             {
-                return new Telerik.Windows.Controls.Map.Location(latitude, longitude) { Description = this.nome };
+                return new Telerik.Windows.Controls.Map.Location(latitude, longitude) { Description = this.descricao };
             }
         }
         public double dias
@@ -161,7 +160,7 @@ namespace DLM.painel
             }
         }
 
-        public string nome { get; set; } = "";
+        //public string nome { get; set; } = "";
         public double latitude { get; private set; } = 0;
         public double longitude { get; private set; } = 0;
 
@@ -210,7 +209,7 @@ namespace DLM.painel
             this.Linha = linha;
             string pedido_principal = linha["pedido_principal"].Valor;
             this.PEP = pedido_principal.Replace(".C00", ".P").Replace(".P00","").Replace(".G00","");
-            this.Titulo.Descricao = linha["nome"].Valor;
+            this.descricao = linha["nome"].Valor;
             this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");
             this.engenharia_cronograma = linha["engenharia_cronograma"].Data();
             this.engenharia_liberacao = linha["engenharia_liberacao"].Data();
@@ -219,7 +218,7 @@ namespace DLM.painel
             this.fabrica_cronograma = linha["fabrica_cronograma"].Data();
             this.latitude = linha["latitude"].Double(8);
             this.longitude = linha["longitude"].Double(8);
-            this.nome = linha["nome"].Valor;
+            this.descricao = linha["nome"].Valor;
             this.peso_embarcado = linha["peso_embarcado"].Double();
             this.peso_planejado = linha["peso_planejado"].Double();
             this.peso_produzido = linha["peso_produzido"].Double();
@@ -260,6 +259,19 @@ namespace DLM.painel
 
             this.finalizado = linha["finalizado"].Valor.ToUpper() == "X";
 
+
+            if (this.descricao.Length == 0)
+            {
+                var ped = DLM.SAP.GetPedido(this.contrato_completo + ".P00");
+                if (ped != null)
+                {
+                    this.descricao = ped.Descricao;
+                }
+                else
+                {
+
+                }
+            }
         }
     }
 }

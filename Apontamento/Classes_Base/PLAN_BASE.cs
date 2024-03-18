@@ -27,13 +27,7 @@ namespace DLM.painel
             this.log_base_st = linha["ls"].Double();
             this.mon_base_st = linha["ms"].Double();
         }
-        public string descricao
-        {
-            get
-            {
-                return this.PEP + (this.Titulo.Descricao != "" ? (" - " + this.Titulo.Descricao) : "");
-            }
-        }
+        public string descricao { get; set; } = "";
         private List<PLAN_ETAPA> _etapas { get; set; } = new List<PLAN_ETAPA>();
         private List<PLAN_PEP> _peps { get; set; } = new List<PLAN_PEP>();
         private List<PLAN_SUB_ETAPA> _subetapas { get; set; } = new List<PLAN_SUB_ETAPA>();
@@ -127,22 +121,7 @@ namespace DLM.painel
 
             return _pecas;
         }
-        public void Set(List<PLAN_CONTRATO> titulos, bool contrato = false)
-        {
-            if (contrato)
-            {
-                this.Titulo = titulos.Find(x => x.Contrato == this.contrato);
-            }
-            else
-            {
-                this.Titulo = titulos.Find(x => x.Contrato == this.PEP);
-            }
 
-            if(this.Titulo==null)
-            {
-
-            }
-        }
         public void Set(List<PLAN_PEDIDO> lista)
         {
             this._pedidos = new List<PLAN_PEDIDO>();
@@ -421,19 +400,7 @@ namespace DLM.painel
             }
         }
         public string update_montagem { get; set; } = "";
-        private PLAN_CONTRATO _Titulo { get; set; } = new PLAN_CONTRATO();
-        public PLAN_CONTRATO Titulo
-        {
-            get
-            {
-                if (_Titulo == null) { _Titulo = new PLAN_CONTRATO() { Contrato = this.PEP }; }
-                return _Titulo;
-            }
-            set
-            {
-                _Titulo = value;
-            }
-        }
+
 
 
         public List<Atraso_Planejamento> GetAtrasos()

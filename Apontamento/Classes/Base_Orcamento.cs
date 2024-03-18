@@ -257,15 +257,14 @@ namespace DLM.painel
             this.id_obra =                  linha["id_obra"].Int();
             this.numerocontrato =           linha["numerocontrato"].Valor;
             this.revisao =                  linha["revisao"].Valor;
-            this.Titulo.Descricao =         linha["descricao"].Valor;
             this.PEP =                      linha["pedido"].Valor;
+            this.descricao =                linha["descricao"].Valor;
             this.quantidade =               linha["quantidade"].Double();
             this.peso_planejado =           linha["peso_total"].Double();
             this.liberado_engenharia =      linha["liberado_engenharia"].Double();
             this.peso_realizado =           linha["peso_realizado"].Double();
             this.arquivos =                 linha["arquivos"].Int();
             this.criacao =                  linha["criacao"].Data();
-            this.Titulo.Descricao =         linha["nome"].Valor;
             this.tipo = tipo;
         }
     }

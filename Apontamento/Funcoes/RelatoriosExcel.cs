@@ -259,7 +259,7 @@ namespace DLM.painel
                             try
                             {
 
-                                pedidos_aba_excel.Cells[l0 + l, c0 + 0].Value = t.Titulo.Descricao;
+                                pedidos_aba_excel.Cells[l0 + l, c0 + 0].Value = t.descricao;
                                 pedidos_aba_excel.Cells[l0 + l, c0 + 1].Value = t.pedido;
                                 pedidos_aba_excel.Cells[l0 + l, c0 + 2].Value = t.exportacao ? 1 : 0;
                                 pedidos_aba_excel.Cells[l0 + l, c0 + 3].Value = t.peso_planejado;
@@ -853,7 +853,7 @@ namespace DLM.painel
                             try
                             {
 
-                                excel_pedidos.Cells[$"A{L1}"].Value = pedido.Titulo.Descricao;
+                                excel_pedidos.Cells[$"A{L1}"].Value = pedido.descricao;
                                 excel_pedidos.Cells[$"B{L1}"].Value = pedido.pedido;
                                 excel_pedidos.Cells[$"C{L1}"].Value = pedido.exportacao ? 1 : 0;
                                 excel_pedidos.Cells[$"D{L1}"].Value = pedido.peso_planejado;
