@@ -164,7 +164,7 @@ namespace DLM.sapgui
             this.St_Carga = l[(int)TAB_ZPP0100.St_Carga].Valor;
             this.Etq_Material = l[(int)TAB_ZPP0100.Etq_Material].Valor;
             this.Material = l[(int)TAB_ZPP0100.Material].Valor;
-            this.Descricao = l[(int)TAB_ZPP0100.Descricao].Valor.CortarString(140);
+            this.Descricao = l[(int)TAB_ZPP0100.Descricao].Valor.CortarString(140, true);
             this.Tamanho_dimensao = l[(int)TAB_ZPP0100.Tamanho_dimensao].Valor;
             this.Comprimento = l[(int)TAB_ZPP0100.Comprimento].Double();
             this.Peso_item_Tot = l[(int)TAB_ZPP0100.Peso_item_Tot].Double();
