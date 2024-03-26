@@ -729,8 +729,8 @@ namespace DLM.painel
                                             excel_peca.Cells[$"G{L1}"].Value = peca.qtd_necessaria;
                                             excel_peca.Cells[$"H{L1}"].Value = peca.qtd_produzida;
                                             excel_peca.Cells[$"I{L1}"].Value = peca.qtd_embarcada > 0 ? peca.qtd_embarcada : 0;
-                                            excel_peca.Cells[$"J{L1}"].Value = sub.Embarque.Necessario;
-                                            excel_peca.Cells[$"K{L1}"].Value = sub.Embarque.Embarcado;
+                                            excel_peca.Cells[$"J{L1}"].Value = sub.Embarque.Peso_Necessario;
+                                            excel_peca.Cells[$"K{L1}"].Value = sub.Embarque.Peso_Embarcado;
                                             excel_peca.Cells[$"L{L1}"].Value = peca.comprimento;
                                             excel_peca.Cells[$"M{L1}"].Value = peca.corte_largura;
                                             excel_peca.Cells[$"N{L1}"].Value = peca.espessura;
