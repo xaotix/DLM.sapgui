@@ -1604,15 +1604,18 @@ namespace DLM.painel
                 var orcs = Consultas.GetSubEtapasPGO(pedidos, false);
                 var cons = Consultas.GetSubEtapasPGO(pedidos, true);
 
-                var lista = reais.FindAll(x=> x.peso_embarcado>0).Select(x => x.PEP).Distinct().ToList();
+                var lista = new List<string>();
+                lista.AddRange(reais.Select(x => x.PEP).Distinct().ToList());
+                var lista_embs = reais.FindAll(x=> x.peso_embarcado>0).Select(x => x.PEP).Distinct().ToList();
                 var embs = new List<ZPP0100_Resumo>();
-                if (lista.Count > 0)
+                if (lista_embs.Count > 0)
                 {
-                    embs = Consultas.GetResumoEmbarquesPEP(lista, 21);
+                    embs = Consultas.GetResumoEmbarquesPEP(lista_embs, 21);
                 }
-
+                //mantido lista de peps juntando consolidação e real
                 lista.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
                 lista.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
+
 
                 lista = lista.Distinct().ToList().OrderBy(x => x).ToList();
                 foreach (var pedido in this.Pedidos)

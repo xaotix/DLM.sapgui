@@ -1617,7 +1617,10 @@ namespace DLM.sapgui
                     //09/04/2020 - removi as datas pq o zpp0100 nao precisa mais
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-LOW")).Text = "";
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-HIGH")).Text = "";
-                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtP_LAYOUT")).Text = "/COMPLETO";
+                    // - SIMPLIFICAÇÃO LAYOUT
+                    // - 26/03/2024
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtP_LAYOUT")).Text = "/SISTEMA";
+                    //((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtP_LAYOUT")).Text = "/COMPLETO";
 
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
 
