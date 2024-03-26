@@ -107,15 +107,6 @@ namespace DLM.sapgui
                 {
                     this.ZPP0100 = CargaExcel.ZPP0100(Cfg.Init.GetDestinoSAP_Excel() + arq0100, out tabela_zpp0100);
                 }
-
-
-
-
-
-
-                
-
-
             }
             else
             {
@@ -129,7 +120,9 @@ namespace DLM.sapgui
                 var peps_producao = this.ZPMP.Select(x => x.PEP.Codigo).Distinct().ToList();
                 peps_producao.AddRange(this.ZPMP.Select(x => x.PEP.Codigo).Distinct().ToList());
                 peps_producao.AddRange(this.CN47N.FindAll(x=> Conexoes.Utilz.PEP.Get.PEP(x.PEP.Codigo).StartsW("F")).Select(x => x.PEP.Codigo));
+                peps_producao.AddRange(this.ZPP0100.Select(x => x.Elemento_PEP));
                 peps_producao = peps_producao.Distinct().ToList().OrderBy(x => x).ToList();
+
 
                 foreach (var pep in peps_producao)
                 {
