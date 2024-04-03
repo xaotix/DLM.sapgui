@@ -172,7 +172,7 @@ namespace DLM.sapgui
             {
                 if(_descricao=="" && SubLancamentos.Count>0)
                 {
-                    _descricao = string.Join(" - ", SubLancamentos.Select(x => x.descricao).Distinct().ToList()).CortarString( 100, true);
+                    _descricao = string.Join(" - ", SubLancamentos.Select(x => x.descricao).Distinct().ToList()).Esquerda( 100, true);
                 }
 
                 return _descricao;
