@@ -24,7 +24,7 @@ namespace DLM.sapgui
             ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[5]")).Press();
 
             var secoes = GetSecoes();
-            if(secoes.Count>0)
+            if (secoes.Count > 0)
             {
                 return secoes.Last();
             }
@@ -33,7 +33,7 @@ namespace DLM.sapgui
         public void Maximizar()
         {
             var jan = GetJanela();
-            if(jan!=null)
+            if (jan != null)
             {
                 jan.Maximize();
             }
@@ -41,7 +41,7 @@ namespace DLM.sapgui
         public string TituloJanela()
         {
             var s = GetJanela();
-            if(s!=null)
+            if (s != null)
             {
                 return s.Text;
             }
@@ -126,11 +126,11 @@ namespace DLM.sapgui
         {
             var retorno = new List<GuiSession>();
             var conn = GetConexao();
-            if(conn==null)
+            if (conn == null)
             {
                 return new List<GuiSession>();
             }
-            foreach(GuiSession gui in conn.Sessions)
+            foreach (GuiSession gui in conn.Sessions)
             {
                 retorno.Add(gui);
             }
@@ -195,7 +195,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    if (!msgs)
+                    if (msgs)
                     {
                         MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
@@ -204,7 +204,7 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                if (!msgs)
+                if (msgs)
                 {
                     MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 }
@@ -212,7 +212,7 @@ namespace DLM.sapgui
             }
 
         }
-        
+
         public void Esc()
         {
             try
@@ -532,9 +532,9 @@ namespace DLM.sapgui
                 return null;
             }
         }
-        public bool CJ20N_Sair(bool salvar,bool esconder_erros = true)
+        public bool CJ20N_Sair(bool salvar, bool esconder_erros = true)
         {
-            if(salvar)
+            if (salvar)
             {
                 CJ20N_Salvar(false);
             }
@@ -550,7 +550,7 @@ namespace DLM.sapgui
                     try
                     {
                         //clica em não se precisar
-                    //session.findById("wnd[1]/usr/btnSPOP-OPTION2").press
+                        //session.findById("wnd[1]/usr/btnSPOP-OPTION2").press
                         ((GuiButton)this.SessaoSAP.FindById("wnd[1]/usr/btnSPOP-OPTION2")).Press();
 
                     }
@@ -614,7 +614,7 @@ namespace DLM.sapgui
                     {
 
                     }
-                 
+
 
 
 
@@ -643,8 +643,8 @@ namespace DLM.sapgui
         }
         public bool CJ20N_Apagar(CJ20N_No no)
         {
-           var tt = no.SetNo();
-            if(tt!=null)
+            var tt = no.SetNo();
+            if (tt != null)
             {
                 //session.findById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell").selectContextMenuItem "DELE"
                 ((GuiTree)this.SessaoSAP.FindById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell/shellcont[1]/shell")).SelectContextMenuItem("DELE");
@@ -660,7 +660,7 @@ namespace DLM.sapgui
 
             return true;
         }
-        public bool CJ20N_CriarTarefa(string pep,string descricao, string centro_de_trabalho = "1202", string divisao = "1202", string centro = "1202",  bool esconder_erros = false, string planejador_mrp = "PS0")
+        public bool CJ20N_CriarTarefa(string pep, string descricao, string centro_de_trabalho = "1202", string divisao = "1202", string centro = "1202", bool esconder_erros = false, string planejador_mrp = "PS0")
         {
 
             try
@@ -733,7 +733,7 @@ namespace DLM.sapgui
             }
 
         }
-        public bool CJ20N_EditarPEP(CJ20N_No no, string novo_nome = null, string nova_descricao = null, string centro =null, string divisao = null, bool atualizar_tarefa = true, bool escondermsgs = false)
+        public bool CJ20N_EditarPEP(CJ20N_No no, string novo_nome = null, string nova_descricao = null, string centro = null, string divisao = null, bool atualizar_tarefa = true, bool escondermsgs = false)
         {
 
             try
@@ -743,19 +743,19 @@ namespace DLM.sapgui
                 {
                     //tem que pegar os filhos antes de renomear, se não ele perde o vínculo
                     var filhos = no.Getfilhos();
-                    
+
                     var tt = no.SetNo();
 
                     if (tt == null) { return false; }
 
-                   
-                    if(novo_nome!=null)
+
+                    if (novo_nome != null)
                     {
                         //session.findById("wnd[0]/usr/subDETAIL_AREA:SAPLCNPB_M:1010/subIDENTIFICATION:SAPLCJWB:3991/ctxtPRPS-POSID").text = "10-104159.P00.004.25A.F4"
                         ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/subDETAIL_AREA:SAPLCNPB_M:1010/subIDENTIFICATION:SAPLCJWB:3991/ctxtPRPS-POSID")).Text = novo_nome;
                     }
-     
-                    if(nova_descricao!=null)
+
+                    if (nova_descricao != null)
                     {
                         //session.findById("wnd[0]/usr/subDETAIL_AREA:SAPLCNPB_M:1010/subIDENTIFICATION:SAPLCJWB:3991/txtPRPS-POST1").text = "Fáb. Medabar em CHA"
                         ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/subDETAIL_AREA:SAPLCNPB_M:1010/subIDENTIFICATION:SAPLCJWB:3991/txtPRPS-POST1")).Text = nova_descricao;
@@ -770,7 +770,7 @@ namespace DLM.sapgui
 
 
 
-                        if(centro!=null)
+                        if (centro != null)
                         {
                             try
                             {
@@ -819,12 +819,12 @@ namespace DLM.sapgui
                             }
                         }
 
-                       
+
 
                         //session.findById("wnd[0]").sendVKey 0
                         Enter();
 
-                        if(atualizar_tarefa)
+                        if (atualizar_tarefa)
                         {
                             //tarefa
                             foreach (var f in filhos)
@@ -855,7 +855,7 @@ namespace DLM.sapgui
 
                                 }
 
-                                if(novo_nome!=null)
+                                if (novo_nome != null)
                                 {
                                     try
                                     {
@@ -913,7 +913,7 @@ namespace DLM.sapgui
                             }
                         }
 
-  
+
 
 
 
@@ -1038,7 +1038,7 @@ namespace DLM.sapgui
                         }
 
 
-    
+
 
                         //session.findById("wnd[0]/usr/subDETAIL_AREA:SAPLCNPB_M:1010/subVIEW_AREA:SAPLCJWB:3999/tabsTABCJWB/tabpORGA/ssubSUBSCR1:SAPLCJWB:1410/ctxtPRPS-PGSBR").text = "1002"
                         ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/subDETAIL_AREA:SAPLCNPB_M:1010/subVIEW_AREA:SAPLCJWB:3999/tabsTABCJWB/tabpORGA/ssubSUBSCR1:SAPLCJWB:1410/ctxtPRPS-PGSBR")).Text = divisao;
@@ -1076,7 +1076,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
                 else
                 {
@@ -1087,7 +1087,7 @@ namespace DLM.sapgui
             }
 
         }
-        
+
         /*FOLHA MARGEM*/
         public bool ZSD0031N(string Pedido, string destino, string ARQUIVO, bool msgs = false)
         {
@@ -1132,7 +1132,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    if (!msgs)
+                    if (msgs)
                     {
                         MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
@@ -1141,9 +1141,9 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                               if (msgs)
+                if (msgs)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
                 else
                 {
@@ -1154,7 +1154,7 @@ namespace DLM.sapgui
 
         }
         /*AVANÇO DE LOGÍSTICA*/
-        public bool ZPP0066N(string Pedido, string destino, string ARQUIVO, bool msgs=false)
+        public bool ZPP0066N(string Pedido, string destino, string ARQUIVO, bool msgs = false)
         {
 
             try
@@ -1177,7 +1177,7 @@ namespace DLM.sapgui
 
 
                     ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
-                    if(!File.Exists(destino + ARQUIVO))
+                    if (!File.Exists(destino + ARQUIVO))
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell/shellcont/shell", false);
                         ExportaExcelNativo(destino, ARQUIVO, ctrl);
@@ -1191,10 +1191,10 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    if(msgs)
+                    if (msgs)
                     {
 
-                    MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
                     return false;
                 }
@@ -1203,7 +1203,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
                 else
                 {
@@ -1264,7 +1264,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
                 else
                 {
@@ -1332,7 +1332,7 @@ namespace DLM.sapgui
 
             if (arquivo.Exists())
             {
-               if(!arquivo.Delete())
+                if (!arquivo.Delete())
                 {
                     return retorno;
                 }
@@ -1399,7 +1399,7 @@ namespace DLM.sapgui
                 catch (Exception ex)
                 {
 
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
 
                 }
                 this.Desbloqueia_Secao();
@@ -1439,7 +1439,7 @@ namespace DLM.sapgui
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPPCOOISN");
 
-                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_PROJN-LOW")).Text ="";
+                    ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_PROJN-LOW")).Text = "";
                     /*
                         session.findById("wnd[0]/usr/ctxtS_BUDAT-LOW").text = "05.07.2022"
                         session.findById("wnd[0]/usr/ctxtS_BUDAT-HIGH").text = "06.07.2022"
@@ -1466,14 +1466,14 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                Conexoes.Utilz.Alerta(ex);
+                ex.Alerta();
             }
             return retorno;
         }
         /*AVANÇO DE FÁBRICA*/
         public bool ZPMP(string Pedido, string destino, string ARQUIVO, bool msgs = false, string LAYOUT = @"/SISTEMA")
         {
-   
+
             try
             {
                 if (File.Exists(destino + ARQUIVO))
@@ -1508,10 +1508,9 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    if(msgs)
+                    if (msgs)
                     {
-
-                    MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
                     return false;
                 }
@@ -1520,7 +1519,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
                 else
                 {
@@ -1584,7 +1583,7 @@ namespace DLM.sapgui
                 if (msgs)
                 {
 
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
                 else
                 {
@@ -1603,13 +1602,13 @@ namespace DLM.sapgui
             {
                 if (File.Exists(destino + ARQUIVO))
                 {
-                File.Delete(destino + ARQUIVO);
+                    File.Delete(destino + ARQUIVO);
                 }
                 if (this.IsActive())
                 {
                     Retornar();
                     this.SessaoSAP.StartTransaction("ZPP0100");
-             
+
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/usr/btn%#AUTOTEXT009")).Press();
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_POSID-LOW")).Text = Pedido;
                     //((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtS_DATA-LOW")).Text = antes.Day.String(2) + "." + antes.Month.String(2) + "." + antes.Year;
@@ -1694,7 +1693,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
                 else
                 {
@@ -1721,7 +1720,7 @@ namespace DLM.sapgui
 
                     this.SessaoSAP.StartTransaction("CJI3");
 
-                    
+
                     ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtCN_PROJN-LOW")).Text = Pedido;
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/usr/btn%_CN_PSPNR_%_APP_%-VALU_PUSH")).Press();
 
@@ -1740,7 +1739,7 @@ namespace DLM.sapgui
                     ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/tabsTAB_STRIP/tabpSIVA/ssubSCREEN_HEADER:SAPLALDB:3010/tblSAPLALDBSINGLE/ctxtRSCSEL_255-SLOW_I[1,0]")).Text = "*FM*";
                     ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/tabsTAB_STRIP/tabpSIVA/ssubSCREEN_HEADER:SAPLALDB:3010/tblSAPLALDBSINGLE/ctxtRSCSEL_255-SLOW_I[1,1]")).Text = "*DES*";
                     ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[8]")).Press();
-                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtR_BUDAT-LOW")).Text = DateTime.Now.AddYears(-3).ToShortDateString().Replace("/",".");
+                    ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtR_BUDAT-LOW")).Text = DateTime.Now.AddYears(-3).ToShortDateString().Replace("/", ".");
                     ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtR_BUDAT-HIGH")).Text = DateTime.Now.AddMonths(1).ToShortDateString().Replace("/", ".");
                     ((GuiCTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxtP_DISVAR")).Text = "/PAINEL";
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
@@ -1759,12 +1758,12 @@ namespace DLM.sapgui
 
                         DLM.log.Log(ex);
                     }
-                   
+
 
                     /*SE NÃO CONSEGUIU GERAR O EXCEL*/
-                    if(!File.Exists(destino + ARQUIVO))
+                    if (!File.Exists(destino + ARQUIVO))
                     {
-                    ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
+                        ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
                     }
                     if (!File.Exists(destino + ARQUIVO))
                     {
@@ -1791,7 +1790,7 @@ namespace DLM.sapgui
 
         }
         /*SALDOS DA CONTRA DO RAZÃO*/
-        public List<SAPFAGLB03> FAGLB03(bool cadastrar,  int ano = 2022,  string conta = "3111003011", string empresa_de = "1100", string empresa_ate = "1200")
+        public List<SAPFAGLB03> FAGLB03(bool cadastrar, int ano = 2022, string conta = "3111003011", string empresa_de = "1100", string empresa_ate = "1200")
         {
             var arquivo = $"{Cfg.Init.DIR_APPDATA}FAGLB03.{ano}.{conta}.{empresa_de}.{empresa_ate}.{Cfg.Init.DATA_TEXT}.txt";
 
@@ -1855,7 +1854,7 @@ namespace DLM.sapgui
             {
 
             }
-            
+
 
             //session.findById("wnd[0]/mbar/menu[6]/menu[5]/menu[2]/menu[1]").select
             ((GuiMenu)this.SessaoSAP.FindById("wnd[0]/mbar/menu[6]/menu[5]/menu[2]/menu[1]")).Select();
@@ -1881,9 +1880,9 @@ namespace DLM.sapgui
             //session.findById("wnd[0]/tbar[0]/btn[15]").press
             Press("wnd[0]/tbar[0]/btn[15]");
 
-            if(cadastrar && arquivo.Exists())
+            if (cadastrar && arquivo.Exists())
             {
-                var valores = CargaExcel.FAGLB03(arquivo, empresa_de,empresa_ate,ano,conta, cadastrar);
+                var valores = CargaExcel.FAGLB03(arquivo, empresa_de, empresa_ate, ano, conta, cadastrar);
                 return valores;
             }
 
@@ -1915,14 +1914,14 @@ namespace DLM.sapgui
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[25]")).Press();
                     ((GuiTree)this.SessaoSAP.FindById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell")).ExpandNode("         22");
                     ((GuiTree)this.SessaoSAP.FindById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell")).SelectNode("         41");
-                    ((GuiTree)this.SessaoSAP.FindById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell")).TopNode ="          1";
+                    ((GuiTree)this.SessaoSAP.FindById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell")).TopNode = "          1";
                     ((GuiTree)this.SessaoSAP.FindById("wnd[0]/shellcont/shellcont/shell/shellcont[0]/shell")).DoubleClickNode("         41");
 
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/usr/btn%_%%DYN001_%_APP_%-VALU_PUSH")).Press();
 
                     //limpa a lista
                     ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[16]")).Press();
-                   
+
 
                     for (int i = 0; i < peps.Count; i++)
                     {
@@ -2052,7 +2051,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
                 else
                 {
@@ -2078,9 +2077,9 @@ namespace DLM.sapgui
                 if (this.IsActive())
                 {
                     Retornar();
-                     //session.findById("wnd[0]/tbar[0]/okcd").Text = "/nzdre"
+                    //session.findById("wnd[0]/tbar[0]/okcd").Text = "/nzdre"
                     this.SessaoSAP.StartTransaction("zdre");
-                     //session.findById("wnd[0]/usr/txt$0F-RY00").Text = "2023"
+                    //session.findById("wnd[0]/usr/txt$0F-RY00").Text = "2023"
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txt$0F-RY00")).Text = data.Year.String();
                     //session.findById("wnd[0]/usr/ctxt$0FLLDNR").Text = "0L"
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/ctxt$0FLLDNR")).Text = "0L";
@@ -2094,7 +2093,7 @@ namespace DLM.sapgui
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[0]/usr/txt$0R-PERT")).Text = data.Month.String(2);
                     //session.findById("wnd[0]/tbar[1]/btn[8]").press
                     ((GuiButton)this.SessaoSAP.FindById("wnd[0]/tbar[1]/btn[8]")).Press();
-                    
+
                     //session.findById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]").Select
                     //((GuiMenu)this.SessaoSAP.FindById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]")).Select();
 
@@ -2128,7 +2127,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
                 else
                 {

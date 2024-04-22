@@ -95,7 +95,7 @@ namespace DLM.sapgui
             }
             else
             {
-                Conexoes.Utilz.Alerta($"Não foi possível rodar a CN47N para o contrato {this.Codigo}");
+               DLM.log.Log($"Não foi possível rodar a CN47N para o contrato {this.Codigo}");
             }
             
             //fábrica / engenharia
