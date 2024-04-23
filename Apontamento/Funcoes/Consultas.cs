@@ -16,7 +16,7 @@ namespace DLM.painel
         private static List<PLAN_OBRA> _obras { get; set; }
         private static List<PLAN_PEDIDO> _pedidos { get; set; }
         private static List<string> _pedidos_clean { get; set; }
-        private static List<PLAN_CONTRATO> _titulos_obras { get; set; }
+        private static List<Plan_Ped_Contrato> _titulos_obras { get; set; }
 
 
         public static List<ORC_PED> GetObrasPGO(bool consolidadas = false)
@@ -357,20 +357,52 @@ namespace DLM.painel
             DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
         }
 
+        public static void SincronizarTitulosContratos(List<string> contratos)
+        {
+            var contratos_sap = DLM.SAP.GetContratos();
+            foreach(var contrato in contratos)
+            {
+                if(contrato.Length == 6)
+                {
+                    if(contrato.Int() > 100000)
+                    {
+                        var contrato_sap = contratos_sap.Find(x => x.Contrato == contrato);
 
+                        if (contratos_sap != null)
+                        {
+                            Conexoes.DBases.GetDB().Apagar("contrato", $"%{contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
 
-        public static List<PLAN_CONTRATO> GetTitulosObras()
+                            var linhas = new List<DLM.db.Linha>();
+                            foreach (var pedido in contrato_sap.GetPedidos())
+                            {
+                                if(pedido.PEP.Contains(".P"))
+                                {
+                                    linhas.Add(new db.Linha("contrato", pedido.PEP, "descricao", pedido.Descricao));
+                                }
+                            }
+                            if (linhas.Count > 0)
+                            {
+                                Conexoes.DBases.GetDB().Cadastro(linhas, Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
+                            }
+                        }
+                    }
+                   
+                }
+            }
+        }
+
+        public static List<Plan_Ped_Contrato> GetPedidosContratos()
         {
             if (_titulos_obras == null)
             {
-                _titulos_obras = new List<PLAN_CONTRATO>();
+                _titulos_obras = new List<Plan_Ped_Contrato>();
                 var lista_fab = DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
-                var retorno = new ConcurrentBag<PLAN_CONTRATO>();
+                var retorno = new ConcurrentBag<Plan_Ped_Contrato>();
                 var Tarefas = new List<Task>();
                 foreach (var linha in lista_fab.Linhas)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() =>
-                    retorno.Add(new PLAN_CONTRATO(linha))
+                    retorno.Add(new Plan_Ped_Contrato(linha))
                     ));
                 }
                 Task.WaitAll(Tarefas.ToArray());

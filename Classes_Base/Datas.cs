@@ -46,13 +46,13 @@ namespace DLM.sapgui
             }
         }
 
-        public string Status { get; private set; } = "";
-        public string Texto_Operacao { get; private set; } = "";
+        public string Status { get; set; } = "";
+        public string Texto_Operacao { get; set; } = "";
 
-        public DateTime Data_Inicio_Base { get; private set; } = Cfg.Init.DataDummy();
-        public DateTime Data_Fim_Base { get; private set; } = Cfg.Init.DataDummy();
-        public DateTime Inicio_Previsto { get; private set; } = Cfg.Init.DataDummy();
-        public DateTime Fim_Previsto { get; private set; } = Cfg.Init.DataDummy();
+        public DateTime? Data_Inicio_Base { get; set; }
+        public DateTime? Data_Fim_Base { get;  set; }
+        public DateTime? Inicio_Previsto { get;  set; }
+        public DateTime? Fim_Previsto { get; set; }
 
         public CN47N()
         {

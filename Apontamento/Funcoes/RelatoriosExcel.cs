@@ -97,7 +97,7 @@ namespace DLM.painel
                     var mindia = Cfg.Init.DataDummy();
                     double at = 0;
                     var pedidosstr = Pecas.Select(x => x.pedido_completo).Distinct().ToList();
-                    var peds_peps = Consultas.GetTitulosObras().FindAll(x => pedidosstr.Find(y => x.Contrato.Contains(y)) != null);
+                    var peds_peps = Consultas.GetPedidosContratos().FindAll(x => pedidosstr.Find(y => x.Contrato.Contains(y)) != null);
                     var tot = Pecas.Count;
 
                     /*PEÇAS*/
@@ -109,7 +109,7 @@ namespace DLM.painel
                             var ped = peds_peps.Find(x => x.Contrato == t.contrato);
                             if (ped == null)
                             {
-                                ped = new PLAN_CONTRATO();
+                                ped = new Plan_Ped_Contrato();
                             }
                             pecas_aba_excel.Cells[l0 + l, c0 + 0].Value = t.contrato;
                             pecas_aba_excel.Cells[l0 + l, c0 + 1].Value = ped.Descricao;
@@ -185,10 +185,10 @@ namespace DLM.painel
                         {
                             try
                             {
-                                var ped = Consultas.GetTitulosObras().Find(x => x.Contrato == t.contrato);
+                                var ped = Consultas.GetPedidosContratos().Find(x => x.Contrato == t.contrato);
                                 if (ped == null)
                                 {
-                                    ped = new PLAN_CONTRATO();
+                                    ped = new Plan_Ped_Contrato();
                                 }
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 0].Value = t.contrato;
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 1].Value = ped.Descricao;

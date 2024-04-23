@@ -46,8 +46,6 @@ namespace DLM.sapgui
         }
         public string Descricao { get; set; } = "";
 
-        public List<PLAN_CONTRATO> Titulos { get; set; } = new List<PLAN_CONTRATO>();
-
         public SAP_Consulta_Macro Consulta { get; private set; } = new SAP_Consulta_Macro();
         public List<ZPP0100> ZPP0100 { get; set; } = new List<ZPP0100>();
         public List<ZPP0112> ZPP0112 { get; set; } = new List<ZPP0112>();
@@ -74,7 +72,6 @@ namespace DLM.sapgui
             this.ZPP0100 = new List<ZPP0100>();
             this.ZPMP = new List<ZPMP>();
             this.PEP_PLanejamento = new List<PEP_Planejamento>();
-            this.Titulos = new List<PLAN_CONTRATO>();
 
             var tabela_zpmp = new db.Tabela();
             var tabela_zpp0100 = new db.Tabela();
@@ -87,16 +84,40 @@ namespace DLM.sapgui
             var arq_cn47n = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_CN47NARQ;
 
 
+            var sap = DLM.SAP.GetContratos().Find(x => x.Contrato == this.Contrato);
+            foreach(var ped in sap.GetPedidos())
+            {
+                if(!ped.PEP.Contains(".P"))
+                {
+                    continue;
+                }
+                var peps = ped.GetPeps();
 
-            //cronograma
-            if (Consulta.CN47N(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq_cn47n))
-            {
-                this.CN47N = CargaExcel.CN47N(Cfg.Init.GetDestinoSAP_Excel() + arq_cn47n, out tabela_cn47n);
+                foreach(var pep in peps)
+                {
+                    var ncn = new CN47N();
+                    ncn.Data_Fim_Base = pep.DT_B_FIM;
+                    ncn.Data_Inicio_Base = pep.DT_B_INI;
+                    ncn.Fim_Previsto = pep.DT_P_FIM;
+                    ncn.Inicio_Previsto = pep.DT_P_INI;
+                    ncn.Texto_Operacao = pep.Descricao;
+                    ncn.Status = string.Join(" " ,pep.Status_Sistema.GetValores("BR_STAT"));
+                    ncn.PEP = new PEP_Planejamento(pep.PEP);
+                    this.CN47N.Add(ncn);
+                }
             }
-            else
-            {
-               DLM.log.Log($"Não foi possível rodar a CN47N para o contrato {this.Codigo}");
-            }
+           var w = Conexoes.Utilz.Wait(200, this.Codigo);
+            w.somaProgresso();
+
+            ////cronograma
+            //if (Consulta.CN47N(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq_cn47n))
+            //{
+            //    this.CN47N = CargaExcel.CN47N(Cfg.Init.GetDestinoSAP_Excel() + arq_cn47n, out tabela_cn47n);
+            //}
+            //else
+            //{
+            //   DLM.log.Log($"Não foi possível rodar a CN47N para o contrato {this.Codigo}");
+            //}
             
             //fábrica / engenharia
             if (Consulta.ZPMP(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq_zpmp))
@@ -139,28 +160,13 @@ namespace DLM.sapgui
             }
 
             //ajustes finais
-            if (tabela_zpmp.Count > 0)
-            {
-                this.Descricao = tabela_zpmp[0][(int)TAB_ZPMP.DENOMINACAO].Valor;
-                var pdes = tabela_zpmp.Linhas.GroupBy(x => Conexoes.Utilz.PEP.Get.Pedido(x[(int)TAB_ZPMP.ELEMENTO_PEP].Valor, true)).Select(x => x.First()).ToList();
-                var pedidos = pdes
-                    .Select(x => $"{Conexoes.Utilz.PEP.Get.Pedido(x[(int)TAB_ZPMP.ELEMENTO_PEP].Valor, true)};{x[(int)TAB_ZPMP.DENOMINACAO].Valor}").Distinct().ToList().Select(x => x.Split(';').ToList()).ToList();
-                foreach (var ped in pedidos)
-                {
-                    var titulo = new PLAN_CONTRATO();
-                    titulo.Contrato = ped[0];
-                    titulo.Descricao = ped[1];
-                    this.Titulos.Add(titulo);
-                    this.Titulos = this.Titulos.FindAll(x => x.Contrato.Length > 0);
-                }
-            }
+            
 
 
             DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
             DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao);
             DBases.GetDB().Apagar("Elemento_PEP", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques);
             DBases.GetDB().Apagar("pep", $"%{Contrato}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
-            DBases.GetDB().Apagar("contrato", $"%{Contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
 
             if (this.PEP_PLanejamento.Count > 0)
             {
@@ -184,10 +190,6 @@ namespace DLM.sapgui
                 if (this.CN47N.Count > 0)
                 {
                     DBases.GetDB().Cadastro(this.CN47N.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
-                }
-                if (this.Titulos.Count > 0)
-                {
-                    DBases.GetDB().Cadastro(this.Titulos.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
                 }
             }
 

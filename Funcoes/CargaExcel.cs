@@ -79,7 +79,7 @@ namespace DLM.sapgui
             chave.Add("K_Empresa_Ate", empresa_ate);
             chave.Add("K_Conta", conta);
             Conexoes.DBases.GetDB().Apagar(chave, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
-            var tabela = retorno.GetTabela();
+            var tabela = retorno.GetTabela(true);
             Conexoes.DBases.GetDB().Cadastro(tabela.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
             return retorno;
         }
@@ -107,7 +107,7 @@ namespace DLM.sapgui
 
                 if (retorno.Count > 0)
                 {
-                    var cadastro = retorno.GetTabela();
+                    var cadastro = retorno.GetTabela(true);
                     DBases.GetDB().Apagar("id", "%%", Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
                     DBases.GetDB().Cadastro(cadastro.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
                     Conexoes.Utilz.Alerta($"Avanço sincronizado! {retorno.Count} itens cadastrados.");

@@ -405,53 +405,37 @@ namespace DLM.sapgui
             {
                 this.Descricao = this.Engenharia.Texto_Operacao;
 
-                this.Engenharia_Cronograma_Inicio = this.Engenharia.Data_Inicio_Base;
-                this.Engenharia_Cronograma = this.Engenharia.Data_Fim_Base;
+                this.Engenharia_Cronograma_Inicio = this.Engenharia.Data_Inicio_Base.GetValue();
+                this.Engenharia_Cronograma = this.Engenharia.Data_Fim_Base.GetValue();
 
-                this.eng_base_ini = this.Engenharia.Inicio_Previsto;
-                this.eng_base_fim = this.Engenharia.Fim_Previsto;
+                this.eng_base_ini = this.Engenharia.Inicio_Previsto.GetValue();
+                this.eng_base_fim = this.Engenharia.Fim_Previsto.GetValue();
             }
             if (this.Fabrica != null)
             {
-                this.Fabrica_Cronograma_Inicio = this.Fabrica.Data_Inicio_Base;
-                this.Fabrica_Cronograma = this.Fabrica.Data_Fim_Base;
+                this.Fabrica_Cronograma_Inicio = this.Fabrica.Data_Inicio_Base.GetValue();
+                this.Fabrica_Cronograma = this.Fabrica.Data_Fim_Base.GetValue();
 
-                this.fab_base_ini = this.Fabrica.Inicio_Previsto;
-                this.fab_base_fim = this.Fabrica.Fim_Previsto;
+                this.fab_base_ini = this.Fabrica.Inicio_Previsto.GetValue();
+                this.fab_base_fim = this.Fabrica.Fim_Previsto.GetValue();
             }
             if (LogisticaDatas.Count > 0)
             {
 
-                this.Logistica_Cronograma_Inicio = LogisticaDatas.Min(x => x.Data_Inicio_Base);
-                this.Logistica_Cronograma = LogisticaDatas.Max(x => x.Data_Fim_Base);
+                this.Logistica_Cronograma_Inicio = LogisticaDatas.Min(x => x.Data_Inicio_Base).GetValue();
+                this.Logistica_Cronograma = LogisticaDatas.Max(x => x.Data_Fim_Base).GetValue();
 
-                this.log_base_ini = LogisticaDatas.Max(x => x.Inicio_Previsto);
-                this.log_base_fim = LogisticaDatas.Max(x => x.Fim_Previsto);
+                this.log_base_ini = LogisticaDatas.Max(x => x.Inicio_Previsto).GetValue();
+                this.log_base_fim = LogisticaDatas.Max(x => x.Fim_Previsto).GetValue();
             }
             if (this.Montagem !=null)
             {
-                this.Montagem_Cronograma_Inicio = Montagem.Data_Inicio_Base;
-                this.Montagem_Cronograma = Montagem.Data_Fim_Base;
+                this.Montagem_Cronograma_Inicio = Montagem.Data_Inicio_Base.GetValue();
+                this.Montagem_Cronograma = Montagem.Data_Fim_Base.GetValue();
 
-                this.mon_base_ini = this.Montagem.Inicio_Previsto;
-                this.mon_base_fim = this.Montagem.Fim_Previsto;
+                this.mon_base_ini = this.Montagem.Inicio_Previsto.GetValue();
+                this.mon_base_fim = this.Montagem.Fim_Previsto.GetValue();
             }     
-
-
-           
-
-
-            ///*pegando datas da zpmp*/
-            //if(Producao.Count>0)
-            //{
-            //    /*datas fim de cronograma pegando da zpmp*/
-            //    this.Engenharia_Cronograma = this.Producao.Max(X => X.fim_engenharia_base);
-            //    this.Fabrica_Cronograma = this.Producao.Max(X => X.Fim_Fabrica_Base);
-            //    this.Logistica_Cronograma = this.Producao.Max(X => X.fim_logistica_base);
-            //    this.Engenharia_Liberacao = this.Producao.Max(X => X.fim_engenharia_real);
-            //}
-
-            
 
             foreach (var t in this.Embarque.FindAll(x => x.Carregado))
             {

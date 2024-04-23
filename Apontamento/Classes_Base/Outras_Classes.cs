@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace DLM.painel
 {
-    public class PLAN_CONTRATO
+    public class Plan_Ped_Contrato
     {
         public override string ToString()
         {
@@ -17,11 +17,11 @@ namespace DLM.painel
         }
         public string Contrato { get; set; } = "";
         public string Descricao { get; set; } = "";
-        public PLAN_CONTRATO()
+        public Plan_Ped_Contrato()
         {
 
         }
-        public PLAN_CONTRATO(DLM.db.Linha L, bool orcamento = false)
+        public Plan_Ped_Contrato(DLM.db.Linha L, bool orcamento = false)
         {
             if (!orcamento)
             {

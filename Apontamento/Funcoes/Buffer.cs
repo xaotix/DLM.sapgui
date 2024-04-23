@@ -65,7 +65,7 @@ namespace DLM.painel
         public static List<Conexoes.Bobina> Bobinas { get; set; } = new List<Conexoes.Bobina>();
         public static void Carregar()
         {
-            Consultas.GetTitulosObras();
+            Consultas.GetPedidosContratos();
             Consultas.GetObras();
             Consultas.GetPedidos();
             Buffer.ObrasPorSegmento();
