@@ -4,6 +4,7 @@ using DLM.sapgui;
 using DLM.vars;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Media;
 
@@ -329,6 +330,7 @@ namespace DLM.painel
                 return 0;
             }
         }
+        [Browsable(false)]
         public Linha Linha { get; set; } = new Linha();
 
         public ImageSource imagem
