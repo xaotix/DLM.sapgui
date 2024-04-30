@@ -130,7 +130,13 @@ namespace DLM.painel
         }
         public void Set(List<PLAN_PECA> lista)
         {
+
             this._pecas = new List<PLAN_PECA>();
+            if(lista.Count==0)
+            {
+                return;
+            }
+
             this._pecas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsW(this.PEP)));
             if (this.carregou_etapas)
             {

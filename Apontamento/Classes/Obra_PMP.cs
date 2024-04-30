@@ -399,7 +399,28 @@ namespace DLM.painel
 
         public List<PLAN_PECA> Getpecas()
         {
-            return Obra.Getpecas().FindAll(x => x.Tipo == tipo).FindAll(x => x.PEP.StartsWith(this.pep));
+            var retorno = new List<PLAN_PECA>();
+
+            var pecas = Obra.Getpecas().FindAll(x => x.PEP.StartsWith(this.pep));
+
+            var tipos = pecas.GroupBy(x => x.Tipo).ToList();
+            if(tipos.Count>0)
+            {
+                var tipo_real = tipos.Find(x => x.Key == Tipo_Material.Real);
+                if (tipo_real != null)
+                {
+                    retorno.AddRange(tipo_real.ToList());
+                }
+                else
+                {
+                    retorno.AddRange(tipos.First().ToList());
+                }
+            }
+            else
+            {
+                retorno.AddRange(pecas);
+            }
+            return retorno;
         }
         public double total_embarcado
         {
@@ -812,7 +833,6 @@ namespace DLM.painel
                 this.Material_REAL = true;
                 this.pep = Real.PEP;
                 this.descricao = real.descricao;
-
             }
 
             if (orcamento != null)

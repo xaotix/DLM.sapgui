@@ -82,6 +82,7 @@ namespace DLM.painel
                 var ped = pedidos.Find(x => x.pep == real);
                 if (ped != null)
                 {
+
                     ped.Real.Set(reais_pecas);
                 }
                 w.somaProgresso();
@@ -165,7 +166,7 @@ namespace DLM.painel
             var tabela = DBases.GetDBPGO().Consulta($"SELECT * from {Cfg.Init.db_orcamento}.{tab} as prod where {chave}");
             foreach (var linha in tabela.Linhas)
             {
-                PLAN_PECA pc = new PLAN_PECA(linha, true);
+                var pc = new PLAN_PECA(linha, true);
 
                 if (consolidada)
                 {

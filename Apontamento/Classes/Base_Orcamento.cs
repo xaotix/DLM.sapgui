@@ -11,20 +11,20 @@ namespace DLM.painel
     {
         public void GetDatas()
         {
-            this.engenharia_cronograma_inicio = Linha["ei"].Data();
+            this.engenharia_cronograma_inicio = Linha["ei"].DataNull();
             this.engenharia_cronograma = Linha["ef"].Data();
 
-            this.fabrica_cronograma_inicio = Linha["fi"].Data();
+            this.fabrica_cronograma_inicio = Linha["fi"].DataNull();
             this.fabrica_cronograma = Linha["ff"].Data();
 
-            this.logistica_cronograma_inicio = Linha["li"].Data();
-            this.logistica_cronograma = Linha["lf"].Data();
+            this.logistica_cronograma_inicio = Linha["li"].DataNull();
+            this.logistica_cronograma = Linha["lf"].DataNull();
 
-            this.montagem_cronograma_inicio = Linha["mi"].Data();
-            this.montagem_cronograma = Linha["mf"].Data();
+            this.montagem_cronograma_inicio = Linha["mi"].DataNull();
+            this.montagem_cronograma = Linha["mf"].DataNull();
 
-            this.mi_s = Linha["mi_s"].Data();
-            this.mf_s = Linha["mf_s"].Data();
+            this.mi_s = Linha["mi_s"].DataNull();
+            this.mf_s = Linha["mf_s"].DataNull();
         }
 
 
