@@ -47,16 +47,6 @@ namespace DLM.sapgui
                 }
             }
         }
-        public static List<CN47N> GetCronograma(string Pedido)
-        {
-            var Datas = new List<CN47N>();
-            var tabela = DLM.SAP.ConsultarProjetoWBS(Pedido);
-            foreach (var s in tabela.ToList())
-            {
-                Datas.Add(new CN47N(s));
-            }
-            return Datas;
-        }
 
         public static List<PLAN_PEP> converter(List<PEP_Planejamento> origem/*, bool consultar_existentes = false*/)
         {
