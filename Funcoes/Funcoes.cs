@@ -6,109 +6,49 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace DLM.sapgui
 {
    public partial class Funcoes
     {
-        public static bool GravarZContratos(List<string> pedidos)
-        {
-            pedidos = pedidos.FindAll(x => x.Replace(" ", "") != "");
-            DLM.sapgui.Consulta sap = new Consulta();
-            var w = Conexoes.Utilz.Wait(pedidos.Count, "Procurando notas fiscais...");
-            var destino = Conexoes.Utilz.CriarPasta(Cfg.Init.DIR_APP, "SAP");
-            var CON = false;
-            if (Directory.Exists(destino))
-            {
-                foreach (var ST in pedidos)
-                {
-                    string arnome = ST.Replace(".", "").Replace("*", "") + Cfg.Init.SAP_ZCONTRATOSARQ;
-                    CON = sap.ZCONTRATOS(ST, destino, ST.Replace(".", "").Replace("*", "") + Cfg.Init.SAP_ZCONTRATOSARQ);
-                    if (CON)
-                    {
-                        DBases.GetDB().Apagar("Elemento_PEP", $"%{ST}%", Cfg.Init.db_comum, Cfg.Init.tb_zcontratos_notas_fiscais, true);
-                        DLM.painel.Consultas.MatarExcel(false);
-                        List<ZCONTRATOS> notas =  CargaExcel.ZCONTRATO(destino + arnome);
-                       DBases.GetDB().Cadastro(notas.Select(x=>x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zcontratos_notas_fiscais);
-                    }
-                    else
-                    {
-                        w.Close();
-                        return CON;
-                    }
 
-                w.somaProgresso();
-                }
-            }
-            else
-            {
-                w.Close();
-
-                return false;
-            }
-
-            w.Close();
-            return CON;
-        }
-        public static void RodaScript(List<string> Script, string Destino)
+        public static void RodaScript(List<string> Script)
         {
 
             if (Script.Count() > 0)
             {
                 try
                 {
-                    if (File.Exists(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp))
+                    var ARQ_TMP = $"{Cfg.Init.DIR_SCRIPTS}DLMScript_{Conexoes.Utilz.RandomString(2)}.vbs";
+                    denovo:
+                    if (ARQ_TMP.Exists())
                     {
-                        File.Delete(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp);
-
+                       if(!ARQ_TMP.Delete(false))
+                        {
+                            ARQ_TMP = $"{Cfg.Init.DIR_SCRIPTS}DLMScript_{Conexoes.Utilz.RandomString(2)}.vbs";
+                            goto denovo;
+                        }
                     }
-                    Biblioteca_Daniel.Arquivo_Pasta.Buffer_Texto.gravar_arquivo(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp, Script.ToList());
-                    Process scriptProc = new Process();
-                    scriptProc.StartInfo.FileName = Conexoes.Utilz.getNome(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp) + ".vbs";
-                    scriptProc.StartInfo.WorkingDirectory = Conexoes.Utilz.getPasta(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp); //<---very important 
-                                                                                                                       //scriptProc.StartInfo.Arguments = "//B //Nologo vbscript.vbs";
-                    scriptProc.StartInfo.WindowStyle = ProcessWindowStyle.Maximized; //prevent console window from popping up
+                    
+                    Conexoes.Utilz.Arquivo.Gravar(ARQ_TMP, Script.ToList());
+                    var scriptProc = new Process();
+                    scriptProc.StartInfo.FileName = ARQ_TMP;
+                    scriptProc.StartInfo.WorkingDirectory = Utilz.getPasta(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp); 
+
+                    scriptProc.StartInfo.WindowStyle = ProcessWindowStyle.Maximized; 
                     scriptProc.Start();
-                    scriptProc.WaitForExit(); // <-- Optional if you want program running until your script exit
+                    scriptProc.WaitForExit(); 
                     scriptProc.Close();
                 }
                 catch (Exception ex)
                 {
                     Conexoes.Utilz.Alerta(ex);
-                    //MessageBox.Show(ex.Message);
                     return;
                 }
             }
         }
-        public static List<CN47N_Datas> GetCronograma(string Pedido)
-        {
-            var Datas = new List<CN47N_Datas>();
-            var t = DLM.sap.RfcsSAP.ConsultarPedido(Pedido);
-            foreach (var s in t)
-            {
-                Datas.Add(new CN47N_Datas(s));
-            }
-            return Datas;
-        }
-        private  static List<PLAN_PEDIDO> _pedidos { get; set; }
-        public static List<PLAN_PEDIDO> GetPedidos()
-        {
-            if(_pedidos==null)
-            {
-                _pedidos = new List<PLAN_PEDIDO>();
-                var ss = DLM.sap.RfcsSAP.ListarObras(true);
-               foreach(var s in ss)
-                {
-                    PLAN_PEDIDO pp = new PLAN_PEDIDO(s);
-                    _pedidos.Add(pp);
-                }
-            }
-            return _pedidos;
-        }
-        public static List<PLAN_PEP> converter(List<PEPConsultaSAP> origem/*, bool consultar_existentes = false*/)
+
+        public static List<PLAN_PEP> converter(List<PEP_Planejamento> origem/*, bool consultar_existentes = false*/)
         {
             var PEPS_DUMP = origem.Select(x =>
             new PLAN_PEP()

@@ -32,19 +32,19 @@ namespace DLM.sapgui
                 switch (this.tipo)
                 {
                     case CJ20N_Tipo.Pedido:
-                return Conexoes.BufferImagem.folder_green;
+                return BufferImagem.folder_green;
                     case CJ20N_Tipo.Etapa:
-                        return Conexoes.BufferImagem.folder;
+                        return BufferImagem.folder;
                     case CJ20N_Tipo.SubEtapa:
-                        return Conexoes.BufferImagem.folder_txt;
+                        return BufferImagem.folder_txt;
                     case CJ20N_Tipo.PEP:
-                        return Conexoes.BufferImagem.folder_downloads;
+                        return BufferImagem.folder_downloads;
                     case CJ20N_Tipo.Tarefa:
-                        return Conexoes.BufferImagem.circulo_verde_16x16;
+                        return BufferImagem.circulo_verde_16x16;
                     case CJ20N_Tipo.Desconhecido:
-                        return Conexoes.BufferImagem.circulo_vermelho_16x16;
+                        return BufferImagem.circulo_vermelho_16x16;
                 }
-                return Conexoes.BufferImagem.circulo_16x16;
+                return BufferImagem.circulo_16x16;
             }
         }
 
@@ -192,7 +192,7 @@ namespace DLM.sapgui
             if(this.key.Replace(" ", "") == "") { return false; }
             return this.SAP.CJ20N_Apagar(this);
         }
-        public Consulta SAP { get; set; }
+        public SAP_Consulta_Macro SAP { get; set; }
         public List<CJ20N_No> nos { get; set; } = new List<CJ20N_No>();
         public CJ20N_No GetRaiz()
         {
@@ -296,20 +296,20 @@ namespace DLM.sapgui
                 
                 
 
-                List<string> keys = new List<string>();
+                var keys = new List<string>();
                 foreach(string s in lvl0)
                 {
                     keys.Add(s);
                 }
 
-                keys = keys.OrderBy(x => Conexoes.Utilz.Int(x)).ToList();
+                keys = keys.OrderBy(x => x.Int()).ToList();
 
 
 
-                foreach (string key in keys)
+                foreach (var key in keys)
                 {
 
-                    if (Conexoes.Utilz.Int(key) > Conexoes.Utilz.Int(this.key))
+                    if (key.Int() > this.key.Int())
                     {
                         var b = GetRaiz().nos.Find(x => x.key == key);
 
@@ -412,7 +412,7 @@ namespace DLM.sapgui
             }
             return _filhos;
         }
-        public CJ20N_No(string nome, string descricao, string key, string chave_pep, GuiTree arvore, Consulta SessaoSAP)
+        public CJ20N_No(string nome, string descricao, string key, string chave_pep, GuiTree arvore, SAP_Consulta_Macro SessaoSAP)
         {
             this.arvore = arvore;
             this.Nome = nome;
@@ -424,7 +424,7 @@ namespace DLM.sapgui
             {
             }
         }
-        public CJ20N_No(GuiTree arvore, Consulta SessaoSAP)
+        public CJ20N_No(GuiTree arvore, SAP_Consulta_Macro SessaoSAP)
         {
             this.arvore = arvore;
             this.key = key;

@@ -1,12 +1,8 @@
-﻿using DLM.vars;
+﻿using Conexoes;
+using DLM.vars;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 
@@ -29,8 +25,7 @@ namespace DLM.painel
             this.obras = Obras;
 
             this.PEP = $"{this.obras.Count} Obras";
-            this.Titulo.CHAVE = contrato;
-            this.Titulo.DESCRICAO = nome;
+            this.descricao = nome;
 
             this.engenharia_cronograma = Obras.Max(x => x.engenharia_cronograma);
             this.engenharia_liberacao = Obras.Max(x => x.engenharia_cronograma);
@@ -38,7 +33,7 @@ namespace DLM.painel
             this.pedidos_qtd = Obras.Sum(x => x.pedidos_qtd);
             this.fabrica_cronograma = Obras.Max(x => x.fabrica_cronograma);
 
-            this.nome = Obras.Count() + " OBRAS";
+            this.descricao = Obras.Count() + " OBRAS";
 
             this.peso_planejado = Math.Round(Obras.Sum(x => x.peso_planejado));
             this.peso_produzido = Math.Round(Obras.Sum(x => x.peso_produzido));
@@ -94,18 +89,21 @@ namespace DLM.painel
 
             this.id_montagem = 1;
 
-            this.resumo_pecas = new Resumo_Pecas(Obras.Select(x => x.resumo_pecas).ToList());
+            //this.resumo_pecas = new Resumo_Pecas(Obras.Select(x => x.resumo_pecas).ToList());
 
             this.status_montagem = "EM ANDAMENTO";
 
             if(nome!="")
             {
-                this.nome = nome;
+                this.descricao = nome;
             }
         }
     }
     public class PLAN_OBRA : PLAN_BASE
     {
+        private List<Conexoes.MSAP_PEP> _peps_eng { get; set; }
+        private List<Conexoes.MSAP_Pedido> _Pedidos_Eng { get; set; }
+
         public ImageSource Imagem
         {
             get
@@ -128,7 +126,7 @@ namespace DLM.painel
         {
             get
             {
-                return new Telerik.Windows.Controls.Map.Location(latitude, longitude) { Description = this.nome };
+                return new Telerik.Windows.Controls.Map.Location(latitude, longitude) { Description = this.descricao };
             }
         }
         public double dias
@@ -137,7 +135,7 @@ namespace DLM.painel
             {
                 var dt = DateTime.Now;
                 var ts = (DateTime)ultima_consulta_sap;
-                return Conexoes.Utilz.Double((dt - ts).TotalDays,2);
+                return (dt - ts).TotalDays.Double(2);
             }
         }
         public override string ToString()
@@ -145,24 +143,7 @@ namespace DLM.painel
             return descricao;
         }
 
-        private List<string> _pedidos_clean { get; set; }
-        public List<string> pedidos_clean
-        {
-            get
-            {
-                if (_pedidos_clean == null)
-                {
-                    if (this.contrato == "")
-                    {
-                        return new List<string>();
-                    }
-                    _pedidos_clean = DLM.painel.Consultas.GetPedidosClean(new List<string> {this.contrato },false);
 
-
-                }
-                return _pedidos_clean;
-            }
-        }
         public List<PLAN_PEDIDO> pedidos
         {
             get
@@ -179,7 +160,7 @@ namespace DLM.painel
             }
         }
 
-        public string nome { get; set; } = "";
+        //public string nome { get; set; } = "";
         public double latitude { get; private set; } = 0;
         public double longitude { get; private set; } = 0;
 
@@ -188,7 +169,6 @@ namespace DLM.painel
 
 
 
-        private List<Conexoes.MSAP_Pedido> _Pedidos_Eng { get; set; }
         public List<Conexoes.MSAP_Pedido> pedidos_eng
         {
             get
@@ -201,7 +181,6 @@ namespace DLM.painel
             }
         }
 
-        private List<Conexoes.MSAP_PEP> _peps_eng { get; set; }
         public List<Conexoes.MSAP_PEP> peps_eng
         {
             get
@@ -225,63 +204,74 @@ namespace DLM.painel
         {
 
         }
-        public PLAN_OBRA(DLM.db.Linha L)
+        public PLAN_OBRA(DLM.db.Linha linha)
         {
-            this.Linha = L;
-            string pedido_principal = L.Get("pedido_principal").Valor;
+            this.Linha = linha;
+            string pedido_principal = linha["pedido_principal"].Valor;
             this.PEP = pedido_principal.Replace(".C00", ".P").Replace(".P00","").Replace(".G00","");
+            this.descricao = linha["nome"].Valor;
             this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");
-            this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
-            this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();
-            this.etapas_qtd = L.Get("etapas").Int();
-            this.pedidos_qtd = L.Get("pedidos").Int();
-            this.fabrica_cronograma = L.Get("fabrica_cronograma").Data();
-            this.latitude = L.Get("latitude").Double(8);
-            this.longitude = L.Get("longitude").Double(8);
-            this.nome = L["Nome"].Valor;
-            this.peso_embarcado = L.Get("peso_embarcado").Double();
-            this.peso_planejado = L.Get("peso_planejado").Double();
-            this.peso_produzido = L.Get("peso_produzido").Double();
-            this.total_embarcado = L.Get("total_embarcado").Double();
-            this.total_fabricado = L.Get("total_produzido").Double();
-            this.liberado_engenharia = L.Get("liberado_engenharia").Double();
-            this.peso_montado = L.Get("peso_montado").Double();
-            this.total_montado = L.Get("total_montado").Double();
-            this.ultima_edicao = L.Get("ultima_atualizacao").Data();
+            this.engenharia_cronograma = linha["engenharia_cronograma"].DataNull();
+            this.engenharia_liberacao = linha["engenharia_liberacao"].DataNull();
+            this.etapas_qtd = linha["etapas"].Int();
+            this.pedidos_qtd = linha["pedidos"].Int();
+            this.fabrica_cronograma = linha["fabrica_cronograma"].DataNull();
+            this.latitude = linha["latitude"].Double(8);
+            this.longitude = linha["longitude"].Double(8);
+            this.descricao = linha["nome"].Valor;
+            this.peso_embarcado = linha["peso_embarcado"].Double();
+            this.peso_planejado = linha["peso_planejado"].Double();
+            this.peso_produzido = linha["peso_produzido"].Double();
+            this.total_embarcado = linha["total_embarcado"].Double();
+            this.total_fabricado = linha["total_produzido"].Double();
+            this.liberado_engenharia = linha["liberado_engenharia"].Double();
+            this.peso_montado = linha["peso_montado"].Double();
+            this.total_montado = linha["total_montado"].Double();
+            this.ultima_edicao = linha["ultima_atualizacao"].DataNull();
 
-            this.dados_montagem = L.Get("total_montado").Valor != "";
+            this.dados_montagem = linha["total_montado"].Valor != "";
 
-            this.montagem_inicio = L.Get("montagem_inicio").Data();
-            this.montagem_fim = L.Get("montagem_fim").Data();
+            this.montagem_inicio = linha["montagem_inicio"].DataNull();
+            this.montagem_fim = linha["montagem_fim"].DataNull();
 
-            this.ultima_consulta_sap = L.Get("ultima_consulta_sap").Data();
+            this.ultima_consulta_sap = linha["ultima_consulta_sap"].DataNull();
 
+            this.engenharia_previsto = linha["es"].Double();
+            this.fabrica_previsto = linha["fs"].Double();
+            this.embarque_previsto = linha["ls"].Double();
+            this.montagem_previsto = linha["ms"].Double();
 
+            this.atraso_embarque = linha["atraso_embarque"].Int();
+            this.atraso_engenharia = linha["atraso_engenharia"].Int();
+            this.atraso_fabrica = linha["atraso_fabrica"].Int();
+            this.atraso_montagem = linha["atraso_montagem"].Int();
 
-            this.engenharia_previsto = L.Get("es").Double();
-            this.fabrica_previsto = L.Get("fs").Double();
-            this.embarque_previsto = L.Get("ls").Double();
-            this.montagem_previsto = L.Get("ms").Double();
+            this.id_montagem = linha["id_montagem"].Int();
+            this.status_montagem = linha["status_montagem"].Valor;
 
+            this.criado = linha["criado"].DataNull();
 
-            this.atraso_embarque = L.Get("atraso_embarque").Int();
-            this.atraso_engenharia = L.Get("atraso_engenharia").Int();
-            this.atraso_fabrica = L.Get("atraso_fabrica").Int();
-            this.atraso_montagem = L.Get("atraso_montagem").Int();
-
-            this.id_montagem = L.Get("id_montagem").Int();
-            this.status_montagem = L.Get("status_montagem").Valor;
-
-            this.criado = L.Get("criado").Data();
-
-            DateTime mont = L.Get("update_montagem").Data();
+            DateTime mont = linha["update_montagem"].Data();
             if (mont > Cfg.Init.DataDummy())
             {
                 this.update_montagem = "Montagem: " + mont.ToShortDateString();
             }
 
-            this.finalizado = (L.Get("finalizado").Valor.ToUpper() == "X");
+            this.finalizado = linha["finalizado"].Valor.ToUpper() == "X";
 
+
+            if (this.descricao.Length == 0)
+            {
+                var ped = DLM.SAP.GetPedido(this.contrato_completo + ".P00");
+                if (ped != null)
+                {
+                    this.descricao = ped.Descricao;
+                }
+                else
+                {
+
+                }
+            }
         }
     }
 }

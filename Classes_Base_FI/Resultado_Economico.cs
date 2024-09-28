@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
@@ -65,7 +63,7 @@ namespace DLM.sapgui
         {
             get
             {
-                return this.ano + "/" + this.mes.ToString().PadLeft(2, '0');
+                return this.ano + "/" + this.mes.String(2);
             }
         }
         [Browsable(false)]
@@ -74,7 +72,7 @@ namespace DLM.sapgui
         {
             get
             {
-                return this.ano + "/" + this.mes.ToString().PadLeft(2, '0') + "/" + this.dia.ToString().PadLeft(2, '0');
+                return this.ano + "/" + this.mes.String(2) + "/" + this.dia.String(2);
             }
         }
         [Browsable(false)]
@@ -88,7 +86,7 @@ namespace DLM.sapgui
         {
             get
             {
-                return ano + "/" + mes.ToString().PadLeft(2,'0') + " - " + Tipo_Lancamento.ToString();
+                return ano + "/" + mes.String(2) + " - " + Tipo_Lancamento.ToString();
             }
         }
         [ReadOnly(true)]
@@ -174,7 +172,7 @@ namespace DLM.sapgui
             {
                 if(_descricao=="" && SubLancamentos.Count>0)
                 {
-                    _descricao = string.Join(" - ", SubLancamentos.Select(x => x.descricao).Distinct().ToList()).CortarString( 100);
+                    _descricao = string.Join(" - ", SubLancamentos.Select(x => x.descricao).Distinct().ToList()).Esquerda( 100, true);
                 }
 
                 return _descricao;

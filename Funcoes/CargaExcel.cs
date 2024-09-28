@@ -4,12 +4,9 @@ using DLM.vars;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace DLM.sapgui
 {
@@ -18,30 +15,26 @@ namespace DLM.sapgui
         public static int max_tasks { get; set; } = 700;
         public static List<ZCONTRATOS> ZCONTRATO(string arquivo)
         {
-            ConcurrentBag<ZCONTRATOS> retorno = new ConcurrentBag<ZCONTRATOS>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            var retorno = new ConcurrentBag<ZCONTRATOS>();
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZCONTRATOS(l))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
-            return retorno.ToList().FindAll(x=>x.Elemento_PEP.Replace(" ","")!="");
+            return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
-        public static List<ZPP0100> ZPP0100(string arquivo)
+        public static List<ZPP0100> ZPP0100(string arquivo, out DLM.db.Tabela tabela)
         {
-            ConcurrentBag<ZPP0100> retorno = new ConcurrentBag<ZPP0100>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            var retorno = new ConcurrentBag<ZPP0100>();
+            tabela = Utilz.Excel.GetPrimeiraAba(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPP0100(l))));
@@ -49,38 +42,34 @@ namespace DLM.sapgui
                 Task.WaitAll(Tarefas.ToArray());
                 Tarefas.Clear();
             }
-
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
         public static List<ZPP0112> ZPP0112(string arquivo)
         {
-            ConcurrentBag<ZPP0112> retorno = new ConcurrentBag<ZPP0112>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            var retorno = new ConcurrentBag<ZPP0112>();
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPP0112(l))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
-        public static List<FAGLB03> FAGLB03(string arquivo, string empresa_de = "1100", string empresa_ate = "1200", int ano = 2022, string conta = "3111003011", bool cadastrar = true)
+        public static List<SAPFAGLB03> FAGLB03(string arquivo, string empresa_de = "1100", string empresa_ate = "1200", int ano = 2022, string conta = "3111003011", bool cadastrar = true)
         {
             var linhas = Conexoes.Utilz.Arquivo.Ler(arquivo);
-            List<FAGLB03> retorno = new List<FAGLB03>();
-            foreach(var linha in linhas)
+            List<SAPFAGLB03> retorno = new List<SAPFAGLB03>();
+            foreach (var linha in linhas)
             {
                 var valores = linha.Split('|').ToList().Select(x => x.TrimStart().TrimEnd()).ToList();
 
-                if(valores.Count>=(int)TAB_FAGLB03.Dt_lcto)
+                if (valores.Count >= (int)TAB_FAGLB03.Dt_lcto)
                 {
-                    FAGLB03 pp = new FAGLB03(valores, empresa_de, empresa_ate, ano, conta);
+                    SAPFAGLB03 pp = new SAPFAGLB03(valores, empresa_de, empresa_ate, ano, conta);
                     retorno.Add(pp);
                 }
             }
@@ -90,28 +79,27 @@ namespace DLM.sapgui
             chave.Add("K_Empresa_Ate", empresa_ate);
             chave.Add("K_Conta", conta);
             Conexoes.DBases.GetDB().Apagar(chave, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
-            var tabela = retorno.GetTabela();
+            var tabela = retorno.GetTabela(true);
             Conexoes.DBases.GetDB().Cadastro(tabela.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
             return retorno;
         }
         public static List<AVANCO_FATURAMENTO> Cadastro_AVANCO_FATURAMENTO()
         {
-            List<AVANCO_FATURAMENTO> retorno = new List<AVANCO_FATURAMENTO>();
+            var retorno = new List<AVANCO_FATURAMENTO>();
             string arquivo = Conexoes.Utilz.Abrir_String("xlsx");
-            if(arquivo == null) { return new List<AVANCO_FATURAMENTO>(); }
+            if (arquivo == null) { return new List<AVANCO_FATURAMENTO>(); }
             var selecao = Conexoes.Utilz.Excel.GetTabelaPrompt(arquivo);
 
-            if(selecao.Linhas.Count>0)
+            if (selecao.Count > 0)
             {
-               
-                foreach(var l in selecao.Linhas)
+                foreach (var linha in selecao.Linhas)
                 {
-                    var pedido = l.Get("C1").Valor;
-                    var valor_contrato = l.Get("C6").Valor;
-                    var valor_f_direto = l.Get("C7").Valor;
+                    var pedido =         linha["C1"].Valor;
+                    var valor_contrato = linha["C6"].Valor;
+                    var valor_f_direto = linha["C7"].Valor;
 
                     var novo = new AVANCO_FATURAMENTO(pedido, valor_contrato, valor_f_direto);
-                    if(novo.Pedido.Length == 13)
+                    if (novo.Pedido.Length == 13)
                     {
                         retorno.Add(novo);
                     }
@@ -119,9 +107,8 @@ namespace DLM.sapgui
 
                 if (retorno.Count > 0)
                 {
-                    var cadastro = retorno.GetTabela();
-
-                    DBases.GetDB().Apagar(new db.Linha(new List<db.Celula> { new db.Celula("id", "%%") }), Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento, "And", false);
+                    var cadastro = retorno.GetTabela(true);
+                    DBases.GetDB().Apagar("id", "%%", Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
                     DBases.GetDB().Cadastro(cadastro.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
                     Conexoes.Utilz.Alerta($"Avanço sincronizado! {retorno.Count} itens cadastrados.");
                 }
@@ -129,122 +116,121 @@ namespace DLM.sapgui
                 {
                     Conexoes.Utilz.Alerta("Nenhum item de avanço encontrado na aba selecionada.");
                 }
-
             }
             return retorno;
         }
         public static List<FAGLL03> FAGLL03(string arquivo, string pedido)
         {
-            ConcurrentBag<FAGLL03> retorno = new ConcurrentBag<FAGLL03>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            var retorno = new ConcurrentBag<FAGLL03>();
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new FAGLL03(pedido,l))));
+                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new FAGLL03(pedido, l))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
             return retorno.ToList().FindAll(x => x.N_documento.Replace(" ", "") != "");
         }
         public static List<CJI3> CJI3(string arquivo)
         {
-            ConcurrentBag<CJI3> retorno = new ConcurrentBag<CJI3>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            var retorno = new ConcurrentBag<CJI3>();
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new CJI3(l))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
 
-        public static List<ZPMP> ZPMP(string arquivo)
+        public static List<ZPMP> ZPMP(string arquivo, out DLM.db.Tabela tabela)
         {
-            ConcurrentBag<ZPMP> retorno = new ConcurrentBag<ZPMP>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var sub in DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks))
+            var retorno = new ConcurrentBag<ZPMP>();
+            tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
+                var Tarefas = new List<Task>();
                 foreach (var l in sub)
                 {
                     Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPMP(l))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
-            return retorno.ToList();
+            return retorno.ToList().FindAll(x => x.PEP.Codigo.Length > 0).ToList();
         }
         public static List<ZPP0066N> ZPP0066N(string arquivo, bool semperfil)
         {
-            ConcurrentBag<ZPP0066N> retorno = new ConcurrentBag<ZPP0066N>();
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-
-            var sublista = DLM.painel.Consultas.quebrar_lista(t.Linhas, max_tasks);
-            foreach (var sub in sublista)
+            var retorno = new ConcurrentBag<ZPP0066N>();
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
+            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
             {
-                List<Task> Tarefas = new List<Task>();
-
-                foreach (var l in sub)
+                var Tarefas = new List<Task>();
+                foreach (var linha in sub)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPP0066N(l,semperfil))));
+                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPP0066N(linha, semperfil))));
                 }
                 Task.WaitAll(Tarefas.ToArray());
-                Tarefas.Clear();
             }
-
-            return retorno.ToList().FindAll(x=>x.Material!="").ToList();
+            return retorno.ToList().FindAll(x => x.Material != "").ToList();
         }
-        public static List<DLM.painel.PLAN_PECA> ZPPCOOISN(string destino,string Pedido, bool buffer = false)
+        public static List<PLAN_PECA_ZPMP> ZPPCOOISN(string destino, string Pedido, bool buffer = false)
         {
-            List<DLM.painel.PLAN_PECA> Retorno = new List<DLM.painel.PLAN_PECA>();
+            var retorno = new List<PLAN_PECA_ZPMP>();
 
             //19/06/2020 - aumentei o filtro para pegar a subetapa. serão mais consultas, no entanto evita os erros.
             /*12/05/2022 - mudei a chamada para um procedure.*/
-            var chamada = $"call comum.zpp_cooisn_get_qtd_pc('{Pedido.Replace("*","").Replace(" ","")}')";
-            //var consulta = DBases.GetDBMySQL().Consulta($"SELECT left(pr.pep,17) as pep, count(pr.pep) as pcs from {Cfg.Init.db_comum}.{Cfg.Init.tb_zpmp_producao} as pr where pr.pep like '%{Pedido}%' and pr.material like '31%' group by left(pr.pep,17) order by count(pr.pep) desc".Replace("*", ""));
+            var ped = Pedido.Replace("*", "").Replace(" ", "");
+            var chamada = $"call comum.getzppcoisn_qtd_pcs('{ped}')";
             var consulta = DBases.GetDB().Consulta(chamada);
-            var peps = consulta.Linhas.Select(x => x.Get("pep").Valor).ToList(); 
-            var w = Conexoes.Utilz.Wait(peps.Count, Pedido + " ZPPCOOISN"); 
-            w.somaProgresso();
-            foreach (var s in peps)
+            var peps = consulta.Linhas.Select(x => x["pep"].Valor).ToList();
+
+            var total = consulta.Linhas.Select(x => x["pcs"].Int()).Sum();
+            if(total>1500)
             {
-            var pecas = DLM.painel.Consultas.GetPecasReal(new List<string> { s }).ToList();
-                if(pecas.Count>0)
+                foreach (var pep in peps)
+                {
+                    var pecas = DLM.painel.Consultas.GetPecasZPMP(pep).ToList();
+                    if (pecas.Count > 0)
+                    {
+                        DLM.painel.Consultas.MatarExcel(false);
+                        ZPPCOOISN(destino, pep, pecas, buffer);
+                        retorno.AddRange(pecas);
+                    }
+                }
+            }
+            else
+            {
+                /*11.08.2023 - simplificar chamadas -> pedidos com menos de 6 mil peças faz a coois completa*/
+                var pecas = DLM.painel.Consultas.GetPecasZPMP(ped).ToList();
+                if (pecas.Count > 0)
                 {
                     DLM.painel.Consultas.MatarExcel(false);
-                    ZPPCOOISN(destino,s, pecas,buffer);
-                    Retorno.AddRange(pecas);
+                    ZPPCOOISN(destino, ped, pecas, buffer);
+                    retorno.AddRange(pecas);
                 }
-                w.somaProgresso(Pedido + " ZPPCOOISN " + s);
             }
-            w.Close();
-            return Retorno;
+
+
+           
+            return retorno;
         }
-        private static void ZPPCOOISN(string dest, string Pedido, List<DLM.painel.PLAN_PECA> retorno, bool buffer = false)
+        private static void ZPPCOOISN(string dest, string Pedido, List<DLM.painel.PLAN_PECA_ZPMP> retorno, bool buffer = false)
         {
             if (dest != "")
             {
                 string arq = Pedido.Replace("*", "").Replace("%", "") + Cfg.Init.SAP_ZPPCOOISNARQ;
-                Consulta p = new Consulta();
+                SAP_Consulta_Macro p = new SAP_Consulta_Macro();
                 if (!buffer)
                 {
                     if (p.ZPPCOOISN(Pedido, dest, arq, false, "/SISTEMA"))
                     {
-                        //w.SetProgresso(3, 5, "COOISN - Gravando Status...");
                         Carregar_ZPPCOOISN_Layout(Pedido, retorno, dest, arq);
                     }
                 }
@@ -262,8 +248,8 @@ namespace DLM.sapgui
             //TRATAMENTO QUE ALTERA QUALQUER LETRA DA UNIDADE FABRIL PRA 'F' 
             // PRA RESOLVER O PROBLEMA DE MERDA OS CADASTRO DE PEP NA 
             //LOGISTICA QUE FICAM FAZENDO TIGRADA DE BOTAR NOMES NÃO PADRÃO
-            string ret   = "";
-            if (PEP.Length > 22 && 
+            string ret = "";
+            if (PEP.Length > 22 &&
                 (
                 PEP.EndsWith(".Z2") |
                 PEP.EndsWith(".Z3") |
@@ -328,7 +314,7 @@ namespace DLM.sapgui
 
 
 
-                PEP.EndsWith(".A3") 
+                PEP.EndsWith(".A3")
                 )
                 )
             {
@@ -340,20 +326,21 @@ namespace DLM.sapgui
             }
             return ret;
         }
-        private static void Carregar_ZPPCOOISN_Layout(string Pedido, List<PLAN_PECA> pecas = null, string dest = null, string arq = null)
+        private static void Carregar_ZPPCOOISN_Layout(string Pedido, List<PLAN_PECA_ZPMP> pecas, string dest = null, string arq = null)
         {
             if (Pedido.Length < 6) { return; }
-            if (dest == null) { dest = Conexoes.Utilz.CriarPasta(Cfg.Init.DIR_APP, "SAP"); }
+            if (dest == null) { dest = Cfg.Init.DIR_APP.GetSubPasta("SAP"); }
             if (arq == null) { arq = Pedido.Replace("*", "").Replace("%", "") + Cfg.Init.SAP_ZPPCOOISNARQ; }
-            if (pecas == null) { pecas = DLM.painel.Consultas.GetPecasReal(new List<string> { Pedido }).FindAll(x => x.material.ToString().StartsWith("31")).ToList(); }
+            if (pecas == null) { return; }
 
             if (pecas.Count == 0) { return; }
 
             if (File.Exists(dest + arq))
             {
-                DLM.painel.Consultas.LimparCOOISN(Pedido);
+                DBases.GetDB().Apagar("pep", $"%{Pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn);
+
                 var arquivo = dest + arq;
-                var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
+                var t = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
                 var listacooisn = t.Linhas.Select(x => new List<object> {
                             /*0*/x[(int)TAB_ZPPCOOISN.MATERIAL].ToString(),
                             /*1*/x[(int)TAB_ZPPCOOISN.DENOMINDSTAND].ToString(),
@@ -373,28 +360,27 @@ namespace DLM.sapgui
                             /*15*/x[(int)TAB_ZPPCOOISN.ESPESSURA].ToString(),
                             /*16*/x[(int)TAB_ZPPCOOISN.TIPO_DE_ACO].ToString(),
                             /*17*/x[(int)TAB_ZPPCOOISN.MATERIA_PRIMA].ToString(),
-                            /*18*/x[(int)TAB_ZPPCOOISN.OPERACAO].ToString(),
-                            /*19*/x[(int)TAB_ZPPCOOISN.MARCA].ToString(),
-                            /*20*/TratarPEP(x[(int)TAB_ZPPCOOISN.ELEMENTO_PEP].ToString()),
-                            /*21*/"",
-                            /*22*/x[(int)TAB_ZPPCOOISN.DESENHO_2].ToString(),
+                            /*18*/x[(int)TAB_ZPPCOOISN.MARCA].ToString(),
+                            /*19*/TratarPEP(x[(int)TAB_ZPPCOOISN.ELEMENTO_PEP].ToString()),
+                            /*20*/"",
+                            /*21*/x[(int)TAB_ZPPCOOISN.DESENHO_2].ToString(),
                         }).Distinct().ToList();
-                //w.SetProgresso(1, retorno.Count());
+
                 var min = Cfg.Init.DataDummy();
-                var pcs = pecas.FindAll(x => x.material.ToString().StartsWith("31"));
-                List<DLM.db.Linha> linhas = new List<DLM.db.Linha>();
-                foreach (var tl in pcs)
+                var pcs = pecas.FindAll(x => x.Material.ToString().StartsW("31"));
+                var linhas = new List<DLM.db.Linha>();
+                foreach (var peca in pcs)
                 {
 
 
-                    var curr = listacooisn.FindAll(x => tl.material.ToString() == x[0].ToString()
+                    var curr = listacooisn.FindAll(x => peca.Material.ToString() == x[0].ToString()
                     |
-                    (tl.marca == x[18].ToString() && tl.PEP == x[18].ToString())
+                    (peca.Marca == x[18].ToString() && peca.PEP == x[18].ToString())
                     );
                     //ordena pela operação
                     curr = curr.OrderBy(x => x[18].ToString()).ToList();
 
-                    var curr_marca = curr.Find(x => Conexoes.Utilz.Int(x[18]) == 10);
+                    var curr_marca = curr.Find(x => x[18].Int() == 10);
                     var curr_submateriais = new List<List<object>>();
                     if (curr_marca != null)
                     {
@@ -402,17 +388,14 @@ namespace DLM.sapgui
 
                     }
                     curr.AddRange(curr_submateriais);
-                    curr = curr.OrderBy(x => Conexoes.Extensoes.Data(x[5].ToString())).ToList();
+                    curr = curr.OrderBy(x => x[5].ToString().Data()).ToList();
                     //08/04/2020
                     curr = curr.OrderBy(x => x[18].ToString()).ToList();
-                    //var  curr2 = curr.FindAll(x => Conexoes.Conexoes.Extensoes.Data(x[5].ToString()) > Cfg.Init.DataDummy());
                     if (curr.Count > 0)
                     {
-                        var Dts = curr.Select(x => Conexoes.Extensoes.Data(x[5].ToString())).OrderBy(x => x).ToList().FindAll(x => x > Cfg.Init.DataDummy());
-                        //Dts = Dts.OrderBy(x => x).ToList();
-
-                        var inicio = Cfg.Init.DataDummy();
-                        var fim = Cfg.Init.DataDummy();
+                        var Dts = curr.Select(x => x[5].ToString().Data()).OrderBy(x => x).ToList().FindAll(x => x > Cfg.Init.DataDummy());
+                        DateTime? inicio = Cfg.Init.DataDummy();
+                        DateTime? fim = Cfg.Init.DataDummy();
                         string ultimo_status = "";
                         if (Dts.Count > 0)
                         {
@@ -421,7 +404,7 @@ namespace DLM.sapgui
                         }
                         for (int i = 0; i < curr.Count - 1; i++)
                         {
-                            var data = Conexoes.Extensoes.Data(curr[i][5].ToString());
+                            var data = curr[i][5].ToString().Data();
                             if (data > Cfg.Init.DataDummy())
                             {
                                 if (curr.Count > i + 1)
@@ -434,7 +417,7 @@ namespace DLM.sapgui
                                 }
                             }
                         }
-                        if (Conexoes.Extensoes.Data(curr.Last()[5].ToString()) > Cfg.Init.DataDummy())
+                        if (curr.Last()[5].ToString().Data() > Cfg.Init.DataDummy())
                         {
                             ultimo_status = curr.Last()[6].ToString();
                         }
@@ -458,7 +441,7 @@ namespace DLM.sapgui
 
                         var pdfs = curr.Select(x => x[2].ToString()).ToList();
 
-                        pdfs.AddRange(curr.Select(x => x[22].ToString()).ToList());
+                        pdfs.AddRange(curr.Select(x => x[21].ToString()).ToList());
                         pdfs = pdfs.Distinct().ToList().FindAll(x => x.Length > 0);
 
                         string desenho = pdfs.Find(x => x.ToUpper().Contains(Cfg.Init.DWG_FAB_FILTRO));
@@ -478,114 +461,72 @@ namespace DLM.sapgui
                         var tipo_pintura = curr[0][3].ToString();
                         var denominstand = curr[0][1].ToString();
 
-                        var valores = new List<DLM.db.Celula>();
-                        if(denominstand!="")
-                        {
-                        valores.Add(new DLM.db.Celula("DENOMINDSTAND", denominstand));
-                        }
-                        if(desenho!="")
-                        {
-                        valores.Add(new DLM.db.Celula("DESENHO_1", desenho));
-                        }
-                        if (tipo_pintura != "")
-                        {
-                        valores.Add(new DLM.db.Celula("TIPO_DE_PINTURA", tipo_pintura));
-                        }
-                        if(inicio>min)
-                        {
-                        valores.Add(new DLM.db.Celula("DATA_INICIO", inicio > min ? inicio.ToShortDateString() : ""));
-                        }
-                        if(fim>min)
-                        {
-                        valores.Add(new DLM.db.Celula("DATA_FIM", fim > min ? fim.ToShortDateString() : ""));
-                        }
+                        var valores = new db.Linha();
+                        valores.Add("DENOMINDSTAND", denominstand);
+                        valores.Add("DESENHO_1", desenho);
+                        valores.Add("TIPO_DE_PINTURA", tipo_pintura);
+                        valores.Add("DATA_INICIO", inicio > min ? inicio : null);
+                        valores.Add("ULTIMO_STATUS", ultimo_status);
+                        valores.Add("DATA_FIM", fim > min ? fim : null);
+                        valores.Add("TIPO_ACO", aco);
+                        valores.Add("CODIGO_MATERIA_PRIMA_SAP", codigo_materia_prima);
 
-                        valores.Add(new DLM.db.Celula("ULTIMO_STATUS", ultimo_status));
-                        if(aco!="")
-                        {
-                        valores.Add(new DLM.db.Celula("TIPO_ACO", aco));
-                        }
-                        if (codigo_materia_prima != "")
-                        {
-                        valores.Add(new DLM.db.Celula("CODIGO_MATERIA_PRIMA_SAP", codigo_materia_prima));
-                        }
                         if (curr_marca != null)
                         {
-                            double esp = Conexoes.Utilz.Double(curr_marca[15]);
-                            int furos = Conexoes.Utilz.Int(curr_marca[12]);
-                            string marca = curr_marca[13].ToString();
-                            double corte = Conexoes.Utilz.Double(curr_marca[8]);
+                            double esp =    curr_marca[15].Double();
+                            int furos =     curr_marca[12].Int();
+                            string marca =  curr_marca[13].ToString();
+                            double corte =  curr_marca[08].Double();
 
                             if (curr_submateriais.Count > 0)
                             {
                                 if (furos == 0)
                                 {
-                                    furos = curr_submateriais.Select(x => Conexoes.Utilz.Int(x[12])).Max();
+                                    furos = curr_submateriais.Select(x => x[12].Int()).Max();
                                 }
 
-                                esp = Conexoes.Utilz.Double(curr_submateriais[0][15]);
+                                esp = curr_submateriais[0][15].Double();
 
 
-                                if (tl.grupo_mercadoria.Contains("PURLIN"))
+                                if (peca.Grupo_Mercadoria.Contains("PURLIN"))
                                 {
-                                    corte = curr_submateriais.Select(x => Conexoes.Utilz.Double(x[8])).Max();
+                                    corte = curr_submateriais.Select(x => x[8].Double()).Max();
                                 }
 
                             }
 
-                            var superficie = Conexoes.Utilz.Double(curr_marca[11]);
-                            var comprimento = Conexoes.Utilz.Double(curr_marca[9]);
+                            var superficie = curr_marca[11].Double();
+                            var comprimento = curr_marca[9].Double();
+
                             /*04/04/2019 - novas caracteristicas adicionadas*/
-                            if(corte>0)
-                            {
-                            valores.Add(new DLM.db.Celula("CORTE_LARGURA", corte));
-                            }
-
-                            if(comprimento>0)
-                            {
-                            valores.Add(new DLM.db.Celula("COMPRIMENTO", comprimento));
-                            }
-                            valores.Add(new DLM.db.Celula("ESQ_DE_PINTURA", curr_marca[10]));
-                            if(superficie>0)
-                            {
-                            valores.Add(new DLM.db.Celula("SUPERFICIE", superficie));
-                            }
-                            if(furos>0)
-                            {
-                            valores.Add(new DLM.db.Celula("FURACOES", furos));
-                            }
-                            if(marca!="")
-                            {
-                            valores.Add(new DLM.db.Celula("MARCA", marca));
-                            }
-
-                            if(esp>0)
-                            {
-                            valores.Add(new DLM.db.Celula("ESPESSURA", esp));
-                            }
-
-
+                            valores.Add("MARCA", marca);
+                            valores.Add("CORTE_LARGURA", corte);
+                            valores.Add("COMPRIMENTO", comprimento);
+                            valores.Add("ESQ_DE_PINTURA", curr_marca[10].ToString());
+                            valores.Add("SUPERFICIE", superficie);
+                            valores.Add("FURACOES", furos);
+                            valores.Add("ESPESSURA", esp);
                         }
 
-                        valores.Add(new DLM.db.Celula("material", tl.material));
-                        valores.Add(new DLM.db.Celula("pep", tl.PEP));
+                        valores.Add("material", peca.Material);
+                        valores.Add("pep", peca.PEP);
 
-                        linhas.Add(new DLM.db.Linha(valores));
+                        linhas.Add(valores);
                     }
                 }
                 DBases.GetDB().Cadastro(linhas, Cfg.Init.db_comum, "zppcooisn");
             }
         }
 
-         public static List<CN47N_Datas> CN47N(string arquivo)
+        public static List<CN47N> CN47N(string arquivo, out DLM.db.Tabela tabela)
         {
-            ConcurrentBag<CN47N_Datas> retorno = new ConcurrentBag<CN47N_Datas>();
-            List<Task> Tarefas = new List<Task>();
+            var retorno = new ConcurrentBag<CN47N>();
+            var Tarefas = new List<Task>();
 
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            foreach (var l in t.Linhas)
+            tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
+            foreach (var linha in tabela.Linhas)
             {
-                Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new CN47N_Datas(l))));
+                Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new CN47N(linha))));
             }
             Task.WaitAll(Tarefas.ToArray());
 
@@ -593,9 +534,9 @@ namespace DLM.sapgui
         }
         public static DLM.sapgui.FolhaMargem ZSD0031N(string arquivo)
         {
-            var t = Conexoes.Utilz.Excel.GetTabela(arquivo, true);
-            var plan = t.Linhas;
-            DLM.sapgui.FolhaMargem ret = new DLM.sapgui.FolhaMargem();
+            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
+            var plan = tabela.Linhas;
+            var ret = new DLM.sapgui.FolhaMargem();
             try
             {
                 int max_col = 12;
@@ -605,83 +546,83 @@ namespace DLM.sapgui
                 if (plan.Count < 63) { return new DLM.sapgui.FolhaMargem(); }
                 if (plan.Max(x => x.Count) < max_col) { return new DLM.sapgui.FolhaMargem(); }
 
-                ret.receitabruta.material.valor = Conexoes.Utilz.Double(plan[19-m][c12]);
-                ret.receitabruta.montagem.valor = Conexoes.Utilz.Double(plan[20-m][c12]);
-                ret.receitabruta.projeto.valor = Conexoes.Utilz.Double(plan[21-m][c12]);
+                ret.receitabruta.material.valor = plan[19 - m][c12].Double();
+                ret.receitabruta.montagem.valor = plan[20 - m][c12].Double();
+                ret.receitabruta.projeto.valor = plan[21 - m][c12].Double();
 
-                ret.impostos.IPI_Material.valor = Conexoes.Utilz.Double(plan[25-m][c12]);
-                ret.impostos.ICMS_Material.valor = Conexoes.Utilz.Double(plan[26-m][c12]);
-                ret.impostos.PIS_COFINS_Material.valor = Conexoes.Utilz.Double(plan[27-m][c12]);
-                ret.impostos.PIS_COFINS_Montagem.valor = Conexoes.Utilz.Double(plan[28-m][c12]);
-                ret.impostos.PIS_COFINS_Projeto.valor = Conexoes.Utilz.Double(plan[29-m][c12]);
-                ret.impostos.ISS_Locacao_Equipamentos.valor = Conexoes.Utilz.Double(plan[30-m][c12]);
-                ret.impostos.ISS_Supervisao.valor = Conexoes.Utilz.Double(plan[31-m][c12]);
-                ret.impostos.ISS_Montagem.valor = Conexoes.Utilz.Double(plan[32-m][c12]);
-                ret.impostos.ISS_Projeto.valor = Conexoes.Utilz.Double(plan[33-m][c12]);
-                ret.impostos.CPRB_Servico.valor = Conexoes.Utilz.Double(plan[34-m][c12]);
-                ret.impostos.CPRB_Material.valor = Conexoes.Utilz.Double(plan[35-m][c12]);
+                ret.impostos.IPI_Material.valor = plan[25 - m][c12].Double();
+                ret.impostos.ICMS_Material.valor = plan[26 - m][c12].Double();
+                ret.impostos.PIS_COFINS_Material.valor = plan[27 - m][c12].Double();
+                ret.impostos.PIS_COFINS_Montagem.valor = plan[28 - m][c12].Double();
+                ret.impostos.PIS_COFINS_Projeto.valor = plan[29 - m][c12].Double();
+                ret.impostos.ISS_Locacao_Equipamentos.valor = plan[30 - m][c12].Double();
+                ret.impostos.ISS_Supervisao.valor = plan[31 - m][c12].Double();
+                ret.impostos.ISS_Montagem.valor = plan[32 - m][c12].Double();
+                ret.impostos.ISS_Projeto.valor = plan[33 - m][c12].Double();
+                ret.impostos.CPRB_Servico.valor = plan[34 - m][c12].Double();
+                ret.impostos.CPRB_Material.valor = plan[35 - m][c12].Double();
 
-                ret.impostos.IPI_Material.porcentagem = Conexoes.Utilz.Double(plan[25 - m][c4]);
-                ret.impostos.ICMS_Material.porcentagem = Conexoes.Utilz.Double(plan[26 - m][c4]);
-                ret.impostos.PIS_COFINS_Material.porcentagem = Conexoes.Utilz.Double(plan[27 - m][c4]);
-                ret.impostos.PIS_COFINS_Montagem.porcentagem = Conexoes.Utilz.Double(plan[28 - m][c4]);
-                ret.impostos.PIS_COFINS_Projeto.porcentagem = Conexoes.Utilz.Double(plan[29 - m][c4]);
-                ret.impostos.ISS_Locacao_Equipamentos.porcentagem = Conexoes.Utilz.Double(plan[30 - m][c4]);
-                ret.impostos.ISS_Supervisao.porcentagem = Conexoes.Utilz.Double(plan[31 - m][c4]);
-                ret.impostos.ISS_Montagem.porcentagem = Conexoes.Utilz.Double(plan[32 - m][c4]);
-                ret.impostos.ISS_Projeto.porcentagem = Conexoes.Utilz.Double(plan[33 - m][c4]);
-                ret.impostos.CPRB_Servico.porcentagem = Conexoes.Utilz.Double(plan[34 - m][c4]);
-                ret.impostos.CPRB_Material.porcentagem = Conexoes.Utilz.Double(plan[35 - m][c4]);
+                ret.impostos.IPI_Material.porcentagem = plan[25 - m][c4].Double();
+                ret.impostos.ICMS_Material.porcentagem = plan[26 - m][c4].Double();
+                ret.impostos.PIS_COFINS_Material.porcentagem = plan[27 - m][c4].Double();
+                ret.impostos.PIS_COFINS_Montagem.porcentagem = plan[28 - m][c4].Double();
+                ret.impostos.PIS_COFINS_Projeto.porcentagem = plan[29 - m][c4].Double();
+                ret.impostos.ISS_Locacao_Equipamentos.porcentagem = plan[30 - m][c4].Double();
+                ret.impostos.ISS_Supervisao.porcentagem = plan[31 - m][c4].Double();
+                ret.impostos.ISS_Montagem.porcentagem = plan[32 - m][c4].Double();
+                ret.impostos.ISS_Projeto.porcentagem = plan[33 - m][c4].Double();
+                ret.impostos.CPRB_Servico.porcentagem = plan[34 - m][c4].Double();
+                ret.impostos.CPRB_Material.porcentagem = plan[35 - m][c4].Double();
 
-                ret.receitaliquida.material.valor = Conexoes.Utilz.Double(plan[39 - m][c12]);
-                ret.receitaliquida.montagem.valor = Conexoes.Utilz.Double(plan[40 - m][c12]);
-                ret.receitaliquida.projeto.valor = Conexoes.Utilz.Double(plan[41 - m][c12]);
+                ret.receitaliquida.material.valor = plan[39 - m][c12].Double();
+                ret.receitaliquida.montagem.valor = plan[40 - m][c12].Double();
+                ret.receitaliquida.projeto.valor = plan[41 - m][c12].Double();
 
-                ret.custosmateriais.materiais.valor = Conexoes.Utilz.Double(plan[45 - m][c12]);
-                ret.custosmateriais.contingencia.valor = Conexoes.Utilz.Double(plan[46 - m][c12]);
+                ret.custosmateriais.materiais.valor = plan[45 - m][c12].Double();
+                ret.custosmateriais.contingencia.valor = plan[46 - m][c12].Double();
 
-                ret.total_custo_projeto.valor = Conexoes.Utilz.Double(plan[48 - m][c12]);
+                ret.total_custo_projeto.valor = plan[48 - m][c12].Double();
 
-                ret.custosmontagem.equipamentos.valor = Conexoes.Utilz.Double(plan[52 - m][c12]);
-                ret.custosmontagem.empreiteiros_despesas.valor = Conexoes.Utilz.Double(plan[53 - m][c12]);
-                ret.custosmontagem.supervisao.valor = Conexoes.Utilz.Double(plan[54 - m][c12]);
+                ret.custosmontagem.equipamentos.valor = plan[52 - m][c12].Double();
+                ret.custosmontagem.empreiteiros_despesas.valor = plan[53 - m][c12].Double();
+                ret.custosmontagem.supervisao.valor = plan[54 - m][c12].Double();
 
-                ret.gastoslogisticos.frete_rodoviario.valor = Conexoes.Utilz.Double(plan[61 - m][c12]);
-                ret.gastoslogisticos.verba_adicional.valor = Conexoes.Utilz.Double(plan[62 - m][c12]);
-                ret.gastoslogisticos.gastos_logisticos.valor = Conexoes.Utilz.Double(plan[63 - m][c12]);
-                ret.gastoslogisticos.outras_despesas.valor = Conexoes.Utilz.Double(plan[64 - m][c12]);
-                ret.gastoslogisticos.seguro_internacional.valor = Conexoes.Utilz.Double(plan[65 - m][c12]);
-                ret.gastoslogisticos.frete_aereo.valor = Conexoes.Utilz.Double(plan[66 - m][c12]);
-                ret.gastoslogisticos.frete_maritimo.valor = Conexoes.Utilz.Double(plan[67 - m][c12]);
-                ret.gastoslogisticos.frete_rodoviario_internacional.valor = Conexoes.Utilz.Double(plan[68 - m][c12]);
-                ret.gastoslogisticos.frete_rodoviario_nacional_exportacao.valor = Conexoes.Utilz.Double(plan[69 - m][c12]);
-                ret.gastoslogisticos.frete_maritimo_cabotagem.valor = Conexoes.Utilz.Double(plan[70 - m][c12]);
-                ret.gastoslogisticos.frete_rodoviario_nacional_cabotagem.valor = Conexoes.Utilz.Double(plan[71 - m][c12]);
+                ret.gastoslogisticos.frete_rodoviario.valor = plan[61 - m][c12].Double();
+                ret.gastoslogisticos.verba_adicional.valor = plan[62 - m][c12].Double();
+                ret.gastoslogisticos.gastos_logisticos.valor = plan[63 - m][c12].Double();
+                ret.gastoslogisticos.outras_despesas.valor = plan[64 - m][c12].Double();
+                ret.gastoslogisticos.seguro_internacional.valor = plan[65 - m][c12].Double();
+                ret.gastoslogisticos.frete_aereo.valor = plan[66 - m][c12].Double();
+                ret.gastoslogisticos.frete_maritimo.valor = plan[67 - m][c12].Double();
+                ret.gastoslogisticos.frete_rodoviario_internacional.valor = plan[68 - m][c12].Double();
+                ret.gastoslogisticos.frete_rodoviario_nacional_exportacao.valor = plan[69 - m][c12].Double();
+                ret.gastoslogisticos.frete_maritimo_cabotagem.valor = plan[70 - m][c12].Double();
+                ret.gastoslogisticos.frete_rodoviario_nacional_cabotagem.valor = plan[71 - m][c12].Double();
 
-                ret.despesasgerais.seguro.valor = Conexoes.Utilz.Double(plan[75 - m][c12]);
-                ret.despesasgerais.comissao.valor = Conexoes.Utilz.Double(plan[76 - m][c12]);
-                ret.despesasgerais.assessoria.valor = Conexoes.Utilz.Double(plan[77 - m][c12]);
-                ret.despesasgerais.custo_financeiro.valor = Conexoes.Utilz.Double(plan[78 - m][c12]);
-                ret.despesasgerais.supervisao_exportacao.valor = Conexoes.Utilz.Double(plan[79 - m][c12]);
-                ret.despesasgerais.creditos_debitos_material.valor = Conexoes.Utilz.Double(plan[80 - m][c12]);
-                ret.despesasgerais.creditos_debitos_projeto.valor = Conexoes.Utilz.Double(plan[81 - m][c12]);
-                ret.despesasgerais.creditos_debitos_montagem.valor = Conexoes.Utilz.Double(plan[82 - m][c12]);
-                ret.despesasgerais.projeto_exportacao.valor = Conexoes.Utilz.Double(plan[83 - m][c12]);
-                ret.despesasgerais.outros.valor = Conexoes.Utilz.Double(plan[84 - m][c12]);
+                ret.despesasgerais.seguro.valor = plan[75 - m][c12].Double();
+                ret.despesasgerais.comissao.valor = plan[76 - m][c12].Double();
+                ret.despesasgerais.assessoria.valor = plan[77 - m][c12].Double();
+                ret.despesasgerais.custo_financeiro.valor = plan[78 - m][c12].Double();
+                ret.despesasgerais.supervisao_exportacao.valor = plan[79 - m][c12].Double();
+                ret.despesasgerais.creditos_debitos_material.valor = plan[80 - m][c12].Double();
+                ret.despesasgerais.creditos_debitos_projeto.valor = plan[81 - m][c12].Double();
+                ret.despesasgerais.creditos_debitos_montagem.valor = plan[82 - m][c12].Double();
+                ret.despesasgerais.projeto_exportacao.valor = plan[83 - m][c12].Double();
+                ret.despesasgerais.outros.valor = plan[84 - m][c12].Double();
 
-                ret.despesasgerais.seguro.porcentagem = Conexoes.Utilz.Double(plan[75 - m][c4]);
-                ret.despesasgerais.comissao.porcentagem = Conexoes.Utilz.Double(plan[76 - m][c4]);
-                ret.despesasgerais.assessoria.porcentagem = Conexoes.Utilz.Double(plan[77 - m][c4]);
-                ret.despesasgerais.custo_financeiro.porcentagem = Conexoes.Utilz.Double(plan[78 - m][c4]);
-                ret.despesasgerais.supervisao_exportacao.porcentagem = Conexoes.Utilz.Double(plan[79 - m][c4]);
-                ret.despesasgerais.creditos_debitos_material.porcentagem = Conexoes.Utilz.Double(plan[80 - m][c4]);
-                ret.despesasgerais.creditos_debitos_projeto.porcentagem = Conexoes.Utilz.Double(plan[81 - m][c4]);
-                ret.despesasgerais.creditos_debitos_montagem.porcentagem = Conexoes.Utilz.Double(plan[82 - m][c4]);
-                ret.despesasgerais.projeto_exportacao.porcentagem = Conexoes.Utilz.Double(plan[83 - m][c4]);
-                ret.despesasgerais.outros.porcentagem = Conexoes.Utilz.Double(plan[84 - m][c4]);
+                ret.despesasgerais.seguro.porcentagem =                     plan[75 - m][c4].Double();
+                ret.despesasgerais.comissao.porcentagem =                   plan[76 - m][c4].Double();
+                ret.despesasgerais.assessoria.porcentagem =                 plan[77 - m][c4].Double();
+                ret.despesasgerais.custo_financeiro.porcentagem =           plan[78 - m][c4].Double();
+                ret.despesasgerais.supervisao_exportacao.porcentagem =      plan[79 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_material.porcentagem =  plan[80 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_projeto.porcentagem =   plan[81 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_montagem.porcentagem =  plan[82 - m][c4].Double();
+                ret.despesasgerais.projeto_exportacao.porcentagem =         plan[83 - m][c4].Double();
+                ret.despesasgerais.outros.porcentagem =                     plan[84 - m][c4].Double();
 
-                ret.margens.valor = Conexoes.Utilz.Double(plan[63][c12]);
-                ret.margens.porcentagem = Conexoes.Utilz.Double(plan[63][c4]);
+                ret.margens.valor = plan[63][c12].Double();
+                ret.margens.porcentagem = plan[63][c4].Double();
                 ret.Carregado = true;
             }
             catch (Exception)

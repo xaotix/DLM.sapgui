@@ -1,40 +1,33 @@
-﻿using DLM.db;
+﻿using Conexoes;
+using DLM.db;
 using DLM.sapgui;
 using DLM.vars;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace DLM.painel
 {
     public class PLAN_BASE
     {
-        public DateTime mindia { get; set; } = Cfg.Init.DataDummy();
-        public void SetBase(DLM.db.Linha l)
+        public void SetBase(DLM.db.Linha linha)
         {
-            this.eini = l.Get("eini").Data();
-            this.efim = l.Get("efim").Data();
-            this.fini = l.Get("fini").Data();
-            this.ffim = l.Get("ffim").Data();
-            this.lini = l.Get("lini").Data();
-            this.lfim = l.Get("lfim").Data();
-            this.mini = l.Get("mini").Data();
-            this.mfim = l.Get("mfim").Data();
-            this.eng_base_st = l.Get("es").Double();
-            this.fab_base_st = l.Get("fs").Double();
-            this.log_base_st = l.Get("ls").Double();
-            this.mon_base_st = l.Get("ms").Double();
+            this.eini =        linha["eini"].DataNull();
+            this.efim =        linha["efim"].DataNull();
+            this.fini =        linha["fini"].DataNull();
+            this.ffim =        linha["ffim"].DataNull();
+            this.lini =        linha["lini"].DataNull();
+            this.lfim =        linha["lfim"].DataNull();
+            this.mini =        linha["mini"].DataNull();
+            this.mfim =        linha["mfim"].DataNull();
+            this.eng_base_st = linha["es"].Double();
+            this.fab_base_st = linha["fs"].Double();
+            this.log_base_st = linha["ls"].Double();
+            this.mon_base_st = linha["ms"].Double();
         }
-        public string descricao
-        {
-            get
-            {
-                return this.PEP + (this.Titulo.DESCRICAO != "" ? (" - " + this.Titulo.DESCRICAO) : "");
-            }
-        }
+        public string descricao { get; set; } = "";
         private List<PLAN_ETAPA> _etapas { get; set; } = new List<PLAN_ETAPA>();
         private List<PLAN_PEP> _peps { get; set; } = new List<PLAN_PEP>();
         private List<PLAN_SUB_ETAPA> _subetapas { get; set; } = new List<PLAN_SUB_ETAPA>();
@@ -104,7 +97,7 @@ namespace DLM.painel
         {
             if (_peps.Count == 0 && this.PEP.Length > 3)
             {
-                _peps = Consultas.GetPeps(new List<string> { this.PEP });
+                _peps = Consultas.GetPepsReal(new List<string> { this.PEP });
             }
 
 
@@ -128,22 +121,7 @@ namespace DLM.painel
 
             return _pecas;
         }
-        public void Set(List<Titulo_Planejamento> titulos, bool contrato = false)
-        {
-            if (contrato)
-            {
-                this.Titulo = titulos.Find(x => x.CHAVE == this.contrato);
-            }
-            else
-            {
-                this.Titulo = titulos.Find(x => x.CHAVE == this.PEP);
-            }
 
-            if(this.Titulo==null)
-            {
-
-            }
-        }
         public void Set(List<PLAN_PEDIDO> lista)
         {
             this._pedidos = new List<PLAN_PEDIDO>();
@@ -151,8 +129,14 @@ namespace DLM.painel
         }
         public void Set(List<PLAN_PECA> lista)
         {
+
             this._pecas = new List<PLAN_PECA>();
-            this._pecas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsWith(this.PEP)));
+            if(lista.Count==0)
+            {
+                return;
+            }
+
+            this._pecas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsW(this.PEP)));
             if (this.carregou_etapas)
             {
                 foreach (var et in this.Getetapas())
@@ -187,17 +171,12 @@ namespace DLM.painel
         public void Set(List<PLAN_ETAPA> lista)
         {
             this._etapas = new List<PLAN_ETAPA>();
-            this._etapas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsWith(this.PEP)));
-        }
-        public void Set(List<PLAN_SUB_ETAPA> lista)
-        {
-            this._subetapas = new List<PLAN_SUB_ETAPA>();
-            this._subetapas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsWith(this.PEP)));
+            this._etapas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsW(this.PEP)));
         }
         public void Set(List<PLAN_PEP> lista)
         {
             this._peps = new List<PLAN_PEP>();
-            this._peps.AddRange(lista.FindAll(x => x.PEP.StartsWith(this.PEP)));
+            this._peps.AddRange(lista.FindAll(x => x.PEP.StartsW(this.PEP)));
         }
 
         public bool carregou_etapas
@@ -271,14 +250,14 @@ namespace DLM.painel
                 return Conexoes.Utilz.PEP.Get.Pedido(this.PEP, true);
             }
         }
-        public DateTime? ultima_edicao { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? criado { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? engenharia_liberacao { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? montagem_inicio { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? montagem_fim { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? ultima_edicao { get; set; } = null;
+        public DateTime? criado { get; set; } = null;
+        public DateTime? engenharia_liberacao { get; set; } = null;
+        public DateTime? montagem_inicio { get; set; } = null;
+        public DateTime? montagem_fim { get; set; } = null;
 
-        public DateTime? mi_s { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? mf_s { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? mi_s { get; set; } = null;
+        public DateTime? mf_s { get; set; } = null;
         public double logistica_previsto
         {
             get
@@ -356,43 +335,44 @@ namespace DLM.painel
                 return 0;
             }
         }
+        [Browsable(false)]
         public Linha Linha { get; set; } = new Linha();
 
         public ImageSource imagem
         {
             get
             {
-                if (this.resumo_pecas.etapa_bloqueada | this.status_montagem == "TRANCADA")
-                {
-                    return Conexoes.BufferImagem._lock;
-                }
+                //if (this.resumo_pecas.etapa_bloqueada | this.status_montagem == "TRANCADA")
+                //{
+                //    return BufferImagem._lock;
+                //}
                 if (this is PLAN_OBRAS)
                 {
-                    return Conexoes.BufferImagem.folder_new;
+                    return BufferImagem.folder_new;
                 }
                 else if (this is PLAN_OBRA)
                 {
-                    return Conexoes.BufferImagem.folder_red;
+                    return BufferImagem.folder_red;
                 }
                 else if (this is PLAN_PEDIDO)
                 {
-                    return Conexoes.BufferImagem.folder_green;
+                    return BufferImagem.folder_green;
                 }
                 else if (this is PLAN_ETAPA)
                 {
-                    return Conexoes.BufferImagem.folder;
+                    return BufferImagem.folder;
                 }
                 else if (this is PLAN_ETAPA)
                 {
-                    return Conexoes.BufferImagem.folder_txt;
+                    return BufferImagem.folder_txt;
                 }
                 else if (this is PLAN_SUB_ETAPA)
                 {
-                    return Conexoes.BufferImagem.folder_bookmark;
+                    return BufferImagem.folder_bookmark;
 
                 }
 
-                return Conexoes.BufferImagem.circulo_16x16;
+                return BufferImagem.circulo_16x16;
 
             }
         }
@@ -427,19 +407,7 @@ namespace DLM.painel
             }
         }
         public string update_montagem { get; set; } = "";
-        private Titulo_Planejamento _Titulo { get; set; } = new Titulo_Planejamento();
-        public Titulo_Planejamento Titulo
-        {
-            get
-            {
-                if (_Titulo == null) { _Titulo = new Titulo_Planejamento() { CHAVE = this.PEP }; }
-                return _Titulo;
-            }
-            set
-            {
-                _Titulo = value;
-            }
-        }
+
 
 
         public List<Atraso_Planejamento> GetAtrasos()
@@ -464,14 +432,14 @@ namespace DLM.painel
             return ps;
         }
 
-        private DateTime? _engenharia_cronograma { get; set; } = Cfg.Init.DataDummy();
-        private DateTime? _fabrica_cronograma { get; set; } = Cfg.Init.DataDummy();
-        private DateTime? _logistica_cronograma { get; set; } = Cfg.Init.DataDummy();
-        private DateTime? _montagem_cronograma { get; set; } = Cfg.Init.DataDummy();
-        private DateTime? _engenharia_cronograma_inicio { get; set; } = Cfg.Init.DataDummy();
-        private DateTime? _fabrica_cronograma_inicio { get; set; } = Cfg.Init.DataDummy();
-        private DateTime? _logistica_cronograma_inicio { get; set; } = Cfg.Init.DataDummy();
-        private DateTime? _montagem_cronograma_inicio { get; set; } = Cfg.Init.DataDummy();
+        private DateTime? _engenharia_cronograma { get; set; } = null;
+        private DateTime? _fabrica_cronograma { get; set; } = null;
+        private DateTime? _logistica_cronograma { get; set; } = null;
+        private DateTime? _montagem_cronograma { get; set; } = null;
+        private DateTime? _engenharia_cronograma_inicio { get; set; } = null;
+        private DateTime? _fabrica_cronograma_inicio { get; set; } = null;
+        private DateTime? _logistica_cronograma_inicio { get; set; } = null;
+        private DateTime? _montagem_cronograma_inicio { get; set; } = null;
 
         public DateTime? engenharia_cronograma
         {
@@ -593,14 +561,14 @@ namespace DLM.painel
                 _montagem_cronograma_inicio = value;
             }
         }
-        public DateTime? eini { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? fini { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? lini { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? mini { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? efim { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? ffim { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? lfim { get; set; } = Cfg.Init.DataDummy();
-        public DateTime? mfim { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? eini { get; set; } = null;
+        public DateTime? fini { get; set; } = null;
+        public DateTime? lini { get; set; } = null;
+        public DateTime? mini { get; set; } = null;
+        public DateTime? efim { get; set; } = null;
+        public DateTime? ffim { get; set; } = null;
+        public DateTime? lfim { get; set; } = null;
+        public DateTime? mfim { get; set; } = null;
 
         private double _eng_base_st { get; set; } = 0;
         public double eng_base_st
@@ -662,7 +630,7 @@ namespace DLM.painel
         {
             get
             {
-                var t = datas_cronograma_filtro.FindAll(x => x > Cfg.Init.DataDummy());
+                var t = datas_cronograma_filtro.FindAll(x => x > null);
                 if (t.Count > 0)
                 {
                     return t.Min();
@@ -674,12 +642,12 @@ namespace DLM.painel
         {
             get
             {
-                var t = datas_cronograma_filtro.FindAll(x => x != Cfg.Init.DataDummy());
+                var t = datas_cronograma_filtro.FindAll(x => x != null);
                 if (t.Count > 0)
                 {
                     return t.Max();
                 }
-                return Cfg.Init.DataDummy();
+                return null;
             }
         }
         public List<DateTime> datas_cronograma_filtro
@@ -714,7 +682,7 @@ namespace DLM.painel
         {
             get
             {
-                var t = datas_cronograma.FindAll(x => x > Cfg.Init.DataDummy());
+                var t = datas_cronograma.FindAll(x => x > null);
                 if (t.Count > 0)
                 {
                     return t.Min();
@@ -726,12 +694,12 @@ namespace DLM.painel
         {
             get
             {
-                var t = datas_cronograma.FindAll(x => x != Cfg.Init.DataDummy());
+                var t = datas_cronograma.FindAll(x => x != null);
                 if (t.Count > 0)
                 {
                     return t.Max();
                 }
-                return Cfg.Init.DataDummy();
+                return null;
             }
         }
         public List<DateTime?> datas_cronograma
@@ -752,16 +720,16 @@ namespace DLM.painel
                 };
             }
         }
-        public Resumo_Pecas resumo_pecas { get; set; } = new Resumo_Pecas();
+        //public Resumo_Pecas resumo_pecas { get; set; } = new Resumo_Pecas();
         private string _status_montagem { get; set; } = "-1";
         public string status_montagem
         {
             get
             {
-                if (this.resumo_pecas.etapa_bloqueada)
-                {
-                    return "TRANCADA";
-                }
+                //if (this.resumo_pecas.etapa_bloqueada)
+                //{
+                //    return "TRANCADA";
+                //}
                 if (_status_montagem.Replace("-1", "") == "")
                 {
                     return "SEM APONTAMENTO";
@@ -775,7 +743,7 @@ namespace DLM.painel
 
         }
         public bool dados_montagem { get; set; } = false;
-        public DateTime? ultima_consulta_sap { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? ultima_consulta_sap { get; set; } = null;
         public double peso_planejado { get; set; } = 0;
         public int atraso_engenharia { get; set; } = 0;
         public int atraso_fabrica { get; set; } = 0;
@@ -785,10 +753,10 @@ namespace DLM.painel
         {
             get
             {
-                if (resumo_pecas.etapa_bloqueada)
-                {
-                    return Conexoes.BufferImagem._lock;
-                }
+                //if (resumo_pecas.etapa_bloqueada)
+                //{
+                //    return BufferImagem._lock;
+                //}
 
                 if (liberado_engenharia == 100)
                 {
@@ -809,10 +777,10 @@ namespace DLM.painel
         {
             get
             {
-                if (resumo_pecas.etapa_bloqueada)
-                {
-                    return Conexoes.BufferImagem._lock;
-                }
+                //if (resumo_pecas.etapa_bloqueada)
+                //{
+                //    return BufferImagem._lock;
+                //}
                 if (total_embarcado == 100)
                 {
                     return Vars.Imagens.embarque_32x32_verde;
@@ -832,10 +800,10 @@ namespace DLM.painel
         {
             get
             {
-                if (resumo_pecas.etapa_bloqueada)
-                {
-                    return Conexoes.BufferImagem._lock;
-                }
+                //if (resumo_pecas.etapa_bloqueada)
+                //{
+                //    return BufferImagem._lock;
+                //}
                 if (total_fabricado == 100)
                 {
                     return Vars.Imagens.fabrica_32x32_verde;
@@ -855,13 +823,13 @@ namespace DLM.painel
         {
             get
             {
-                if (resumo_pecas.etapa_bloqueada)
-                {
-                    return Conexoes.BufferImagem._lock;
-                }
+                //if (resumo_pecas.etapa_bloqueada)
+                //{
+                //    return BufferImagem._lock;
+                //}
                 if (exportacao)
                 {
-                    return Conexoes.BufferImagem.globo;
+                    return BufferImagem.globo;
                 }
                 if (total_montado == 100 | status_montagem == "CONCLUÍDA" | status_montagem == "ENTREGUE")
                 {
@@ -873,7 +841,7 @@ namespace DLM.painel
                 }
                 if (status_montagem == "TRANCADA")
                 {
-                    return Conexoes.BufferImagem._lock;
+                    return BufferImagem._lock;
 
                 }
                 if (atraso_montagem > 0)
@@ -1136,7 +1104,7 @@ namespace DLM.painel
         {
             get
             {
-                if (resumo_pecas.etapa_bloqueada | this.status_montagem == "TRANCADA")
+                if (this.status_montagem == "TRANCADA")
                 {
                     return new SolidColorBrush(Colors.Violet) { Opacity = opacidade0 };
                 }

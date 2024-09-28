@@ -1,32 +1,34 @@
-﻿using DLM.sapgui;
+﻿using Conexoes;
+using DLM.sapgui;
 using DLM.vars;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLM.painel
 {
 
     public class ORC_BASE : PLAN_BASE
     {
-        public void GetDatas()
+        public void GetDatas(DLM.db.Linha linha = null)
         {
-            this.engenharia_cronograma_inicio = Linha.Get("ei").Data();
-            this.engenharia_cronograma = Linha.Get("ef").Data();
+            if(linha==null)
+            {
+                linha = this.Linha;
+            }
+            this.engenharia_cronograma_inicio = linha["ei"].DataNull();
+            this.engenharia_cronograma = linha["ef"].DataNull();
 
-            this.fabrica_cronograma_inicio = Linha.Get("fi").Data();
-            this.fabrica_cronograma = Linha.Get("ff").Data();
+            this.fabrica_cronograma_inicio = linha["fi"].DataNull();
+            this.fabrica_cronograma = linha["ff"].DataNull();
 
-            this.logistica_cronograma_inicio = Linha.Get("li").Data();
-            this.logistica_cronograma = Linha.Get("lf").Data();
+            this.logistica_cronograma_inicio = linha["li"].DataNull();
+            this.logistica_cronograma = linha["lf"].DataNull();
 
-            this.montagem_cronograma_inicio = Linha.Get("mi").Data();
-            this.montagem_cronograma = Linha.Get("mf").Data();
+            this.montagem_cronograma_inicio = linha["mi"].DataNull();
+            this.montagem_cronograma = linha["mf"].DataNull();
 
-            this.mi_s = Linha.Get("mi_s").Data();
-            this.mf_s = Linha.Get("mf_s").Data();
+            this.mi_s = linha["mi_s"].DataNull();
+            this.mf_s = linha["mf_s"].DataNull();
         }
 
 
@@ -90,13 +92,13 @@ namespace DLM.painel
 
         }
 
-        public ORC_SUB(DLM.db.Linha l)
+        public ORC_SUB(DLM.db.Linha linha)
         {
-            this.Linha = l;
-            this.id_obra = l["id_obra"].Int();
-            this.PEP = l.Get("pep").Valor;
-            this.peso_planejado = l.Get("peso_total").Double();
-            this.quantidade = l.Get("quantidade").Int();
+            this.Linha = linha;
+            this.id_obra = linha["id_obra"].Int();
+            this.PEP = linha["pep"].Valor;
+            this.peso_planejado = linha["peso_total"].Double();
+            this.quantidade = linha["quantidade"].Int();
         }
     }
 
@@ -117,7 +119,7 @@ namespace DLM.painel
         }
         public void Set(List<ORC_SUB> subs)
         {
-            this._subetapas = subs.FindAll(x => x.PEP.StartsWith(this.PEP));
+            this._subetapas = subs.FindAll(x => x.PEP.StartsW(this.PEP));
         }
 
         private List<ORC_SUB> _subetapas { get; set; }
@@ -137,13 +139,13 @@ namespace DLM.painel
         {
 
         }
-        public ORC_ETP(DLM.db.Linha l)
+        public ORC_ETP(DLM.db.Linha linha)
         {
-            this.Linha = l;
-            this.id_obra = l["id_obra"].Int();
-            this.PEP = l.Get("pep").Valor;
-            this.peso_planejado = l.Get("peso_total").Double();
-            this.quantidade = l.Get("quantidade").Double();
+            this.Linha = linha;
+            this.id_obra =          linha["id_obra"].Int();
+            this.PEP =              linha["pep"].Valor;
+            this.peso_planejado =   linha["peso_total"].Double();
+            this.quantidade =       linha["quantidade"].Double();
         
         }
     }
@@ -155,16 +157,16 @@ namespace DLM.painel
         {
 
         }
-        public ORC_PEP(DLM.db.Linha l)
+        public ORC_PEP(DLM.db.Linha linha)
         {
-            this.Linha = l;
+            this.Linha = linha;
 
-            this.id_obra = l["id_obra"].Int();
-            this.PEP = l.Get("pep").Valor;
-            this.pep_inicial = l.Get("pep_inicial").Valor;
-            this.centro = l.Get("centro").Valor;
-            this.peso_planejado = l.Get("peso_total").Double();
-            this.quantidade = l.Get("quantidade").Double();
+            this.id_obra =          linha["id_obra"].Int();
+            this.PEP =              linha["pep"].Valor;
+            this.pep_inicial =      linha["pep_inicial"].Valor;
+            this.centro =           linha["centro"].Valor;
+            this.peso_planejado =   linha["peso_total"].Double();
+            this.quantidade =       linha["quantidade"].Double();
 
 
 
@@ -253,26 +255,21 @@ namespace DLM.painel
         }
 
         public DateTime criacao { get; set; } = Cfg.Init.DataDummy();
-        public ORC_PED(DLM.db.Linha l, Tipo_Material tipo)
+        public ORC_PED(DLM.db.Linha linha, Tipo_Material tipo)
         {
-            this.Linha = l;
-            this.id_obra = l["id_obra"].Int();
-            this.numerocontrato = l.Get("numerocontrato").Valor;
-            this.revisao = l.Get("revisao").Valor;
-            this.Titulo.DESCRICAO = l.Get("descricao").Valor;
-            this.PEP = l.Get("pedido").Valor;
-            this.quantidade = l.Get("quantidade").Double();
-            this.peso_planejado = l.Get("peso_total").Double();
-
-            this.liberado_engenharia = l.Get("liberado_engenharia").Double();
-            this.peso_realizado = l.Get("peso_realizado").Double();
-            this.arquivos = l.Get("arquivos").Int();
-            this.criacao = l.Get("criacao").Data();
+            this.Linha = linha;
+            this.id_obra =                  linha["id_obra"].Int();
+            this.numerocontrato =           linha["numerocontrato"].Valor;
+            this.revisao =                  linha["revisao"].Valor;
+            this.PEP =                      linha["pedido"].Valor;
+            this.descricao =                linha["descricao"].Valor;
+            this.quantidade =               linha["quantidade"].Double();
+            this.peso_planejado =           linha["peso_total"].Double();
+            this.liberado_engenharia =      linha["liberado_engenharia"].Double();
+            this.peso_realizado =           linha["peso_realizado"].Double();
+            this.arquivos =                 linha["arquivos"].Int();
+            this.criacao =                  linha["criacao"].Data();
             this.tipo = tipo;
-            if(this.descricao == "")
-            {
-                this.Titulo.DESCRICAO = l.Get("nome").Valor;
-            }
         }
     }
 }

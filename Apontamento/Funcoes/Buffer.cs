@@ -1,11 +1,7 @@
 ﻿using Conexoes;
 using DLM.vars;
-using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLM.painel
 {
@@ -20,7 +16,7 @@ namespace DLM.painel
             if (true)
             {
                 _Obras_PMP = new List<Pedido_PMP>();
-                var reais = Pedidos();
+                var reais = Consultas.GetPedidos();
                 var orcs = Obras_PGO(recarregar);
                 var cons = Obras_PGO_Consolidadas( recarregar);
                 var contratos = reais.Select(x => x.pedido).Distinct().ToList();
@@ -69,25 +65,14 @@ namespace DLM.painel
         public static List<Conexoes.Bobina> Bobinas { get; set; } = new List<Conexoes.Bobina>();
         public static void Carregar()
         {
-            List<Task> Tarefas = new List<Task>();
-            Tarefas.Add(Task.Factory.StartNew(() => GetTitulosPedidos()));
-            Tarefas.Add(Task.Factory.StartNew(() => Consultas.GetTitulosObras()));
-            Tarefas.Add(Task.Factory.StartNew(() => Consultas.GetTitulosEtapas()));
-            Tarefas.Add(Task.Factory.StartNew(() => Consultas.GetTitulosEtapas()));
-
-            Tarefas.Add(Task.Factory.StartNew(() => Consultas.getresumo_pecas_obras()));
-            Tarefas.Add(Task.Factory.StartNew(() => Consultas.getresumo_pecas_pedidos()));
-            Tarefas.Add(Task.Factory.StartNew(() => Consultas.getresumo_pecas_subetapas()));
-            Task.WaitAll(Tarefas.ToArray());
-            Tarefas.Clear();
-
-            Buffer.Obras();
-            Buffer.Pedidos();
+            Consultas.GetPedidosContratos();
+            Consultas.GetObras();
+            Consultas.GetPedidos();
             Buffer.ObrasPorSegmento();
         }
 
         private static List<PLAN_OBRA> _Garantias { get; set; }
-        private static List<PLAN_PEDIDO> _Pedidos { get; set; }
+
         private static List<PLAN_PEDIDO> _Pedidos_Principais { get; set; }
 
         public static List<PLAN_OBRA> GetObrasClone(bool Principais,bool Garantias)
@@ -106,7 +91,7 @@ namespace DLM.painel
         }
         public static List<PLAN_OBRA> GetObrasPrincipaisClone()
         {
-            return Obras().Select(x => x.Clonar()).ToList();
+            return Consultas.GetObras().Select(x => x.Clonar()).ToList();
         }
 
         public static List<PLAN_OBRA> GetObrasGarantiasClone()
@@ -122,23 +107,8 @@ namespace DLM.painel
             return _Pedidos_Principais;
 
         }
-        public static List<PLAN_PEDIDO> Pedidos()
-        {
-            if (_Pedidos == null)
-            {
-                _Pedidos = Consultas.GetPedidos();
-            }
-            return _Pedidos;
-        }
-        private static List<PLAN_OBRA> _Obras { get; set; }
-        public static List<PLAN_OBRA> Obras(bool copia = true, bool reset = false)
-        {
-            if (_Obras == null)
-            {
-                _Obras = Consultas.GetObras(copia,reset);
-            }
-            return _Obras;
-        }
+
+
 
         private static List<PLAN_OBRAS> _ObrasPorSegmento { get; set; }
         public static List<PLAN_OBRAS> ObrasPorSegmento()
@@ -147,17 +117,17 @@ namespace DLM.painel
             {
                 _ObrasPorSegmento = new List<PLAN_OBRAS>();
 
-                var segs = Obras().Select(x => x.setor_atividade).Distinct().ToList().OrderBy(x => x).ToList();
-                var familias = DBases.GetSegmentos().FindAll(y => segs.Find(z => z == y.COD) != null).Select(x => x.FAMILIA).Distinct().ToList();
+                var segs = Consultas.GetObras().Select(x => x.setor_atividade).Distinct().ToList().OrderBy(x => x).ToList();
+                var familias = DBases.GetSegmentos().FindAll(y => segs.Find(z => z == y.id.ToString()) != null).Select(x => x.FAMILIA).Distinct().ToList();
 
                 foreach (var fam in familias)
                 {
                     List<PLAN_OBRA> obras = new List<PLAN_OBRA>();
-                    var segmentos = DBases.GetSegmentos().FindAll(x => x.FAMILIA == fam).Select(x => x.COD).Distinct().ToList();
+                    var segmentos = DBases.GetSegmentos().FindAll(x => x.FAMILIA == fam).Select(x => x.id.ToString()).Distinct().ToList();
                     string nome = DBases.GetSegmentos().Find(x => x.FAMILIA == fam).FAMILIA_DESC;
                     foreach (var ss in segmentos)
                     {
-                        obras.AddRange(Obras().FindAll(x => x.setor_atividade == ss));
+                        obras.AddRange(Consultas.GetObras().FindAll(x => x.setor_atividade == ss));
                     }
                     var nova = new PLAN_OBRAS(obras, fam, nome);
 
@@ -174,36 +144,11 @@ namespace DLM.painel
         {
             if (_Garantias == null)
             {
-                _Garantias = Consultas.GetObras(new List<string> { ".G" },true,false);
+                _Garantias = Consultas.GetObras(new List<string> { ".G" });
             }
             return _Garantias;
         }
-        private static List<Titulo_Planejamento> _Titulos_Pedidos { get; set; }
-        public static List<Titulo_Planejamento> GetTitulosPedidos()
-        {
-            if (_Titulos_Pedidos != null) { return _Titulos_Pedidos; }
-            _Titulos_Pedidos = new List<Titulo_Planejamento>();
-            var lista_fab = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_titulos_pedidos);
-            ConcurrentBag<Titulo_Planejamento> retorno = new ConcurrentBag<Titulo_Planejamento>();
-            List<Task> Tarefas = new List<Task>();
-            foreach (var s in lista_fab.Linhas)
-            {
-                Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new Titulo_Planejamento(s))));
-            }
-            Task.WaitAll(Tarefas.ToArray());
-            _Titulos_Pedidos.AddRange(retorno);
 
-            
-            var lista_orcamento = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_resumo);
-
-            foreach (var s in lista_orcamento.Linhas)
-            {
-                _Titulos_Pedidos.Add(new Titulo_Planejamento(s, true));
-            }
-
-
-            return _Titulos_Pedidos.OrderBy(x => x.CHAVE).ToList();
-        }
 
         private static List<StatusSAP_Planejamento> _Status { get; set; }
 
@@ -213,9 +158,9 @@ namespace DLM.painel
             {
                 _Status = new List<StatusSAP_Planejamento>();
                 var lista_log = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_status_sap);
-                foreach (var t in lista_log.Linhas)
+                foreach (var linha in lista_log.Linhas)
                 {
-                    _Status.Add(new StatusSAP_Planejamento(t));
+                    _Status.Add(new StatusSAP_Planejamento(linha));
                 }
             }
             return _Status;

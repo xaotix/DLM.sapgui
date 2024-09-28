@@ -2,23 +2,17 @@
 using DLM.vars;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Markup;
 
 namespace DLM.sapgui
 {
 
-    public class PEPConsultaSAP : INotifyPropertyChanged
+    public class PEP_Planejamento : Notificar
     {
-        public CN47N_Datas Engenharia { get; set; } = new CN47N_Datas();
-        public CN47N_Datas Montagem { get; set; } = new CN47N_Datas();
-        public CN47N_Datas Fabrica { get; set; } = new CN47N_Datas();
-        public List<CN47N_Datas> LogisticaDatas { get; set; } = new List<CN47N_Datas>();
+        public CN47N Engenharia { get; set; } = new CN47N();
+        public CN47N Montagem { get; set; } = new CN47N();
+        public CN47N Fabrica { get; set; } = new CN47N();
+        public List<CN47N> LogisticaDatas { get; set; } = new List<CN47N>();
         public ConexaoSAP Pedido { get; set; } = new ConexaoSAP();
 
         public List<ZPP0100> Embarque { get; set; } = new List<ZPP0100>();
@@ -36,24 +30,7 @@ namespace DLM.sapgui
                 NotifyPropertyChanged("id");
             }
         }
-        #region Properties
-        [Browsable(false)]
-        public event PropertyChangedEventHandler PropertyChanged;
-        [Browsable(false)]
-        public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        [Browsable(false)]
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
+
         private string _Codigo { get; set; } = "";
         public string Codigo
         {
@@ -378,11 +355,11 @@ namespace DLM.sapgui
             }
         }
 
-        public PEPConsultaSAP()
+        public PEP_Planejamento()
         {
 
         }
-        public PEPConsultaSAP(string Codigo)
+        public PEP_Planejamento(string Codigo)
         {
             this.Codigo = Codigo;
             AjustaPEP();
@@ -398,7 +375,7 @@ namespace DLM.sapgui
             this.Codigo = PEP;
         }
 
-        public PEPConsultaSAP(string Codigo, List<ZPMP> Producao,List<ZPP0100> Embarque, CN47N_Datas Fabrica, ConexaoSAP Pedido)
+        public PEP_Planejamento(string Codigo, List<ZPMP> Producao,List<ZPP0100> Embarque, CN47N Fabrica, ConexaoSAP Pedido)
         {
             this.Codigo = Codigo;
             this.AjustaPEP();
@@ -408,17 +385,13 @@ namespace DLM.sapgui
             this.Fabrica = Fabrica;
             if (this.Fabrica == null)
             {
-                this.Fabrica = new CN47N_Datas();
+                this.Fabrica = new CN47N();
             }
             this.Pedido = Pedido;
 
-            this.Peso_Planejado = this.Producao.Sum(x => Conexoes.Utilz.Double(x.peso_necessario));
-            this.Peso_Produzido = this.Producao.Sum(x => Conexoes.Utilz.Double(x.peso_produzido));
+            this.Peso_Planejado = this.Producao.Sum(x => x.peso_necessario);
+            this.Peso_Produzido = this.Producao.Sum(x => x.peso_produzido);
 
-            if (this.Producao.Count > 0)
-            {
-                this.Denominacao = this.Producao[0].denominacao;
-            }
 
             this.Engenharia = Pedido.GETPEPENG(this.Codigo);
 
@@ -432,60 +405,44 @@ namespace DLM.sapgui
             {
                 this.Descricao = this.Engenharia.Texto_Operacao;
 
-                this.Engenharia_Cronograma_Inicio = this.Engenharia.Data_Inicio_Base;
-                this.Engenharia_Cronograma = this.Engenharia.Data_Fim_Base;
+                this.Engenharia_Cronograma_Inicio = this.Engenharia.Data_Inicio_Base.GetValue();
+                this.Engenharia_Cronograma = this.Engenharia.Data_Fim_Base.GetValue();
 
-                this.eng_base_ini = this.Engenharia.Inicio_Previsto;
-                this.eng_base_fim = this.Engenharia.Fim_Previsto;
+                this.eng_base_ini = this.Engenharia.Inicio_Previsto.GetValue();
+                this.eng_base_fim = this.Engenharia.Fim_Previsto.GetValue();
             }
             if (this.Fabrica != null)
             {
-                this.Fabrica_Cronograma_Inicio = this.Fabrica.Data_Inicio_Base;
-                this.Fabrica_Cronograma = this.Fabrica.Data_Fim_Base;
+                this.Fabrica_Cronograma_Inicio = this.Fabrica.Data_Inicio_Base.GetValue();
+                this.Fabrica_Cronograma = this.Fabrica.Data_Fim_Base.GetValue();
 
-                this.fab_base_ini = this.Fabrica.Inicio_Previsto;
-                this.fab_base_fim = this.Fabrica.Fim_Previsto;
+                this.fab_base_ini = this.Fabrica.Inicio_Previsto.GetValue();
+                this.fab_base_fim = this.Fabrica.Fim_Previsto.GetValue();
             }
             if (LogisticaDatas.Count > 0)
             {
 
-                this.Logistica_Cronograma_Inicio = LogisticaDatas.Min(x => x.Data_Inicio_Base);
-                this.Logistica_Cronograma = LogisticaDatas.Max(x => x.Data_Fim_Base);
+                this.Logistica_Cronograma_Inicio = LogisticaDatas.Min(x => x.Data_Inicio_Base).GetValue();
+                this.Logistica_Cronograma = LogisticaDatas.Max(x => x.Data_Fim_Base).GetValue();
 
-                this.log_base_ini = LogisticaDatas.Max(x => x.Inicio_Previsto);
-                this.log_base_fim = LogisticaDatas.Max(x => x.Fim_Previsto);
+                this.log_base_ini = LogisticaDatas.Max(x => x.Inicio_Previsto).GetValue();
+                this.log_base_fim = LogisticaDatas.Max(x => x.Fim_Previsto).GetValue();
             }
             if (this.Montagem !=null)
             {
-                this.Montagem_Cronograma_Inicio = Montagem.Data_Inicio_Base;
-                this.Montagem_Cronograma = Montagem.Data_Fim_Base;
+                this.Montagem_Cronograma_Inicio = Montagem.Data_Inicio_Base.GetValue();
+                this.Montagem_Cronograma = Montagem.Data_Fim_Base.GetValue();
 
-                this.mon_base_ini = this.Montagem.Inicio_Previsto;
-                this.mon_base_fim = this.Montagem.Fim_Previsto;
+                this.mon_base_ini = this.Montagem.Inicio_Previsto.GetValue();
+                this.mon_base_fim = this.Montagem.Fim_Previsto.GetValue();
             }     
-
-
-           
-
-
-            /*pegando datas da zpmp*/
-            if(Producao.Count>0)
-            {
-                /*datas fim de cronograma pegando da zpmp*/
-                this.Engenharia_Cronograma = this.Producao.Max(X => X.fim_engenharia_base);
-                this.Fabrica_Cronograma = this.Producao.Max(X => X.Fim_Fabrica_Base);
-                this.Logistica_Cronograma = this.Producao.Max(X => X.fim_logistica_base);
-                this.Engenharia_Liberacao = this.Producao.Max(X => X.fim_engenharia_real);
-            }
-
-            
 
             foreach (var t in this.Embarque.FindAll(x => x.Carregado))
             {
                 var s = Producao.Find(x => x.material == t.Material);
                 if (s != null)
                 {
-                    this.Peso_Embarcado = this.Peso_Embarcado + (Conexoes.Utilz.Double(s.peso_necessario) / Conexoes.Utilz.Double(s.qtd_necessaria) * Conexoes.Utilz.Double(t.Qtd_Carregada));
+                    this.Peso_Embarcado = this.Peso_Embarcado + (s.peso_necessario / s.qtd_necessaria * t.Qtd_Carregada);
                 }
             }
 

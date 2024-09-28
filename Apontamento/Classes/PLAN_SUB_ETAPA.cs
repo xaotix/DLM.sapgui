@@ -1,11 +1,6 @@
 ﻿using DLM.vars;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace DLM.painel
 {
@@ -34,9 +29,9 @@ namespace DLM.painel
         {
 
         }
-        public PLAN_SUB_ETAPA(DLM.db.Linha L, List<PLAN_PEP> peps)
+        public PLAN_SUB_ETAPA(DLM.db.Linha linha, List<PLAN_PEP> peps)
         {
-            this.PEP = L.Get("pep").Valor;
+            this.PEP = linha["pep"].Valor;
 
 
             if (peps != null && this.carregou_pecas)
@@ -49,43 +44,43 @@ namespace DLM.painel
             }
 
 
-            this.Linha = L;
+            this.Linha = linha;
 
-            this.engenharia_cronograma = L.Get("engenharia_cronograma").Data();
-            this.engenharia_liberacao = L.Get("engenharia_liberacao").Data();
-            this.fabrica_cronograma = L.Get("fabrica_cronograma").Data();
-            this.liberado_engenharia = L.Get("liberado_engenharia").Double();
-            this.peso_embarcado = L.Get("peso_embarcado").Double(6);
-            this.peso_planejado = L.Get("peso_planejado").Double(6);
-            this.peso_produzido = L.Get("peso_produzido").Double(6);
-            this.total_montado = L.Get("total_montado").Double(6);
-            this.engenharia_previsto = L.Get("engenharia_previsto").Double();
-            this.fabrica_previsto = L.Get("fabrica_previsto").Double();
-            this.montagem_previsto = L.Get("montagem_previsto").Double();
-            this.peso_montado = L.Get("peso_montado").Double();
-            this.ultima_edicao = L["ultima_edicao"].Data();
-            this.peps_qtd = L.Get("pep_fabrica").Int();
+            this.engenharia_cronograma = linha["engenharia_cronograma"].DataNull();
+            this.engenharia_liberacao = linha["engenharia_liberacao"].DataNull();
+            this.fabrica_cronograma = linha["fabrica_cronograma"].DataNull();
+            this.liberado_engenharia = linha["liberado_engenharia"].Double();
+            this.peso_embarcado = linha["peso_embarcado"].Double(6);
+            this.peso_planejado = linha["peso_planejado"].Double(6);
+            this.peso_produzido = linha["peso_produzido"].Double(6);
+            this.total_montado = linha["total_montado"].Double(6);
+            this.engenharia_previsto = linha["engenharia_previsto"].Double();
+            this.fabrica_previsto = linha["fabrica_previsto"].Double();
+            this.montagem_previsto = linha["montagem_previsto"].Double();
+            this.peso_montado = linha["peso_montado"].Double();
+            this.ultima_edicao = linha["ultima_edicao"].DataNull();
+            this.peps_qtd = linha["pep_fabrica"].Int();
 
-            this.dados_montagem = L.Get("total_montado").Valor != "";
+            this.dados_montagem = linha["total_montado"].Valor != "";
 
-            this.ultima_consulta_sap = L.Get("ultima_consulta_sap").Data();
+            this.ultima_consulta_sap = linha["ultima_consulta_sap"].DataNull();
 
-            this.engenharia_previsto = L.Get("es").Double();
-            this.fabrica_previsto = L.Get("fs").Double();
+            this.engenharia_previsto = linha["es"].Double();
+            this.fabrica_previsto = linha["fs"].Double();
 
-            this.embarque_previsto = L.Get("ls").Double();
+            this.embarque_previsto = linha["ls"].Double();
 
-            this.montagem_previsto = L.Get("ms").Double();
+            this.montagem_previsto = linha["ms"].Double();
      
-            this.engenharia_cronograma_inicio = L.Get("ei").Data();
-            this.fabrica_cronograma_inicio = L.Get("fi").Data();
-            this.logistica_cronograma = L.Get("lf").Data();
-            this.logistica_cronograma_inicio = L.Get("li").Data();
-            this.montagem_cronograma = L.Get("mf").Data();
-            this.montagem_cronograma_inicio = L.Get("mi").Data();
+            this.engenharia_cronograma_inicio = linha["ei"].DataNull();
+            this.fabrica_cronograma_inicio = linha["fi"].DataNull();
+            this.logistica_cronograma = linha["lf"].DataNull();
+            this.logistica_cronograma_inicio = linha["li"].DataNull();
+            this.montagem_cronograma = linha["mf"].DataNull();
+            this.montagem_cronograma_inicio = linha["mi"].DataNull();
 
-            this.mi_s = L.Get("mi_s").Data();
-            this.mf_s = L.Get("mf_s").Data();
+            this.mi_s = linha["mi_s"].DataNull();
+            this.mf_s = linha["mf_s"].DataNull();
 
 
 
@@ -100,22 +95,21 @@ namespace DLM.painel
                 this.montagem_cronograma_inicio = ((DateTime)this.logistica_cronograma).AddDays(2);
             }
 
-            this.resumo = L.Get("descricao").Valor;
+            this.resumo = linha["descricao"].Valor;
 
 
-            this.atraso_engenharia = L.Get("atraso_engenharia").Int();
-            this.atraso_fabrica = L.Get("atraso_fabrica").Int();
-            this.atraso_embarque = L.Get("atraso_embarque").Int();
-            this.atraso_montagem = L.Get("atraso_montagem").Int();
+            this.atraso_engenharia = linha["atraso_engenharia"].Int();
+            this.atraso_fabrica = linha["atraso_fabrica"].Int();
+            this.atraso_embarque = linha["atraso_embarque"].Int();
+            this.atraso_montagem = linha["atraso_montagem"].Int();
 
-            this.montagem_engenheiro = L.Get("montagem_engenheiro").Valor;
+            this.montagem_engenheiro = linha["montagem_engenheiro"].Valor;
 
             if (this.montagem_cronograma_inicio < Cfg.Init.DataDummy())
             {
                 this.Montagem_Balanco = false;
-                this.montagem_cronograma = L.Get("montagem_fim").Data();
-                this.montagem_cronograma_inicio = L.Get("montagem_inicio").Data();
-
+                this.montagem_cronograma = linha["montagem_fim"].DataNull();
+                this.montagem_cronograma_inicio = linha["montagem_inicio"].DataNull();
             }
 
 
@@ -140,14 +134,7 @@ namespace DLM.painel
                 this.total_fabricado = 100;
 
             }
-
-            //this.almox_comprado = L.Get("almox_comprado").Boolean();
-            //this.almox_comprado_data = L.Get("almox_comprado_data").Data();
-            //this.almox_comprado_user = L.Get("almox_comprado_user").ToString();
-
-
-
-            DateTime mont = L.Get("update_montagem").Data();
+            DateTime mont = linha["update_montagem"].Data();
             if (mont > Cfg.Init.DataDummy())
             {
                 this.update_montagem = "Montagem: " + mont.ToShortDateString();

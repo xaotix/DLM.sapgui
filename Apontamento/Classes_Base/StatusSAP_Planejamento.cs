@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace DLM.painel
 {
     public class StatusSAP_Planejamento
@@ -15,11 +10,11 @@ namespace DLM.painel
         {
 
         }
-        public StatusSAP_Planejamento(DLM.db.Linha L)
+        public StatusSAP_Planejamento(DLM.db.Linha linha)
         {
-            this.id = L["id"].Int();
-            this.descricao = L.Get("descricao").Valor;
-            this.status = L.Get("status").Valor;
+            this.id = linha["id"].Int();
+            this.descricao = linha["descricao"].Valor;
+            this.status = linha["status"].Valor;
         }
     }
 }
