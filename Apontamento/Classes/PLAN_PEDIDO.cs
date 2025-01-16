@@ -115,7 +115,7 @@ namespace DLM.painel
             this.status_montagem = linha["status_montagem"].Valor;
 
             DateTime mont = linha["update_montagem"].Data();
-            if (mont > Cfg.Init.DataDummy())
+            if (mont > Cfg.Init.DataDummy)
             {
                 this.update_montagem = "Montagem: " + mont.ToShortDateString();
             }

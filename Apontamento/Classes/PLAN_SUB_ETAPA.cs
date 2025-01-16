@@ -85,12 +85,12 @@ namespace DLM.painel
 
 
 
-            if (this.logistica_cronograma_inicio == Cfg.Init.DataDummy() && this.logistica_cronograma != Cfg.Init.DataDummy())
+            if (this.logistica_cronograma_inicio == Cfg.Init.DataDummy && this.logistica_cronograma != Cfg.Init.DataDummy)
             {
                 this.logistica_cronograma_inicio = ((DateTime)this.fabrica_cronograma).AddDays(2);
             }
 
-            if (this.montagem_cronograma_inicio == Cfg.Init.DataDummy() && this.montagem_cronograma != Cfg.Init.DataDummy())
+            if (this.montagem_cronograma_inicio == Cfg.Init.DataDummy && this.montagem_cronograma != Cfg.Init.DataDummy)
             {
                 this.montagem_cronograma_inicio = ((DateTime)this.logistica_cronograma).AddDays(2);
             }
@@ -105,7 +105,7 @@ namespace DLM.painel
 
             this.montagem_engenheiro = linha["montagem_engenheiro"].Valor;
 
-            if (this.montagem_cronograma_inicio < Cfg.Init.DataDummy())
+            if (this.montagem_cronograma_inicio < Cfg.Init.DataDummy)
             {
                 this.Montagem_Balanco = false;
                 this.montagem_cronograma = linha["montagem_fim"].DataNull();
@@ -135,7 +135,7 @@ namespace DLM.painel
 
             }
             DateTime mont = linha["update_montagem"].Data();
-            if (mont > Cfg.Init.DataDummy())
+            if (mont > Cfg.Init.DataDummy)
             {
                 this.update_montagem = "Montagem: " + mont.ToShortDateString();
             }

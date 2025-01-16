@@ -18,7 +18,7 @@ namespace DLM.sapgui
 
         public DLM.db.Linha GetLinha()
         {
-            DateTime dtmin = Cfg.Init.DataDummy();
+            DateTime dtmin = Cfg.Init.DataDummy;
             DLM.db.Linha l = new DLM.db.Linha();
             l.Add("pep", PEP.Codigo);
             l.Add(nameof(centro), centro);

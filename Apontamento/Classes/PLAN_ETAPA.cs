@@ -64,10 +64,10 @@ namespace DLM.painel
                 this.logistica_cronograma = this.subetapas.Max(x => x.logistica_cronograma);
                 this.montagem_cronograma = this.subetapas.Max(x => x.montagem_cronograma);
 
-                var eng = this.subetapas.FindAll(x => x.engenharia_cronograma_inicio != Cfg.Init.DataDummy());
-                var fab = this.subetapas.FindAll(x => x.fabrica_cronograma_inicio != Cfg.Init.DataDummy());
-                var log = this.subetapas.FindAll(x => x.fabrica_cronograma_inicio != Cfg.Init.DataDummy());
-                var mont = this.subetapas.FindAll(x => x.montagem_cronograma_inicio != Cfg.Init.DataDummy());
+                var eng = this.subetapas.FindAll(x => x.engenharia_cronograma_inicio != Cfg.Init.DataDummy);
+                var fab = this.subetapas.FindAll(x => x.fabrica_cronograma_inicio != Cfg.Init.DataDummy);
+                var log = this.subetapas.FindAll(x => x.fabrica_cronograma_inicio != Cfg.Init.DataDummy);
+                var mont = this.subetapas.FindAll(x => x.montagem_cronograma_inicio != Cfg.Init.DataDummy);
 
                 if (eng.Count > 0)
                 {
@@ -123,7 +123,7 @@ namespace DLM.painel
 
                 //this.resumo_pecas.etapa_bloqueada = (this.subetapas.FindAll(x => x.resumo_pecas.etapa_bloqueada).Count == this.subetapas.Count);
 
-                //var MIN = Cfg.Init.DataDummy();
+                //var MIN = Cfg.Init.DataDummy;
                 //var D0 = this.subetapas.Select(X => X.resumo_pecas.Inicio).ToList().FindAll(X => X > MIN).OrderBy(x => x);
                 //var D1 = this.subetapas.Select(X => X.resumo_pecas.Fim).ToList().FindAll(X => X > MIN).OrderBy(x => x);
 

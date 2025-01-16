@@ -252,7 +252,7 @@ namespace DLM.painel
             this.criado = linha["criado"].DataNull();
 
             DateTime mont = linha["update_montagem"].Data();
-            if (mont > Cfg.Init.DataDummy())
+            if (mont > Cfg.Init.DataDummy)
             {
                 this.update_montagem = "Montagem: " + mont.ToShortDateString();
             }

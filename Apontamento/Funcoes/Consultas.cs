@@ -481,7 +481,7 @@ namespace DLM.painel
 
 
             w.SetProgresso(1, Pecas.Count, "Mapeando peças...");
-            var mindia = Cfg.Init.DataDummy();
+            var mindia = Cfg.Init.DataDummy;
 
 
             var linhas = new List<DLM.db.Linha>();

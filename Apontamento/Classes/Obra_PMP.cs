@@ -1183,7 +1183,7 @@ namespace DLM.painel
     }
     public class Pedido_PMP : Base_PMP
     {
-        public DateTime? ultima_edicao { get; set; } = Cfg.Init.DataDummy();
+        public DateTime? ultima_edicao { get; set; } = Cfg.Init.DataDummy;
         public DateTime? ei
         {
             get

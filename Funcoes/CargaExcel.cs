@@ -366,7 +366,7 @@ namespace DLM.sapgui
                             /*21*/x[(int)TAB_ZPPCOOISN.DESENHO_2].ToString(),
                         }).Distinct().ToList();
 
-                var min = Cfg.Init.DataDummy();
+                var min = Cfg.Init.DataDummy;
                 var pcs = pecas.FindAll(x => x.Material.ToString().StartsW("31"));
                 var linhas = new List<DLM.db.Linha>();
                 foreach (var peca in pcs)
@@ -393,9 +393,9 @@ namespace DLM.sapgui
                     curr = curr.OrderBy(x => x[18].ToString()).ToList();
                     if (curr.Count > 0)
                     {
-                        var Dts = curr.Select(x => x[5].ToString().Data()).OrderBy(x => x).ToList().FindAll(x => x > Cfg.Init.DataDummy());
-                        DateTime? inicio = Cfg.Init.DataDummy();
-                        DateTime? fim = Cfg.Init.DataDummy();
+                        var Dts = curr.Select(x => x[5].ToString().Data()).OrderBy(x => x).ToList().FindAll(x => x > Cfg.Init.DataDummy);
+                        DateTime? inicio = Cfg.Init.DataDummy;
+                        DateTime? fim = Cfg.Init.DataDummy;
                         string ultimo_status = "";
                         if (Dts.Count > 0)
                         {
@@ -405,7 +405,7 @@ namespace DLM.sapgui
                         for (int i = 0; i < curr.Count - 1; i++)
                         {
                             var data = curr[i][5].ToString().Data();
-                            if (data > Cfg.Init.DataDummy())
+                            if (data > Cfg.Init.DataDummy)
                             {
                                 if (curr.Count > i + 1)
                                 {
@@ -417,7 +417,7 @@ namespace DLM.sapgui
                                 }
                             }
                         }
-                        if (curr.Last()[5].ToString().Data() > Cfg.Init.DataDummy())
+                        if (curr.Last()[5].ToString().Data() > Cfg.Init.DataDummy)
                         {
                             ultimo_status = curr.Last()[6].ToString();
                         }

@@ -280,7 +280,7 @@ namespace DLM.painel
         public DLM.db.Linha GetLinha()
         {
             DLM.db.Linha l = new DLM.db.Linha();
-            var data_min = Cfg.Init.DataDummy();
+            var data_min = Cfg.Init.DataDummy;
 
             l.Add("id_status_pep", id_status_pep);
             l.Add("id_status_pedido", id_status_pedido);

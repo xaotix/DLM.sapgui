@@ -94,7 +94,7 @@ namespace DLM.painel
                     int l = 1;
                     int c0 = 1;
                     var w = Conexoes.Utilz.Wait(Pecas.Count, "Gerando Planilha...");
-                    var mindia = Cfg.Init.DataDummy();
+                    var mindia = Cfg.Init.DataDummy;
                     double at = 0;
                     var pedidosstr = Pecas.Select(x => x.pedido_completo).Distinct().ToList();
                     var peds_peps = Consultas.GetPedidosContratos().FindAll(x => pedidosstr.Find(y => x.Contrato.Contains(y)) != null);
@@ -518,7 +518,7 @@ namespace DLM.painel
                 int c0 = 1;
 
                 w.SetProgresso(1, Pecas.Count, "Mapeando peças...");
-                var mindia = Cfg.Init.DataDummy();
+                var mindia = Cfg.Init.DataDummy;
                 var tot = Pecas.Count;
 
 
@@ -693,7 +693,7 @@ namespace DLM.painel
                     int l = 1;
                     var w = Conexoes.Utilz.Wait(pecas.Count);
                     var TOT = pecas.Count;
-                    var mindia = Cfg.Init.DataDummy();
+                    var mindia = Cfg.Init.DataDummy;
                     double at = 0;
 
 

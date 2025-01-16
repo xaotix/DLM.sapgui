@@ -34,7 +34,7 @@ namespace DLM.sapgui
         //public double Sld_1204 { get; set; } = 0;
         public string St_Conf_ { get; set; } = "";
         //public string St_DtProg_ { get; set; } = "";
-        public DateTime Data { get; set; } = Cfg.Init.DataDummy();
+        public DateTime Data { get; set; } = Cfg.Init.DataDummy;
         public string Ordem_Prod_ { get; set; } = "";
         public string Apontamento_Fert { get; set; } = "";
         //public string End_Logistico { get; set; } = "";
@@ -43,7 +43,7 @@ namespace DLM.sapgui
         //public string Ordem_Venda { get; set; } = "";
         //public string Remessa { get; set; } = "";
         public int Nota_Fiscal { get; set; } = 0;
-        public DateTime Data_NF { get; set; } = Cfg.Init.DataDummy();
+        public DateTime Data_NF { get; set; } = Cfg.Init.DataDummy;
         public DLM.db.Linha GetLinha()
         {
 

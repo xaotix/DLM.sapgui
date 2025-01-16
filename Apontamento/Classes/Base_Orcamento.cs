@@ -254,7 +254,7 @@ namespace DLM.painel
             return "[PGO] - [" + this.PEP + "] - " + this.descricao + " [" + this.numerocontrato + "." + this.revisao + "]";
         }
 
-        public DateTime criacao { get; set; } = Cfg.Init.DataDummy();
+        public DateTime criacao { get; set; } = Cfg.Init.DataDummy;
         public ORC_PED(DLM.db.Linha linha, Tipo_Material tipo)
         {
             this.Linha = linha;
