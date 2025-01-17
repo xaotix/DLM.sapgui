@@ -630,10 +630,9 @@ namespace DLM.painel
         {
             get
             {
-                var t = datas_cronograma_filtro.FindAll(x => x > null);
-                if (t.Count > 0)
+                if (datas_cronograma_filtro.Count > 0)
                 {
-                    return t.Min();
+                    return datas_cronograma_filtro.Min();
                 }
                 return DateTime.Now.AddMonths(-3);
             }
@@ -642,38 +641,38 @@ namespace DLM.painel
         {
             get
             {
-                var t = datas_cronograma_filtro.FindAll(x => x != null);
-                if (t.Count > 0)
+                if (datas_cronograma_filtro.Count > 0)
                 {
-                    return t.Max();
+                    return datas_cronograma_filtro.Max();
                 }
-                return null;
+                return DateTime.Now;
             }
         }
         public List<DateTime> datas_cronograma_filtro
         {
             get
             {
-                List<DateTime> retorno = new List<DateTime>();
+                var retorno = new List<DateTime>();
                 if (cron_eng_show)
                 {
-                    retorno.Add((DateTime)engenharia_cronograma);
-                    retorno.Add((DateTime)engenharia_cronograma_inicio);
+                    if (engenharia_cronograma != null) { retorno.Add(engenharia_cronograma.Value); };
+                    if (engenharia_cronograma_inicio != null) { retorno.Add(engenharia_cronograma_inicio.Value); };
                 }
                 if (cron_fab_show)
                 {
-                    retorno.Add((DateTime)fabrica_cronograma);
-                    retorno.Add((DateTime)fabrica_cronograma_inicio);
+                    if (engenharia_cronograma != null) { retorno.Add(fabrica_cronograma.Value); };
+                    if (engenharia_cronograma != null) { retorno.Add(fabrica_cronograma_inicio.Value); };
                 }
                 if (cron_log_show)
                 {
-                    retorno.Add((DateTime)logistica_cronograma);
-                    retorno.Add((DateTime)logistica_cronograma_inicio);
+                    if (logistica_cronograma != null) { retorno.Add(logistica_cronograma.Value); };
+                    if (logistica_cronograma_inicio != null) { retorno.Add(logistica_cronograma_inicio.Value); };
+
                 }
                 if (cron_mont_show)
                 {
-                    retorno.Add((DateTime)montagem_cronograma);
-                    retorno.Add((DateTime)montagem_cronograma_inicio);
+                    if (montagem_cronograma != null) { retorno.Add(montagem_cronograma.Value); };
+                    if (montagem_cronograma_inicio != null) { retorno.Add(montagem_cronograma_inicio.Value); };
                 }
                 return retorno;
             }

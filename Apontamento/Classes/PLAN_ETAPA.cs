@@ -64,10 +64,10 @@ namespace DLM.painel
                 this.logistica_cronograma = this.subetapas.Max(x => x.logistica_cronograma);
                 this.montagem_cronograma = this.subetapas.Max(x => x.montagem_cronograma);
 
-                var eng = this.subetapas.FindAll(x => x.engenharia_cronograma_inicio != Cfg.Init.DataDummy);
-                var fab = this.subetapas.FindAll(x => x.fabrica_cronograma_inicio != Cfg.Init.DataDummy);
-                var log = this.subetapas.FindAll(x => x.fabrica_cronograma_inicio != Cfg.Init.DataDummy);
-                var mont = this.subetapas.FindAll(x => x.montagem_cronograma_inicio != Cfg.Init.DataDummy);
+                var eng = this.subetapas.FindAll(x => x.engenharia_cronograma_inicio != null);
+                var fab = this.subetapas.FindAll(x => x.fabrica_cronograma_inicio != null);
+                var log = this.subetapas.FindAll(x => x.fabrica_cronograma_inicio != null);
+                var mont = this.subetapas.FindAll(x => x.montagem_cronograma_inicio != null);
 
                 if (eng.Count > 0)
                 {
@@ -103,7 +103,7 @@ namespace DLM.painel
                 this.peso_planejado = Math.Round(this.subetapas.Sum(x => x.peso_planejado), 2);
 
                 this.liberado_engenharia = Math.Round(this.subetapas.Sum(x => x.liberado_engenharia / this.subetapas.Count), 2);
-                
+
                 this.total_embarcado = Math.Round(this.subetapas.Sum(x => x.peso_embarcado) / this.subetapas.Sum(x => x.peso_planejado) * 100, 2);
                 this.total_fabricado = Math.Round(this.subetapas.Sum(x => x.peso_produzido) / this.subetapas.Sum(x => x.peso_planejado) * 100, 2);
                 this.total_montado = Math.Round(this.subetapas.Sum(x => x.peso_montado) / this.subetapas.Sum(x => x.peso_planejado) * 100, 2);

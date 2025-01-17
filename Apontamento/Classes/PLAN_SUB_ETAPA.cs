@@ -85,12 +85,12 @@ namespace DLM.painel
 
 
 
-            if (this.logistica_cronograma_inicio == Cfg.Init.DataDummy && this.logistica_cronograma != Cfg.Init.DataDummy)
+            if (this.logistica_cronograma_inicio == null && this.logistica_cronograma != null)
             {
                 this.logistica_cronograma_inicio = ((DateTime)this.fabrica_cronograma).AddDays(2);
             }
 
-            if (this.montagem_cronograma_inicio == Cfg.Init.DataDummy && this.montagem_cronograma != Cfg.Init.DataDummy)
+            if (this.montagem_cronograma_inicio == null && this.montagem_cronograma != null)
             {
                 this.montagem_cronograma_inicio = ((DateTime)this.logistica_cronograma).AddDays(2);
             }
