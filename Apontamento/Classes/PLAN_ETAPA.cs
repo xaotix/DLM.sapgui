@@ -10,7 +10,7 @@ namespace DLM.painel
     {
         public override string ToString()
         {
-            return descricao;
+            return $"{PEP} {descricao}";
         }
         public List<PLAN_SUB_ETAPA> subetapas { get; set; } = new List<PLAN_SUB_ETAPA>();
         public List<PLAN_SUB_ETAPA> get(bool atraso_engenharia = false, bool atraso_fabrica = false, bool atraso_embarque = false, bool atraso_montagem = false)

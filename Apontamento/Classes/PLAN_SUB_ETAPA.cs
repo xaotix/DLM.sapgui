@@ -8,7 +8,7 @@ namespace DLM.painel
     {
         public override string ToString()
         {
-            return descricao;
+            return $"{PEP} {descricao}";
         }
         public List<PLAN_PEP> peps
         {

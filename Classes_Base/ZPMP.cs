@@ -9,106 +9,102 @@ namespace DLM.sapgui
     {
         public override string ToString()
         {
-            return material.ToString();
+            return $"[{PEP}] - {Material} - [{Marca}] [{Descricao}]";
         }
-
-
-        private PEP_Planejamento _PEP { get; set; }
-
 
         public DLM.db.Linha GetLinha()
         {
-            DateTime dtmin = Cfg.Init.DataDummy;
-            DLM.db.Linha l = new DLM.db.Linha();
-            l.Add("pep", PEP.Codigo);
-            l.Add(nameof(centro), centro);
-            l.Add(nameof(centro_producao), centro_producao);
-            l.Add(nameof(material), material);
-            l.Add(nameof(tamanho_dimensao), tamanho_dimensao);
-            l.Add(nameof(grupo_mercadoria), grupo_mercadoria);
-            l.Add(nameof(texto_breve), texto_breve);
-
-            l.Add(nameof(peso_necessario), peso_necessario);
-            l.Add(nameof(peso_produzido), peso_produzido);
-
-            l.Add(nameof(qtd_necessaria), qtd_necessaria);
-            l.Add(nameof(qtd_produzida), qtd_produzida);
-            l.Add(nameof(peso_unitario), peso_unitario);
+            var l = new DLM.db.Linha();
+            l.Add("pep", PEP);
+            l.Add("centro", Centro);
+            l.Add("centro_producao", CentroProducao);
+            l.Add("material", Material);
+            l.Add("tamanho_dimensao", Marca);
+            l.Add("grupo_mercadoria", Grp_Mercadoria);
+            l.Add("texto_breve", Descricao);
+            l.Add("peso_necessario", Peso_Nec);
+            l.Add("peso_produzido", Peso_Fab);
+            l.Add("qtd_necessaria", Qtd_Nec);
+            l.Add("qtd_produzida", Qtd_Fab);
+            l.Add("peso_unitario", Peso_Un);
 
 
 
             return l;
         }
 
-        public PEP_Planejamento PEP
-        {
-            get
-            {
-                if (_PEP == null)
-                {
-                    _PEP = new PEP_Planejamento();
-                }
-                return _PEP;
-            }
-            set
-            {
-
-                _PEP = value;
-                NotifyPropertyChanged("PEP");
-            }
-        }
+        public long POSNR { get; set; }
+        public string PEP { get; set; } = "";
 
 
-        public string centro { get; private set; } = "";
-        public string centro_producao { get; private set; } = "";
-        public string tamanho_dimensao { get; private set; } = "";
-        public string material { get; private set; } = "";
-        public string texto_breve { get; private set; } = "";
-        public string grupo_mercadoria { get; private set; } = "";
-        public double peso_unitario
+        public string Centro { get; private set; } = "";
+        public string CentroProducao { get; private set; } = "";
+        public string Marca { get; private set; } = "";
+        public string Material { get; private set; } = "";
+        public string Descricao { get; set; } = "";
+        public string Grp_Mercadoria { get; private set; } = "";
+
+        public double Peso_Un
         {
            get
             {
-                if(qtd_necessaria>0 && peso_necessario>0)
+                if(Qtd_Nec>0 && Peso_Nec>0)
                 {
-                    return peso_necessario / qtd_necessaria;
+                    return Peso_Nec / Qtd_Nec;
                 }
                 return 0;
             }
         }
-        public double peso_necessario { get; private set; } = 0;
-        public double peso_produzido { get; private set; } =0;
-        public double qtd_necessaria { get; private set; } = 0;
-        public double qtd_produzida
+        public double Peso_Nec { get; private set; } = 0;
+        public double Peso_Fab { get; private set; } =0;
+
+        public double Qtd_Nec { get; private set; } = 0;
+        public double Qtd_Fab
         {
             get
             {
-                if(peso_produzido>0 && peso_unitario>0)
+                if(Peso_Fab>0 && Peso_Un>0)
                 {
-                    return peso_produzido / peso_unitario;
+                    return Peso_Fab / Peso_Un;
                 }
                 return 0;
             }
         }
-        public double saldo_peso_produzido { get; private set; } = 0;
-
-        public string status_usuario_pep { get; private set; } = "";
 
 
 
-
-        public ZPMP(DLM.db.Linha l)
+        public ZPMP(DLM.db.Linha l, bool avanco = false)
         {
-            this.PEP = new PEP_Planejamento(l[(int)TAB_ZPMP.ELEMENTO_PEP].Valor);
-            this.centro = l[(int)TAB_ZPMP.CENTRO].Valor;
-            this.centro_producao = l[(int)TAB_ZPMP.CENTRO_PRODUCAO].Valor;
-            this.material = l[(int)TAB_ZPMP.MATERIAL].Valor;
-            this.tamanho_dimensao = l[(int)TAB_ZPMP.TAMANHO_DIMENSAO].Valor;
-            this.texto_breve = l[(int)TAB_ZPMP.TEXTO_BREVE].Valor;
-            this.qtd_necessaria = l[(int)TAB_ZPMP.QTD_NECESS].Double();
-            this.peso_necessario = l[(int)TAB_ZPMP.PESO_NECESS].Double();
-            this.peso_produzido = l[(int)TAB_ZPMP.PESO_PRODUZIDO].Double();
-            this.grupo_mercadoria = l[(int)TAB_ZPMP.DENOM_GRUPO_MERC].Valor;
+            if(avanco)
+            {
+                this.POSNR = l["ELPEP"].Long();
+                this.PEP = Conexoes.Utilz.PEP.Ajustar(l["POSID"].Valor);
+                this.Material = l["MATNR"].Valor;
+                this.Marca = l["GROES"].Valor;
+
+                this.Centro = l["WERKS"].Valor;
+                this.CentroProducao = l["WERKR"].Valor;
+                this.Qtd_Nec = l["BDMNG"].Double();
+                this.Peso_Nec = l["PESO_NEC"].Double();
+                this.Peso_Fab = l["PESO_FAB"].Double();
+
+                //this.texto_breve = l["MAKTX"].Valor;
+                //this.grupo_mercadoria = l[""].Valor;
+            }
+            else
+            {
+                this.PEP = l[(int)TAB_ZPMP.ELEMENTO_PEP].Valor;
+                this.Centro = l[(int)TAB_ZPMP.CENTRO].Valor;
+                this.CentroProducao = l[(int)TAB_ZPMP.CENTRO_PRODUCAO].Valor;
+                this.Material = l[(int)TAB_ZPMP.MATERIAL].Valor;
+                this.Marca = l[(int)TAB_ZPMP.TAMANHO_DIMENSAO].Valor;
+                this.Descricao = l[(int)TAB_ZPMP.TEXTO_BREVE].Valor;
+                this.Qtd_Nec = l[(int)TAB_ZPMP.QTD_NECESS].Double();
+                this.Peso_Nec = l[(int)TAB_ZPMP.PESO_NECESS].Double();
+                this.Peso_Fab = l[(int)TAB_ZPMP.PESO_PRODUZIDO].Double();
+                this.Grp_Mercadoria = l[(int)TAB_ZPMP.DENOM_GRUPO_MERC].Valor;
+            }
+
         }
     }
 }

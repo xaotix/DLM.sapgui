@@ -23,7 +23,7 @@ namespace DLM.sapgui
 
         public CN47N GETPEPENG(string PEPFABRICA)
         {
-            var T = this.CN47N.Find(x => x.PEP.Codigo.ToUpper() == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".EN").ToUpper());
+            var T = this.CN47N.Find(x => x.PEP == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".EN").ToUpper());
             if (T != null)
             {
                 return T;
@@ -32,7 +32,7 @@ namespace DLM.sapgui
         }
         public CN47N GETPEPMONT(string PEPFABRICA)
         {
-            var T = this.CN47N.Find(x => x.PEP.Codigo.ToUpper() == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".MO").ToUpper());
+            var T = this.CN47N.Find(x => x.PEP == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".MO").ToUpper());
             if (T != null)
             {
                 return T;
@@ -41,7 +41,7 @@ namespace DLM.sapgui
         }
         public List<CN47N> GETPEPSLOG(string PEPFABRICA)
         {
-            var T = this.CN47N.FindAll(x => x.PEP.Codigo.ToUpper().Contains(Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".L"));
+            var T = this.CN47N.FindAll(x => x.PEP.Contains(Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".L"));
             return T.ToList();
         }
         public string Descricao { get; set; } = "";
@@ -94,42 +94,78 @@ namespace DLM.sapgui
                         continue;
                     }
                     var peps = ped.GetPeps();
-
-                    foreach (var pep in peps)
+                    if (peps != null)
                     {
-                        var ncn = new CN47N();
-                        ncn.Data_Fim_Base = pep.DT_B_FIM;
-                        ncn.Data_Inicio_Base = pep.DT_B_INI;
-                        ncn.Fim_Previsto = pep.DT_P_FIM;
-                        ncn.Inicio_Previsto = pep.DT_P_INI;
-                        ncn.Texto_Operacao = pep.Descricao;
-                        ncn.Status = string.Join(" ", pep.Status_Sistema.GetValores("BR_STAT"));
-                        ncn.PEP = new PEP_Planejamento(pep.PEP);
-                        this.CN47N.Add(ncn);
+                        foreach (var pep in peps)
+                        {
+                            var ncn = new CN47N();
+                            ncn.Data_Fim_Base = pep.DT_B_FIM;
+                            ncn.Data_Inicio_Base = pep.DT_B_INI;
+                            ncn.Fim_Previsto = pep.DT_P_FIM;
+                            ncn.Inicio_Previsto = pep.DT_P_INI;
+                            ncn.Texto_Operacao = pep.Descricao;
+                            ncn.Status = string.Join(" ", pep.Status_Sistema.GetValores("BR_STAT"));
+                            ncn.PEP = pep.PEP;
+                            this.CN47N.Add(ncn);
+                        }
                     }
+
                 }
 
                 var w = Conexoes.Utilz.Wait(200, this.Codigo);
                 w.somaProgresso();
 
-                //fábrica / engenharia
-                if (Consulta.ZPMP(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq_zpmp))
+                var avanco_sap = DLM.SAP.Get_Avanco(this.Codigo);
+                if (avanco_sap.Pecas.Count > 0)
                 {
-                    this.ZPMP.AddRange(CargaExcel.ZPMP(Cfg.Init.GetDestinoSAP_Excel() + arq_zpmp, out tabela_zpmp));
-                    //logística
-                    if (Consulta.ZPP0100(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
+                    this.ZPMP = avanco_sap.Pecas.Linhas.Select(x => new sapgui.ZPMP(x, true)).ToList();
+                    this.ZPP0100 = avanco_sap.Cargas.Linhas.Select(x => new sapgui.ZPP0100(x, true)).ToList();
+                    if (this.ZPP0100.Count > 0)
                     {
-                        this.ZPP0100 = CargaExcel.ZPP0100(Cfg.Init.GetDestinoSAP_Excel() + arq0100, out tabela_zpp0100);
+                        foreach (var p in this.ZPMP)
+                        {
+                            var log = this.ZPP0100.FindAll(x => x.POSNR == p.POSNR && x.Material == p.Material);
+                            foreach (var l in log)
+                            {
+                                l.PEP = p.PEP;
+                                p.Descricao = l.Descricao;
+                            }
+                        }
+                        var pp = this.ZPP0100.FindAll(x => x.PEP.Length == 0).ToList();
+                        foreach (var p in pp)
+                        {
+                            this.ZPP0100.Remove(p);
+                        }
+                        if(pp.Count > 0)
+                        {
+                            DLM.log.Log($"{this.Contrato} -> Contém {pp.Count} registros sem PEP respectivo de ZPMP",   "Painel de Obras.Log");
+                        }
                     }
+
                 }
+                //else
+                //{
+                //    //fábrica / engenharia
+                //    if (Consulta.ZPMP(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq_zpmp))
+                //    {
+                //        this.ZPMP.AddRange(CargaExcel.ZPMP(Cfg.Init.GetDestinoSAP_Excel() + arq_zpmp, out tabela_zpmp));
+                //        //logística
+                //        if (Consulta.ZPP0100(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
+                //        {
+                //            this.ZPP0100 = CargaExcel.ZPP0100(Cfg.Init.GetDestinoSAP_Excel() + arq0100, out tabela_zpp0100);
+                //        }
+                //    }
+                //}
+
+
 
                 //monta o PEP_PLANEJAMENTO
                 if (this.CN47N.Count > 0)
                 {
-                    var peps_producao = this.ZPMP.Select(x => x.PEP.Codigo).Distinct().ToList();
-                    peps_producao.AddRange(this.ZPMP.Select(x => x.PEP.Codigo).Distinct().ToList());
-                    peps_producao.AddRange(this.CN47N.FindAll(x => Conexoes.Utilz.PEP.Get.PEP(x.PEP.Codigo).StartsW("F")).Select(x => x.PEP.Codigo));
-                    peps_producao.AddRange(this.ZPP0100.Select(x => x.Elemento_PEP));
+                    var peps_producao = this.ZPMP.Select(x => x.PEP).Distinct().ToList();
+                    peps_producao.AddRange(this.ZPMP.Select(x => x.PEP).Distinct().ToList());
+                    peps_producao.AddRange(this.CN47N.FindAll(x => Conexoes.Utilz.PEP.Get.PEP(x.PEP).StartsW("F")).Select(x => x.PEP));
+                    peps_producao.AddRange(this.ZPP0100.Select(x => x.PEP));
                     peps_producao = peps_producao.Distinct().ToList().OrderBy(x => x).ToList();
 
 
@@ -137,9 +173,9 @@ namespace DLM.sapgui
                     {
                         PEP_PLanejamento.Add(new PEP_Planejamento(
                             pep,
-                            this.ZPMP.FindAll(x => x.PEP.Codigo == pep).ToList(),
-                            this.ZPP0100.FindAll(x => x.PEP.Codigo == pep).ToList(),
-                            this.CN47N.Find(x => x.PEP.Codigo == pep),
+                            this.ZPMP.FindAll(x => x.PEP == pep).ToList(),
+                            this.ZPP0100.FindAll(x => x.PEP == pep).ToList(),
+                            this.CN47N.Find(x => x.PEP == pep),
                             this
                             )
                             );

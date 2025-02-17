@@ -110,34 +110,37 @@ namespace DLM.painel
 
 
 
-        private static List<PLAN_OBRAS> _ObrasPorSegmento { get; set; }
+        private static List<PLAN_OBRAS> _obras_seg { get; set; }
         public static List<PLAN_OBRAS> ObrasPorSegmento()
         {
-            if (_ObrasPorSegmento == null)
+            if (_obras_seg == null)
             {
-                _ObrasPorSegmento = new List<PLAN_OBRAS>();
+                _obras_seg = new List<PLAN_OBRAS>();
 
-                var segs = Consultas.GetObras().Select(x => x.setor_atividade).Distinct().ToList().OrderBy(x => x).ToList();
-                var familias = DBases.GetSegmentos().FindAll(y => segs.Find(z => z == y.id.ToString()) != null).Select(x => x.FAMILIA).Distinct().ToList();
+                var lista = Consultas.GetObras();
 
-                foreach (var fam in familias)
-                {
-                    List<PLAN_OBRA> obras = new List<PLAN_OBRA>();
-                    var segmentos = DBases.GetSegmentos().FindAll(x => x.FAMILIA == fam).Select(x => x.id.ToString()).Distinct().ToList();
-                    string nome = DBases.GetSegmentos().Find(x => x.FAMILIA == fam).FAMILIA_DESC;
-                    foreach (var ss in segmentos)
-                    {
-                        obras.AddRange(Consultas.GetObras().FindAll(x => x.setor_atividade == ss));
-                    }
-                    var nova = new PLAN_OBRAS(obras, fam, nome);
+                _obras_seg.Add(new PLAN_OBRAS(lista.FindAll(x => !x.contrato.StartsW("90") && x.setor_atividade!="80"), "", "Nacional"));
+                _obras_seg.Add(new PLAN_OBRAS(lista.FindAll(x => x.contrato.StartsW("90") && x.setor_atividade!="80"), "", "Exportação"));
+                _obras_seg.Add(new PLAN_OBRAS(lista.FindAll(x =>  x.setor_atividade=="80"), "", "Serviços Técnicos"));
 
+                //var segs = lista.Select(x => x.setor_atividade).Distinct().ToList().OrderBy(x => x).ToList();
+                //var familias = DBases.GetSegmentos().FindAll(y => segs.Find(z => z == y.id.ToString()) != null).Select(x => x.FAMILIA).Distinct().ToList();
 
-
-                    _ObrasPorSegmento.Add(nova);
-                }
+                //foreach (var fam in familias)
+                //{
+                //    var obras = new List<PLAN_OBRA>();
+                //    var segmentos = DBases.GetSegmentos().FindAll(x => x.FAMILIA == fam).Select(x => x.id.ToString()).Distinct().ToList();
+                //    string nome = DBases.GetSegmentos().Find(x => x.FAMILIA == fam).FAMILIA_DESC;
+                //    foreach (var ss in segmentos)
+                //    {
+                //        obras.AddRange(lista.FindAll(x => x.setor_atividade == ss));
+                //    }
+                //    var nova = new PLAN_OBRAS(obras, fam, nome);
+                //    _ObrasPorSegmento.Add(nova);
+                //}
 
             }
-            return _ObrasPorSegmento;
+            return _obras_seg;
         }
 
         public static List<PLAN_OBRA> GetGarantias()

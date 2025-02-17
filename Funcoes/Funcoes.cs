@@ -56,7 +56,7 @@ namespace DLM.sapgui
                 //banco = DBases.GetDBMySQL(),
 
                 PEP = x.Codigo,
-                pep_engenharia = x.Engenharia.PEP.Codigo,
+                pep_engenharia = x.Engenharia.PEP,
                 peso_planejado = x.Peso_Planejado,
                 peso_produzido = x.Peso_Produzido,
                 peso_embarcado = x.Peso_Embarcado,
