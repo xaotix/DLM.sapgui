@@ -116,10 +116,10 @@ namespace DLM.sapgui
                 w.somaProgresso();
 
                 var avanco_sap = DLM.SAP.Get_Avanco(this.Codigo);
-                if (avanco_sap.Pecas.Count > 0)
+                if (avanco_sap.Tab_Pecas.Count > 0)
                 {
-                    this.ZPMP = avanco_sap.Pecas.Linhas.Select(x => new sapgui.ZPMP(x, true)).ToList();
-                    this.ZPP0100 = avanco_sap.Cargas.Linhas.Select(x => new sapgui.ZPP0100(x, true)).ToList();
+                    this.ZPMP = avanco_sap.Tab_Pecas.Linhas.Select(x => new sapgui.ZPMP(x, true)).ToList();
+                    this.ZPP0100 = avanco_sap.Tab_Cargas.Linhas.Select(x => new sapgui.ZPP0100(x, true)).ToList();
                     if (this.ZPP0100.Count > 0)
                     {
                         foreach (var p in this.ZPMP)
