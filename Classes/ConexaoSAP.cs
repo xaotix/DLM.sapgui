@@ -77,12 +77,9 @@ namespace DLM.sapgui
             var tabela_zpp0100 = new db.Tabela();
             var tabela_cn47n = new DLM.db.Tabela();
 
-
-
-            var arq0100 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPP0100ARQ;
-            var arq_zpmp = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPMPARQ_SISTEMA;
-            var arq_cn47n = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_CN47NARQ;
-
+            //var arq0100 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPP0100ARQ;
+            //var arq_zpmp = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPMPARQ_SISTEMA;
+            //var arq_cn47n = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_CN47NARQ;
 
             var sap = DLM.SAP.GetContratos().Find(x => x.Contrato == this.Contrato);
             if (sap != null)
@@ -109,7 +106,6 @@ namespace DLM.sapgui
                             this.CN47N.Add(ncn);
                         }
                     }
-
                 }
 
                 var w = Conexoes.Utilz.Wait(200, this.Codigo);
@@ -141,35 +137,18 @@ namespace DLM.sapgui
                             DLM.log.Log($"{this.Contrato} -> Contém {pp.Count} registros sem PEP respectivo de ZPMP",   "Painel de Obras.Log");
                         }
                     }
-
                 }
-                //else
-                //{
-                //    //fábrica / engenharia
-                //    if (Consulta.ZPMP(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq_zpmp))
-                //    {
-                //        this.ZPMP.AddRange(CargaExcel.ZPMP(Cfg.Init.GetDestinoSAP_Excel() + arq_zpmp, out tabela_zpmp));
-                //        //logística
-                //        if (Consulta.ZPP0100(this.Codigo, Cfg.Init.GetDestinoSAP_Excel(), arq0100))
-                //        {
-                //            this.ZPP0100 = CargaExcel.ZPP0100(Cfg.Init.GetDestinoSAP_Excel() + arq0100, out tabela_zpp0100);
-                //        }
-                //    }
-                //}
-
-
 
                 //monta o PEP_PLANEJAMENTO
                 if (this.CN47N.Count > 0)
                 {
-                    var peps_producao = this.ZPMP.Select(x => x.PEP).Distinct().ToList();
-                    peps_producao.AddRange(this.ZPMP.Select(x => x.PEP).Distinct().ToList());
-                    peps_producao.AddRange(this.CN47N.FindAll(x => Conexoes.Utilz.PEP.Get.PEP(x.PEP).StartsW("F")).Select(x => x.PEP));
-                    peps_producao.AddRange(this.ZPP0100.Select(x => x.PEP));
-                    peps_producao = peps_producao.Distinct().ToList().OrderBy(x => x).ToList();
+                    var peps_prod = this.ZPMP.Select(x => x.PEP).Distinct().ToList();
+                    peps_prod.AddRange(this.ZPMP.Select(x => x.PEP).Distinct().ToList());
+                    peps_prod.AddRange(this.CN47N.FindAll(x => Conexoes.Utilz.PEP.Get.PEP(x.PEP).StartsW("F")).Select(x => x.PEP));
+                    peps_prod.AddRange(this.ZPP0100.Select(x => x.PEP));
+                    peps_prod = peps_prod.Distinct().ToList().OrderBy(x => x).ToList();
 
-
-                    foreach (var pep in peps_producao)
+                    foreach (var pep in peps_prod)
                     {
                         PEP_PLanejamento.Add(new PEP_Planejamento(
                             pep,
