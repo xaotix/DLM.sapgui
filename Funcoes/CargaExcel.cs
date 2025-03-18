@@ -191,36 +191,8 @@ namespace DLM.sapgui
             return retorno.ToList().FindAll(x => x.Elemento_PEP.Replace(" ", "") != "");
         }
 
-        public static List<ZPMP> ZPMP(string arquivo, out DLM.db.Tabela tabela)
-        {
-            var retorno = new ConcurrentBag<ZPMP>();
-            tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
-            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
-            {
-                var Tarefas = new List<Task>();
-                foreach (var l in sub)
-                {
-                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPMP(l))));
-                }
-                Task.WaitAll(Tarefas.ToArray());
-            }
-            return retorno.ToList().FindAll(x => x.PEP.Length > 0).ToList();
-        }
-        public static List<ZPP0066N> ZPP0066N(string arquivo, bool semperfil)
-        {
-            var retorno = new ConcurrentBag<ZPP0066N>();
-            var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
-            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
-            {
-                var Tarefas = new List<Task>();
-                foreach (var linha in sub)
-                {
-                    Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new ZPP0066N(linha, semperfil))));
-                }
-                Task.WaitAll(Tarefas.ToArray());
-            }
-            return retorno.ToList().FindAll(x => x.Material != "").ToList();
-        }
+
+
         private static void ZPPCOOISN(string dest, string Pedido, List<DLM.painel.PLAN_PECA_ZPMP> retorno, bool buffer = false)
         {
             if (dest != "")

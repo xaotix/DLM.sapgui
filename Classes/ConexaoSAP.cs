@@ -111,7 +111,10 @@ namespace DLM.sapgui
                 var w = Conexoes.Utilz.Wait(200, this.Codigo);
                 w.somaProgresso();
 
-                var avanco_sap = DLM.SAP.Get_Avanco(this.Codigo,true);
+
+                //novo mapeamento
+                //todo = eliminar sistema atual, substituindo-o por este
+                var avanco_sap = DLM.SAP.Get_Avanco(this.Codigo,true,true,true,true);
                 if (avanco_sap.Tab_Pecas.Count > 0)
                 {
                     this.ZPMP = avanco_sap.Tab_Pecas.Linhas.Select(x => new sapgui.ZPMP(x, true)).ToList();
