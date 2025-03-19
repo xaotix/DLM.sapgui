@@ -316,32 +316,36 @@ namespace DLM.painel
         }
 
 
-        public static void ApagarObra(string contrato_ou_pedido)
+        public static void ApagarObra(string pedido)
         {
-            contrato_ou_pedido = contrato_ou_pedido.Replace("*", "").Replace(" ", "").Replace("%", "");
+            pedido = pedido.Replace("*", "").Replace(" ", "").Replace("%", "");
 
-            if (contrato_ou_pedido.Length < 6)
+            if (pedido.Length < 6)
             {
                 return;
             }
 
-            DBases.GetDB().Apagar("pedido_principal", $"%{contrato_ou_pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_obras_copia);
-            DBases.GetDB().Apagar("pedido", $"%{contrato_ou_pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pedidos_copia);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pep_copia);
+            DBases.LimparPMP_Orcamento(pedido);
+            DBases.LimparPMP_Consolidada(pedido);
 
-            DBases.GetDB().Apagar("contrato", $"%{contrato_ou_pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao);
 
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn);
-            DBases.GetDB().Apagar("Elemento_PEP", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
+            DBases.GetDB().Apagar("pedido_principal", $"%{pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_obras_copia);
+            DBases.GetDB().Apagar("pedido", $"%{pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pedidos_copia);
+            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pep_copia);
 
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc);
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_datas);
+            DBases.GetDB().Apagar("contrato", $"%{pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
+            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_pep_planejamento);
+            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpmp_producao);
 
-            DBases.GetDB().Apagar("pep", $"%{contrato_ou_pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
+            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn);
+            DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0100_embarques);
+            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
+
+            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada);
+            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc);
+            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_datas);
+
+            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
         }
 
         public static void SincronizarTitulosContratos(List<string> contratos)
