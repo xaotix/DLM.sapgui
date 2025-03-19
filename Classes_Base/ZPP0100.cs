@@ -37,6 +37,7 @@ namespace DLM.sapgui
         {
 
             var l = new DLM.db.Linha();
+            l.Add("posnr", this.POSNR);
             l.Add("Elemento_PEP", this.PEP);
             l.Add("Material", this.Material);
 

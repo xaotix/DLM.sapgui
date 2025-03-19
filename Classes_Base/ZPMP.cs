@@ -15,6 +15,7 @@ namespace DLM.sapgui
         public DLM.db.Linha GetLinha()
         {
             var l = new DLM.db.Linha();
+            l.Add("posnr", POSNR);
             l.Add("pep", PEP);
             l.Add("centro", Centro);
             l.Add("centro_producao", CentroProducao);

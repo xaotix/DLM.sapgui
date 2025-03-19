@@ -48,7 +48,6 @@ namespace DLM.sapgui
 
         public SAP_Consulta_Macro Consulta { get; private set; } = new SAP_Consulta_Macro();
         public List<ZPP0100> ZPP0100 { get; set; } = new List<ZPP0100>();
-        public List<ZPP0112> ZPP0112 { get; set; } = new List<ZPP0112>();
         public List<ZPMP> ZPMP { get; set; } = new List<ZPMP>();
         public List<CN47N> CN47N { get; set; } = new List<CN47N>();
         public List<PEP_Planejamento> PEP_PLanejamento { get; set; } = new List<PEP_Planejamento>();
@@ -107,10 +106,6 @@ namespace DLM.sapgui
                         }
                     }
                 }
-
-                var w = Conexoes.Utilz.Wait(200, this.Codigo);
-                w.somaProgresso();
-
 
                 //novo mapeamento
                 //todo = eliminar sistema atual, substituindo-o por este
@@ -204,22 +199,22 @@ namespace DLM.sapgui
 
 
 
-        public List<ZPP0112> GetZPP0112(long min, long max, bool salvar, string pedido = "")
-        {
-            DLM.painel.Consultas.MatarExcel(false);
-            var arq_zpp0112 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPP0112ARQ;
+        //public List<ZPP0112> GetZPP0112(long min, long max, bool salvar, string pedido = "")
+        //{
+        //    DLM.painel.Consultas.MatarExcel(false);
+        //    var arq_zpp0112 = this.Codigo.Replace("*", "").Replace("%", "") + "_" + Cfg.Init.SAP_ZPP0112ARQ;
 
-            if (Consulta.ZPP0112(Cfg.Init.GetDestinoSAP_Excel(), arq_zpp0112, min, max))
-            {
-                DLM.painel.Consultas.MatarExcel(false);
-                this.ZPP0112 = CargaExcel.ZPP0112(Cfg.Init.GetDestinoSAP_Excel() + arq_zpp0112);
-                if (salvar)
-                {
-                    DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0112);
-                    DBases.GetDB().Cadastro(this.ZPP0112.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpp0112);
-                }
-            }
-            return this.ZPP0112;
-        }
+        //    if (Consulta.ZPP0112(Cfg.Init.GetDestinoSAP_Excel(), arq_zpp0112, min, max))
+        //    {
+        //        DLM.painel.Consultas.MatarExcel(false);
+        //        this.ZPP0112 = CargaExcel.ZPP0112(Cfg.Init.GetDestinoSAP_Excel() + arq_zpp0112);
+        //        if (salvar)
+        //        {
+        //            DBases.GetDB().Apagar("Elemento_PEP", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zpp0112);
+        //            DBases.GetDB().Cadastro(this.ZPP0112.Select(x => x.GetLinha()).ToList(), Cfg.Init.db_comum, Cfg.Init.tb_zpp0112);
+        //        }
+        //    }
+        //    return this.ZPP0112;
+        //}
     }
 }
