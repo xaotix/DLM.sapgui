@@ -16,7 +16,7 @@ namespace DLM.painel
             if (true)
             {
                 _Obras_PMP = new List<Pedido_PMP>();
-                var reais = Consultas.GetPedidos();
+                var reais = Consultas.GetPedidos(recarregar);
                 var orcs = Obras_PGO(recarregar);
                 var cons = Obras_PGO_Consolidadas( recarregar);
                 var contratos = reais.Select(x => x.pedido).Distinct().ToList();

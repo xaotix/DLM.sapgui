@@ -249,7 +249,7 @@ namespace DLM.painel
             this.id_montagem = linha["id_montagem"].Int();
             this.status_montagem = linha["status_montagem"].Valor;
 
-            this.criado = linha["criado"].DataNull();
+            this.criado = linha["criado_em"].DataNull();
 
             DateTime mont = linha["update_montagem"].Data();
             if (mont > Cfg.Init.DataDummy)

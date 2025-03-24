@@ -250,14 +250,14 @@ namespace DLM.painel
                 return Conexoes.Utilz.PEP.Get.Pedido(this.PEP, true);
             }
         }
-        public DateTime? ultima_edicao { get; set; } = null;
-        public DateTime? criado { get; set; } = null;
-        public DateTime? engenharia_liberacao { get; set; } = null;
-        public DateTime? montagem_inicio { get; set; } = null;
-        public DateTime? montagem_fim { get; set; } = null;
+        public DateTime? ultima_edicao { get; set; }
+        public DateTime? criado { get; set; }
+        public DateTime? engenharia_liberacao { get; set; }
+        public DateTime? montagem_inicio { get; set; }
+        public DateTime? montagem_fim { get; set; }
 
-        public DateTime? mi_s { get; set; } = null;
-        public DateTime? mf_s { get; set; } = null;
+        public DateTime? mi_s { get; set; }
+        public DateTime? mf_s { get; set; }
         public double logistica_previsto
         {
             get

@@ -122,6 +122,8 @@ namespace DLM.painel
 
             this.latitude = linha["latitude"].Double(8);
             this.longitude = linha["longitude"].Double(8);
+
+            this.criado = linha["criado_em"].DataNull();
         }
         public PLAN_PEDIDO()
         {
