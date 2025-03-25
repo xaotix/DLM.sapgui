@@ -7,6 +7,12 @@ namespace DLM.painel
 {
     public class Buffer
     {
+        private static List<StatusSAP_Planejamento> _Status { get; set; }
+        private static List<PLAN_OBRAS> _obras_seg { get; set; }
+        private static List<PLAN_PEDIDO> _Pedidos_Principais { get; set; }
+        private static List<PLAN_OBRA> _Garantias { get; set; }
+        private static List<ORC_PED> _Obras_PGO_Consolidadas { get; set; }
+        private static List<ORC_PED> _Obras_PGO { get; set; }
         public static List<Pedido_PMP> _Obras_PMP { get; set; }
 
 
@@ -40,7 +46,6 @@ namespace DLM.painel
             }
             return _Obras_PMP;
         }
-        private static List<ORC_PED> _Obras_PGO { get; set; }
         public static List<ORC_PED> Obras_PGO(bool recarregar = false)
         {
             if (_Obras_PGO == null | recarregar)
@@ -51,7 +56,6 @@ namespace DLM.painel
             return _Obras_PGO;
         }
 
-        private static List<ORC_PED> _Obras_PGO_Consolidadas { get; set; }
         public static List<ORC_PED> Obras_PGO_Consolidadas(bool recarregar = false)
         {
             if (_Obras_PGO_Consolidadas == null | recarregar)
@@ -71,9 +75,7 @@ namespace DLM.painel
             Buffer.ObrasPorSegmento();
         }
 
-        private static List<PLAN_OBRA> _Garantias { get; set; }
 
-        private static List<PLAN_PEDIDO> _Pedidos_Principais { get; set; }
 
         public static List<PLAN_OBRA> GetObrasClone(bool Principais,bool Garantias)
         {
@@ -110,7 +112,6 @@ namespace DLM.painel
 
 
 
-        private static List<PLAN_OBRAS> _obras_seg { get; set; }
         public static List<PLAN_OBRAS> ObrasPorSegmento()
         {
             if (_obras_seg == null)
@@ -153,7 +154,6 @@ namespace DLM.painel
         }
 
 
-        private static List<StatusSAP_Planejamento> _Status { get; set; }
 
         public static List<StatusSAP_Planejamento> GetStatus()
         {

@@ -458,7 +458,39 @@ namespace DLM.painel
 
             return retorno;
         }
+        public static void SincronizarPedidos(List<string> pedidos)
+        {
+            var w = Conexoes.Utilz.Wait(pedidos.Count, "Rodando Pedidos...");
+            var contratos = pedidos.Select(x => Conexoes.Utilz.PEP.Get.Contrato(x)).Distinct().ToList();
+            Consultas.SincronizarTitulosContratos(contratos);
 
+            var conexaoSAP2 = new ConexaoSAP("");
+            var pack_pedidos = pedidos.Quebrar(3);
+
+            var Tarefas = new List<Task>();
+            int m = pedidos.Count;
+            int c = 1;
+            foreach (var pacote in pack_pedidos)
+            {
+                var obrasSAP = new List<ConexaoSAP>();
+                foreach (var pedido in pacote)
+                {
+                    w.somaProgresso($"{c}/{m} - {pedido}");
+
+                    var consultaContrato = new ConexaoSAP(pedido);
+                    obrasSAP.Add(consultaContrato);
+                    /*como o consultasap carrega todas as datas, eu salvo as datas de cronograma no sistema.*/
+                    if (consultaContrato.ConsultaSAP())
+                    {
+                        Consultas.CriarCache(pedido.Replace("*", "").Replace("%", ""));
+                    }
+                    c++;
+                }
+            }
+            w.Close();
+            Conexoes.Email.Enviar(new List<string> { "daniel.maciel@medabil.com.br" }, $"Sincronização ZPAINEL {pedidos.Count} pedidos - {DateTime.Now.ToString()}",
+                $"<html>{string.Join("\n<br>", pedidos)}</html>");
+        }
         public static void CriarCache(string contrato)
         {
             if (contrato.Length < 4) { return; }
