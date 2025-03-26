@@ -105,6 +105,7 @@
     <Compile Include="Apontamento\Classes\PLAN_ETAPA.cs" />
     <Compile Include="Apontamento\Classes\PLAN_OBRA.cs" />
     <Compile Include="Apontamento\Classes\PLAN_PECA.cs" />
+    <Compile Include="Apontamento\Classes\PLAN_PECA_ZPMP.cs" />
     <Compile Include="Apontamento\Classes\PLAN_PEDIDO.cs" />
     <Compile Include="Apontamento\Classes\PLAN_PEP.cs" />
     <Compile Include="Apontamento\Classes\PLAN_SUB_ETAPA.cs" />

@@ -10,34 +10,19 @@ using System.Windows.Media;
 
 namespace DLM.painel
 {
-    public class PLAN_PECA_ZPMP
-    {
-        public string PEP { get; private set; } = "";
-        public string Marca { get; private set; } = "";
-        public string Material { get; private set; } = "";
-        public string Grupo_Mercadoria { get; private set; } = "";
-        public PLAN_PECA_ZPMP(db.Linha linha)
-        {
-            this.PEP =              linha["pep"].Valor;
-            this.Marca =            linha["tamanho_dimensao"].Valor;
-            this.Material =         linha["material"].Valor;
-            this.Grupo_Mercadoria = linha["grupo_mercadoria"].Valor;
-           
-        }
-    }
     public class PLAN_PECA
     {
+        private Bobina _bobina { get; set; }
         private ImageSource _imagem { get; set; } = null;
         private string _desenho { get; set; } = "";
         private string _esq_de_pintura { get; set; } = "";
         private string _arquivo { get; set; }
-        private double _qtd_embarcada { get; set; } = 0;
 
         public Tipo_Embarque Tipo_Embarque { get; set; } = Tipo_Embarque.ZPP0100;
         public void SetStatusByZPP0100(List<DLM.db.Linha> linhas)
         {
             var lista_fim = linhas.FindAll(x => x["Material"].Valor == this.material.ToString());
-            if(lista_fim.Count==0)
+            if (lista_fim.Count == 0)
             {
                 lista_fim = linhas.FindAll(x => x["Tamanho_dimensao"].Valor == this.marca);
             }
@@ -52,7 +37,7 @@ namespace DLM.painel
 
             }
 
-                this.qtd_embarcada = lista_fim.FindAll(x => x["St_Conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x["qtd_embarque"].Double());
+            this.qtd_embarcada = lista_fim.FindAll(x => x["St_Conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x["qtd_embarque"].Double());
             var marca = lista_fim.Select(x => x["Tamanho_dimensao"].Valor).Distinct().ToList().FindAll(x => x.Replace(" ", "") != "");
 
             if (marca.Count > 0)
@@ -64,10 +49,10 @@ namespace DLM.painel
                 }
             }
 
-           if(lista_fim.Count>0)
+            if (lista_fim.Count > 0)
             {
                 var centro = lista_fim[0]["CentroProducao"].Int();
-                if(centro>0)
+                if (centro > 0)
                 {
                     this.centro = centro.ToString();
                 }
@@ -82,9 +67,9 @@ namespace DLM.painel
             {
                 var DUMMY = new SAP_ESQ_PIN() { ESQUEMA_DESCR = "", PINTURA = this.TIPO_DE_PINTURA };
                 if (
-                    this.TIPO_DE_PINTURA.ToUpper().StartsW("SEM") | 
-                    this.TIPO_DE_PINTURA.ToUpper().Contains("GALVANIZADO") | 
-                    this.esq_de_pintura.Replace("0", "") == "" | 
+                    this.TIPO_DE_PINTURA.ToUpper().StartsW("SEM") |
+                    this.TIPO_DE_PINTURA.ToUpper().Contains("GALVANIZADO") |
+                    this.esq_de_pintura.Replace("0", "") == "" |
                     this.TIPO_DE_PINTURA == ""
                     )
                 {
@@ -112,15 +97,7 @@ namespace DLM.painel
                 {
                     if (Tipo == Tipo_Material.Real)
                     {
-                        //_imagem =  BufferImagem.R_VERDE;
-                        if (File.Exists(arquivo))
-                        {
-                            _imagem = BufferImagem.R_VERDE;
-                        }
-                        else
-                        {
-                            _imagem = BufferImagem.R_PRETO;
-                        }
+                        _imagem = BufferImagem.R_AZUL;
                     }
                     else if (Tipo == Tipo_Material.Consolidado)
                     {
@@ -156,131 +133,20 @@ namespace DLM.painel
             return retorno.Celulas;
         }
 
-        public DateTime ultima_edicao { get; private set; } = Cfg.Init.DataDummy;
-        public string unidade
-        {
-            get
-            {
-                if (PEP.Length >= 24)
-                {
-                    return PEP.Substring(22, 2);
-                }
-                return "";
-            }
-        }
-        public string arquivo
-        {
-            get
-            {
-                if (_arquivo == null)
-                {
-                    if (this.DESENHO_1 != "")
-                    {
-                        this._arquivo = this.DESENHO_1;
-                    }
-                    else if (this.desenho != "")
-                    {
-                        var pasta = Cfg.Init.DIR_SAP_PDF_DESENHOS + contrato + pedido + "_" + etapa + subetapa + @"\";
-                        if (!Directory.Exists(pasta))
-                        {
-                            var pastas = Cfg.Init.DIR_SAP_PDF_DESENHOS.GetPastas(contrato + pedido + "_" + etapa + subetapa + "*");
-                            foreach (var p in pastas)
-                            {
-                                var arq = $"{pasta}{desenho}.pdf";
-                                if (File.Exists(arq))
-                                {
-                                    this._arquivo = arq;
-
-                                }
-                            }
-
-
-                        }
-                        else
-                        {
-                            var arq2 = pasta + @"\" + desenho + ".pdf";
-                            if (File.Exists(arq2))
-                            {
-                                this._arquivo = arq2;
-
-                            }
-                            else
-                            {
-                                this._arquivo = "";
-                            }
-
-                        }
-                    }
-
-
-
-                }
-                return _arquivo;
-            }
-        }
         public string DENOMINDSTAND { get; private set; } = "";
         public string DESENHO_1 { get; private set; } = "";
         public string TIPO_DE_PINTURA { get; private set; } = "";
         public string ULTIMO_STATUS { get; private set; } = "";
 
-        public DateTime? inicio { get; set; } = Cfg.Init.DataDummy;
-        public DateTime? fim { get; set; } = Cfg.Init.DataDummy;
-        public string subetapa
-        {
-            get
-            {
-                if (PEP.Length >= 21)
-                {
-                    return PEP.Substring(18, 3);
-                }
-                return "";
-            }
-        }
-        public string etapa
-        {
-            get
-            {
-                if (PEP.Length >= 21)
-                {
-                    return PEP.Substring(14, 3);
-                }
-                return "";
-            }
-        }
-        public string contrato
-        {
-            get
-            {
-                if (PEP.Length >= 12)
-                {
-                    return PEP.Substring(3, 6);
-                }
-                return "";
-            }
-        }
-        public string pedido
-        {
-            get
-            {
-                if (PEP.Length >= 12)
-                {
-                    return PEP.Substring(10, 3);
-                }
-                return "";
-            }
-        }
-
-        public string pedido_completo
-        {
-            get
-            {
-                if (PEP.Length >= 13)
-                {
-                    return PEP.Substring(0, 13) + (this.Tipo == Tipo_Material.Orçamento ? ".PGO" : "");
-                }
-                return "";
-            }
-        }
+        public DateTime? inicio { get; set; }
+        public DateTime? ultima_edicao { get; private set; }
+        public DateTime? fim { get; set; }
+        public string unidade => Conexoes.Utilz.PEP.Get.Unidade_Fabril(this.PEP);
+        public string subetapa => Conexoes.Utilz.PEP.Get.Subetapa(this.PEP, false);
+        public string etapa => Conexoes.Utilz.PEP.Get.Etapa(this.PEP, false);
+        public string contrato => Conexoes.Utilz.PEP.Get.Contrato(this.PEP, false);
+        public string pedido => Conexoes.Utilz.PEP.Get.Pedido(this.PEP, false);
+        public string pedido_completo => Conexoes.Utilz.PEP.Get.Pedido(this.PEP, true);
         public override string ToString()
         {
             return this.PEP + "/" + this.desenho + "/" + this.material + " - [N: " + qtd_necessaria + "]" + "[F: " + qtd_produzida + "[E: " + qtd_embarcada + "]";
@@ -310,14 +176,7 @@ namespace DLM.painel
 
             }
         }
-        public void SetLogistica(List<PLAN_PECA_LOG> logs)
-        {
-            this._logistica = logs;
-            foreach (var s in this._logistica)
-            {
-                s.peca = this;
-            }
-        }
+
         public string marca
         {
             get
@@ -332,7 +191,8 @@ namespace DLM.painel
         {
             get
             {
-                if (_desenho != "") { return _desenho; };
+                if (_desenho != "") { return _desenho; }
+                ;
                 return material.ToString();
             }
             set
@@ -459,12 +319,11 @@ namespace DLM.painel
             }
             set
             {
-                var s = value.Int().ToString();
-                if (s.Replace("0", "") != "") { _codigo_materia_prima_sap = s; }
+                var vlr = value.Int().ToString();
+                if (vlr.Replace("0", "") != "") { _codigo_materia_prima_sap = vlr; }
             }
         }
 
-        private Bobina _bobina { get; set; }
         public Bobina bobina
         {
             get
@@ -486,15 +345,18 @@ namespace DLM.painel
             }
         }
 
-        public double saldo_peso_produzido { get; private set; } = 0;
+        public void SetLogistica(List<PLAN_PECA_LOG> logs)
+        {
+            this._logistica = logs;
+            foreach (var s in this._logistica)
+            {
+                s.peca = this;
+            }
+        }
+
         public string status_sistema_pep { get; private set; } = "";
         public string centro { get; private set; } = "";
-        public string status_usuario_pep { get; private set; } = "";
-        public string status_sistema_tarefa { get; private set; } = "";
-
         public string Complexidade { get; set; } = "";
-
-
 
 
         public PLAN_PECA(DLM.db.Linha linha, bool orcamento = false)
@@ -504,13 +366,22 @@ namespace DLM.painel
                 this.Tipo = Tipo_Material.Real;
                 this.material = linha["material"].Valor;
                 this.PEP = linha["pep"].Valor;
+                if (!this.PEP.Contains("."))
+                {
+                    this.PEP = Conexoes.Utilz.PEP.Ajustar(this.PEP);
+                }
+
                 this.texto_breve = linha["texto_breve"].Valor;
+
                 this.peso_unitario = linha["peso_unitario"].Double();
                 this.peso_necessario = linha["peso_necessario"].Double();
                 this.peso_produzido = linha["peso_produzido"].Double(6);
+                this.peso_embarcado = linha["peso_embarcado"].Double();
+
                 this.qtd_necessaria = linha["qtd_necessaria"].Double();
                 this.qtd_produzida = linha["qtd_produzida"].Double();
                 this.qtd_embarcada = linha["qtd_embarcada"].Double();
+
                 this.grupo_mercadoria = linha["grupo_mercadoria"].Valor;
                 this.desenho = linha["desenho"].Valor;
 
@@ -536,7 +407,6 @@ namespace DLM.painel
                     this.desenho = linha["marca"].Valor;
                 }
 
-                this.peso_embarcado = this.qtd_embarcada * peso_unitario;
 
                 /*porcentagens*/
 
@@ -566,9 +436,6 @@ namespace DLM.painel
                 {
                     this.ULTIMO_STATUS = "EMBARCADO";
                 }
-
-
-                getComplexidade();
             }
             /*05/04/19*/
             else
@@ -600,49 +467,49 @@ namespace DLM.painel
         }
 
 
-        private void getComplexidade()
-        {
-            if (DENOMINDSTAND.Replace(" ", "").StartsW("SS") | DENOMINDSTAND.Replace(" ", "").EndsWith("SS"))
-            {
-                Complexidade = "Super Simples";
-            }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsW("S") | DENOMINDSTAND.Replace(" ", "").EndsWith("S"))
-            {
-                Complexidade = "Simples";
-            }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsW("M") | DENOMINDSTAND.Replace(" ", "").EndsWith("M"))
-            {
-                Complexidade = "Média";
-            }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsW("C") | DENOMINDSTAND.Replace(" ", "").EndsWith("C"))
-            {
-                Complexidade = "Complexa";
-            }
-            else if (DENOMINDSTAND.Replace(" ", "").StartsW("H") | DENOMINDSTAND.Replace(" ", "").EndsWith("H"))
-            {
-                Complexidade = "Hiper Complexa";
-            }
-            if (this.grupo_mercadoria.Contains("PARAF"))
-            {
-                this.grupo_mercadoria = "PARAFUSO";
-            }
-            else if (this.grupo_mercadoria.Contains("PORCA"))
-            {
-                this.grupo_mercadoria = "PARAFUSO";
-            }
-            else if (this.grupo_mercadoria.Contains("ARRU"))
-            {
-                this.grupo_mercadoria = "PARAFUSO";
-            }
-            else if (this.material.ToString().StartsW("10"))
-            {
-                this.grupo_mercadoria = "ALMOX NÃO FATURÁVEL";
-            }
-            else if (this.material.ToString().StartsW("11"))
-            {
-                this.grupo_mercadoria = "ALMOX";
-            }
-        }
+        //private void getComplexidade()
+        //{
+        //    if (DENOMINDSTAND.Replace(" ", "").StartsW("SS") | DENOMINDSTAND.Replace(" ", "").EndsWith("SS"))
+        //    {
+        //        Complexidade = "Super Simples";
+        //    }
+        //    else if (DENOMINDSTAND.Replace(" ", "").StartsW("S") | DENOMINDSTAND.Replace(" ", "").EndsWith("S"))
+        //    {
+        //        Complexidade = "Simples";
+        //    }
+        //    else if (DENOMINDSTAND.Replace(" ", "").StartsW("M") | DENOMINDSTAND.Replace(" ", "").EndsWith("M"))
+        //    {
+        //        Complexidade = "Média";
+        //    }
+        //    else if (DENOMINDSTAND.Replace(" ", "").StartsW("C") | DENOMINDSTAND.Replace(" ", "").EndsWith("C"))
+        //    {
+        //        Complexidade = "Complexa";
+        //    }
+        //    else if (DENOMINDSTAND.Replace(" ", "").StartsW("H") | DENOMINDSTAND.Replace(" ", "").EndsWith("H"))
+        //    {
+        //        Complexidade = "Hiper Complexa";
+        //    }
+        //    if (this.grupo_mercadoria.Contains("PARAF"))
+        //    {
+        //        this.grupo_mercadoria = "PARAFUSO";
+        //    }
+        //    else if (this.grupo_mercadoria.Contains("PORCA"))
+        //    {
+        //        this.grupo_mercadoria = "PARAFUSO";
+        //    }
+        //    else if (this.grupo_mercadoria.Contains("ARRU"))
+        //    {
+        //        this.grupo_mercadoria = "PARAFUSO";
+        //    }
+        //    else if (this.material.ToString().StartsW("10"))
+        //    {
+        //        this.grupo_mercadoria = "ALMOX NÃO FATURÁVEL";
+        //    }
+        //    else if (this.material.ToString().StartsW("11"))
+        //    {
+        //        this.grupo_mercadoria = "ALMOX";
+        //    }
+        //}
         public PLAN_PECA()
         {
         }

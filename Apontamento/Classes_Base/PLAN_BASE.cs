@@ -136,7 +136,7 @@ namespace DLM.painel
                 return;
             }
 
-            this._pecas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsW(this.PEP)));
+            this._pecas.AddRange(lista.FindAll(x => x.PEP.StartsW(this.PEP)));
             if (this.carregou_etapas)
             {
                 foreach (var et in this.Getetapas())

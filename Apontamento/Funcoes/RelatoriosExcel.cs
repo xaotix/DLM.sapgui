@@ -153,7 +153,7 @@ namespace DLM.painel
                             pecas_aba_excel.Cells[l0 + l, c0 + 29].Value = t.Complexidade;
                             pecas_aba_excel.Cells[l0 + l, c0 + 30].Value = t.DENOMINDSTAND;
                             pecas_aba_excel.Cells[l0 + l, c0 + 31].Value = t.Tipo.ToString();
-                            pecas_aba_excel.Cells[l0 + l, c0 + 32].Value = t.arquivo;
+                            pecas_aba_excel.Cells[l0 + l, c0 + 32].Value = ""; //arquivo
                             pecas_aba_excel.Cells[l0 + l, c0 + 33].Value = t.Tipo_Embarque;
 
                         }
@@ -628,6 +628,16 @@ namespace DLM.painel
 
             return true;
         }
+        public static void ExportarListaPecasPMP()
+        {
+            var pedidos = DLM.painel.Buffer.Obras_PMP(true);
+            pedidos = pedidos.ListaSelecionarVarios();
+            if(pedidos.Count>0)
+            {
+                var pacote = new Pacote_PMP(pedidos);
+                ExportarListaPecasPMP(pacote,true,true,true,true,true,true);
+            }
+        }
         public static bool ExportarListaPecasPMP(Pacote_PMP pacote, bool abrir = false, bool gerar_subetapas = false, bool gerar_grupos_mercadoria = false, bool gerar_avanco = false, bool gerar_pedidos = false, bool gerar_pecas = true)
         {
             var template = Vars.TEMPLATE_SAIDA_PECAS_RESUMO_CONSOLIDADA;
@@ -664,6 +674,8 @@ namespace DLM.painel
             if (gerar_pecas && gerar_subetapas)
             {
                 pecas.AddRange(pacote.GetPecas());
+                pacote.Getsubetapas();
+                pacote.Getpeps();
                 var pedidosstr = pacote.Pedidos.Select(x => x.pep).Distinct().ToList();
             }
 
@@ -762,7 +774,7 @@ namespace DLM.painel
                                             excel_peca.Cells[$"AN{L1}"].Value = peca.Complexidade;
                                             excel_peca.Cells[$"AO{L1}"].Value = peca.DENOMINDSTAND;
                                             excel_peca.Cells[$"AP{L1}"].Value = peca.Tipo.ToString();
-                                            excel_peca.Cells[$"AQ{L1}"].Value = peca.arquivo;
+                                            excel_peca.Cells[$"AQ{L1}"].Value = ""; //arquivo
                                         }
                                         catch (Exception)
                                         {
