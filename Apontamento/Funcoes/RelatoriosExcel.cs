@@ -630,7 +630,7 @@ namespace DLM.painel
         }
         public static void ExportarListaPecasPMP()
         {
-            var pedidos = DLM.painel.Buffer.Obras_PMP(true);
+            var pedidos = DLM.painel.Buffer.Pedidos_PMP(true);
             pedidos = pedidos.ListaSelecionarVarios();
             if(pedidos.Count>0)
             {

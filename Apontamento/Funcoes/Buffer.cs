@@ -12,31 +12,27 @@ namespace DLM.painel
         private static List<PLAN_PEDIDO> _Pedidos_Principais { get; set; }
         private static List<PLAN_OBRA> _Garantias { get; set; }
         private static List<ORC_PED> _Obras_PGO_Consolidadas { get; set; }
-        private static List<ORC_PED> _Obras_PGO { get; set; }
         public static List<Pedido_PMP> _Obras_PMP { get; set; }
 
 
-        public static List<Pedido_PMP> Obras_PMP(bool recarregar = false)
+        public static List<Pedido_PMP> Pedidos_PMP(bool recarregar = false)
         {
 
             if (true)
             {
                 _Obras_PMP = new List<Pedido_PMP>();
                 var reais = Consultas.GetPedidos(recarregar);
-                var orcs = Obras_PGO(recarregar);
                 var cons = Obras_PGO_Consolidadas( recarregar);
                 var contratos = reais.Select(x => x.pedido).Distinct().ToList();
-                contratos.AddRange(orcs.Select(x => x.PEP).Distinct().ToList());
                 contratos.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
                 contratos = contratos.OrderBy(x => x).Distinct().ToList().FindAll(x=>x.Length>5).ToList();
                 foreach (var ct in contratos)
                 {
                     var real = reais.Find(x => x.pedido == ct);
-                    var orc = orcs.Find(x => x.PEP == ct);
                     var con = cons.Find(x => x.PEP == ct);
-                    if (real != null | orc != null | con != null)
+                    if (real != null |  con != null)
                     {
-                        _Obras_PMP.Add(new Pedido_PMP(real, orc, con));
+                        _Obras_PMP.Add(new Pedido_PMP(real, null, con));
                     }
                     else
                     {
@@ -46,15 +42,7 @@ namespace DLM.painel
             }
             return _Obras_PMP;
         }
-        public static List<ORC_PED> Obras_PGO(bool recarregar = false)
-        {
-            if (_Obras_PGO == null | recarregar)
-            {
-                _Obras_PGO = new List<ORC_PED>();
-                _Obras_PGO = Consultas.GetObrasPGO();
-            }
-            return _Obras_PGO;
-        }
+
 
         public static List<ORC_PED> Obras_PGO_Consolidadas(bool recarregar = false)
         {
