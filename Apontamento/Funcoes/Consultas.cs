@@ -346,6 +346,8 @@ namespace DLM.painel
             DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_datas);
 
             DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
+
+            DBases.GetDB().Apagar("pspid", $"%{pedido.Replace("-","").Replace(".","")}%", "sap", "pedidos");
         }
 
         public static void SincronizarTitulosContratos(List<string> contratos)
