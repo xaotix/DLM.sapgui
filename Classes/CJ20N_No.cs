@@ -42,7 +42,7 @@ namespace DLM.sapgui
                     case CJ20N_Tipo.Tarefa:
                         return BufferImagem.circulo_verde_16x16;
                     case CJ20N_Tipo.Desconhecido:
-                        return BufferImagem.circulo_vermelho_16x16;
+                        return BufferImagem.circulo_16x16_laranja;
                 }
                 return BufferImagem.circulo_16x16;
             }
