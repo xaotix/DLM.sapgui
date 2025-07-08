@@ -287,10 +287,10 @@ namespace DLM.painel
         {
             get
             {
-                var t = Math.Round((peso_planejado * engenharia_previsto / 100) - (peso_planejado * liberado_engenharia / 100), 2);
+                var t = ((peso_planejado * engenharia_previsto / 100) - (peso_planejado * liberado_engenharia / 100)).Round(2);
                 if (t > 0)
                 {
-                    return Math.Round(t, 2);
+                    return (t).Round(2);
                 }
                 return 0;
             }
@@ -299,10 +299,10 @@ namespace DLM.painel
         {
             get
             {
-                var t = Math.Round((peso_planejado * fabrica_previsto / 100) - (peso_planejado * total_fabricado / 100), 2);
+                var t = ((peso_planejado * fabrica_previsto / 100) - (peso_planejado * total_fabricado / 100)).Round(2);
                 if (t > 0)
                 {
-                    return Math.Round(t, 2);
+                    return (t).Round(2);
                 }
                 return 0;
             }
@@ -311,10 +311,10 @@ namespace DLM.painel
         {
             get
             {
-                var t = Math.Round((peso_planejado * embarque_previsto / 100) - (peso_planejado * total_embarcado / 100), 2);
+                var t = ((peso_planejado * embarque_previsto / 100) - (peso_planejado * total_embarcado / 100)).Round(2);
                 if (t > 0)
                 {
-                    return Math.Round(t, 2);
+                    return (t).Round(2);
                 }
                 return 0;
             }
@@ -327,10 +327,10 @@ namespace DLM.painel
                 {
                     return 0;
                 }
-                var t = Math.Round((peso_planejado * montagem_previsto / 100) - (peso_planejado * total_montado / 100), 2);
+                var t = ((peso_planejado * montagem_previsto / 100) - (peso_planejado * total_montado / 100)).Round(2);
                 if (t > 0)
                 {
-                    return Math.Round(t, 2);
+                    return t.Round(2);
                 }
                 return 0;
             }
@@ -910,35 +910,35 @@ namespace DLM.painel
         {
             get
             {
-                return Math.Round(this.engenharia_previsto * this.peso_planejado / 100);
+                return (this.engenharia_previsto * this.peso_planejado / 100).Round(0);
             }
         }
         public double fabrica_peso_previsto
         {
             get
             {
-                return Math.Round(this.fabrica_previsto * this.peso_planejado / 100);
+                return (this.fabrica_previsto * this.peso_planejado / 100).Round(0);
             }
         }
         public double embarque_peso_previsto
         {
             get
             {
-                return Math.Round(this.embarque_previsto * this.peso_planejado / 100);
+                return (this.embarque_previsto * this.peso_planejado / 100).Round(0);
             }
         }
         public double montagem_peso_previsto
         {
             get
             {
-                return Math.Round(this.montagem_previsto * this.peso_planejado / 100);
+                return (this.montagem_previsto * this.peso_planejado / 100).Round(0);
             }
         }
         public double peso_projetado
         {
             get
             {
-                return Math.Round(this.liberado_engenharia * this.peso_planejado / 100);
+                return (this.liberado_engenharia * this.peso_planejado / 100).Round(0);
             }
         }
         private double _total_embarcado { get; set; } = 0;

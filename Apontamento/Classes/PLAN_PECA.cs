@@ -210,7 +210,7 @@ namespace DLM.painel
         {
             get
             {
-                var s = Math.Round(peso_necessario - peso_produzido, 2);
+                var s = (peso_necessario - peso_produzido).Round(2);
                 if (s > 0)
                 {
                     return s;
@@ -227,7 +227,7 @@ namespace DLM.painel
             {
                 if (total_fabricado == 0) { return 0; }
                 double vv = 100;
-                return Math.Round(total_fabricado / vv, 2);
+                return (total_fabricado / vv).Round(2);
             }
         }
         public double embarcado_porcentagem
@@ -236,7 +236,7 @@ namespace DLM.painel
             {
                 if (total_embarcado == 0) { return 0; }
                 double vv = 100;
-                return Math.Round(total_embarcado / vv, 2);
+                return (total_embarcado / vv).Round(2);
             }
         }
         public double total_fabricado
@@ -246,7 +246,7 @@ namespace DLM.painel
 
                 if (this.qtd_produzida > 0 && this.qtd_necessaria > 0)
                 {
-                    var s = Math.Round((double)(this.qtd_produzida / this.qtd_necessaria) * 100, 2);
+                    var s = ((double)(this.qtd_produzida / this.qtd_necessaria) * 100).Round(2);
                     if (s > 0)
                     {
                         return 100;
@@ -262,7 +262,7 @@ namespace DLM.painel
             {
                 if (this.qtd_embarcada > 0 && this.qtd_necessaria > 0)
                 {
-                    var s = Math.Round((double)(this.qtd_embarcada / this.qtd_necessaria) * 100, 2);
+                    var s = ((double)(this.qtd_embarcada / this.qtd_necessaria) * 100).Round(2);
                     if (s > 0)
                     {
                         return 100;

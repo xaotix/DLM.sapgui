@@ -1,4 +1,5 @@
-﻿using DLM.vars;
+﻿using Conexoes;
+using DLM.vars;
 using System;
 using System.Collections.Generic;
 
@@ -116,7 +117,7 @@ namespace DLM.painel
             var t = peso_embarcado / peso_planejado * 100;
             if (t > 0)
             {
-                this.total_embarcado = Math.Round(t, 2);
+                this.total_embarcado = t.Round(2);
             }
             else if (t > 100)
             {
@@ -127,7 +128,7 @@ namespace DLM.painel
             var t2 = peso_produzido / peso_planejado * 100;
             if (t2 > 0)
             {
-                this.total_fabricado = Math.Round(t2, 2);
+                this.total_fabricado = t2.Round(2);
             }
             else if (t2 > 100)
             {

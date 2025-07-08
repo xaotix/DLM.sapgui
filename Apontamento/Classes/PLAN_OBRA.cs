@@ -35,10 +35,10 @@ namespace DLM.painel
 
             this.descricao = Obras.Count() + " OBRAS";
 
-            this.peso_planejado = Math.Round(Obras.Sum(x => x.peso_planejado));
-            this.peso_produzido = Math.Round(Obras.Sum(x => x.peso_produzido));
-            this.peso_embarcado = Math.Round(Obras.Sum(x => x.peso_embarcado));
-            this.peso_montado = Math.Round(Obras.Sum(x => x.peso_montado));
+            this.peso_planejado = Obras.Sum(x => x.peso_planejado).Round(0);
+            this.peso_produzido = Obras.Sum(x => x.peso_produzido).Round(0);
+            this.peso_embarcado = Obras.Sum(x => x.peso_embarcado).Round(0);
+            this.peso_montado = Obras.Sum(x => x.peso_montado).Round(0);
 
             this.total_embarcado = Obras.Sum(x => x.total_embarcado) / Obras.Count();
             this.total_fabricado = Obras.Sum(x => x.total_fabricado) / Obras.Count();

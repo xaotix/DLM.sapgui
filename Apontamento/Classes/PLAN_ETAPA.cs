@@ -91,22 +91,22 @@ namespace DLM.painel
                 this.atraso_montagem = this.subetapas.FindAll(x => x.atraso_montagem > 0).Count;
 
 
-                this.engenharia_previsto = Math.Round(this.subetapas.Sum(x => x.engenharia_previsto / this.subetapas.Count), 2);
-                this.fabrica_previsto = Math.Round(this.subetapas.Sum(x => x.fabrica_previsto / this.subetapas.Count), 2);
-                this.montagem_previsto = Math.Round(this.subetapas.Sum(x => x.montagem_previsto / this.subetapas.Count), 2);
-                this.embarque_previsto = Math.Round(this.subetapas.Sum(x => x.logistica_previsto / this.subetapas.Count), 2);
+                this.engenharia_previsto = this.subetapas.Sum(x => x.engenharia_previsto / this.subetapas.Count).Round(2);
+                this.fabrica_previsto = this.subetapas.Sum(x => x.fabrica_previsto / this.subetapas.Count).Round(2);
+                this.montagem_previsto = this.subetapas.Sum(x => x.montagem_previsto / this.subetapas.Count).Round(2);
+                this.embarque_previsto = this.subetapas.Sum(x => x.logistica_previsto / this.subetapas.Count).Round(2);
 
 
-                this.peso_produzido = Math.Round(this.subetapas.Sum(x => x.peso_produzido), 2);
-                this.peso_embarcado = Math.Round(this.subetapas.Sum(x => x.peso_embarcado), 2);
-                this.peso_montado = Math.Round(this.subetapas.Sum(x => x.peso_montado), 2);
-                this.peso_planejado = Math.Round(this.subetapas.Sum(x => x.peso_planejado), 2);
+                this.peso_produzido = this.subetapas.Sum(x => x.peso_produzido).Round(2);
+                this.peso_embarcado = this.subetapas.Sum(x => x.peso_embarcado).Round(2);
+                this.peso_montado = this.subetapas.Sum(x => x.peso_montado).Round(2);
+                this.peso_planejado = this.subetapas.Sum(x => x.peso_planejado).Round(2);
 
-                this.liberado_engenharia = Math.Round(this.subetapas.Sum(x => x.liberado_engenharia / this.subetapas.Count), 2);
+                this.liberado_engenharia = this.subetapas.Sum(x => x.liberado_engenharia / this.subetapas.Count).Round(2);
 
-                this.total_embarcado = Math.Round(this.subetapas.Sum(x => x.peso_embarcado) / this.subetapas.Sum(x => x.peso_planejado) * 100, 2);
-                this.total_fabricado = Math.Round(this.subetapas.Sum(x => x.peso_produzido) / this.subetapas.Sum(x => x.peso_planejado) * 100, 2);
-                this.total_montado = Math.Round(this.subetapas.Sum(x => x.peso_montado) / this.subetapas.Sum(x => x.peso_planejado) * 100, 2);
+                this.total_embarcado = (this.subetapas.Sum(x => x.peso_embarcado) / this.subetapas.Sum(x => x.peso_planejado) * 100).Round(2);
+                this.total_fabricado = (this.subetapas.Sum(x => x.peso_produzido) / this.subetapas.Sum(x => x.peso_planejado) * 100).Round(2);
+                this.total_montado = (this.subetapas.Sum(x => x.peso_montado) / this.subetapas.Sum(x => x.peso_planejado) * 100).Round(2);
 
                 this.ultima_consulta_sap = this.subetapas.Max(x => x.ultima_consulta_sap);
 

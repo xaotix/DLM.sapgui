@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Conexoes;
 using DLM.vars;
 
 namespace DLM.painel
@@ -287,9 +288,9 @@ namespace DLM.painel
             l.Add("pep", PEP);
             l.Add("pep_engenharia", pep_engenharia);
 
-            l.Add("peso_planejado", Math.Round(peso_planejado, 3));
-            l.Add("peso_produzido", Math.Round(peso_produzido, 3));
-            l.Add("peso_embarcado", Math.Round(peso_embarcado, 3));
+            l.Add("peso_planejado", peso_planejado.Round(3));
+            l.Add("peso_produzido", peso_produzido.Round(3));
+            l.Add("peso_embarcado", peso_embarcado.Round(3));
 
             if (engenharia_liberacao > data_min)
             {

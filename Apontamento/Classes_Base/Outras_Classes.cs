@@ -93,13 +93,7 @@ namespace DLM.painel
     public class Carga_Planejamento
     {
         public string data { get; set; } = "";
-        public double peso
-        {
-            get
-            {
-                return Math.Round(this.Pecas_Logistica.Sum(x => x.peso), 4);
-            }
-        }
+        public double peso => this.Pecas_Logistica.Sum(x => x.peso).Round(4);
         private List<PackList_Planejamento> _pack_lists { get; set; }
         public List<PackList_Planejamento> pack_lists
         {
@@ -174,7 +168,7 @@ namespace DLM.painel
                 this.cargas.Add(new Carga_Planejamento(s, Pecas_Logistica));
             }
 
-            this.peso = Math.Round(this.Pecas_Logistica.Sum(x => x.peso), 4);
+            this.peso = this.Pecas_Logistica.Sum(x => x.peso).Round(4);
         }
         public PackList_Planejamento()
         {
@@ -252,7 +246,7 @@ namespace DLM.painel
                 _peca = value;
                 if (value != null)
                 {
-                    this.peso = Math.Round(peca.peso_unitario * this.quantidade, 4);
+                    this.peso = (peca.peso_unitario * this.quantidade).Round(4);
 
                 }
             }
@@ -453,15 +447,15 @@ namespace DLM.painel
                 this.pep = pecas[0].PEP;
                 this.pedido_completo = pecas[0].pedido_completo;
             }
-            this.Peso_Total = Math.Round(pecas.Sum(x => x.peso_unitario * x.qtd_necessaria), 4);
-            this.Peso_Embarcado = Math.Round(pecas.Sum(x => x.peso_embarcado), 4);
-            this.Peso_Produzido = Math.Round(pecas.Sum(x => x.peso_produzido), 4);
+            this.Peso_Total = pecas.Sum(x => x.peso_unitario * x.qtd_necessaria).Round(4);
+            this.Peso_Embarcado = pecas.Sum(x => x.peso_embarcado).Round(4);
+            this.Peso_Produzido = pecas.Sum(x => x.peso_produzido).Round(4);
 
 
-            this.Qtd_Necessaria = Math.Round(pecas.Sum(x => x.qtd_necessaria), 4);
-            this.Qtd_Embarcada = Math.Round(pecas.Sum(x => x.qtd_embarcada), 4);
-            this.Qtd_Produzida = Math.Round(pecas.Sum(x => x.qtd_produzida), 4);
-            this.comprimento_total = Math.Round(pecas.Sum(x => x.comprimento) / 1000, 4);
+            this.Qtd_Necessaria = pecas.Sum(x => x.qtd_necessaria).Round(4);
+            this.Qtd_Embarcada = pecas.Sum(x => x.qtd_embarcada).Round(4);
+            this.Qtd_Produzida = pecas.Sum(x => x.qtd_produzida).Round(4);
+            this.comprimento_total = (pecas.Sum(x => x.comprimento) / 1000).Round(4);
             if (this.Qtd_Embarcada < 0) { this.Qtd_Embarcada = 0; }
 
         }
@@ -596,7 +590,7 @@ namespace DLM.painel
                     this.descricao = ss.DESC;
                 }
             }
-            this.Peso_Total = Math.Round(pecas.Sum(x => x.peso_necessario), 2);
+            this.Peso_Total = pecas.Sum(x => x.peso_necessario).Round(2);
             this.quantidade = pecas.Sum(x => x.qtd_necessaria);
         }
     }
@@ -618,9 +612,9 @@ namespace DLM.painel
             {
                 this.Esquema = pecas[0].Esquema;
             }
-            this.comprimento_total = Math.Round(pecas.Sum(x => x.comprimento) / 1000, 4);
+            this.comprimento_total = (pecas.Sum(x => x.comprimento) / 1000).Round(4);
 
-            this.Superficie = Math.Round(pecas.Sum(x => x.superficie), 2);
+            this.Superficie = pecas.Sum(x => x.superficie).Round(2);
         }
     }
     public class Viga
@@ -647,7 +641,7 @@ namespace DLM.painel
         {
             this.pecas = pecas;
             this.peso_total = pecas.Sum(x => x.peso_necessario);
-            this.comprimento_total = Math.Round(pecas.Sum(x => x.comprimento) / 1000, 4);
+            this.comprimento_total = (pecas.Sum(x => x.comprimento) / 1000).Round(4);
             this.quantidade = pecas.Sum(x => x.qtd_necessaria);
             this.furacoes = pecas.Sum(x => x.furacoes);
             if (pecas.Count > 0)
@@ -684,7 +678,7 @@ namespace DLM.painel
             if (pecas.Count > 0)
             {
                 this.peso_total = pecas.Sum(x => x.peso_necessario);
-                this.comprimento_total = Math.Round(pecas.Sum(x => x.comprimento) / 1000, 4);
+                this.comprimento_total = (pecas.Sum(x => x.comprimento) / 1000).Round(4);
                 this.quantidade = pecas.Sum(x => x.qtd_necessaria);
                 this.furacoes = pecas.Sum(x => x.furacoes);
 
@@ -738,7 +732,7 @@ namespace DLM.painel
             {
                 this.descricao = pecas[0].centro;
             }
-            this.Peso_Total = Math.Round(pecas.Sum(x => x.peso_necessario), 2);
+            this.Peso_Total = pecas.Sum(x => x.peso_necessario).Round(2);
         }
     }
 

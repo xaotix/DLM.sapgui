@@ -796,7 +796,7 @@ namespace DLM.painel
         {
             get
             {
-                return Math.Round(Getpeps().Sum(x => x.peso), 2);
+                return Getpeps().Sum(x => x.peso).Round(2);
             }
         }
         public string centro
@@ -1109,7 +1109,7 @@ namespace DLM.painel
         {
             get
             {
-                return Math.Round(Getsubetapas().Sum(x => x.peso), 2);
+                return Getsubetapas().Sum(x => x.peso).Round(2);
             }
         }
 
@@ -1421,7 +1421,7 @@ namespace DLM.painel
         {
             get
             {
-                return Math.Round(Getpeps().Sum(x => x.peso), 2);
+                return Getpeps().Sum(x => x.peso).Round(2);
             }
         }
         public override string ToString()
