@@ -342,6 +342,7 @@ namespace DLM.painel
             DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_cn47n);
 
             DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada);
+            DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada_ranges);
             DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc);
             DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_datas);
 
