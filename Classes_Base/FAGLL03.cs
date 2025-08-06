@@ -12,7 +12,7 @@ namespace DLM.sapgui
     {
         public string GetRow()
         {
-            return ("(" + string.Join("", GetLinha().Celulas.Select(x => "'" + x.Valor.Replace("'", "") + "',")) + ")").Replace(",)", ")");
+            return ("(" + string.Join("", GetLinha().Select(x => "'" + x.Valor.Replace("'", "") + "',")) + ")").Replace(",)", ")");
         }
         public DLM.db.Linha GetLinha()
         {

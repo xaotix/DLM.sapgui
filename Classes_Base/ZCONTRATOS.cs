@@ -11,7 +11,7 @@ namespace DLM.sapgui
         }
         public string GetRow()
         {
-            return ("(" + string.Join("", GetLinha().Celulas.Select(x => "'" + x.Valor + "',")) + ")").Replace(",)", ")");
+            return ("(" + string.Join("", GetLinha().Select(x => "'" + x.Valor + "',")) + ")").Replace(",)", ")");
         }
 
 

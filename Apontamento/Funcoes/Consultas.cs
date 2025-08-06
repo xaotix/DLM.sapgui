@@ -428,7 +428,7 @@ namespace DLM.painel
                 {
                     Tarefas.Add(Task.Factory.StartNew(() =>
                     {
-                        var igual = st_base.Filtrar("pep", obra.PEP);
+                        var igual = st_base["pep", obra.PEP];
                         if (igual.Count > 0)
                         {
                             obra.SetBase(igual[0]);
@@ -641,7 +641,7 @@ namespace DLM.painel
                 {
                     Tarefas.Add(Task.Factory.StartNew(() =>
                     {
-                        var igual = st_base.Filtrar("pep", t.PEP, true);
+                        var igual = st_base["pep", t.PEP];
                         if (igual.Count > 0)
                         {
                             t.SetBase(igual[0]);
@@ -699,7 +699,7 @@ namespace DLM.painel
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
-                    var tabela = st_base.Filtrar("pep", etapa.PEP.ToUpper().Replace(".P00", ""));
+                    var tabela = st_base["pep", etapa.PEP.ToUpper().Replace(".P00", "")];
                     if (tabela.Count > 0)
                     {
                         etapa.SetBase(tabela[0]);
@@ -764,7 +764,7 @@ namespace DLM.painel
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
-                    var igual = st_base.Filtrar("pep", subetapa.PEP.ToUpper().Replace(".P00", ""));
+                    var igual = st_base["pep", subetapa.PEP.ToUpper().Replace(".P00", "")];
                     if (igual.Count > 0)
                     {
                         subetapa.SetBase(igual[0]);
@@ -825,7 +825,7 @@ namespace DLM.painel
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
-                    var igual = consulta2.Filtrar("pep", ret.PEP);
+                    var igual = consulta2["pep", ret.PEP];
                     if (igual.Count > 0)
                     {
                         ret.SetBase(igual[0]);
