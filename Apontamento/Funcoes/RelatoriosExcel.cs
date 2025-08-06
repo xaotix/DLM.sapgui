@@ -509,7 +509,7 @@ namespace DLM.painel
             var w = Conexoes.Utilz.Wait(10, "Consultando logística...");
 
 
-            var Pecas = DBases.GetDB().Consulta("pep",contrato,Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas,false).Linhas;
+            var Pecas = DBases.GetDB().Consulta("pep",contrato,Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas,false);
 
             try
             {

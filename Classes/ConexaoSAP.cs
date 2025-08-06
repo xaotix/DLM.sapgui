@@ -102,11 +102,11 @@ namespace DLM.sapgui
                 {
                     //novo mapeamento
                     //todo = eliminar sistema atual, substituindo-o por este
-                    var avanco_sap = DLM.SAP.Get_Avanco(this.Pedido, true, true, true, true);
+                    var avanco_sap = DLM.SAP.Get_Avanco(this.Pedido, true, true, true, false,true,true);
                     if (avanco_sap.Tabelas["PECAS"].Count > 0)
                     {
-                        this.ZPMP = avanco_sap.Tabelas["PECAS"].Linhas.Select(x => new sapgui.ZPMP(x, true)).ToList();
-                        this.ZPP0100 = avanco_sap.Tabelas["CARGAS"].Linhas.Select(x => new sapgui.ZPP0100(x, true)).ToList();
+                        this.ZPMP = avanco_sap.Tabelas["PECAS"].Select(x => new sapgui.ZPMP(x, true)).ToList();
+                        this.ZPP0100 = avanco_sap.Tabelas["CARGAS"].Select(x => new sapgui.ZPP0100(x, true)).ToList();
                         if (this.ZPP0100.Count > 0)
                         {
                             foreach (var p in this.ZPMP)

@@ -17,7 +17,7 @@ namespace DLM.sapgui
         {
             var retorno = new ConcurrentBag<ZCONTRATOS>();
             var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
-            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
+            foreach (var sub in tabela.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
                 foreach (var l in sub)
@@ -32,7 +32,7 @@ namespace DLM.sapgui
         {
             var retorno = new ConcurrentBag<ZPP0100>();
             tabela = Utilz.Excel.GetPrimeiraAba(arquivo, true);
-            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
+            foreach (var sub in tabela.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
                 foreach (var l in sub)
@@ -48,7 +48,7 @@ namespace DLM.sapgui
         {
             var retorno = new ConcurrentBag<ZPP0112>();
             var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
-            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
+            foreach (var sub in tabela.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
                 foreach (var l in sub)
@@ -68,9 +68,9 @@ namespace DLM.sapgui
             var ped = Pedido.Replace("*", "").Replace(" ", "");
             var chamada = $"call comum.getzppcoisn_qtd_pcs('{ped}')";
             var consulta = DBases.GetDB().Consulta(chamada);
-            var peps = consulta.Linhas.Select(x => x["pep"].Valor).ToList();
+            var peps = consulta.Select(x => x["pep"].Valor).ToList();
 
-            var total = consulta.Linhas.Select(x => x["pcs"].Int()).Sum();
+            var total = consulta.Select(x => x["pcs"].Int()).Sum();
             if(total>1500)
             {
                 foreach (var pep in peps)
@@ -121,7 +121,7 @@ namespace DLM.sapgui
             chave.Add("K_Conta", conta);
             Conexoes.DBases.GetDB().Apagar(chave, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
             var tabela = retorno.GetTabela(true);
-            Conexoes.DBases.GetDB().Cadastro(tabela.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
+            Conexoes.DBases.GetDB().Cadastro(tabela, Cfg.Init.db_comum, Cfg.Init.tb_faglb03);
             return retorno;
         }
         public static List<AVANCO_FATURAMENTO> Cadastro_AVANCO_FATURAMENTO()
@@ -133,7 +133,7 @@ namespace DLM.sapgui
 
             if (selecao.Count > 0)
             {
-                foreach (var linha in selecao.Linhas)
+                foreach (var linha in selecao)
                 {
                     var pedido =         linha["C1"].Valor;
                     var valor_contrato = linha["C6"].Valor;
@@ -150,7 +150,7 @@ namespace DLM.sapgui
                 {
                     var cadastro = retorno.GetTabela(true);
                     DBases.GetDB().Apagar("id", "%%", Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
-                    DBases.GetDB().Cadastro(cadastro.Linhas, Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
+                    DBases.GetDB().Cadastro(cadastro, Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
                     Conexoes.Utilz.Alerta($"Avanço sincronizado! {retorno.Count} itens cadastrados.");
                 }
                 else
@@ -164,7 +164,7 @@ namespace DLM.sapgui
         {
             var retorno = new ConcurrentBag<FAGLL03>();
             var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
-            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
+            foreach (var sub in tabela.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
                 foreach (var l in sub)
@@ -179,7 +179,7 @@ namespace DLM.sapgui
         {
             var retorno = new ConcurrentBag<CJI3>();
             var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
-            foreach (var sub in tabela.Linhas.Quebrar(max_tasks))
+            foreach (var sub in tabela.Quebrar(max_tasks))
             {
                 var Tarefas = new List<Task>();
                 foreach (var l in sub)
@@ -313,7 +313,7 @@ namespace DLM.sapgui
 
                 var arquivo = dest + arq;
                 var t = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
-                var listacooisn = t.Linhas.Select(x => new List<object> {
+                var listacooisn = t.Select(x => new List<object> {
                             /*0*/x[(int)TAB_ZPPCOOISN.MATERIAL].ToString(),
                             /*1*/x[(int)TAB_ZPPCOOISN.DENOMINDSTAND].ToString(),
                             /*2*/x[(int)TAB_ZPPCOOISN.DESENHO_1].ToString(),
@@ -496,7 +496,7 @@ namespace DLM.sapgui
             var Tarefas = new List<Task>();
 
             tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
-            foreach (var linha in tabela.Linhas)
+            foreach (var linha in tabela)
             {
                 Tarefas.Add(Task.Factory.StartNew(() => retorno.Add(new CN47N(linha))));
             }
@@ -507,7 +507,7 @@ namespace DLM.sapgui
         public static DLM.sapgui.FolhaMargem ZSD0031N(string arquivo)
         {
             var tabela = Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo, true);
-            var plan = tabela.Linhas;
+
             var ret = new DLM.sapgui.FolhaMargem();
             try
             {
@@ -515,86 +515,86 @@ namespace DLM.sapgui
                 int m = 3;
                 int c12 = 11;
                 int c4 = 3;
-                if (plan.Count < 63) { return new DLM.sapgui.FolhaMargem(); }
-                if (plan.Max(x => x.Count) < max_col) { return new DLM.sapgui.FolhaMargem(); }
+                if (tabela.Count < 63) { return new DLM.sapgui.FolhaMargem(); }
+                if (tabela.Max(x => x.Count) < max_col) { return new DLM.sapgui.FolhaMargem(); }
 
-                ret.receitabruta.material.valor = plan[19 - m][c12].Double();
-                ret.receitabruta.montagem.valor = plan[20 - m][c12].Double();
-                ret.receitabruta.projeto.valor = plan[21 - m][c12].Double();
+                ret.receitabruta.material.valor = tabela[19 - m][c12].Double();
+                ret.receitabruta.montagem.valor = tabela[20 - m][c12].Double();
+                ret.receitabruta.projeto.valor = tabela[21 - m][c12].Double();
 
-                ret.impostos.IPI_Material.valor = plan[25 - m][c12].Double();
-                ret.impostos.ICMS_Material.valor = plan[26 - m][c12].Double();
-                ret.impostos.PIS_COFINS_Material.valor = plan[27 - m][c12].Double();
-                ret.impostos.PIS_COFINS_Montagem.valor = plan[28 - m][c12].Double();
-                ret.impostos.PIS_COFINS_Projeto.valor = plan[29 - m][c12].Double();
-                ret.impostos.ISS_Locacao_Equipamentos.valor = plan[30 - m][c12].Double();
-                ret.impostos.ISS_Supervisao.valor = plan[31 - m][c12].Double();
-                ret.impostos.ISS_Montagem.valor = plan[32 - m][c12].Double();
-                ret.impostos.ISS_Projeto.valor = plan[33 - m][c12].Double();
-                ret.impostos.CPRB_Servico.valor = plan[34 - m][c12].Double();
-                ret.impostos.CPRB_Material.valor = plan[35 - m][c12].Double();
+                ret.impostos.IPI_Material.valor = tabela[25 - m][c12].Double();
+                ret.impostos.ICMS_Material.valor = tabela[26 - m][c12].Double();
+                ret.impostos.PIS_COFINS_Material.valor = tabela[27 - m][c12].Double();
+                ret.impostos.PIS_COFINS_Montagem.valor = tabela[28 - m][c12].Double();
+                ret.impostos.PIS_COFINS_Projeto.valor = tabela[29 - m][c12].Double();
+                ret.impostos.ISS_Locacao_Equipamentos.valor = tabela[30 - m][c12].Double();
+                ret.impostos.ISS_Supervisao.valor = tabela[31 - m][c12].Double();
+                ret.impostos.ISS_Montagem.valor = tabela[32 - m][c12].Double();
+                ret.impostos.ISS_Projeto.valor = tabela[33 - m][c12].Double();
+                ret.impostos.CPRB_Servico.valor = tabela[34 - m][c12].Double();
+                ret.impostos.CPRB_Material.valor = tabela[35 - m][c12].Double();
 
-                ret.impostos.IPI_Material.porcentagem = plan[25 - m][c4].Double();
-                ret.impostos.ICMS_Material.porcentagem = plan[26 - m][c4].Double();
-                ret.impostos.PIS_COFINS_Material.porcentagem = plan[27 - m][c4].Double();
-                ret.impostos.PIS_COFINS_Montagem.porcentagem = plan[28 - m][c4].Double();
-                ret.impostos.PIS_COFINS_Projeto.porcentagem = plan[29 - m][c4].Double();
-                ret.impostos.ISS_Locacao_Equipamentos.porcentagem = plan[30 - m][c4].Double();
-                ret.impostos.ISS_Supervisao.porcentagem = plan[31 - m][c4].Double();
-                ret.impostos.ISS_Montagem.porcentagem = plan[32 - m][c4].Double();
-                ret.impostos.ISS_Projeto.porcentagem = plan[33 - m][c4].Double();
-                ret.impostos.CPRB_Servico.porcentagem = plan[34 - m][c4].Double();
-                ret.impostos.CPRB_Material.porcentagem = plan[35 - m][c4].Double();
+                ret.impostos.IPI_Material.porcentagem = tabela[25 - m][c4].Double();
+                ret.impostos.ICMS_Material.porcentagem = tabela[26 - m][c4].Double();
+                ret.impostos.PIS_COFINS_Material.porcentagem = tabela[27 - m][c4].Double();
+                ret.impostos.PIS_COFINS_Montagem.porcentagem = tabela[28 - m][c4].Double();
+                ret.impostos.PIS_COFINS_Projeto.porcentagem = tabela[29 - m][c4].Double();
+                ret.impostos.ISS_Locacao_Equipamentos.porcentagem = tabela[30 - m][c4].Double();
+                ret.impostos.ISS_Supervisao.porcentagem = tabela[31 - m][c4].Double();
+                ret.impostos.ISS_Montagem.porcentagem = tabela[32 - m][c4].Double();
+                ret.impostos.ISS_Projeto.porcentagem = tabela[33 - m][c4].Double();
+                ret.impostos.CPRB_Servico.porcentagem = tabela[34 - m][c4].Double();
+                ret.impostos.CPRB_Material.porcentagem = tabela[35 - m][c4].Double();
 
-                ret.receitaliquida.material.valor = plan[39 - m][c12].Double();
-                ret.receitaliquida.montagem.valor = plan[40 - m][c12].Double();
-                ret.receitaliquida.projeto.valor = plan[41 - m][c12].Double();
+                ret.receitaliquida.material.valor = tabela[39 - m][c12].Double();
+                ret.receitaliquida.montagem.valor = tabela[40 - m][c12].Double();
+                ret.receitaliquida.projeto.valor = tabela[41 - m][c12].Double();
 
-                ret.custosmateriais.materiais.valor = plan[45 - m][c12].Double();
-                ret.custosmateriais.contingencia.valor = plan[46 - m][c12].Double();
+                ret.custosmateriais.materiais.valor = tabela[45 - m][c12].Double();
+                ret.custosmateriais.contingencia.valor = tabela[46 - m][c12].Double();
 
-                ret.total_custo_projeto.valor = plan[48 - m][c12].Double();
+                ret.total_custo_projeto.valor = tabela[48 - m][c12].Double();
 
-                ret.custosmontagem.equipamentos.valor = plan[52 - m][c12].Double();
-                ret.custosmontagem.empreiteiros_despesas.valor = plan[53 - m][c12].Double();
-                ret.custosmontagem.supervisao.valor = plan[54 - m][c12].Double();
+                ret.custosmontagem.equipamentos.valor = tabela[52 - m][c12].Double();
+                ret.custosmontagem.empreiteiros_despesas.valor = tabela[53 - m][c12].Double();
+                ret.custosmontagem.supervisao.valor = tabela[54 - m][c12].Double();
 
-                ret.gastoslogisticos.frete_rodoviario.valor = plan[61 - m][c12].Double();
-                ret.gastoslogisticos.verba_adicional.valor = plan[62 - m][c12].Double();
-                ret.gastoslogisticos.gastos_logisticos.valor = plan[63 - m][c12].Double();
-                ret.gastoslogisticos.outras_despesas.valor = plan[64 - m][c12].Double();
-                ret.gastoslogisticos.seguro_internacional.valor = plan[65 - m][c12].Double();
-                ret.gastoslogisticos.frete_aereo.valor = plan[66 - m][c12].Double();
-                ret.gastoslogisticos.frete_maritimo.valor = plan[67 - m][c12].Double();
-                ret.gastoslogisticos.frete_rodoviario_internacional.valor = plan[68 - m][c12].Double();
-                ret.gastoslogisticos.frete_rodoviario_nacional_exportacao.valor = plan[69 - m][c12].Double();
-                ret.gastoslogisticos.frete_maritimo_cabotagem.valor = plan[70 - m][c12].Double();
-                ret.gastoslogisticos.frete_rodoviario_nacional_cabotagem.valor = plan[71 - m][c12].Double();
+                ret.gastoslogisticos.frete_rodoviario.valor = tabela[61 - m][c12].Double();
+                ret.gastoslogisticos.verba_adicional.valor = tabela[62 - m][c12].Double();
+                ret.gastoslogisticos.gastos_logisticos.valor = tabela[63 - m][c12].Double();
+                ret.gastoslogisticos.outras_despesas.valor = tabela[64 - m][c12].Double();
+                ret.gastoslogisticos.seguro_internacional.valor = tabela[65 - m][c12].Double();
+                ret.gastoslogisticos.frete_aereo.valor = tabela[66 - m][c12].Double();
+                ret.gastoslogisticos.frete_maritimo.valor = tabela[67 - m][c12].Double();
+                ret.gastoslogisticos.frete_rodoviario_internacional.valor = tabela[68 - m][c12].Double();
+                ret.gastoslogisticos.frete_rodoviario_nacional_exportacao.valor = tabela[69 - m][c12].Double();
+                ret.gastoslogisticos.frete_maritimo_cabotagem.valor = tabela[70 - m][c12].Double();
+                ret.gastoslogisticos.frete_rodoviario_nacional_cabotagem.valor = tabela[71 - m][c12].Double();
 
-                ret.despesasgerais.seguro.valor = plan[75 - m][c12].Double();
-                ret.despesasgerais.comissao.valor = plan[76 - m][c12].Double();
-                ret.despesasgerais.assessoria.valor = plan[77 - m][c12].Double();
-                ret.despesasgerais.custo_financeiro.valor = plan[78 - m][c12].Double();
-                ret.despesasgerais.supervisao_exportacao.valor = plan[79 - m][c12].Double();
-                ret.despesasgerais.creditos_debitos_material.valor = plan[80 - m][c12].Double();
-                ret.despesasgerais.creditos_debitos_projeto.valor = plan[81 - m][c12].Double();
-                ret.despesasgerais.creditos_debitos_montagem.valor = plan[82 - m][c12].Double();
-                ret.despesasgerais.projeto_exportacao.valor = plan[83 - m][c12].Double();
-                ret.despesasgerais.outros.valor = plan[84 - m][c12].Double();
+                ret.despesasgerais.seguro.valor = tabela[75 - m][c12].Double();
+                ret.despesasgerais.comissao.valor = tabela[76 - m][c12].Double();
+                ret.despesasgerais.assessoria.valor = tabela[77 - m][c12].Double();
+                ret.despesasgerais.custo_financeiro.valor = tabela[78 - m][c12].Double();
+                ret.despesasgerais.supervisao_exportacao.valor = tabela[79 - m][c12].Double();
+                ret.despesasgerais.creditos_debitos_material.valor = tabela[80 - m][c12].Double();
+                ret.despesasgerais.creditos_debitos_projeto.valor = tabela[81 - m][c12].Double();
+                ret.despesasgerais.creditos_debitos_montagem.valor = tabela[82 - m][c12].Double();
+                ret.despesasgerais.projeto_exportacao.valor = tabela[83 - m][c12].Double();
+                ret.despesasgerais.outros.valor = tabela[84 - m][c12].Double();
 
-                ret.despesasgerais.seguro.porcentagem =                     plan[75 - m][c4].Double();
-                ret.despesasgerais.comissao.porcentagem =                   plan[76 - m][c4].Double();
-                ret.despesasgerais.assessoria.porcentagem =                 plan[77 - m][c4].Double();
-                ret.despesasgerais.custo_financeiro.porcentagem =           plan[78 - m][c4].Double();
-                ret.despesasgerais.supervisao_exportacao.porcentagem =      plan[79 - m][c4].Double();
-                ret.despesasgerais.creditos_debitos_material.porcentagem =  plan[80 - m][c4].Double();
-                ret.despesasgerais.creditos_debitos_projeto.porcentagem =   plan[81 - m][c4].Double();
-                ret.despesasgerais.creditos_debitos_montagem.porcentagem =  plan[82 - m][c4].Double();
-                ret.despesasgerais.projeto_exportacao.porcentagem =         plan[83 - m][c4].Double();
-                ret.despesasgerais.outros.porcentagem =                     plan[84 - m][c4].Double();
+                ret.despesasgerais.seguro.porcentagem =                     tabela[75 - m][c4].Double();
+                ret.despesasgerais.comissao.porcentagem =                   tabela[76 - m][c4].Double();
+                ret.despesasgerais.assessoria.porcentagem =                 tabela[77 - m][c4].Double();
+                ret.despesasgerais.custo_financeiro.porcentagem =           tabela[78 - m][c4].Double();
+                ret.despesasgerais.supervisao_exportacao.porcentagem =      tabela[79 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_material.porcentagem =  tabela[80 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_projeto.porcentagem =   tabela[81 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_montagem.porcentagem =  tabela[82 - m][c4].Double();
+                ret.despesasgerais.projeto_exportacao.porcentagem =         tabela[83 - m][c4].Double();
+                ret.despesasgerais.outros.porcentagem =                     tabela[84 - m][c4].Double();
 
-                ret.margens.valor = plan[63][c12].Double();
-                ret.margens.porcentagem = plan[63][c4].Double();
+                ret.margens.valor = tabela[63][c12].Double();
+                ret.margens.porcentagem = tabela[63][c4].Double();
                 ret.Carregado = true;
             }
             catch (Exception)
