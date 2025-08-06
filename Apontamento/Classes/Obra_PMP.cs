@@ -1538,7 +1538,7 @@ namespace DLM.painel
             {
                 if(this.contrato.ESoNumero())
                 {
-                    var ped = DLM.SAP.GetPedido(this.pep);
+                    var ped = DLM.SAP.GetPedidoDetalhado(this.pep);
                     if (ped != null)
                     {
                         this.descricao = ped.Descricao;
