@@ -76,7 +76,7 @@ namespace DLM.sapgui
             var tabela_zpmp = new db.Tabela();
             var tabela_zpp0100 = new db.Tabela();
             var tabela_cn47n = new DLM.db.Tabela();
-            
+
             var ped = DLM.SAP.GetPedidoDetalhado(this.Pedido);
             if (ped != null)
             {
@@ -102,7 +102,7 @@ namespace DLM.sapgui
                 {
                     //novo mapeamento
                     //todo = eliminar sistema atual, substituindo-o por este
-                    var avanco_sap = DLM.SAP.Get_Avanco(this.Pedido, true, true, true, false,true,true);
+                    var avanco_sap = DLM.SAP.Get_Avanco(this.Pedido, true, true, true, true, true, true);
                     if (avanco_sap.Tabelas["PECAS"].Count > 0)
                     {
                         this.ZPMP = avanco_sap.Tabelas["PECAS"].Select(x => new sapgui.ZPMP(x, true)).ToList();
