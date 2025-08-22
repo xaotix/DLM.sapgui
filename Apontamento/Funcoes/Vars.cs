@@ -1,4 +1,5 @@
-﻿using DLM.vars;
+﻿using Conexoes;
+using DLM.vars;
 using System;
 using System.Globalization;
 using System.Windows.Media;
@@ -351,17 +352,6 @@ namespace DLM.painel
 
         public class Datas
         {
-            public static int GetSemana(DateTime time)
-            {
-                DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(time);
-                if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
-                {
-                    time = time.AddDays(3);
-                }
-
-                return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-            }
-
             public static DateTime GetPrimeiroDiaDaSemana(int ano, int semana, System.Globalization.CultureInfo ci)
             {
                 DateTime iniciojaneiro = new DateTime(ano, 1, 1);
@@ -377,7 +367,7 @@ namespace DLM.painel
 
             public static void GetPrimeiroEUltimoDiaDaSemana(DateTime Data, out DateTime primeiro, out DateTime ultimo)
             {
-                int semana = GetSemana(Data);
+                int semana = Data.Week();
                 primeiro = GetPrimeiroDiaDaSemana(Data.Year, semana, CultureInfo.CurrentCulture);
                 ultimo = primeiro.AddDays(7);
             }
