@@ -1393,7 +1393,7 @@ namespace DLM.sapgui
 
                     if (arquivo.Exists())
                     {
-                        return Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo);
+                        return Conexoes.Utilz.Excel.GetTabela(arquivo);
                     }
                 }
                 catch (Exception ex)
@@ -1459,7 +1459,7 @@ namespace DLM.sapgui
                     }
 
                     this.SessaoSAP.EndTransaction();
-                    return Conexoes.Utilz.Excel.GetPrimeiraAba(arquivo);
+                    return Conexoes.Utilz.Excel.GetTabela(arquivo);
 
                 }
 
