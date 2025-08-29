@@ -129,7 +129,7 @@ namespace DLM.sapgui
             var retorno = new List<AVANCO_FATURAMENTO>();
             string arquivo = Conexoes.Utilz.Abrir_String("xlsx");
             if (arquivo == null) { return new List<AVANCO_FATURAMENTO>(); }
-            var selecao = Conexoes.Utilz.Excel.GetTabelaPrompt(arquivo);
+            var selecao = Conexoes.Utilz.Excel.SelecionarTabela(arquivo);
 
             if (selecao.Count > 0)
             {
