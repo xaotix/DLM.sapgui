@@ -349,6 +349,8 @@ namespace DLM.painel
             DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
 
             DBases.GetDB().Apagar("pspid", $"%{pedido.Replace("-","").Replace(".","")}%", "sap", "pedidos");
+
+            DLM.SAP.Editar_PEP(pedido, DLM.sap.SAP_Acao.Nada, DLM.sap.SAP_Acao.Sim);
         }
 
         public static void SincronizarTitulosContratos(List<string> contratos)

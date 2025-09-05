@@ -1,4 +1,5 @@
 ﻿using Conexoes;
+using DLM.sap;
 using DLM.sapgui;
 using DLM.vars;
 using System;
@@ -1488,6 +1489,25 @@ namespace DLM.painel
         public PLAN_PEDIDO Real { get; set; } = new PLAN_PEDIDO();
         public ORC_PED Orcamento { get; set; } = new ORC_PED();
         public ORC_PED Consolidada { get; set; } = new ORC_PED();
+
+        public bool Terceirizacao { get; set; } = false;
+        public bool Finalizado { get; set; } = false;
+        public Pedido_PMP(SAP_Pedido sap)
+        {
+            this.pep = sap.PEP;
+            this.descricao = sap.Descricao;
+            this.ultima_edicao = sap.Criado;
+            this.tipo = Tipo_Material.Real;
+            this.Terceirizacao = sap.Terceirizacao;
+            this.Finalizado = sap.Finalizado;
+            var avanco = sap.Get_SAP_Avanco();
+            if (avanco != null)
+            {
+                this.Real = new PLAN_PEDIDO(avanco);
+
+                this.ultima_edicao = this.Real.ultima_edicao;
+            }
+        }
         public Pedido_PMP(PLAN_PEDIDO real, ORC_PED orcamento, ORC_PED consolidado)
         {
 
@@ -1517,7 +1537,7 @@ namespace DLM.painel
                 {
                     this.pep = this.Consolidada.PEP;
                 }
-                if(this.descricao=="")
+                if (this.descricao == "")
                 {
                     this.descricao = this.Consolidada.descricao;
                 }
@@ -1536,7 +1556,7 @@ namespace DLM.painel
 
             if (descricao == "" | descricao == pep)
             {
-                if(this.contrato.ESoNumero())
+                if (this.contrato.ESoNumero())
                 {
                     var ped = DLM.SAP.GetPedido(this.pep);
                     if (ped != null)

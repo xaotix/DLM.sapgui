@@ -1,4 +1,5 @@
 ﻿using Conexoes;
+using DLM.sap;
 using DLM.vars;
 using System;
 using System.Collections.Generic;
@@ -14,14 +15,14 @@ namespace DLM.painel
         private List<PLAN_PECA_LOG> _logistica_st { get; set; }
         public List<PLAN_PECA_LOG> GetLogistica()
         {
-            if(_logistica_st==null)
+            if (_logistica_st == null)
             {
                 var orfas = new List<PLAN_PECA>();
                 _logistica_st = DLM.painel.Consultas.GetLogistica(this.GetPecas(), out orfas);
             }
             return _logistica_st;
         }
-       
+
         public List<PLAN_ETAPA> etapas
         {
             get
@@ -133,7 +134,7 @@ namespace DLM.painel
         {
             var ls = l_sap.Select(x => x.Split('=').ToList()).ToList().FindAll(x => x.Count > 0);
             var ped = ls.Find(x => x[0].Contains("PROJETO"));
-            if(ped!=null)
+            if (ped != null)
             {
                 this.PEP = ped[1];
             }
@@ -142,6 +143,21 @@ namespace DLM.painel
             {
                 this.nome = desc[1];
             }
+        }
+
+        public PLAN_PEDIDO(SAP_Avanco avanco)
+        {
+            this.PEP = avanco.PEP;
+            this.descricao = avanco.Descricao;
+            this.peso_embarcado = avanco.peso_emb;
+            this.peso_planejado = avanco.peso_plan;
+            this.peso_produzido = avanco.peso_fab;
+            this.criado = avanco.criado;
+            this.ultima_edicao = avanco.data_criacao;
+
+            this.total_embarcado = avanco.Log.Real;
+            this.total_fabricado = avanco.Fab.Real;
+            this.liberado_engenharia = avanco.Eng.Real;
         }
     }
 }
