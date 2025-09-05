@@ -77,7 +77,7 @@ namespace DLM.sapgui
             var tabela_zpp0100 = new db.Tabela();
             var tabela_cn47n = new DLM.db.Tabela();
 
-            var ped = DLM.SAP.GetPedidoDetalhado(this.Pedido);
+            var ped = DLM.SAP.GetPedido(this.Pedido);
             if (ped != null)
             {
                 var peps_ped = ped.GetPeps();

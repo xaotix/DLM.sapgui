@@ -262,7 +262,7 @@ namespace DLM.painel
 
             if (this.descricao.Length == 0)
             {
-                var ped = DLM.SAP.GetPedidoDetalhado(this.contrato_completo + ".P00");
+                var ped = DLM.SAP.GetPedido(this.contrato_completo + ".P00");
                 if (ped != null)
                 {
                     this.descricao = ped.Descricao;
