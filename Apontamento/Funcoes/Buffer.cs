@@ -22,7 +22,7 @@ namespace DLM.painel
             {
                 _Obras_PMP = new List<Pedido_PMP>();
                 var reais = Consultas.GetPedidos(recarregar);
-                var cons = Obras_PGO_Consolidadas( recarregar);
+                var cons = Obras_PGO_Consolidadas(recarregar);
                 var contratos = reais.Select(x => x.pedido).Distinct().ToList();
                 contratos.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
                 contratos = contratos.OrderBy(x => x).Distinct().ToList().FindAll(x=>x.Length>5).ToList();
