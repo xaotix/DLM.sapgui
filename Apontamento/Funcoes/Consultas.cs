@@ -60,7 +60,6 @@ namespace DLM.painel
         {
             var retorno = new List<PLAN_PECA>();
             var pedidos_real = pedidos.FindAll(x => x.Material_REAL).Select(x => x.pep).Distinct().ToList();
-            var pedidos_orcamento = pedidos.FindAll(x => x.Material_ORC).Select(x => x.pep).Distinct().ToList();
             var pedidos_consolidados = pedidos.FindAll(x => x.Material_CONS).Select(x => x.pep).Distinct().ToList();
 
             var w = Conexoes.Utilz.Wait(pedidos_real.Count * 4 + 3, $"Mapeando peças...{pedidos.Count} pedidos...");
@@ -69,8 +68,7 @@ namespace DLM.painel
 
             var reais_pecas = GetPecasReal(pedidos_real, tam_pacote);
             w.somaProgresso();
-            var orc_pecas = GetPecasPGO(pedidos_orcamento, tam_pacote);
-            w.somaProgresso();
+
             var cons_pecas = GetPecasPGO(pedidos_consolidados, tam_pacote, true);
             w.somaProgresso();
 
@@ -81,15 +79,6 @@ namespace DLM.painel
                 {
 
                     ped.Real.Set(reais_pecas);
-                }
-                w.somaProgresso();
-            }
-            foreach (var orc in pedidos_orcamento)
-            {
-                var ped = pedidos.Find(x => x.pep == orc);
-                if (ped != null)
-                {
-                    ped.Orcamento.Set(orc_pecas);
                 }
                 w.somaProgresso();
             }
@@ -105,7 +94,6 @@ namespace DLM.painel
             }
             retorno.AddRange(reais_pecas);
             retorno.AddRange(cons_pecas);
-            retorno.AddRange(orc_pecas);
             retorno = retorno.OrderBy(x => x.PEP).ToList();
             foreach (var pedido in pedidos)
             {
@@ -178,7 +166,7 @@ namespace DLM.painel
         {
 
             string chave_pedidos = "";
-            List<ORC_ETP> retorno = new List<ORC_ETP>();
+            var retorno = new List<ORC_ETP>();
             string tab = "pmp_orc_etapas";
             if (consolidada)
             {

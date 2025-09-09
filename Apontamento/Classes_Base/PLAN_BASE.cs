@@ -283,58 +283,7 @@ namespace DLM.painel
             }
             return _Grupos_Mercadoria;
         }
-        public double engenharia_peso_atraso
-        {
-            get
-            {
-                var t = ((peso_planejado * engenharia_previsto / 100) - (peso_planejado * liberado_engenharia / 100)).Round(2);
-                if (t > 0)
-                {
-                    return (t).Round(2);
-                }
-                return 0;
-            }
-        }
-        public double fabrica_peso_atraso
-        {
-            get
-            {
-                var t = ((peso_planejado * fabrica_previsto / 100) - (peso_planejado * total_fabricado / 100)).Round(2);
-                if (t > 0)
-                {
-                    return (t).Round(2);
-                }
-                return 0;
-            }
-        }
-        public double embarque_peso_atraso
-        {
-            get
-            {
-                var t = ((peso_planejado * embarque_previsto / 100) - (peso_planejado * total_embarcado / 100)).Round(2);
-                if (t > 0)
-                {
-                    return (t).Round(2);
-                }
-                return 0;
-            }
-        }
-        public double montagem_peso_atraso
-        {
-            get
-            {
-                if (exportacao | this.status_montagem == "SEM APONTAMENTO")
-                {
-                    return 0;
-                }
-                var t = ((peso_planejado * montagem_previsto / 100) - (peso_planejado * total_montado / 100)).Round(2);
-                if (t > 0)
-                {
-                    return t.Round(2);
-                }
-                return 0;
-            }
-        }
+
         [Browsable(false)]
         public Linha Linha { get; set; } = new Linha();
 
@@ -377,28 +326,7 @@ namespace DLM.painel
             }
         }
         public string PEP { get; set; } = "";
-        public System.Windows.Visibility montagem_visivel
-        {
-            get
-            {
-                if (this.status_montagem == "SEM APONTAMENTO")
-                {
-                    return System.Windows.Visibility.Collapsed;
-                }
-                return System.Windows.Visibility.Visible;
-            }
-        }
-        public System.Windows.Visibility montagem_visivel_grid
-        {
-            get
-            {
-                if (exportacao && this.status_montagem == "SEM APONTAMENTO")
-                {
-                    return System.Windows.Visibility.Collapsed;
-                }
-                return System.Windows.Visibility.Visible;
-            }
-        }
+
         public bool exportacao
         {
             get
@@ -622,104 +550,9 @@ namespace DLM.painel
 
         public double mon_base_st { get; set; } = 0;
 
-        public bool cron_eng_show { get; set; } = true;
-        public bool cron_fab_show { get; set; } = true;
-        public bool cron_log_show { get; set; } = true;
-        public bool cron_mont_show { get; set; } = true;
-        public DateTime? inicio_cronograma_filtro
-        {
-            get
-            {
-                if (datas_cronograma_filtro.Count > 0)
-                {
-                    return datas_cronograma_filtro.Min();
-                }
-                return DateTime.Now.AddMonths(-3);
-            }
-        }
-        public DateTime? fim_cronograma_filtro
-        {
-            get
-            {
-                if (datas_cronograma_filtro.Count > 0)
-                {
-                    return datas_cronograma_filtro.Max();
-                }
-                return DateTime.Now;
-            }
-        }
-        public List<DateTime> datas_cronograma_filtro
-        {
-            get
-            {
-                var retorno = new List<DateTime>();
-                if (cron_eng_show)
-                {
-                    if (engenharia_cronograma != null) { retorno.Add(engenharia_cronograma.Value); };
-                    if (engenharia_cronograma_inicio != null) { retorno.Add(engenharia_cronograma_inicio.Value); };
-                }
-                if (cron_fab_show)
-                {
-                    if (engenharia_cronograma != null) { retorno.Add(fabrica_cronograma.Value); };
-                    if (engenharia_cronograma != null) { retorno.Add(fabrica_cronograma_inicio.Value); };
-                }
-                if (cron_log_show)
-                {
-                    if (logistica_cronograma != null) { retorno.Add(logistica_cronograma.Value); };
-                    if (logistica_cronograma_inicio != null) { retorno.Add(logistica_cronograma_inicio.Value); };
 
-                }
-                if (cron_mont_show)
-                {
-                    if (montagem_cronograma != null) { retorno.Add(montagem_cronograma.Value); };
-                    if (montagem_cronograma_inicio != null) { retorno.Add(montagem_cronograma_inicio.Value); };
-                }
-                return retorno;
-            }
-        }
-        public DateTime? inicio_cronograma
-        {
-            get
-            {
-                var t = datas_cronograma.FindAll(x => x > null);
-                if (t.Count > 0)
-                {
-                    return t.Min();
-                }
-                return DateTime.Now.AddMonths(-3);
-            }
-        }
-        public DateTime? fim_cronograma
-        {
-            get
-            {
-                var t = datas_cronograma.FindAll(x => x != null);
-                if (t.Count > 0)
-                {
-                    return t.Max();
-                }
-                return null;
-            }
-        }
-        public List<DateTime?> datas_cronograma
-        {
-            get
-            {
 
-                return new List<DateTime?>
-                {
-                    engenharia_cronograma,
-                    engenharia_cronograma_inicio,
-                    fabrica_cronograma,
-                    fabrica_cronograma_inicio,
-                    logistica_cronograma,
-                    logistica_cronograma_inicio,
-                    montagem_cronograma,
-                    montagem_cronograma_inicio
-                };
-            }
-        }
-        //public Resumo_Pecas resumo_pecas { get; set; } = new Resumo_Pecas();
+
         private string _status_montagem { get; set; } = "-1";
         public string status_montagem
         {
@@ -742,118 +575,13 @@ namespace DLM.painel
 
         }
         public bool dados_montagem { get; set; } = false;
-        public DateTime? ultima_consulta_sap { get; set; } = null;
+        public DateTime? ultima_consulta_sap { get; set; }
         public double peso_planejado { get; set; } = 0;
         public int atraso_engenharia { get; set; } = 0;
         public int atraso_fabrica { get; set; } = 0;
         public int atraso_embarque { get; set; } = 0;
         public int atraso_montagem { get; set; } = 0;
-        public ImageSource imagem_engenharia
-        {
-            get
-            {
-                //if (resumo_pecas.etapa_bloqueada)
-                //{
-                //    return BufferImagem._lock;
-                //}
 
-                if (liberado_engenharia == 100)
-                {
-                    return Vars.Imagens.engenharia_32x32_verde;
-                }
-                if (atraso_engenharia > 0)
-                {
-                    return Vars.Imagens.engenharia_32x32_vermelho;
-                }
-                if (liberado_engenharia > 0)
-                {
-                    return Vars.Imagens.engenharia_32x32_azul;
-                }
-                return Vars.Imagens.engenharia_32x32;
-            }
-        }
-        public ImageSource imagem_embarque
-        {
-            get
-            {
-                //if (resumo_pecas.etapa_bloqueada)
-                //{
-                //    return BufferImagem._lock;
-                //}
-                if (total_embarcado == 100)
-                {
-                    return Vars.Imagens.embarque_32x32_verde;
-                }
-                if (atraso_embarque > 0)
-                {
-                    return Vars.Imagens.embarque_32x32_vermelho;
-                }
-                if (total_embarcado > 0)
-                {
-                    return Vars.Imagens.embarque_32x32_azul;
-                }
-                return Vars.Imagens.embarque_32x32;
-            }
-        }
-        public ImageSource imagem_fabrica
-        {
-            get
-            {
-                //if (resumo_pecas.etapa_bloqueada)
-                //{
-                //    return BufferImagem._lock;
-                //}
-                if (total_fabricado == 100)
-                {
-                    return Vars.Imagens.fabrica_32x32_verde;
-                }
-                if (atraso_fabrica > 0)
-                {
-                    return Vars.Imagens.fabrica_32x32_vermelho;
-                }
-                if (total_fabricado > 0)
-                {
-                    return Vars.Imagens.fabrica_32x32_azul;
-                }
-                return Vars.Imagens.fabrica_32x32;
-            }
-        }
-        public ImageSource imagem_montagem
-        {
-            get
-            {
-                //if (resumo_pecas.etapa_bloqueada)
-                //{
-                //    return BufferImagem._lock;
-                //}
-                if (exportacao)
-                {
-                    return BufferImagem.globo;
-                }
-                if (total_montado == 100 | status_montagem == "CONCLUÍDA" | status_montagem == "ENTREGUE")
-                {
-                    return Vars.Imagens.montagem_32x32_verde;
-                }
-                if (!dados_montagem)
-                {
-                    return Vars.Imagens.montagem_32x32_cinza;
-                }
-                if (status_montagem == "TRANCADA")
-                {
-                    return BufferImagem._lock;
-
-                }
-                if (atraso_montagem > 0)
-                {
-                    return Vars.Imagens.montagem_32x32_vermelho;
-                }
-                else if (total_montado > 0)
-                {
-                    return Vars.Imagens.montagem_32x32_azul;
-                }
-                return Vars.Imagens.montagem_32x32;
-            }
-        }
 
         private double _engenharia_previsto { get; set; } = 0;
         public double engenharia_previsto
@@ -906,41 +634,7 @@ namespace DLM.painel
                 _embarque_previsto = value;
             }
         }
-        public double engenharia_peso_previsto
-        {
-            get
-            {
-                return (this.engenharia_previsto * this.peso_planejado / 100).Round(0);
-            }
-        }
-        public double fabrica_peso_previsto
-        {
-            get
-            {
-                return (this.fabrica_previsto * this.peso_planejado / 100).Round(0);
-            }
-        }
-        public double embarque_peso_previsto
-        {
-            get
-            {
-                return (this.embarque_previsto * this.peso_planejado / 100).Round(0);
-            }
-        }
-        public double montagem_peso_previsto
-        {
-            get
-            {
-                return (this.montagem_previsto * this.peso_planejado / 100).Round(0);
-            }
-        }
-        public double peso_projetado
-        {
-            get
-            {
-                return (this.liberado_engenharia * this.peso_planejado / 100).Round(0);
-            }
-        }
+
         private double _total_embarcado { get; set; } = 0;
         public double total_embarcado
         {
@@ -1028,156 +722,10 @@ namespace DLM.painel
         }
         private double _liberado_engenharia { get; set; } = 0;
 
-        public SolidColorBrush corengenharia
-        {
-            get
-            {
-                return Consultas.getCor(engenharia_previsto, liberado_engenharia);
-            }
-        }
-        public SolidColorBrush corfabrica
-        {
-            get
-            {
-                return Consultas.getCor(fabrica_previsto, total_fabricado, opacidade1);
-            }
-        }
-        public SolidColorBrush corembarque
-        {
-            get
-            {
-                return Consultas.getCor(embarque_previsto, total_embarcado, opacidade1);
-            }
-        }
-        public SolidColorBrush cormontagem
-        {
-            get
-            {
-                return Consultas.getCor(montagem_previsto, total_montado, opacidade1);
-            }
-        }
 
 
-        public SolidColorBrush corengenharia2
-        {
-            get
-            {
-                var s = corengenharia.Clone();
-                s.Opacity = opacidade2;
-                return s;
-            }
-        }
-        public SolidColorBrush corfabrica2
-        {
-            get
-            {
-                var s = corfabrica.Clone();
-                s.Opacity = opacidade2;
-                return s;
-            }
-        }
-        public SolidColorBrush corembarque2
-        {
-            get
-            {
-                var s = corembarque.Clone();
-                s.Opacity = opacidade2;
-                return s;
-            }
-        }
-        public SolidColorBrush cormontagem2
-        {
-            get
-            {
-                var s = cormontagem.Clone();
-                s.Opacity = opacidade2;
-                return s;
-            }
-        }
-        public double opacidade0 { get; set; } = 0.5;
-        public double opacidade1 { get; set; } = 0.5;
-        public double opacidade2 { get; set; } = 0.5;
-        public double opacidade3 { get; set; } = 0.75;
-
-        public SolidColorBrush cor
-        {
-            get
-            {
-                if (this.status_montagem == "TRANCADA")
-                {
-                    return new SolidColorBrush(Colors.Violet) { Opacity = opacidade0 };
-                }
-                else if (this.total_montado > 95 | this.status_montagem == "CONCLUÍDA" | this.status_montagem == "ENTREGUE")
-                {
-                    return new SolidColorBrush(Colors.LightGreen) { Opacity = opacidade0 };
-                }
 
 
-                return new SolidColorBrush(Colors.White);
-            }
-        }
-
-        public SolidColorBrush corprevisto
-        {
-            get
-            {
-                return new SolidColorBrush(Colors.LimeGreen) { Opacity = opacidade0 };
-            }
-        }
-        public SolidColorBrush corprevisto2
-        {
-            get
-            {
-                return new SolidColorBrush(Colors.LimeGreen) { Opacity = opacidade2 };
-            }
-        }
-
-        public SolidColorBrush corbase
-        {
-            get
-            {
-                return new SolidColorBrush(Colors.DarkBlue) { Opacity = opacidade1 };
-            }
-        }
-        public SolidColorBrush corbase2
-        {
-            get
-            {
-                return new SolidColorBrush(Colors.DarkBlue) { Opacity = opacidade2 };
-            }
-        }
-        public SolidColorBrush corengenharia3
-        {
-            get
-            {
-                var s = corengenharia.Clone();
-                s.Opacity = opacidade3;
-                return s;
-            }
-        }
-        public SolidColorBrush corfabrica3
-        {
-            get
-            {
-                var s = corfabrica.Clone();
-                s.Opacity = opacidade3;
-                return s;
-            }
-        }
-        public SolidColorBrush corembarque3
-        {
-            get
-            {
-                return Consultas.getCor(embarque_previsto, total_embarcado, .2);
-            }
-        }
-        public SolidColorBrush cormontagem3
-        {
-            get
-            {
-                return Consultas.getCor(montagem_previsto, total_montado, .3);
-            }
-        }
         public PLAN_BASE()
         {
 

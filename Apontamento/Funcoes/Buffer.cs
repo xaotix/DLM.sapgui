@@ -1,4 +1,5 @@
 ﻿using Conexoes;
+using DLM.sapgui;
 using DLM.vars;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace DLM.painel
         private static List<PLAN_PEDIDO> _Pedidos_Principais { get; set; }
         private static List<PLAN_OBRA> _Garantias { get; set; }
         private static List<ORC_PED> _Obras_PGO_Consolidadas { get; set; }
-        public static List<Pedido_PMP> _Obras_PMP { get; set; }
+        public static List<Pedido_PMP> _pedidos_pmp { get; set; }
 
 
         public static List<Pedido_PMP> Pedidos_PMP(bool recarregar = false)
@@ -20,27 +21,61 @@ namespace DLM.painel
 
             if (true)
             {
-                _Obras_PMP = new List<Pedido_PMP>();
+                _pedidos_pmp = new List<Pedido_PMP>();
+                var pmps = new List<Pedido_PMP>();
                 var reais = Consultas.GetPedidos(recarregar);
                 var cons = Obras_PGO_Consolidadas(recarregar);
                 var contratos = reais.Select(x => x.pedido).Distinct().ToList();
                 contratos.AddRange(cons.Select(x => x.PEP).Distinct().ToList());
-                contratos = contratos.OrderBy(x => x).Distinct().ToList().FindAll(x=>x.Length>5).ToList();
+
+
+                contratos = contratos.OrderBy(x => x).Distinct().ToList();
                 foreach (var ct in contratos)
                 {
                     var real = reais.Find(x => x.pedido == ct);
                     var con = cons.Find(x => x.PEP == ct);
                     if (real != null |  con != null)
                     {
-                        _Obras_PMP.Add(new Pedido_PMP(real, null, con));
+                        pmps.Add(new Pedido_PMP(real, null, con));
                     }
                     else
                     {
 
                     }
                 }
+
+
+                var reais_SAP = DLM.SAP.GetPedidos(recarregar);
+
+                var peds = new List<string>();
+                peds.AddRange(reais.Select(x => x.PEP));
+                peds.AddRange(pmps.Select(x => x.pep));
+                peds = peds.Distinct().ToList().OrderBy(x => x).ToList();
+
+                foreach (var pedido in peds)
+                {
+                    var pmp = pmps.Find(x => x.pep == pedido);
+                    var real = reais_SAP.Find(x => x.PEP == pedido);
+                    if (pmp != null)
+                    {
+                        if (real != null)
+                        {
+                            pmp.SAP = true;
+                            pmp.Finalizado = real.Finalizado;
+                            pmp.Terceirizacao = real.Terceirizacao;
+                        }
+                        _pedidos_pmp.Add(pmp);
+                    }
+                    else if (real != null)
+                    {
+                        if(!real.Finalizado)
+                        {
+                            _pedidos_pmp.Add(new DLM.painel.Pedido_PMP(real));
+                        }
+                    }
+                }
             }
-            return _Obras_PMP;
+            return _pedidos_pmp;
         }
 
 

@@ -723,7 +723,7 @@ namespace DLM.painel
                         int max = subetapas.Count;
                         foreach(var ped in pacote.Pedidos)
                         {
-                            foreach (var sub in ped.Getsubetapas())
+                            foreach (var sub in ped.SupEtapas)
                             {
                                 foreach (var pep in sub.Getpeps())
                                 {
@@ -755,10 +755,10 @@ namespace DLM.painel
                                             excel_peca.Cells[$"U{L1}"].Value = sub.liberado_engenharia / 100;
                                             excel_peca.Cells[$"V{L1}"].Value = peca.fabricado_porcentagem;
                                             excel_peca.Cells[$"W{L1}"].Value = peca.embarcado_porcentagem;
-                                            excel_peca.Cells[$"X{L1}"].Value = pep.ef > mindia ? pep.ef : sub.ef;
-                                            excel_peca.Cells[$"Y{L1}"].Value = pep.ff > mindia ? pep.ff : sub.ff;
-                                            excel_peca.Cells[$"Z{L1}"].Value = pep.li > mindia ? pep.li : sub.li;
-                                            excel_peca.Cells[$"AA{L1}"].Value = pep.mi > mindia ? pep.mi : sub.mi;
+                                            excel_peca.Cells[$"X{L1}"].Value = sub.ef;
+                                            excel_peca.Cells[$"Y{L1}"].Value = sub.ff;
+                                            excel_peca.Cells[$"Z{L1}"].Value = sub.li;
+                                            excel_peca.Cells[$"AA{L1}"].Value =  sub.mi;
                                             excel_peca.Cells[$"AB{L1}"].Value = sub.mi_s> mindia ? sub.mi_s : null;
                                             excel_peca.Cells[$"AC{L1}"].Value = peca.inicio > mindia ? peca.inicio : null;
                                             excel_peca.Cells[$"AD{L1}"].Value = peca.fim > mindia ? peca.fim : null;
@@ -797,7 +797,7 @@ namespace DLM.painel
                         w = Conexoes.Utilz.Wait(subetapas.Count, "Carregando SubEtapas...");
                         foreach(var ped in pacote.Pedidos)
                         {
-                            foreach (var sub in ped.Getsubetapas())
+                            foreach (var sub in ped.SupEtapas)
                             {
                                 try
                                 {
