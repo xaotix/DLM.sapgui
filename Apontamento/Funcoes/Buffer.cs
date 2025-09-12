@@ -49,12 +49,12 @@ namespace DLM.painel
 
                 var peds = new List<string>();
                 peds.AddRange(reais.Select(x => x.PEP));
-                peds.AddRange(pmps.Select(x => x.pep));
+                peds.AddRange(pmps.Select(x => x.PEP));
                 peds = peds.Distinct().ToList().OrderBy(x => x).ToList();
 
                 foreach (var pedido in peds)
                 {
-                    var pmp = pmps.Find(x => x.pep == pedido);
+                    var pmp = pmps.Find(x => x.PEP == pedido);
                     var real = reais_SAP.Find(x => x.PEP == pedido);
                     if (pmp != null)
                     {

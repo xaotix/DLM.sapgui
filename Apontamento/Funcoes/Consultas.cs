@@ -59,8 +59,8 @@ namespace DLM.painel
         public static List<PLAN_PECA> GetPecasPMP(List<Pedido_PMP> pedidos)
         {
             var retorno = new List<PLAN_PECA>();
-            var pedidos_real = pedidos.FindAll(x => x.Material_REAL).Select(x => x.pep).Distinct().ToList();
-            var pedidos_consolidados = pedidos.FindAll(x => x.Material_CONS).Select(x => x.pep).Distinct().ToList();
+            var pedidos_real = pedidos.FindAll(x => x.Material_REAL).Select(x => x.PEP).Distinct().ToList();
+            var pedidos_consolidados = pedidos.FindAll(x => x.Material_CONS).Select(x => x.PEP).Distinct().ToList();
 
             var w = Conexoes.Utilz.Wait(pedidos_real.Count * 4 + 3, $"Mapeando peças...{pedidos.Count} pedidos...");
 
@@ -74,7 +74,7 @@ namespace DLM.painel
 
             foreach (var real in pedidos_real)
             {
-                var ped = pedidos.Find(x => x.pep == real);
+                var ped = pedidos.Find(x => x.PEP == real);
                 if (ped != null)
                 {
 
@@ -84,7 +84,7 @@ namespace DLM.painel
             }
             foreach (var orc in pedidos_consolidados)
             {
-                var ped = pedidos.Find(x => x.pep == orc);
+                var ped = pedidos.Find(x => x.PEP == orc);
                 if (ped != null)
                 {
                     ped.Consolidada.Set(cons_pecas);

@@ -676,7 +676,7 @@ namespace DLM.painel
                 pecas.AddRange(pacote.GetPecas());
                 pacote.Getsubetapas();
                 pacote.Getpeps();
-                var pedidosstr = pacote.Pedidos.Select(x => x.pep).Distinct().ToList();
+                var pedidosstr = pacote.Pedidos.Select(x => x.PEP).Distinct().ToList();
             }
 
             try
@@ -733,7 +733,7 @@ namespace DLM.painel
                                         try
                                         {
                                             excel_peca.Cells[$"A{L1}"].Value = peca.contrato;
-                                            excel_peca.Cells[$"B{L1}"].Value = ped.descricao;
+                                            excel_peca.Cells[$"B{L1}"].Value = ped.Descricao;
                                             excel_peca.Cells[$"C{L1}"].Value = peca.pedido_completo;
                                             excel_peca.Cells[$"D{L1}"].Value = peca.PEP;
                                             excel_peca.Cells[$"E{L1}"].Value = peca.desenho;
@@ -783,7 +783,7 @@ namespace DLM.painel
                                     }
                                 }
                                 cont++;
-                                w.somaProgresso(sub.etapa + " - Gravando Peças...");
+                                w.somaProgresso(sub.Etapa + " - Gravando Peças...");
                             }
                         }
                     }
@@ -802,11 +802,11 @@ namespace DLM.painel
                                 try
                                 {
                                     var L1 = l0 + l;
-                                    excel_sub.Cells[$"A{L1}"].Value = sub.contrato;
-                                    excel_sub.Cells[$"B{L1}"].Value = ped.descricao;
-                                    excel_sub.Cells[$"C{L1}"].Value = sub.pedido;
-                                    excel_sub.Cells[$"D{L1}"].Value = sub.pep;
-                                    excel_sub.Cells[$"E{L1}"].Value = sub.tipo.ToString();
+                                    excel_sub.Cells[$"A{L1}"].Value = sub.Contrato;
+                                    excel_sub.Cells[$"B{L1}"].Value = ped.Descricao;
+                                    excel_sub.Cells[$"C{L1}"].Value = sub.Pedido;
+                                    excel_sub.Cells[$"D{L1}"].Value = sub.PEP;
+                                    excel_sub.Cells[$"E{L1}"].Value = sub.Tipo.ToString();
                                     //excel_sub.Cells[$"F{L1}"].Value = sub.Real.resumo_pecas.etapa_bloqueada ? 1 : 0;
                                     excel_sub.Cells[$"G{L1}"].Value = sub.peso;
                                     excel_sub.Cells[$"H{L1}"].Value = sub.Real.liberado_engenharia / 100;
@@ -845,8 +845,8 @@ namespace DLM.painel
                     if (excel_pedidos != null && gerar_pedidos)
                     {
 
-                        var peds = subetapas.Select(x => x.contrato).Distinct().ToList();
-                        var pedss = subetapas.Select(x => x.pedido).Distinct().ToList();
+                        var peds = subetapas.Select(x => x.Contrato).Distinct().ToList();
+                        var pedss = subetapas.Select(x => x.Pedido).Distinct().ToList();
                         //var pedidos_sistema = DLM.painel.Consultas.GetPedidos(peds);
                         var pedidos_sistema = pacote.Pedidos.FindAll(x => x.Material_REAL).Select(x => x.Real).ToList();
 
