@@ -168,33 +168,6 @@ namespace DLM.painel
         public int pedidos_qtd { get; set; } = 0;
 
 
-
-        public List<Conexoes.MSAP_Pedido> pedidos_eng
-        {
-            get
-            {
-                if (_Pedidos_Eng == null)
-                {
-                    _Pedidos_Eng = DLM.painel.Vars.Obras.GetPedidos(contrato);
-                }
-                return _Pedidos_Eng;
-            }
-        }
-
-        public List<Conexoes.MSAP_PEP> peps_eng
-        {
-            get
-            {
-                if (_peps_eng == null)
-                {
-                    _peps_eng = pedidos_eng.SelectMany(x => x.GetPEPs()).OrderBy(x => x.Codigo).ToList();
-                }
-                return _peps_eng;
-            }
-        }
-
-
-
         public PLAN_OBRA(string pedido_principal)
         {
             this.PEP = pedido_principal.Replace(".C00", ".P").Replace(".P00", "").Replace(".G00", "");
