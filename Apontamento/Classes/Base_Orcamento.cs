@@ -254,7 +254,6 @@ namespace DLM.painel
             return "[PGO] - [" + this.PEP + "] - " + this.descricao + " [" + this.numerocontrato + "." + this.revisao + "]";
         }
 
-        public DateTime criacao { get; set; } = Cfg.Init.DataDummy;
         public ORC_PED(DLM.db.Linha linha, Tipo_Material tipo)
         {
             this.Linha = linha;
@@ -268,7 +267,7 @@ namespace DLM.painel
             this.liberado_engenharia =      linha["liberado_engenharia"].Double();
             this.peso_realizado =           linha["peso_realizado"].Double();
             this.arquivos =                 linha["arquivos"].Int();
-            this.criacao =                  linha["criacao"].Data();
+            this.criado =                  linha["criacao"].Data();
             this.tipo = tipo;
         }
     }

@@ -349,7 +349,11 @@ namespace DLM.painel
                 this.Meta = true;
                 this.Consolidada = consolidado;
                 this.Material_CONS = true;
-                this.Criado = consolidado.criado;
+                if(real==null)
+                {
+                    this.Criado = consolidado.criado;
+                }
+
 
                 if (this.PEP == "")
                 {
