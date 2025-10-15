@@ -66,7 +66,7 @@ namespace DLM.sapgui
             //19/06/2020 - aumentei o filtro para pegar a subetapa. serão mais consultas, no entanto evita os erros.
             /*12/05/2022 - mudei a chamada para um procedure.*/
             var ped = Pedido.Replace("*", "").Replace(" ", "");
-            var chamada = $"call comum.getzppcoisn_qtd_pcs('{ped}')";
+            var chamada = $"call {Cfg.Init.db_comum}.getzppcoisn_qtd_pcs('{ped}')";
             var consulta = DBases.GetDB().Consulta(chamada);
             var peps = consulta.Select(x => x["pep"].Valor).ToList();
 
