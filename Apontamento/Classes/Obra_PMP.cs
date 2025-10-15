@@ -66,7 +66,7 @@ namespace DLM.painel
         {
             var retorno = new List<PLAN_PECA>();
 
-            var pecas = Obra.Pecas.FindAll(x => x.PEP.StartsWith(this.PEP));
+            var pecas = Obra.Pecas.FindAll(x => x.PEP.StartsW(this.PEP));
 
             var tipos = pecas.GroupBy(x => x.Tipo).ToList();
             if (tipos.Count > 0)
@@ -131,7 +131,7 @@ namespace DLM.painel
 
             if (this.Material_REAL)
             {
-                var sub = this.Obra.SupEtapas.Find(x => this.PEP.StartsWith(x.PEP));
+                var sub = this.Obra.SupEtapas.Find(x => this.PEP.StartsW(x.PEP));
                 if (sub != null)
                 {
                     if (sub.liberado_engenharia > 0)
@@ -180,7 +180,7 @@ namespace DLM.painel
 
         public List<PEP_PMP> Getpeps()
         {
-            return this.Obra.PEPs.FindAll(x => x.PEP.StartsWith(this.PEP) && x.Tipo == this.Tipo).OrderBy(x => x.PEP).ToList();
+            return this.Obra.PEPs.FindAll(x => x.PEP.StartsW(this.PEP) && x.Tipo == this.Tipo).OrderBy(x => x.PEP).ToList();
         }
 
         public Pedido_PMP Obra { get; set; } = new Pedido_PMP();
@@ -294,22 +294,22 @@ namespace DLM.painel
         public void Set(List<PLAN_PECA> itens)
         {
             this.Pecas = new List<PLAN_PECA>();
-            this.Pecas.AddRange(itens.FindAll(x => x.PEP.StartsWith(this.PEP)));
+            this.Pecas.AddRange(itens.FindAll(x => x.PEP.StartsW(this.PEP)));
         }
         public void Set(List<SubEtapa_PMP> itens)
         {
             this.SupEtapas = new List<SubEtapa_PMP>();
-            this.SupEtapas.AddRange(itens.FindAll(x => x.PEP.StartsWith(this.PEP)));
+            this.SupEtapas.AddRange(itens.FindAll(x => x.PEP.StartsW(this.PEP)));
         }
         public void Set(List<PEP_PMP> itens)
         {
             this.PEPs = new List<PEP_PMP>();
-            this.PEPs.AddRange(itens.FindAll(x => x.PEP.StartsWith(this.PEP)));
+            this.PEPs.AddRange(itens.FindAll(x => x.PEP.StartsW(this.PEP)));
         }
         public void Set(List<Etapa_PMP> itens)
         {
             this.Etapas = new List<Etapa_PMP>();
-            this.Etapas.AddRange(itens.FindAll(x => x.PEP.StartsWith(this.PEP)));
+            this.Etapas.AddRange(itens.FindAll(x => x.PEP.StartsW(this.PEP)));
         }
         public List<PLAN_PECA> Pecas { get; private set; } = new List<PLAN_PECA>();
         public PLAN_PEDIDO Real { get; set; } = new PLAN_PEDIDO();
@@ -448,7 +448,7 @@ namespace DLM.painel
                 lista = lista.Distinct().ToList().OrderBy(x => x).ToList();
                 foreach (var ped in this.Pedidos)
                 {
-                    var etps = lista.FindAll(x => x.StartsWith(ped.PEP));
+                    var etps = lista.FindAll(x => x.StartsW(ped.PEP));
                     foreach (var s in etps)
                     {
                         var real = reais.Find(x => x.PEP == s);
@@ -489,8 +489,8 @@ namespace DLM.painel
                 lista = lista.Distinct().ToList().OrderBy(x => x).ToList();
                 foreach (var pedido in this.Pedidos)
                 {
-                    var etps = lista.FindAll(x => x.StartsWith(pedido.PEP));
-                    var etapas = etp.FindAll(x => x.PEP.StartsWith(pedido.PEP));
+                    var etps = lista.FindAll(x => x.StartsW(pedido.PEP));
+                    var etapas = etp.FindAll(x => x.PEP.StartsW(pedido.PEP));
                     foreach (var s in etps)
                     {
                         var real = reais.Find(x => x.PEP == s);
@@ -523,7 +523,7 @@ namespace DLM.painel
                 lista = lista.Distinct().ToList().OrderBy(x => x).ToList();
                 foreach (var pedido in this.Pedidos)
                 {
-                    var etps = lista.FindAll(x => x.StartsWith(pedido.PEP));
+                    var etps = lista.FindAll(x => x.StartsW(pedido.PEP));
                     foreach (var s in etps)
                     {
                         var real = reais.Find(x => x.PEP == s);
