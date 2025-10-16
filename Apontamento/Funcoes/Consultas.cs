@@ -19,18 +19,13 @@ namespace DLM.painel
         private static List<Plan_Ped_Contrato> _titulos_obras { get; set; }
 
 
-        public static List<ORC_PED> GetObrasPGO(bool consolidadas = false)
+        public static List<ORC_PED> GetObrasPGO()
         {
             var retorno = new List<ORC_PED>();
-            string tab = $"pmp_orc_resumo";
-            if (consolidadas)
-            {
-                tab = $"pmp_orc_resumo_consolidada";
-            }
-            var consulta = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, tab);
+            var consulta = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_resumo_consolidada);
             foreach (var p in consulta)
             {
-                var ped = new ORC_PED(p, consolidadas ? Tipo_Material.Consolidado : Tipo_Material.Orçamento);
+                var ped = new ORC_PED(p, Tipo_Material.Consolidado);
             
                 if (ped.PEP.Length > 0)
                 {
@@ -38,20 +33,17 @@ namespace DLM.painel
                 }
             }
 
-            if (consolidadas)
+            var pacotes = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada_arquivos_peps);
+            foreach (var pedido in retorno)
             {
-                var pacotes = DBases.GetDBPGO().Consulta(Cfg.Init.db_orcamento, Cfg.Init.tb_pmp_orc_consolidada_arquivos_peps);
-                foreach (var pedido in retorno)
+                var pcks = pacotes.ToList().FindAll(x => x["pedido"].Valor == pedido.PEP);
+                var arqs = pcks.Select(x => x["arquivo"].Valor).Distinct().ToList();
+                foreach (var arq in arqs)
                 {
-                    var pcks = pacotes.ToList().FindAll(x => x["pedido"].Valor == pedido.PEP);
-                    var arqs = pcks.Select(x => x["arquivo"].Valor).Distinct().ToList();
-                    foreach (var arq in arqs)
-                    {
-                        var peps = pcks.FindAll(x => x["arquivo"].Valor == arq).Select(x => x["pep"].Valor).Distinct().ToList();
-                        pedido.pacotes.Add(new ORC_PCK(arq, peps, pedido));
-                    }
-
+                    var peps = pcks.FindAll(x => x["arquivo"].Valor == arq).Select(x => x["pep"].Valor).Distinct().ToList();
+                    pedido.pacotes.Add(new ORC_PCK(arq, peps, pedido));
                 }
+
             }
             return retorno;
         }

@@ -84,7 +84,7 @@ namespace DLM.painel
             if (_Obras_PGO_Consolidadas == null | recarregar)
             {
                 _Obras_PGO_Consolidadas = new List<ORC_PED>();
-                _Obras_PGO_Consolidadas = Consultas.GetObrasPGO(true);
+                _Obras_PGO_Consolidadas = Consultas.GetObrasPGO();
 
             }
             return _Obras_PGO_Consolidadas;
