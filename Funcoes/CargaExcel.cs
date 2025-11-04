@@ -151,11 +151,11 @@ namespace DLM.sapgui
                     var cadastro = retorno.GetTabela(true);
                     DBases.GetDB().Apagar("id", "%%", Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
                     DBases.GetDB().Cadastro(cadastro, Cfg.Init.db_comum, Cfg.Init.tb_avanco_faturamento);
-                    Conexoes.Utilz.Alerta($"Avanço sincronizado! {retorno.Count} itens cadastrados.");
+                    $"Avanço sincronizado! {retorno.Count} itens cadastrados.".Alerta();
                 }
                 else
                 {
-                    Conexoes.Utilz.Alerta("Nenhum item de avanço encontrado na aba selecionada.");
+                    "Nenhum item de avanço encontrado na aba selecionada.".Alerta();
                 }
             }
             return retorno;
