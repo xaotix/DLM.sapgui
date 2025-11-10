@@ -133,12 +133,12 @@ namespace DLM.painel
         public PLAN_PEDIDO(List<string> l_sap)
         {
             var ls = l_sap.Select(x => x.Split('=').ToList()).ToList().FindAll(x => x.Count > 0);
-            var ped = ls.Find(x => x[0].Contains("PROJETO"));
+            var ped = ls.Find(x => x[0].Contem("PROJETO"));
             if (ped != null)
             {
                 this.PEP = ped[1];
             }
-            var desc = ls.Find(x => x[0].Contains("VTEXT"));
+            var desc = ls.Find(x => x[0].Contem("VTEXT"));
             if (desc != null)
             {
                 this.nome = desc[1];

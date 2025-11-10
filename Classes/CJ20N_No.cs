@@ -55,7 +55,7 @@ namespace DLM.sapgui
                 var s = this.pai;
                 if(s!=null)
                 {
-                    if (!this.Nome.Contains(this.GetRaiz().Nome))
+                    if (!this.Nome.Contem(this.GetRaiz().Nome))
                     {
                         return CJ20N_Tipo.Tarefa;
                     }
@@ -146,13 +146,13 @@ namespace DLM.sapgui
         {
            if(this._filhos!=null)
             {
-                return this._filhos.Find(x => x.Nome.ToUpper().EndsWith(fim.ToUpper()));
+                return this._filhos.Find(x => x.Nome.ToUpper().EndsW(fim.ToUpper()));
             }
             return null;
         }
         public bool AddTarefa( string centro_de_trabalho = "1202",string divisao = "1202",string centro = "1202")
         {
-            var s = this.Getfilhos(true).FindAll(x => !x.Nome.Contains(this.Nome)).ToList();
+            var s = this.Getfilhos(true).FindAll(x => !x.Nome.Contem(this.Nome)).ToList();
             if (s.Count>0)
             {
                 return true;

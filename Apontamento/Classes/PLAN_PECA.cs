@@ -29,7 +29,7 @@ namespace DLM.painel
 
             if (lista_fim.Count == 0)
             {
-                lista_fim = linhas.FindAll(x => x["Tamanho_dimensao"].Valor.Contains(this.marca));
+                lista_fim = linhas.FindAll(x => x["Tamanho_dimensao"].Valor.Contem(this.marca));
             }
 
             if (lista_fim.Count == 0)
@@ -68,7 +68,7 @@ namespace DLM.painel
                 var DUMMY = new SAP_ESQ_PIN() { ESQUEMA_DESCR = "", PINTURA = this.TIPO_DE_PINTURA };
                 if (
                     this.TIPO_DE_PINTURA.ToUpper().StartsW("SEM") |
-                    this.TIPO_DE_PINTURA.ToUpper().Contains("GALVANIZADO") |
+                    this.TIPO_DE_PINTURA.ToUpper().Contem("GALVANIZADO") |
                     this.esq_de_pintura.Replace("0", "") == "" |
                     this.TIPO_DE_PINTURA == ""
                     )
@@ -366,7 +366,7 @@ namespace DLM.painel
                 this.Tipo = Tipo_Material.Real;
                 this.material = linha["material"].Valor;
                 this.PEP = linha["pep"].Valor;
-                if (!this.PEP.Contains("."))
+                if (!this.PEP.Contem("."))
                 {
                     this.PEP = Conexoes.Utilz.PEP.Ajustar(this.PEP);
                 }

@@ -125,7 +125,7 @@ namespace DLM.painel
         public void Set(List<PLAN_PEDIDO> lista)
         {
             this._pedidos = new List<PLAN_PEDIDO>();
-            this._pedidos.AddRange(lista.FindAll(x => x.PEP.ToUpper().Contains(this.PEP)));
+            this._pedidos.AddRange(lista.FindAll(x => x.PEP.ToUpper().Contem(this.PEP)));
         }
         public void Set(List<PLAN_PECA> lista)
         {
@@ -327,13 +327,7 @@ namespace DLM.painel
         }
         public string PEP { get; set; } = "";
 
-        public bool exportacao
-        {
-            get
-            {
-                return PEP.Contains("-90");
-            }
-        }
+        public bool exportacao => PEP.Contem("-90");
         public string update_montagem { get; set; } = "";
 
 

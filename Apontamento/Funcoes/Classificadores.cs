@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Conexoes;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DLM.painel
 {
     public class Classificadores
     {
-       
+
         public static List<Tipos_Pintura> GetPinturas(List<PLAN_PECA> Pecas)
         {
             List<Tipos_Pintura> pinturas = new List<Tipos_Pintura>();
@@ -40,15 +41,15 @@ namespace DLM.painel
             }
             return grupos;
         }
-        public static List<Grupo_Mercadoria> GetGrupo_Mercadorias(List<PLAN_PECA> pecas, bool filtro_pep =false)
+        public static List<Grupo_Mercadoria> GetGrupo_Mercadorias(List<PLAN_PECA> pecas, bool filtro_pep = false)
         {
             List<Grupo_Mercadoria> retorno = new List<Grupo_Mercadoria>();
-         
+
             if (filtro_pep)
             {
                 var peps = pecas.Select(x => x.PEP).Distinct().ToList().OrderBy(x => x).ToList();
 
-              
+
 
                 foreach (var pep in peps)
                 {
@@ -65,7 +66,7 @@ namespace DLM.painel
 
 
                 }
-                
+
             }
             else
             {
@@ -79,25 +80,25 @@ namespace DLM.painel
             return retorno;
         }
 
-        public static List<Materia_Prima> GetMateriaPrima(List<PLAN_PECA> Pecas,bool separar_cortes = true)
+        public static List<Materia_Prima> GetMateriaPrima(List<PLAN_PECA> Pecas, bool separar_cortes = true)
         {
             List<Materia_Prima> retorno = new List<Materia_Prima>();
             var codigos = Pecas.Select(x => x.chave_material).Distinct().ToList().FindAll(x => x != "");
-            foreach(var sub in codigos.FindAll(x=>x.Replace("0","").Replace(" ","")!=""))
+            foreach (var sub in codigos.FindAll(x => x.Replace("0", "").Replace(" ", "") != ""))
             {
                 var pcs = Pecas.FindAll(x => x.chave_material == sub);
-                if(separar_cortes)
+                if (separar_cortes)
                 {
                     var cortes = pcs.Select(x => x.corte_largura).Distinct().ToList();
-                    foreach(var co in cortes)
+                    foreach (var co in cortes)
                     {
                         retorno.Add(new Materia_Prima(pcs.FindAll(x => x.corte_largura == co)));
                     }
                 }
                 else
                 {
-   
-                        retorno.Add(new Materia_Prima(pcs.FindAll(x => x.chave_material == sub)));
+
+                    retorno.Add(new Materia_Prima(pcs.FindAll(x => x.chave_material == sub)));
                 }
             }
             return retorno;
@@ -106,9 +107,9 @@ namespace DLM.painel
         public static List<Viga> GetVigas(List<PLAN_PECA> Pecas)
         {
             List<Viga> retorno = new List<Viga>();
-            var pcs = Pecas.FindAll(x => x.grupo_mercadoria.Contains("VIGA") |x.grupo_mercadoria.Contains("PERFIL SOLDADO") | x.grupo_mercadoria.Contains("PERFIL LAMINADO"));
+            var pcs = Pecas.FindAll(x => x.grupo_mercadoria.Contem("VIGA", "PERFIL SOLDADO", "PERFIL LAMINADO"));
             var chaves = pcs.Select(x => x.grupo_mercadoria + "/" + x.Complexidade).Distinct().ToList();
-            foreach(var chave in chaves)
+            foreach (var chave in chaves)
             {
                 retorno.Add(new Viga(pcs.FindAll(x => x.grupo_mercadoria + "/" + x.Complexidade == chave)));
             }

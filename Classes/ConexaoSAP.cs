@@ -42,7 +42,7 @@ namespace DLM.sapgui
         }
         public List<CN47N> GETPEPSLOG(string PEPFABRICA)
         {
-            var lista = this.CN47N.FindAll(x => x.PEP.Contains(Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".L"));
+            var lista = this.CN47N.FindAll(x => x.PEP.Contem(Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".L"));
             return lista.ToList();
         }
         public string Descricao { get; set; } = "";

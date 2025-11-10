@@ -351,7 +351,7 @@ namespace DLM.painel
                             var linhas = new List<DLM.db.Linha>();
                             foreach (var pedido in contrato_sap.GetPedidos())
                             {
-                                if(pedido.PEP.Contains(".P"))
+                                if(pedido.PEP.Contem(".P"))
                                 {
                                     linhas.Add(new db.Linha("contrato", pedido.PEP, "descricao", pedido.Descricao));
                                 }
@@ -437,7 +437,7 @@ namespace DLM.painel
             var retorno = new List<PLAN_OBRA>();
             foreach (var obra in obras)
             {
-                retorno.AddRange(obras_lista.FindAll(x => x.PEP.Contains(obra)));
+                retorno.AddRange(obras_lista.FindAll(x => x.PEP.Contem(obra)));
             }
             retorno = retorno.GroupBy(x => x.PEP).Select(x => x.First()).ToList();
 
@@ -652,7 +652,7 @@ namespace DLM.painel
             List<PLAN_PEDIDO> pedidos = new List<PLAN_PEDIDO>();
             foreach (var s in contrato)
             {
-                pedidos.AddRange(GetPedidos().FindAll(x => x.PEP.Contains(s.Replace("%", "").Replace("*", ""))));
+                pedidos.AddRange(GetPedidos().FindAll(x => x.PEP.Contem(s.Replace("%", "").Replace("*", ""))));
             }
             pedidos = pedidos.GroupBy(x => x.PEP).Select(x => x.First()).ToList();
 
@@ -972,7 +972,7 @@ namespace DLM.painel
                 var _retorno = new List<string>();
                 foreach (var contrato in contratos.Distinct().ToList().FindAll(x => x.Length > 5))
                 {
-                    _retorno.AddRange(_pedidos_clean.FindAll(x => x.Contains(contrato)));
+                    _retorno.AddRange(_pedidos_clean.FindAll(x => x.Contem(contrato)));
                 }
                 _retorno = _retorno.Distinct().ToList();
                 return _retorno;
@@ -986,7 +986,7 @@ namespace DLM.painel
         public static bool MatarExcel(bool confirmar = false)
         {
             var t = Process.GetProcessesByName("EXCEL").ToList();
-            t.AddRange(Process.GetProcesses().ToList().FindAll(x => x.ProcessName.ToUpper().Contains("SOFFICE")));
+            t.AddRange(Process.GetProcesses().ToList().FindAll(x => x.ProcessName.ToUpper().Contem("SOFFICE")));
             if (t.Count > 0)
             {
                 bool matar = false;

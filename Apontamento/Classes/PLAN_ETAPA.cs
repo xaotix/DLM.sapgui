@@ -55,7 +55,7 @@ namespace DLM.painel
         public PLAN_ETAPA(List<PLAN_SUB_ETAPA> subetapas)
         {
             this.subetapas_com_chumbacao = subetapas;
-            this.subetapas = subetapas_com_chumbacao.FindAll(x => !x.PEP.Contains(".10A")).ToList();
+            this.subetapas = subetapas_com_chumbacao.FindAll(x => !x.PEP.Contem(".10A")).ToList();
             if (this.subetapas.Count > 0)
             {
                 this.PEP = this.subetapas[0].etapa;

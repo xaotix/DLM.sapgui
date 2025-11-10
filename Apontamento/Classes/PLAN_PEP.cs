@@ -37,11 +37,11 @@ namespace DLM.painel
                 {
                     return _data_eng;
                 }
-                else if (status_eng.Contains("CONF"))
+                else if (status_eng.Contem("CONF"))
                 {
                     return "LIBERADO";
                 }
-                else if (status_eng.Contains("NÃO"))
+                else if (status_eng.Contem("NÃO"))
                 {
                     return status_eng;
                 }
@@ -68,7 +68,7 @@ namespace DLM.painel
                 {
                     return "FINALIZADO";
                 }
-                else if (PEP.Contains(".FO"))
+                else if (PEP.Contem(".FO"))
                 {
                     return "TELHA EM OBRA";
                 }

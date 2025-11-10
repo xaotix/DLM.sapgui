@@ -71,7 +71,7 @@ namespace DLM.sapgui
             var peps = consulta.Select(x => x["pep"].Valor).ToList();
 
             var total = consulta.Select(x => x["pcs"].Int()).Sum();
-            if(total>1500)
+            if (total > 1500)
             {
                 foreach (var pep in peps)
                 {
@@ -97,7 +97,7 @@ namespace DLM.sapgui
             }
 
 
-           
+
             return retorno;
         }
         public static List<SAPFAGLB03> FAGLB03(string arquivo, string empresa_de = "1100", string empresa_ate = "1200", int ano = 2022, string conta = "3111003011", bool cadastrar = true)
@@ -135,7 +135,7 @@ namespace DLM.sapgui
             {
                 foreach (var linha in selecao)
                 {
-                    var pedido =         linha["C1"].Valor;
+                    var pedido = linha["C1"].Valor;
                     var valor_contrato = linha["C6"].Valor;
                     var valor_f_direto = linha["C7"].Valor;
 
@@ -222,72 +222,20 @@ namespace DLM.sapgui
             //LOGISTICA QUE FICAM FAZENDO TIGRADA DE BOTAR NOMES NÃO PADRÃO
             string ret = "";
             if (PEP.Length > 22 &&
-                (
-                PEP.EndsWith(".Z2") |
-                PEP.EndsWith(".Z3") |
-                PEP.EndsWith(".Z4") |
-                PEP.EndsWith(".ZO") |
-
-                PEP.EndsWith(".G2") |
-                PEP.EndsWith(".G3") |
-                PEP.EndsWith(".G4") |
-                PEP.EndsWith(".GO") |
-
-                PEP.EndsWith(".A2") |
-                PEP.EndsWith(".A3") |
-                PEP.EndsWith(".A4") |
-                PEP.EndsWith(".AO") |
-
-                PEP.EndsWith(".B2") |
-                PEP.EndsWith(".B3") |
-                PEP.EndsWith(".B4") |
-                PEP.EndsWith(".BO") |
-
-                PEP.EndsWith(".C2") |
-                PEP.EndsWith(".C3") |
-                PEP.EndsWith(".C4") |
-                PEP.EndsWith(".CO") |
-
-                PEP.EndsWith(".D2") |
-                PEP.EndsWith(".D3") |
-                PEP.EndsWith(".D4") |
-                PEP.EndsWith(".DO") |
-
-                PEP.EndsWith(".E2") |
-                PEP.EndsWith(".E3") |
-                PEP.EndsWith(".E4") |
-                PEP.EndsWith(".EO") |
-
-                PEP.EndsWith(".H2") |
-                PEP.EndsWith(".H3") |
-                PEP.EndsWith(".H4") |
-                PEP.EndsWith(".HO") |
-
-                PEP.EndsWith(".I2") |
-                PEP.EndsWith(".I3") |
-                PEP.EndsWith(".I4") |
-                PEP.EndsWith(".IO") |
-
-                PEP.EndsWith(".J2") |
-                PEP.EndsWith(".J3") |
-                PEP.EndsWith(".J4") |
-                PEP.EndsWith(".JO") |
-
-                PEP.EndsWith(".K2") |
-                PEP.EndsWith(".K3") |
-                PEP.EndsWith(".K4") |
-                PEP.EndsWith(".KO") |
-
-                PEP.EndsWith(".R2") |
-                PEP.EndsWith(".R3") |
-                PEP.EndsWith(".R4") |
-                PEP.EndsWith(".RO") |
-
-
-
-
-                PEP.EndsWith(".A3")
-                )
+                PEP.EndsW(
+                    ".Z2", ".Z3", ".Z4", ".ZO",
+                    ".G2", ".G3", ".G4", ".GO",
+                    ".A2", ".A3", ".A4", ".AO",
+                    ".B2", ".B3", ".B4", ".BO",
+                    ".C2", ".C3", ".C4", ".CO",
+                    ".D2", ".D3", ".D4", ".DO",
+                    ".E2", ".E3", ".E4", ".EO",
+                    ".H2", ".H3", ".H4", ".HO",
+                    ".I2", ".I3", ".I4", ".IO",
+                    ".J2", ".J3", ".J4", ".JO",
+                    ".K2", ".K3", ".K4", ".KO",
+                    ".R2", ".R3", ".R4", ".RO",
+                    ".A3")
                 )
             {
                 ret = PEP.Substring(0, PEP.Length - 2) + "F" + PEP[PEP.Length - 1];
@@ -416,7 +364,7 @@ namespace DLM.sapgui
                         pdfs.AddRange(curr.Select(x => x[21].ToString()).ToList());
                         pdfs = pdfs.Distinct().ToList().FindAll(x => x.Length > 0);
 
-                        string desenho = pdfs.Find(x => x.ToUpper().Contains(Cfg.Init.DWG_FAB_FILTRO));
+                        string desenho = pdfs.Find(x => x.ToUpper().Contem(Cfg.Init.DWG_FAB_FILTRO));
                         if (desenho == null)
                         {
                             if (pdfs.Count > 0)
@@ -445,10 +393,10 @@ namespace DLM.sapgui
 
                         if (curr_marca != null)
                         {
-                            double esp =    curr_marca[15].Double();
-                            int furos =     curr_marca[12].Int();
-                            string marca =  curr_marca[13].ToString();
-                            double corte =  curr_marca[08].Double();
+                            double esp = curr_marca[15].Double();
+                            int furos = curr_marca[12].Int();
+                            string marca = curr_marca[13].ToString();
+                            double corte = curr_marca[08].Double();
 
                             if (curr_submateriais.Count > 0)
                             {
@@ -460,7 +408,7 @@ namespace DLM.sapgui
                                 esp = curr_submateriais[0][15].Double();
 
 
-                                if (peca.Grupo_Mercadoria.Contains("PURLIN"))
+                                if (peca.Grupo_Mercadoria.Contem("PURLIN"))
                                 {
                                     corte = curr_submateriais.Select(x => x[8].Double()).Max();
                                 }
@@ -582,16 +530,16 @@ namespace DLM.sapgui
                 ret.despesasgerais.projeto_exportacao.valor = tabela[83 - m][c12].Double();
                 ret.despesasgerais.outros.valor = tabela[84 - m][c12].Double();
 
-                ret.despesasgerais.seguro.porcentagem =                     tabela[75 - m][c4].Double();
-                ret.despesasgerais.comissao.porcentagem =                   tabela[76 - m][c4].Double();
-                ret.despesasgerais.assessoria.porcentagem =                 tabela[77 - m][c4].Double();
-                ret.despesasgerais.custo_financeiro.porcentagem =           tabela[78 - m][c4].Double();
-                ret.despesasgerais.supervisao_exportacao.porcentagem =      tabela[79 - m][c4].Double();
-                ret.despesasgerais.creditos_debitos_material.porcentagem =  tabela[80 - m][c4].Double();
-                ret.despesasgerais.creditos_debitos_projeto.porcentagem =   tabela[81 - m][c4].Double();
-                ret.despesasgerais.creditos_debitos_montagem.porcentagem =  tabela[82 - m][c4].Double();
-                ret.despesasgerais.projeto_exportacao.porcentagem =         tabela[83 - m][c4].Double();
-                ret.despesasgerais.outros.porcentagem =                     tabela[84 - m][c4].Double();
+                ret.despesasgerais.seguro.porcentagem = tabela[75 - m][c4].Double();
+                ret.despesasgerais.comissao.porcentagem = tabela[76 - m][c4].Double();
+                ret.despesasgerais.assessoria.porcentagem = tabela[77 - m][c4].Double();
+                ret.despesasgerais.custo_financeiro.porcentagem = tabela[78 - m][c4].Double();
+                ret.despesasgerais.supervisao_exportacao.porcentagem = tabela[79 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_material.porcentagem = tabela[80 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_projeto.porcentagem = tabela[81 - m][c4].Double();
+                ret.despesasgerais.creditos_debitos_montagem.porcentagem = tabela[82 - m][c4].Double();
+                ret.despesasgerais.projeto_exportacao.porcentagem = tabela[83 - m][c4].Double();
+                ret.despesasgerais.outros.porcentagem = tabela[84 - m][c4].Double();
 
                 ret.margens.valor = tabela[63][c12].Double();
                 ret.margens.porcentagem = tabela[63][c4].Double();

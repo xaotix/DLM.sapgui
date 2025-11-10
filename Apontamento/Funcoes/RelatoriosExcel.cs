@@ -97,7 +97,7 @@ namespace DLM.painel
                     var mindia = Cfg.Init.DataDummy;
                     double at = 0;
                     var pedidosstr = Pecas.Select(x => x.pedido_completo).Distinct().ToList();
-                    var peds_peps = Consultas.GetPedidosContratos().FindAll(x => pedidosstr.Find(y => x.Contrato.Contains(y)) != null);
+                    var peds_peps = Consultas.GetPedidosContratos().FindAll(x => pedidosstr.Find(y => x.Contrato.Contem(y)) != null);
                     var tot = Pecas.Count;
 
                     /*PEÇAS*/
@@ -454,7 +454,7 @@ namespace DLM.painel
             {
                 if (abrir)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
             }
 
@@ -664,7 +664,7 @@ namespace DLM.painel
             {
                 if (abrir)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
                 return false;
             }
@@ -979,7 +979,7 @@ namespace DLM.painel
             {
                 if (abrir)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                 }
             }
             return true;
