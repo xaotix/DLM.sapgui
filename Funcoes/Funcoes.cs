@@ -42,7 +42,7 @@ namespace DLM.sapgui
                 }
                 catch (Exception ex)
                 {
-                    Conexoes.Utilz.Alerta(ex);
+                    ex.Alerta();
                     return;
                 }
             }
@@ -85,7 +85,7 @@ namespace DLM.sapgui
                 /*14/11/18*/
 
             }).ToList();
-            List<PLAN_PEP> RETORNO = new List<PLAN_PEP>();
+            var RETORNO = new List<PLAN_PEP>();
             RETORNO.AddRange(PEPS_DUMP);
 
             
