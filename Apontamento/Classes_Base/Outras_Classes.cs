@@ -348,7 +348,7 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length >= 21)
+                if (pep.LenghtStr() >= 21)
                 {
                     return pep.Substring(18, 3);
                 }
@@ -359,7 +359,7 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length >= 21)
+                if (pep.LenghtStr() >= 21)
                 {
                     return pep.Substring(14, 3);
                 }
@@ -370,7 +370,7 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length >= 12)
+                if (pep.LenghtStr() >= 12)
                 {
                     return pep.Substring(3, 6);
                 }
@@ -381,7 +381,7 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length >= 12)
+                if (pep.LenghtStr() >= 12)
                 {
                     return pep.Substring(10, 3);
                 }
@@ -469,7 +469,7 @@ namespace DLM.painel
         {
             get
             {
-                if (pep.Length >= 21)
+                if (pep.LenghtStr() >= 21)
                 {
                     return pep.Substring(18, 3);
                 }

@@ -36,7 +36,7 @@ namespace DLM.painel
         {
             get
             {
-                if (PEP.Length >= 24)
+                if (PEP.LenghtStr() >= 24)
                 {
                     return PEP.Substring(22, 2);
                 }

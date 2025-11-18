@@ -57,7 +57,7 @@ namespace DLM.painel
         {
             get
             {
-                if (pedido.Length >= 9)
+                if (pedido.LenghtStr() >= 9)
                 {
                     return pedido.Substring(3, 6);
                 }

@@ -140,7 +140,7 @@ namespace DLM.sapgui
                     var valor_f_direto = linha["C7"].Valor;
 
                     var novo = new AVANCO_FATURAMENTO(pedido, valor_contrato, valor_f_direto);
-                    if (novo.Pedido.Length == 13)
+                    if (novo.Pedido.LenghtStr() == 13)
                     {
                         retorno.Add(novo);
                     }
@@ -221,7 +221,7 @@ namespace DLM.sapgui
             // PRA RESOLVER O PROBLEMA DE MERDA OS CADASTRO DE PEP NA 
             //LOGISTICA QUE FICAM FAZENDO TIGRADA DE BOTAR NOMES NÃO PADRÃO
             string ret = "";
-            if (PEP.Length > 22 &&
+            if (PEP.LenghtStr() > 22 &&
                 PEP.EndsW(
                     ".Z2", ".Z3", ".Z4", ".ZO",
                     ".G2", ".G3", ".G4", ".GO",
@@ -238,7 +238,7 @@ namespace DLM.sapgui
                     ".A3")
                 )
             {
-                ret = PEP.Substring(0, PEP.Length - 2) + "F" + PEP[PEP.Length - 1];
+                ret = PEP.Substring(0, PEP.LenghtStr() - 2) + "F" + PEP[PEP.LenghtStr() - 1];
             }
             else
             {
@@ -248,7 +248,7 @@ namespace DLM.sapgui
         }
         private static void Carregar_ZPPCOOISN_Layout(string Pedido, List<PLAN_PECA_ZPMP> pecas, string dest = null, string arq = null)
         {
-            if (Pedido.Length < 6) { return; }
+            if (Pedido.LenghtStr() < 6) { return; }
             if (dest == null) { dest = Cfg.Init.DIR_APP.GetSubPasta("SAP"); }
             if (arq == null) { arq = Pedido.Replace("*", "").Replace("%", "") + Cfg.Init.SAP_ZPPCOOISNARQ; }
             if (pecas == null) { return; }
@@ -362,7 +362,7 @@ namespace DLM.sapgui
                         var pdfs = curr.Select(x => x[2].ToString()).ToList();
 
                         pdfs.AddRange(curr.Select(x => x[21].ToString()).ToList());
-                        pdfs = pdfs.Distinct().ToList().FindAll(x => x.Length > 0);
+                        pdfs = pdfs.Distinct().ToList().FindAll(x => x.LenghtStr() > 0);
 
                         string desenho = pdfs.Find(x => x.ToUpper().Contem(Cfg.Init.DWG_FAB_FILTRO));
                         if (desenho == null)

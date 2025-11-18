@@ -36,7 +36,7 @@ namespace DLM.painel
 
         public List<PLAN_PEDIDO> GetPedidos()
         {
-            if (_pedidos.Count == 0 && this.PEP.Length > 3)
+            if (_pedidos.Count == 0 && this.PEP.LenghtStr() > 3)
             {
                 _pedidos = DLM.painel.Consultas.GetPedidos(new List<string> { this.contrato });
 
@@ -52,7 +52,7 @@ namespace DLM.painel
         }
         public List<PLAN_ETAPA> Getetapas()
         {
-            if (_etapas.Count == 0 && this.PEP.Length > 3)
+            if (_etapas.Count == 0 && this.PEP.LenghtStr() > 3)
             {
                 _etapas = Consultas.GetEtapas(new List<string> { this.PEP });
 
@@ -70,7 +70,7 @@ namespace DLM.painel
         }
         public List<PLAN_SUB_ETAPA> GetSubEtapas()
         {
-            if (_subetapas.Count == 0 && this.PEP.Length > 3)
+            if (_subetapas.Count == 0 && this.PEP.LenghtStr() > 3)
             {
                 _subetapas = new List<PLAN_SUB_ETAPA>();
                 _subetapas.AddRange(this.Getetapas().SelectMany(x => x.subetapas_com_chumbacao).ToList());
@@ -95,7 +95,7 @@ namespace DLM.painel
         }
         public List<PLAN_PEP> GetPeps()
         {
-            if (_peps.Count == 0 && this.PEP.Length > 3)
+            if (_peps.Count == 0 && this.PEP.LenghtStr() > 3)
             {
                 _peps = Consultas.GetPepsReal(new List<string> { this.PEP });
             }
@@ -113,7 +113,7 @@ namespace DLM.painel
         }
         public List<PLAN_PECA> GetPecas(bool reset = false)
         {
-            if ((_pecas.Count == 0 | reset) && this.PEP.Length > 3)
+            if ((_pecas.Count == 0 | reset) && this.PEP.LenghtStr() > 3)
             {
                 _pecas = Consultas.GetPecasReal(new List<string> { this.PEP });
             }

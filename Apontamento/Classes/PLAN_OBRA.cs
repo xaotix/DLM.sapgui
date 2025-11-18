@@ -233,7 +233,7 @@ namespace DLM.painel
             this.finalizado = linha["finalizado"].Valor.ToUpper() == "X";
 
 
-            if (this.descricao.Length == 0)
+            if (this.descricao.LenghtStr() == 0)
             {
                 var ped = DLM.SAP.GetPedido(this.contrato_completo + ".P00");
                 if (ped != null)

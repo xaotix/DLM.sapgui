@@ -304,7 +304,7 @@ namespace DLM.sapgui
         /*ESSE CARA TENTA EXPORTAR EM EXCEL A TELA QUE ESTÁ EM EXECUÇÃO NO SAP*/
         private void ExportarExcel(string destino, string NOME, string SCRIPT_ORIGEM)
         {
-            var SCR = Conexoes.Utilz.Arquivo.Ler(SCRIPT_ORIGEM).Select(X => X.Replace("$NOME$", NOME).Replace("$TAM$", (NOME.Length - 1).ToString()).Replace("$DESTINO$", destino)).ToList();
+            var SCR = Conexoes.Utilz.Arquivo.Ler(SCRIPT_ORIGEM).Select(X => X.Replace("$NOME$", NOME).Replace("$TAM$", (NOME.LenghtStr() - 1).ToString()).Replace("$DESTINO$", destino)).ToList();
             Funcoes.RodaScript(SCR);
 
         }

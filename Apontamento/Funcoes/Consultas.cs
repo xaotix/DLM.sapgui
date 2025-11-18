@@ -26,8 +26,8 @@ namespace DLM.painel
             foreach (var p in consulta)
             {
                 var ped = new ORC_PED(p, Tipo_Material.Consolidado);
-            
-                if (ped.PEP.Length > 0)
+
+                if (ped.PEP.LenghtStr() > 0)
                 {
                     retorno.Add(ped);
                 }
@@ -300,7 +300,7 @@ namespace DLM.painel
         {
             pedido = pedido.Replace("*", "").Replace(" ", "").Replace("%", "");
 
-            if (pedido.Length < 6)
+            if (pedido.LenghtStr() < 6)
             {
                 return;
             }
@@ -328,7 +328,7 @@ namespace DLM.painel
 
             DBases.GetDB().Apagar("pep", $"%{pedido}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
 
-            DBases.GetDB().Apagar("pspid", $"%{pedido.Replace("-","").Replace(".","")}%", "sap", "pedidos");
+            DBases.GetDB().Apagar("pspid", $"%{pedido.Replace("-", "").Replace(".", "")}%", "sap", "pedidos");
 
             DLM.SAP.Editar_PEP(pedido, DLM.sap.SAP_Acao.Nada, DLM.sap.SAP_Acao.Sim);
         }
@@ -336,11 +336,11 @@ namespace DLM.painel
         public static void SincronizarTitulosContratos(List<string> contratos)
         {
             var contratos_sap = DLM.SAP.GetContratos();
-            foreach(var contrato in contratos)
+            foreach (var contrato in contratos)
             {
-                if(contrato.Length == 6)
+                if (contrato.LenghtStr() == 6)
                 {
-                    if(contrato.Int() > 100000)
+                    if (contrato.Int() > 100000)
                     {
                         var contrato_sap = contratos_sap.Find(x => x.Contrato == contrato);
 
@@ -351,7 +351,7 @@ namespace DLM.painel
                             var linhas = new List<DLM.db.Linha>();
                             foreach (var pedido in contrato_sap.GetPedidos())
                             {
-                                if(pedido.PEP.Contem(".P"))
+                                if (pedido.PEP.Contem(".P"))
                                 {
                                     linhas.Add(new db.Linha("contrato", pedido.PEP, "descricao", pedido.Descricao));
                                 }
@@ -362,7 +362,7 @@ namespace DLM.painel
                             }
                         }
                     }
-                   
+
                 }
             }
         }
@@ -427,7 +427,7 @@ namespace DLM.painel
             {
                 obras = new List<string>();
             }
-            obras = obras.Distinct().ToList().FindAll(x => x.Length > 0);
+            obras = obras.Distinct().ToList().FindAll(x => x.LenghtStr() > 0);
             var obras_lista = GetObras(reset);
             if (obras.Count == 0)
             {
@@ -478,7 +478,7 @@ namespace DLM.painel
         }
         public static void CriarCache(string contrato)
         {
-            if (contrato.Length < 4) { return; }
+            if (contrato.LenghtStr() < 4) { return; }
             DBases.Painel_Criar_Cache(contrato);
 
 
@@ -643,7 +643,7 @@ namespace DLM.painel
         public static List<PLAN_PEDIDO> GetPedidos(List<string> contrato)
         {
 
-            contrato = contrato.Distinct().ToList().FindAll(x => x.Length > 0);
+            contrato = contrato.Distinct().ToList().FindAll(x => x.LenghtStr() > 0);
             if (contrato.Count == 0)
             {
                 return GetPedidos();
@@ -779,11 +779,11 @@ namespace DLM.painel
                 {
                     if (i == 0)
                     {
-                        chave = $"{tabela}.pep like '%{chaves_consulta[i] }%'";
+                        chave = $"{tabela}.pep like '%{chaves_consulta[i]}%'";
                     }
                     else
                     {
-                        chave = chave + $" or {tabela}.pep like '%{chaves_consulta[i] }%'";
+                        chave = chave + $" or {tabela}.pep like '%{chaves_consulta[i]}%'";
                     }
                 }
 
@@ -824,7 +824,7 @@ namespace DLM.painel
         {
             orfas = new List<PLAN_PECA>();
             var pedidos = pecas.Select(x => x.pedido_completo).Distinct().ToList();
-            pedidos = pedidos.FindAll(x => x.Length > 5).Distinct().ToList();
+            pedidos = pedidos.FindAll(x => x.LenghtStr() > 5).Distinct().ToList();
 
             if (pedidos.Count == 0) { return new List<PLAN_PECA_LOG>(); }
             var retorno = new List<PLAN_PECA_LOG>();
@@ -839,7 +839,7 @@ namespace DLM.painel
             }
             for (int i = 0; i < pecas.Count; i++)
             {
-                if (pecas[i].PEP.Length > 0 && pecas[i].material != "")
+                if (pecas[i].PEP.LenghtStr() > 0 && pecas[i].material != "")
                 {
                     var logs = retorno.ToList().FindAll(x => x.pep == pecas[i].PEP && x.material == pecas[i].material);
                     pecas[i].SetLogistica(logs);
@@ -872,7 +872,7 @@ namespace DLM.painel
 
         public static List<PLAN_PECA> GetPecasReal(List<string> lista_pedidos, int max_pacote = 10)
         {
-            lista_pedidos = lista_pedidos.FindAll(x => x.Length > 5).Distinct().ToList();
+            lista_pedidos = lista_pedidos.FindAll(x => x.LenghtStr() > 5).Distinct().ToList();
             lista_pedidos = lista_pedidos.Select(x => x.Replace("*", "").Replace(" ", "")).ToList().FindAll(x => x != "").OrderBy(x => x).ToList();
 
             if (lista_pedidos.Count == 0) { return new List<PLAN_PECA>(); }
@@ -965,12 +965,12 @@ namespace DLM.painel
                 _pedidos_clean = new List<string>();
 
                 _pedidos_clean.AddRange(DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pedidos_copia).Select(x => x["pedido"].Valor).Distinct().ToList());
-                _pedidos_clean = _pedidos_clean.Distinct().ToList().FindAll(x => x.Length > 3);
+                _pedidos_clean = _pedidos_clean.Distinct().ToList().FindAll(x => x.LenghtStr() > 3);
             }
             if (contratos != null)
             {
                 var _retorno = new List<string>();
-                foreach (var contrato in contratos.Distinct().ToList().FindAll(x => x.Length > 5))
+                foreach (var contrato in contratos.Distinct().ToList().FindAll(x => x.LenghtStr() > 5))
                 {
                     _retorno.AddRange(_pedidos_clean.FindAll(x => x.Contem(contrato)));
                 }

@@ -12,7 +12,7 @@ namespace DLM.sapgui
         {
             get
             {
-                if (this.Codigo.Length > 6)
+                if (this.Codigo.LenghtStr() > 6)
                 {
                     return this.Codigo.Substring(3, 6);
                 }
@@ -65,7 +65,7 @@ namespace DLM.sapgui
 
         public bool ConsultaSAP()
         {
-            if (this.Codigo.Length < 10)
+            if (this.Codigo.LenghtStr() < 10)
             {
                 return false;
             }
@@ -118,7 +118,7 @@ namespace DLM.sapgui
                                     p.Descricao = l.Descricao;
                                 }
                             }
-                            var pp = this.ZPP0100.FindAll(x => x.PEP.Length == 0).ToList();
+                            var pp = this.ZPP0100.FindAll(x => x.PEP.LenghtStr() == 0).ToList();
                             foreach (var p in pp)
                             {
                                 this.ZPP0100.Remove(p);

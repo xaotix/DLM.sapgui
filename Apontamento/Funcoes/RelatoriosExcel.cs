@@ -465,7 +465,7 @@ namespace DLM.painel
 
         public static bool ExportarEmbarque(string contrato, string Destino, bool abrir = true)
         {
-            if (contrato.Length < 5)
+            if (contrato.LenghtStr() < 5)
             {
                 return false;
             }
