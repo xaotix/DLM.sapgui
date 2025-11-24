@@ -1,8 +1,6 @@
 ﻿using DLM.painel;
 using Conexoes;
 using System;
-using DLM.vars;
-using SAP.Middleware.Connector;
 
 namespace DLM.sapgui
 {
