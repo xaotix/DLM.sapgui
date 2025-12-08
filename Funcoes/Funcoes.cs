@@ -33,7 +33,7 @@ namespace DLM.sapgui
                     Conexoes.Utilz.Arquivo.Gravar(ARQ_TMP, Script.ToList());
                     var scriptProc = new Process();
                     scriptProc.StartInfo.FileName = ARQ_TMP;
-                    scriptProc.StartInfo.WorkingDirectory = Utilz.getPasta(Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp); 
+                    scriptProc.StartInfo.WorkingDirectory = Cfg.Init.SAP_SCRIPT_IMPRESSAO_tmp.getPasta(); 
 
                     scriptProc.StartInfo.WindowStyle = ProcessWindowStyle.Maximized; 
                     scriptProc.Start();
