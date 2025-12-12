@@ -311,7 +311,7 @@ namespace DLM.painel
                     /*MERCADORIAS*/
                     if (subetapas != null && Pecas.Count > 0 && mercadorias_aba_excel != null)
                     {
-                        w = Conexoes.Utilz.Wait(subetapas.Count, "Criando Lista por Grupo de Mercadorias...");
+                        w = Conexoes.Utilz.Wait(subetapas.Count, "Criando dg_lista por Grupo de Mercadorias...");
                         l0 = 1;
                         l = 1;
                         foreach (var t in subetapas)
@@ -369,7 +369,7 @@ namespace DLM.painel
                         /*novo mercadorias*/
                         if (mercadorias.Count > 0 && mercadorias_aba_excel != null)
                         {
-                            w = Conexoes.Utilz.Wait(mercadorias.Count, "Criando Lista por Grupo de Mercadorias...");
+                            w = Conexoes.Utilz.Wait(mercadorias.Count, "Criando dg_lista por Grupo de Mercadorias...");
                             l0 = 1;
                             l = 1;
                             foreach (var grupo in mercadorias)
