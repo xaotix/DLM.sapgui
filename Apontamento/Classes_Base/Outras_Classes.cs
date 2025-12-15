@@ -555,7 +555,7 @@ namespace DLM.painel
             this.fases = lista.Sum(x => x.fases);
             this.Fim = lista.Max(x => x.Fim);
             this.Inicio = lista.Min(x => x.Inicio);
-            this.pep = "Resumo";
+            this.pep = "Resultado_Item_Resumo";
             this.peso_necessario = lista.Sum(x => x.peso_necessario);
             this.qtd_embarcada = lista.Sum(x => x.qtd_embarcada);
             this.qtd_necessaria = lista.Sum(x => x.qtd_necessaria);
