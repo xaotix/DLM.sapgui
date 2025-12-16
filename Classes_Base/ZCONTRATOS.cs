@@ -21,7 +21,7 @@ namespace DLM.sapgui
             l.Add("Empresa", this.Empresa);
             l.Add("Cen", this.Cen);
             l.Add("Cen", this.Cen);
-            l.Add("Contrato", this.Contrato);
+            l.Add("CI", this.Contrato);
             l.Add("Cliente", this.Cliente);
             l.Add("CNPJ", this.CNPJ);
             l.Add("Razao_Social_Cliente", this.Razao_Social_Cliente);

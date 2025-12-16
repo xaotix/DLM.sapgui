@@ -330,7 +330,7 @@ namespace DLM.painel
 
             DBases.GetDB().Apagar("pspid", $"%{pedido.Replace("-", "").Replace(".", "")}%", "sap", "pedidos");
 
-            DLM.SAP.Editar_PEP(pedido, DLM.sap.SAP_Acao.Nada, DLM.sap.SAP_Acao.Sim);
+            DLM.SAP.ZGWBS_UPDATE(pedido, DLM.sap.SAP_Acao.Nada, DLM.sap.SAP_Acao.Sim);
         }
 
         public static void SincronizarTitulosContratos(List<string> contratos)
