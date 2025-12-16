@@ -49,7 +49,7 @@ namespace DLM.sapgui
             l.Add("Nro_Carga", this.Nro_Carga);
 
             l.Add("Etq_Material", this.Etq_Material);
-            l.Add("Descricao", this.Descricao);
+            l.Add("Obra", this.Descricao);
             l.Add("Tamanho_dimensao", this.Marca);
             l.Add("Comprimento", this.Comprimento);
 

@@ -84,7 +84,7 @@ namespace DLM.sapgui
             set
             {
                 _Descricao = value;
-                NotifyPropertyChanged("Descricao");
+                NotifyPropertyChanged("Obra");
             }
         }
         private double _Peso_Planejado { get; set; } = 0;
