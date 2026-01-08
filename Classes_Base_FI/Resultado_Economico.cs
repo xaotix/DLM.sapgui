@@ -79,7 +79,7 @@ namespace DLM.sapgui
         public List<Lancamento> SubLancamentos { get; set; } = new List<Lancamento>();
         public override string ToString()
         {
-            return Chave + " - Prev.: " + previsto + " - Real.:" + realizado + " - Desc.:" + descricao;
+            return Chave + " - Prev.: " + previsto + " - Realizado.:" + realizado + " - Desc.:" + descricao;
         }
         [Browsable(false)]
         public string Chave
