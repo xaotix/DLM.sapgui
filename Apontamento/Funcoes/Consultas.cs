@@ -501,7 +501,7 @@ namespace DLM.painel
             Pecas = Pecas.OrderBy(x => x.ToString()).ToList();
 
 
-            w.SetProgresso(1, Pecas.Count, "Mapeando peças...");
+            w.New(1, Pecas.Count, "Mapeando peças...");
             var mindia = Cfg.Init.DataDummy;
 
 
