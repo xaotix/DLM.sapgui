@@ -165,7 +165,7 @@ namespace DLM.painel
                         }
                         if (dif - at > 2)
                         {
-                            w.New(l, tot);
+                            w.New(tot, l);
                             at = dif;
                         }
                         l++;
@@ -181,7 +181,7 @@ namespace DLM.painel
                     {
                         l0 = 1;
                         l = 1;
-                        w = w.New(1, subetapas.Count, "Carregando SubEtapas...");
+                        w = w.New(subetapas.Count, 1, "Carregando SubEtapas...");
                         foreach (var t in subetapas.OrderBy(x => x.etapa))
                         {
                             try
@@ -251,7 +251,7 @@ namespace DLM.painel
                         pedidos_sistema = pedidos_sistema.FindAll(x => pedss.FindAll(y => y == x.pedido) != null);
                         if (pedidos_sistema.Count > 0)
                         {
-                            w = w.New(1, pedidos_sistema.Count, "Carregando Pedidos...");
+                            w = w.New(pedidos_sistema.Count, 1, "Carregando Pedidos...");
                         }
 
                         foreach (var t in pedidos_sistema.OrderBy(x => x.pedidos))
@@ -297,7 +297,7 @@ namespace DLM.painel
                             }
                             if (dif - at > 1)
                             {
-                                w.New(l, peds.Count);
+                                w.New(peds.Count, l);
                                 at = dif;
                             }
                             l++;
@@ -312,7 +312,7 @@ namespace DLM.painel
                     /*MERCADORIAS*/
                     if (subetapas != null && Pecas.Count > 0 && mercadorias_aba_excel != null)
                     {
-                        w = w.New(1, subetapas.Count, "Criando dg_lista por Grupo de Mercadorias...");
+                        w = w.New(subetapas.Count, 1, "Criando dg_lista por Grupo de Mercadorias...");
                         l0 = 1;
                         l = 1;
                         foreach (var t in subetapas)
@@ -370,7 +370,7 @@ namespace DLM.painel
                         /*novo mercadorias*/
                         if (mercadorias.Count > 0 && mercadorias_aba_excel != null)
                         {
-                            w = w.New(1, mercadorias.Count, "Criando dg_lista por Grupo de Mercadorias...");
+                            w = w.New(mercadorias.Count, 1, "Criando dg_lista por Grupo de Mercadorias...");
                             l0 = 1;
                             l = 1;
                             foreach (var grupo in mercadorias)
@@ -511,7 +511,7 @@ namespace DLM.painel
             var w = Conexoes.Utilz.Wait(10, "Consultando logística...");
 
 
-            var Pecas = DBases.GetDB().Consulta("pep", contrato, Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas, false);
+            var pecas = DBases.GetDB().Consulta("pep", contrato, Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas, false);
 
             try
             {
@@ -519,9 +519,9 @@ namespace DLM.painel
                 int l = 1;
                 int c0 = 1;
 
-                w.New(1, Pecas.Count, "Mapeando peças...");
+                w.New(pecas.Count, 1, "Mapeando peças...");
                 var mindia = Cfg.Init.DataDummy;
-                var tot = Pecas.Count;
+                var tot = pecas.Count;
 
 
                 using (var pck = new OfficeOpenXml.ExcelPackage())
@@ -536,7 +536,7 @@ namespace DLM.painel
                     var pecas_aba_excel = pck.Workbook.Worksheets[1];
                     var Planilha = pecas_aba_excel.Name;
 
-                    foreach (var linha in Pecas)
+                    foreach (var linha in pecas)
                     {
                         double qtd = linha["qtd"].Int();
                         double peso_total = linha["peso_tot"].Double();
@@ -797,7 +797,7 @@ namespace DLM.painel
                     {
                         l0 = 1;
                         l = 1;
-                        w = w.New(1, subetapas.Count, "Carregando SubEtapas...");
+                        w = w.New(subetapas.Count, 1, "Carregando SubEtapas...");
                         foreach (var ped in pacote.Pedidos)
                         {
                             foreach (var sub in ped.SupEtapas)
@@ -858,7 +858,7 @@ namespace DLM.painel
                         pedidos_sistema = pedidos_sistema.FindAll(x => pedss.FindAll(y => y == x.pedido) != null);
                         if (pedidos_sistema.Count > 0)
                         {
-                            w = w.New(1, pedidos_sistema.Count, "Carregando Pedidos...");
+                            w = w.New(pedidos_sistema.Count, 1, "Carregando Pedidos...");
                         }
 
                         foreach (var pedido in pedidos_sistema.OrderBy(x => x.pedidos))
@@ -898,7 +898,7 @@ namespace DLM.painel
                             }
                             if (dif - at > 1)
                             {
-                                w.New(l, peds.Count);
+                                w.New(peds.Count, l);
                                 at = dif;
                             }
                             l++;

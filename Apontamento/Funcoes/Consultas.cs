@@ -492,7 +492,6 @@ namespace DLM.painel
             }
 
 
-            var w = Conexoes.Utilz.Wait(10, $"Logística...{Pecas.Count} [{contrato}]");
 
             var orfas = new List<PLAN_PECA>();
             var logistica = DLM.painel.Consultas.GetLogistica(Pecas, out orfas);
@@ -501,7 +500,6 @@ namespace DLM.painel
             Pecas = Pecas.OrderBy(x => x.ToString()).ToList();
 
 
-            w.New(1, Pecas.Count, "Mapeando peças...");
             var mindia = Cfg.Init.DataDummy;
 
 
@@ -536,13 +534,8 @@ namespace DLM.painel
                         linhas.Add(GetLinhaDB(mindia, plog, plog.quantidade, plog.quantidade, plog.quantidade, 0));
                     }
                 }
-                w.somaProgresso();
             }
             DBases.GetDB().Cadastro(linhas, Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pecas);
-
-
-            w.Close();
-
         }
 
 
