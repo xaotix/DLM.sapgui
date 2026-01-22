@@ -104,10 +104,10 @@ namespace DLM.sapgui
                     //novo mapeamento
                     //todo = eliminar sistema atual, substituindo-o por este
                     var avanco_sap = DLM.SAP.ZGPP_GET_AVANCO(this.Pedido, true, true, true, false, true, true);
-                    if (avanco_sap.Tabelas[ZGPP_GET_AVANCO_TABS.PECAS.ToString()].Count > 0)
+                    if (avanco_sap[ZGPP_GET_AVANCO_TABS.PECAS].Count > 0)
                     {
-                        this.ZPMP = avanco_sap.Tabelas[ZGPP_GET_AVANCO_TABS.PECAS.ToString()].Select(x => new sapgui.ZPMP(x, true)).ToList();
-                        this.ZPP0100 = avanco_sap.Tabelas[ZGPP_GET_AVANCO_TABS.CARGAS.ToString()].Select(x => new sapgui.ZPP0100(x, true)).ToList();
+                        this.ZPMP = avanco_sap[ZGPP_GET_AVANCO_TABS.PECAS].Select(x => new sapgui.ZPMP(x, true)).ToList();
+                        this.ZPP0100 = avanco_sap[ZGPP_GET_AVANCO_TABS.CARGAS].Select(x => new sapgui.ZPP0100(x, true)).ToList();
                         if (this.ZPP0100.Count > 0)
                         {
                             foreach (var p in this.ZPMP)
