@@ -19,7 +19,7 @@ namespace DLM.painel
 
 
             RelatorioAvanco(item.GetPecas(), pecas ? item.GetSubEtapas() : new List<PLAN_SUB_ETAPA>(), destino, abrir);
-            return File.Exists(destino);
+            return destino.Exists();
         }
         public static bool RelatorioAvanco(List<PLAN_PECA> Pecas, List<PLAN_SUB_ETAPA> subetapas = null, string destino = "", bool abrir = true)
         {
@@ -34,7 +34,7 @@ namespace DLM.painel
                     return false;
                 }
             }
-            if (!File.Exists(Vars.TEMPLATE_SAIDA_PECAS_RESUMO))
+            if (!Vars.TEMPLATE_SAIDA_PECAS_RESUMO.Exists())
             {
                 if (abrir)
                 {
@@ -55,7 +55,7 @@ namespace DLM.painel
             }
             try
             {
-                if (File.Exists(destino)) { File.Delete(destino); }
+                if (destino.Exists()) { destino.Delete(); }
                 ;
                 File.Copy(Vars.TEMPLATE_SAIDA_PECAS_RESUMO, destino);
             }
@@ -470,7 +470,7 @@ namespace DLM.painel
             {
                 return false;
             }
-            if (!File.Exists(Vars.TEMPLATE_EMBARQUES))
+            if (!Vars.TEMPLATE_EMBARQUES.Exists())
             {
                 if (abrir)
                 {
@@ -495,7 +495,7 @@ namespace DLM.painel
             try
             {
 
-                if (File.Exists(Destino)) { File.Delete(Destino); }
+                if (Destino.Exists()) { Destino.Delete(); }
                 ;
                 File.Copy(Vars.TEMPLATE_EMBARQUES, Destino);
             }
@@ -643,7 +643,7 @@ namespace DLM.painel
         public static bool ExportarListaPecasPMP(Pacote_PMP pacote, bool abrir = false, bool gerar_subetapas = false, bool gerar_grupos_mercadoria = false, bool gerar_avanco = false, bool gerar_pedidos = false, bool gerar_pecas = true)
         {
             var template = Vars.TEMPLATE_SAIDA_PECAS_RESUMO_CONSOLIDADA;
-            if (!File.Exists(template))
+            if (!template.Exists())
             {
                 if (abrir)
                 {
@@ -659,7 +659,7 @@ namespace DLM.painel
             }
             try
             {
-                if (File.Exists(Destino)) { File.Delete(Destino); }
+                if (Destino.Exists()) { Destino.Delete(); }
                 ;
                 File.Copy(template, Destino);
             }

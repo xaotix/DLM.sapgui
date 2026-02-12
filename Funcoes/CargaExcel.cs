@@ -255,7 +255,7 @@ namespace DLM.sapgui
 
             if (pecas.Count == 0) { return; }
 
-            if (File.Exists(dest + arq))
+            if ($"{dest}{arq}".Exists())
             {
                 DBases.GetDB().Apagar("pep", $"%{Pedido}%", Cfg.Init.db_comum, Cfg.Init.tb_zppcooisn);
 

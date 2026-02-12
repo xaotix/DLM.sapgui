@@ -182,14 +182,14 @@ namespace DLM.sapgui
 
 
                     ExportarExcel(destino, nomeArq, Cfg.Init.SAP_SCRIPT_IMPRESSAO);
-                    if (!File.Exists(arquivo))
+                    if (!arquivo.Exists())
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/cntlALVCONTAINER/shellcont/shell", false);
                         ExportaExcelNativo(destino, nomeArq, ctrl);
                     }
                     this.SessaoSAP.EndTransaction();
                     DLM.painel.Consultas.MatarExcel(false);
-                    return File.Exists(arquivo);
+                    return arquivo.Exists();
 
 
                 }
@@ -1094,7 +1094,7 @@ namespace DLM.sapgui
 
             try
             {
-                if (File.Exists(destino + ARQUIVO))
+                if ($"{destino}{ARQUIVO}".Exists())
                 {
                     File.Delete(destino + ARQUIVO);
                 }
@@ -1113,10 +1113,10 @@ namespace DLM.sapgui
                     ((GuiTextField)this.SessaoSAP.FindById("wnd[1]/usr/ctxtDY_FILENAME")).Text = ARQUIVO;
                     ((GuiButton)this.SessaoSAP.FindById("wnd[1]/tbar[0]/btn[11]")).Press();
 
-                    if (!File.Exists(destino + ARQUIVO))
+                    if (!$"{destino}{ARQUIVO}".Exists())
                     {
                         ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO);
-                        if (!File.Exists(destino + ARQUIVO))
+                        if (!$"{destino}{ARQUIVO}".Exists())
                         {
                             var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/cntlALVCONTAINER/shellcont/shell", false);
                             ExportaExcelNativo(destino, ARQUIVO, ctrl);
@@ -1126,7 +1126,7 @@ namespace DLM.sapgui
                     this.SessaoSAP.EndTransaction();
                     //this.SessaoSAP.ActiveWindow.Close();
 
-                    return File.Exists(destino + ARQUIVO);
+                    return $"{destino}{ARQUIVO}".Exists();
 
 
                 }
@@ -1160,7 +1160,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (File.Exists(destino + ARQUIVO))
+                if ($"{destino}{ARQUIVO}".Exists())
                 {
                     File.Delete(destino + ARQUIVO);
                 }
@@ -1177,7 +1177,7 @@ namespace DLM.sapgui
 
 
                     ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
-                    if (!File.Exists(destino + ARQUIVO))
+                    if (!$"{destino}{ARQUIVO}".Exists())
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell/shellcont/shell", false);
                         ExportaExcelNativo(destino, ARQUIVO, ctrl);
@@ -1185,7 +1185,7 @@ namespace DLM.sapgui
 
                     this.SessaoSAP.EndTransaction();
 
-                    return File.Exists(destino + ARQUIVO);
+                    return $"{destino}{ARQUIVO}".Exists();
 
 
                 }
@@ -1220,7 +1220,7 @@ namespace DLM.sapgui
             try
             {
 
-                if (File.Exists(destino + ARQUIVO))
+                if ($"{destino}{ARQUIVO}".Exists())
                 {
                     File.Delete(destino + ARQUIVO);
                 }
@@ -1238,7 +1238,7 @@ namespace DLM.sapgui
 
 
                     ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
-                    if (!File.Exists(destino + ARQUIVO))
+                    if (!$"{destino}{ARQUIVO}".Exists())
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell/shellcont/shell", false);
                         ExportaExcelNativo(destino, ARQUIVO, ctrl);
@@ -1246,7 +1246,7 @@ namespace DLM.sapgui
 
                     this.SessaoSAP.EndTransaction();
 
-                    return File.Exists(destino + ARQUIVO);
+                    return $"{destino}{ARQUIVO}".Exists();
 
 
                 }
@@ -1281,7 +1281,7 @@ namespace DLM.sapgui
 
             try
             {
-                if (File.Exists(destino + ARQUIVO))
+                if ($"{destino}{ARQUIVO}".Exists())
                 {
                     File.Delete(destino + ARQUIVO);
                 }
@@ -1300,7 +1300,7 @@ namespace DLM.sapgui
                     ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
 
                     this.SessaoSAP.EndTransaction();
-                    return File.Exists(destino + ARQUIVO);
+                    return $"{destino}{ARQUIVO}".Exists();
 
                 }
                 else
@@ -1430,9 +1430,9 @@ namespace DLM.sapgui
 
             try
             {
-                if (File.Exists(arquivo))
+                if (arquivo.Exists())
                 {
-                    File.Delete(arquivo);
+                    arquivo.Delete();
                 }
                 if (this.IsActive())
                 {
@@ -1476,7 +1476,7 @@ namespace DLM.sapgui
 
             try
             {
-                if (File.Exists(destino + ARQUIVO))
+                if ($"{destino}{ARQUIVO}".Exists())
                 {
                     File.Delete(destino + ARQUIVO);
                 }
@@ -1498,7 +1498,7 @@ namespace DLM.sapgui
 
 
                     ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO_ZPMP);
-                    if (!File.Exists(destino + ARQUIVO))
+                    if (!$"{destino}{ARQUIVO}".Exists())
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
                         ExportaExcelNativo(destino, ARQUIVO, ctrl);
@@ -1528,7 +1528,7 @@ namespace DLM.sapgui
                 return false;
             }
             DLM.painel.Consultas.MatarExcel(false);
-            return File.Exists(destino + ARQUIVO);
+            return $"{destino}{ARQUIVO}".Exists();
         }
         /*CARACTERÍSTICAS DAS PEÇAS*/
         public bool ZPPCOOISN(string Pedido, string destino, string ARQUIVO, bool msgs = false, string layout = "")
@@ -1536,7 +1536,7 @@ namespace DLM.sapgui
 
             try
             {
-                if (File.Exists(destino + ARQUIVO))
+                if ($"{destino}{ARQUIVO}".Exists())
                 {
                     File.Delete(destino + ARQUIVO);
                 }
@@ -1558,7 +1558,7 @@ namespace DLM.sapgui
 
 
                     ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO_ZPMP);
-                    if (!File.Exists(destino + ARQUIVO))
+                    if (!$"{destino}{ARQUIVO}".Exists())
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
                         ExportaExcelNativo(destino, ARQUIVO, ctrl);
@@ -1592,7 +1592,7 @@ namespace DLM.sapgui
                 return false;
             }
             this.SessaoSAP.EndTransaction();
-            return File.Exists(destino + ARQUIVO);
+            return $"{destino}{ARQUIVO}".Exists();
         }
         /*AVANÇO DE LOGÍSTICA NOVO*/
         public bool ZPP0100(string Pedido, string destino, string ARQUIVO)
@@ -1600,7 +1600,7 @@ namespace DLM.sapgui
 
             try
             {
-                if (File.Exists(destino + ARQUIVO))
+                if ($"{destino}{ARQUIVO}".Exists())
                 {
                     File.Delete(destino + ARQUIVO);
                 }
@@ -1642,7 +1642,7 @@ namespace DLM.sapgui
                 return false;
             }
             DLM.painel.Consultas.MatarExcel(false);
-            return File.Exists(destino + ARQUIVO);
+            return $"{destino}{ARQUIVO}".Exists();
         }
         /*NOTAS FISCAIS DA OBRA*/
         public bool ZCONTRATOS(string Pedido, string destino, string ARQUIVO, bool msgs = false)
@@ -1650,7 +1650,7 @@ namespace DLM.sapgui
 
             try
             {
-                if (File.Exists(destino + ARQUIVO))
+                if ($"{destino}{ARQUIVO}".Exists())
                 {
                     File.Delete(destino + ARQUIVO);
                 }
@@ -1669,14 +1669,14 @@ namespace DLM.sapgui
 
 
                     ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO_ZPMP);
-                    if (!File.Exists(destino + ARQUIVO))
+                    if (!$"{destino}{ARQUIVO}".Exists())
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/shell", false);
                         ExportaExcelNativo(destino, ARQUIVO, ctrl);
                     }
 
                     this.SessaoSAP.EndTransaction();
-                    return File.Exists(destino + ARQUIVO);
+                    return $"{destino}{ARQUIVO}".Exists();
 
                 }
                 else
@@ -1709,7 +1709,7 @@ namespace DLM.sapgui
 
             try
             {
-                if (File.Exists(destino + ARQUIVO))
+                if ($"{destino}{ARQUIVO}".Exists())
                 {
                     File.Delete(destino + ARQUIVO);
                 }
@@ -1761,18 +1761,18 @@ namespace DLM.sapgui
 
 
                     /*SE NÃO CONSEGUIU GERAR O EXCEL*/
-                    if (!File.Exists(destino + ARQUIVO))
+                    if (!$"{destino}{ARQUIVO}".Exists())
                     {
                         ExportarExcel(destino, ARQUIVO, Cfg.Init.SAP_SCRIPT_IMPRESSAO2);
                     }
-                    if (!File.Exists(destino + ARQUIVO))
+                    if (!$"{destino}{ARQUIVO}".Exists())
                     {
                         var ctrl = SessaoSAP.ActiveWindow.FindById("wnd[0]/usr/cntlALVCONTAINER/shellcont/shell", false);
                         ExportaExcelNativo(destino, ARQUIVO, ctrl);
                     }
 
                     this.SessaoSAP.EndTransaction();
-                    return File.Exists(destino + ARQUIVO);
+                    return $"{destino}{ARQUIVO}".Exists();
 
                 }
                 else
@@ -1895,7 +1895,7 @@ namespace DLM.sapgui
 
             try
             {
-                if (File.Exists(destino + ARQUIVO))
+                if ($"{destino}{ARQUIVO}".Exists())
                 {
                     File.Delete(destino + ARQUIVO);
                 }
@@ -1974,7 +1974,7 @@ namespace DLM.sapgui
 
 
                     this.SessaoSAP.EndTransaction();
-                    return File.Exists(destino + ARQUIVO);
+                    return $"{destino}{ARQUIVO}".Exists();
 
                 }
                 else
@@ -2002,9 +2002,9 @@ namespace DLM.sapgui
             var nomeArq = arquivo.getNome(true);
             try
             {
-                if (File.Exists(arquivo))
+                if (arquivo.Exists())
                 {
-                    File.Delete(arquivo);
+                    arquivo.Delete();
                 }
                 if (this.IsActive())
                 {
@@ -2070,9 +2070,9 @@ namespace DLM.sapgui
             var nomeArq = arquivo.getNome(true);
             try
             {
-                if (File.Exists(arquivo))
+                if (arquivo.Exists())
                 {
-                    File.Delete(arquivo);
+                    arquivo.Delete();
                 }
                 if (this.IsActive())
                 {

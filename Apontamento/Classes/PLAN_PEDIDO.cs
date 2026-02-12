@@ -153,6 +153,7 @@ namespace DLM.painel
             this.peso_planejado = avanco.peso_plan;
             this.peso_produzido = avanco.peso_fab;
             this.criado = avanco.criado;
+            
             this.ultima_edicao = avanco.data_criacao;
 
             this.total_embarcado = avanco.Log.Real;
