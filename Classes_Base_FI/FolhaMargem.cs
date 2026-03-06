@@ -10,9 +10,7 @@ namespace DLM.sapgui
     [Serializable]
     public class FolhaMargem
     {
-        [XmlIgnore]
-        [ReadOnly(true)]
-        [Browsable(false)]
+        [XmlIgnore, Browsable(false)]
         public long id { get; set; } = -1;
         [Category("Receita")]
         [DisplayName("Líquida")]
@@ -306,7 +304,7 @@ namespace DLM.sapgui
         {
             get
             {
-                return new Variavel() { valor = material.valor + montagem.valor + projeto.valor , porcentagem = material.porcentagem + montagem.porcentagem + projeto.porcentagem};
+                return new Variavel() { valor = material.valor + montagem.valor + projeto.valor, porcentagem = material.porcentagem + montagem.porcentagem + projeto.porcentagem };
             }
         }
 
@@ -375,7 +373,7 @@ namespace DLM.sapgui
             }
         }
         [XmlIgnore]
-   
+
         [DisplayName("Porcentagem Supervisão")]
         public double supervisao_porcentagem
         {
@@ -469,7 +467,7 @@ namespace DLM.sapgui
 
         [DisplayName("Frete Marítimo Cabotagem")]
         public Variavel frete_maritimo_cabotagem { get; set; } = new Variavel();
-      
+
         [DisplayName("Frete Rodoviário Nacional Cabotagem")]
         public Variavel frete_rodoviario_nacional_cabotagem { get; set; } = new Variavel();
 
@@ -483,28 +481,28 @@ namespace DLM.sapgui
     [ExpandableObject()]
     public class DespesasGerais
     {
-      
+
         [DisplayName("Seguro")]
         public Variavel seguro { get; set; } = new Variavel();
-   
+
         [DisplayName("Comissão")]
         public Variavel comissao { get; set; } = new Variavel();
-    
+
         [DisplayName("Assessoria")]
         public Variavel assessoria { get; set; } = new Variavel();
-       
+
         [DisplayName("Custo Financeiro")]
         public Variavel custo_financeiro { get; set; } = new Variavel();
-       
+
         [DisplayName("Supervisão Exportação")]
         public Variavel supervisao_exportacao { get; set; } = new Variavel();
-    
+
         [DisplayName("Créditos / Débitos Material")]
         public Variavel creditos_debitos_material { get; set; } = new Variavel();
 
         [DisplayName("Créditos / Débitos Projeto")]
         public Variavel creditos_debitos_projeto { get; set; } = new Variavel();
-    
+
         [DisplayName("Créditos / Débitos Montagem")]
         public Variavel creditos_debitos_montagem { get; set; } = new Variavel();
 
@@ -514,7 +512,7 @@ namespace DLM.sapgui
         [DisplayName("Outros")]
         public Variavel outros { get; set; } = new Variavel();
 
-       public DespesasGerais()
+        public DespesasGerais()
         {
 
         }

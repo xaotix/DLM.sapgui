@@ -12,21 +12,19 @@ namespace DLM.sapgui
     [Serializable]
     public class Lancamento
     {
-        [XmlIgnore]
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public string previstostr
         {
             get
             {
-                if(previsto<0)
+                if (previsto < 0)
                 {
                     return "(" + Math.Abs(previsto).ToString("N0") + ")";
                 }
-                return previsto !=0 ? previsto.ToString("N0") :"";
+                return previsto != 0 ? previsto.ToString("N0") : "";
             }
         }
-        [XmlIgnore]
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public string realizadostr
         {
             get
@@ -39,15 +37,14 @@ namespace DLM.sapgui
                 return realizado != 0 ? realizado.ToString("N0") : "";
             }
         }
-        [XmlIgnore]
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public DateTime datasys
         {
             get
             {
-                if(dia>0)
+                if (dia > 0)
                 {
-                return new DateTime(ano, mes, dia);
+                    return new DateTime(ano, mes, dia);
 
                 }
                 else
@@ -57,8 +54,7 @@ namespace DLM.sapgui
                 }
             }
         }
-        [XmlIgnore]
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public string data
         {
             get
@@ -66,8 +62,7 @@ namespace DLM.sapgui
                 return this.ano + "/" + this.mes.String(2);
             }
         }
-        [Browsable(false)]
-        [XmlIgnore]
+        [Browsable(false), XmlIgnore]
         public string data_completa
         {
             get
@@ -145,7 +140,7 @@ namespace DLM.sapgui
         {
             get
             {
-                if(peso_total_previsto>0)
+                if (peso_total_previsto > 0)
                 {
                     return peso / peso_total_previsto;
                 }
@@ -170,9 +165,9 @@ namespace DLM.sapgui
         {
             get
             {
-                if(_descricao=="" && SubLancamentos.Count>0)
+                if (_descricao == "" && SubLancamentos.Count > 0)
                 {
-                    _descricao = string.Join(" - ", SubLancamentos.Select(x => x.descricao).Distinct().ToList()).Esquerda( 100, true);
+                    _descricao = string.Join(" - ", SubLancamentos.Select(x => x.descricao).Distinct().ToList()).Esquerda(100, true);
                 }
 
                 return _descricao;
@@ -187,7 +182,7 @@ namespace DLM.sapgui
         public Lancamento(List<Lancamento> sublancamentos)
         {
             this.SubLancamentos = sublancamentos;
-            if(this.SubLancamentos.Count>0)
+            if (this.SubLancamentos.Count > 0)
             {
                 this.ano = this.SubLancamentos[0].ano;
                 this.mes = this.SubLancamentos[0].mes;
@@ -196,11 +191,11 @@ namespace DLM.sapgui
 
                 this.descricao = this.SubLancamentos[0].descricao;
 
-                this.peso_total_previsto = this.SubLancamentos.Max(x=>x.peso_total_previsto);
-                this.peso_total_realizado = this.SubLancamentos.Max(x=>x.peso_total_realizado);
+                this.peso_total_previsto = this.SubLancamentos.Max(x => x.peso_total_previsto);
+                this.peso_total_realizado = this.SubLancamentos.Max(x => x.peso_total_realizado);
 
-                this.valor_maximo_previsto = this.SubLancamentos.Max(x=>x.valor_maximo_previsto);
-                this.valor_maximo_realizado = this.SubLancamentos.Max(x=>x.valor_maximo_realizado);
+                this.valor_maximo_previsto = this.SubLancamentos.Max(x => x.valor_maximo_previsto);
+                this.valor_maximo_realizado = this.SubLancamentos.Max(x => x.valor_maximo_realizado);
 
                 //this.previsto = this.SubLancamentos.Sum(x=>x.previsto);
                 //this.realizado = this.SubLancamentos.Sum(x=>x.realizado);
@@ -253,7 +248,7 @@ namespace DLM.sapgui
             this.valor_maximo_previsto = clonar.valor_maximo_previsto;
             this.valor_maximo_realizado = clonar.valor_maximo_realizado;
 
-            foreach(var SUB in clonar.SubLancamentos)
+            foreach (var SUB in clonar.SubLancamentos)
             {
                 this.SubLancamentos.Add(new Lancamento(SUB));
             }
@@ -264,7 +259,7 @@ namespace DLM.sapgui
 
     }
     [Serializable]
-    public class  Receitas
+    public class Receitas
     {
         public void Reset()
         {
@@ -275,7 +270,7 @@ namespace DLM.sapgui
         private Grupo _receita_bruta { get; set; }
         public Grupo Getreceita_bruta()
         {
-            if(_receita_bruta==null)
+            if (_receita_bruta == null)
             {
                 Grupo retorno = new Grupo();
                 var cor = Brushes.LightGreen.Clone();
@@ -292,8 +287,8 @@ namespace DLM.sapgui
                 retorno.meses.AddRange(receita_bruta_projeto.meses);
                 retorno.meses.AddRange(receita_bruta_materiais.meses);
                 retorno.meses.AddRange(receita_bruta_montagem.meses);
-                retorno.meses = Funcoes.Agrupar(retorno.meses,false);
-                foreach(var m in retorno.meses)
+                retorno.meses = Funcoes.Agrupar(retorno.meses, false);
+                foreach (var m in retorno.meses)
                 {
                     m.Tipo_Lancamento = Tipo_Lancamento.Receita_Bruta;
                 }
@@ -311,7 +306,7 @@ namespace DLM.sapgui
         private Grupo _receita_liquida { get; set; }
         public Grupo Getreceita_liquida()
         {
-            if(_receita_liquida==null)
+            if (_receita_liquida == null)
             {
                 var retorno = new Grupo() { linha_previsto = 16, linha_realizado = 17 };
                 var cor = Brushes.LightGreen.Clone();
@@ -326,18 +321,18 @@ namespace DLM.sapgui
                     var n = new Lancamento();
                     n.ano = receita_bruta.ano;
                     n.mes = receita_bruta.mes;
-                    if(receita_bruta.previsto>0)
+                    if (receita_bruta.previsto > 0)
                     {
-                    n.previsto = receita_bruta.previsto - deducao.previsto;
+                        n.previsto = receita_bruta.previsto - deducao.previsto;
                     }
-                    if(receita_bruta.realizado>0)
+                    if (receita_bruta.realizado > 0)
                     {
-                    n.realizado = receita_bruta.realizado - deducao.realizado;
+                        n.realizado = receita_bruta.realizado - deducao.realizado;
                     }
                     n.Tipo_Lancamento = Tipo_Lancamento.Receita_Liquida;
 
                     retorno.meses.Add(n);
-                    
+
 
                 }
                 _receita_liquida = retorno;
@@ -355,7 +350,7 @@ namespace DLM.sapgui
             this.receita_bruta_materiais.Cor = cor;
             this.receita_bruta_montagem.Cor = cor;
             this.receita_bruta_projeto.Cor = cor;
-            
+
         }
     }
     public class Outros
@@ -370,7 +365,7 @@ namespace DLM.sapgui
         public Outros(int lprev_peso, int lreal_peso, int lPrev_custo, int lreal_custo, int lPrev_custo_kg, int lreal_custo_kg)
         {
             this.peso.linha_previsto = lprev_peso;
-            
+
             this.peso.linha_realizado = lreal_peso;
             this.custo.linha_previsto = lPrev_custo;
             this.custo.linha_realizado = lreal_custo;
@@ -400,7 +395,7 @@ namespace DLM.sapgui
         private Grupo _material { get; set; }
         public Grupo Getmaterial()
         {
-           if(_material ==null)
+            if (_material == null)
             {
                 Grupo retorno = new Grupo() { linha_previsto = 22, linha_realizado = 23 };
                 var cor = Brushes.LightSalmon.Clone();
@@ -414,7 +409,7 @@ namespace DLM.sapgui
                 retorno.meses.AddRange(mod.meses);
                 retorno.meses.AddRange(ggf.meses);
                 retorno.meses.AddRange(terceiricacao_producao.meses);
-                retorno.meses = Funcoes.Agrupar(retorno.meses,false);
+                retorno.meses = Funcoes.Agrupar(retorno.meses, false);
                 foreach (var m in retorno.meses)
                 {
                     m.Tipo_Lancamento = Tipo_Lancamento.Custos_Material;
@@ -431,7 +426,7 @@ namespace DLM.sapgui
         private Grupo _montagem { get; set; }
         public Grupo Getmontagem()
         {
-            if(_montagem ==null)
+            if (_montagem == null)
             {
                 Grupo retorno = new Grupo() { linha_previsto = 34, linha_realizado = 35 };
                 var cor = Brushes.LightSalmon.Clone();
@@ -445,7 +440,7 @@ namespace DLM.sapgui
                 retorno.meses.AddRange(equipamentos.meses);
                 retorno.meses.AddRange(supervisor_medabil.meses);
                 retorno.meses.AddRange(equipe_propria.meses);
-                retorno.meses = Funcoes.Agrupar(retorno.meses,false);
+                retorno.meses = Funcoes.Agrupar(retorno.meses, false);
                 foreach (var m in retorno.meses)
                 {
                     m.Tipo_Lancamento = Tipo_Lancamento.Custos_Montagem;
@@ -481,26 +476,25 @@ namespace DLM.sapgui
             this.supervisor_medabil.Cor = cor;
             this.terceiricacao_producao.Cor = cor;
             this.terceirizacao_de_projeto.Cor = cor;
-          
+
         }
     }
     [Serializable]
     public class Grupo
     {
-        [XmlIgnore]
-        [Browsable(false)]
+        [Browsable(false), XmlIgnore]
         public Brush Cor { get; set; } = Brushes.LightCyan;
         public double faturamento_direto { get; set; } = 0;
         public double saving { get; set; } = 0;
         public Lancamento GetLancamento(string data)
         {
             var retorno = this.meses.FindAll(x => x.data == data);
-            if(retorno.Count>1)
+            if (retorno.Count > 1)
             {
                 List<DLM.sapgui.Lancamento> ret = new List<Lancamento>();
-                foreach(var t in retorno)
+                foreach (var t in retorno)
                 {
-                    if(t.SubLancamentos.Count>0)
+                    if (t.SubLancamentos.Count > 0)
                     {
                         ret.AddRange(t.SubLancamentos);
                     }
@@ -511,7 +505,7 @@ namespace DLM.sapgui
                 }
                 return new Lancamento(ret);
             }
-            if (retorno.Count==1) { return retorno[0]; }
+            if (retorno.Count == 1) { return retorno[0]; }
             return new Lancamento();
         }
         public int linha_previsto { get; set; } = 1;
@@ -544,7 +538,7 @@ namespace DLM.sapgui
             Lancamento reto = new Lancamento();
             if (contrato.previsto > 0)
             {
-                reto.previsto = Gettotal().previsto / contrato.previsto *100;
+                reto.previsto = Gettotal().previsto / contrato.previsto * 100;
             }
 
             if (contrato.previsto > 0)
