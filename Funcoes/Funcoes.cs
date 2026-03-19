@@ -19,13 +19,13 @@ namespace DLM.sapgui
             {
                 try
                 {
-                    var ARQ_TMP = $"{Cfg.Init.DIR_SCRIPTS}DLMScript_{Conexoes.Utilz.RandomString(2)}.vbs";
+                    var ARQ_TMP = $"{Cfg.Init.DIR_SCRIPTS}DLMScript_{(2).RandomString()}.vbs";
                     denovo:
                     if (ARQ_TMP.Exists())
                     {
                        if(!ARQ_TMP.Delete(false))
                         {
-                            ARQ_TMP = $"{Cfg.Init.DIR_SCRIPTS}DLMScript_{Conexoes.Utilz.RandomString(2)}.vbs";
+                            ARQ_TMP = $"{Cfg.Init.DIR_SCRIPTS}DLMScript_{(2).RandomString()}.vbs";
                             goto denovo;
                         }
                     }

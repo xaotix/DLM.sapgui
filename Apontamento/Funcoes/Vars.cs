@@ -50,7 +50,7 @@ namespace DLM.painel
                 {
                     if (_embarque_32x32_vermelho == null)
                     {
-                        _embarque_32x32_vermelho = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.embarque_32x32_vermelho);
+                        _embarque_32x32_vermelho = nameof(DLM.sapgui.Properties.Resources.embarque_32x32_vermelho).getImageSource();
                     }
                     return _embarque_32x32_vermelho;
                 }
@@ -63,7 +63,7 @@ namespace DLM.painel
                 {
                     if (_engenharia_32x32_vermelho == null)
                     {
-                        _engenharia_32x32_vermelho = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.engenharia_32x32_vermelho);
+                        _engenharia_32x32_vermelho = nameof(DLM.sapgui.Properties.Resources.engenharia_32x32_vermelho).getImageSource();
                     }
                     return _engenharia_32x32_vermelho;
                 }
@@ -77,7 +77,7 @@ namespace DLM.painel
                 {
                     if (_fabrica_32x32_vermelho == null)
                     {
-                        _fabrica_32x32_vermelho = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.fabrica_32x32_vermelho);
+                        _fabrica_32x32_vermelho = nameof(DLM.sapgui.Properties.Resources.fabrica_32x32_vermelho).getImageSource();
                     }
                     return _fabrica_32x32_vermelho;
                 }
@@ -91,7 +91,7 @@ namespace DLM.painel
                 {
                     if (_montagem_32x32_vermelho == null)
                     {
-                        _montagem_32x32_vermelho = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.montagem_32x32_vermelho);
+                        _montagem_32x32_vermelho = nameof(DLM.sapgui.Properties.Resources.montagem_32x32_vermelho).getImageSource();
                     }
                     return _montagem_32x32_vermelho;
                 }
@@ -104,7 +104,7 @@ namespace DLM.painel
                 {
                     if (_montagem_32x32_trancada == null)
                     {
-                        _montagem_32x32_trancada = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.montagem_32x32_trancada);
+                        _montagem_32x32_trancada = nameof(DLM.sapgui.Properties.Resources.montagem_32x32_trancada).getImageSource();
                     }
                     return _montagem_32x32_trancada;
                 }
@@ -117,7 +117,7 @@ namespace DLM.painel
                 {
                     if (_montagem_32x32_cinza == null)
                     {
-                        _montagem_32x32_cinza = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.montagem_32x32_cinza);
+                        _montagem_32x32_cinza = nameof(DLM.sapgui.Properties.Resources.montagem_32x32_cinza).getImageSource();
                     }
                     return _montagem_32x32_cinza;
                 }
@@ -130,7 +130,7 @@ namespace DLM.painel
                 {
                     if (_embarque_32x32_verde == null)
                     {
-                        _embarque_32x32_verde = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.embarque_32x32_verde);
+                        _embarque_32x32_verde = nameof(DLM.sapgui.Properties.Resources.embarque_32x32_verde).getImageSource();
                     }
                     return _embarque_32x32_verde;
                 }
@@ -143,7 +143,7 @@ namespace DLM.painel
                 {
                     if (_engenharia_32x32_verde == null)
                     {
-                        _engenharia_32x32_verde = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.engenharia_32x32_verde);
+                        _engenharia_32x32_verde = nameof(DLM.sapgui.Properties.Resources.engenharia_32x32_verde).getImageSource();
                     }
                     return _engenharia_32x32_verde;
                 }
@@ -157,7 +157,7 @@ namespace DLM.painel
                 {
                     if (_fabrica_32x32_verde == null)
                     {
-                        _fabrica_32x32_verde = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.fabrica_32x32_verde);
+                        _fabrica_32x32_verde = nameof(DLM.sapgui.Properties.Resources.fabrica_32x32_verde).getImageSource();
                     }
                     return _fabrica_32x32_verde;
                 }
@@ -170,7 +170,7 @@ namespace DLM.painel
                 {
                     if (_montagem_32x32_verde == null)
                     {
-                        _montagem_32x32_verde = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.montagem_32x32_verde);
+                        _montagem_32x32_verde = nameof(DLM.sapgui.Properties.Resources.montagem_32x32_verde).getImageSource();
                     }
                     return _montagem_32x32_verde;
                 }
@@ -186,7 +186,7 @@ namespace DLM.painel
                 {
                     if (_embarque_32x32_laranja == null)
                     {
-                        _embarque_32x32_laranja = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.embarque_32x32_laranja);
+                        _embarque_32x32_laranja = nameof(DLM.sapgui.Properties.Resources.embarque_32x32_laranja).getImageSource();
                     }
                     return _embarque_32x32_laranja;
                 }
@@ -199,7 +199,7 @@ namespace DLM.painel
                 {
                     if (_engenharia_32x32_laranja == null)
                     {
-                        _engenharia_32x32_laranja = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.engenharia_32x32_laranja);
+                        _engenharia_32x32_laranja = nameof(DLM.sapgui.Properties.Resources.engenharia_32x32_laranja).getImageSource();
                     }
                     return _engenharia_32x32_laranja;
                 }
@@ -213,7 +213,7 @@ namespace DLM.painel
                 {
                     if (_fabrica_32x32_laranja == null)
                     {
-                        _fabrica_32x32_laranja = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.fabrica_32x32_laranja);
+                        _fabrica_32x32_laranja = nameof(DLM.sapgui.Properties.Resources.fabrica_32x32_laranja).getImageSource();
                     }
                     return _fabrica_32x32_laranja;
                 }
@@ -227,7 +227,7 @@ namespace DLM.painel
                 {
                     if (_montagem_32x32_laranja == null)
                     {
-                        _montagem_32x32_laranja = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.montagem_32x32_laranja);
+                        _montagem_32x32_laranja = nameof(DLM.sapgui.Properties.Resources.montagem_32x32_laranja).getImageSource();
                     }
                     return _montagem_32x32_laranja;
                 }
@@ -245,7 +245,7 @@ namespace DLM.painel
                 {
                     if (_embarque_32x32_azul == null)
                     {
-                        _embarque_32x32_azul = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.embarque_32x32_azul);
+                        _embarque_32x32_azul = nameof(DLM.sapgui.Properties.Resources.embarque_32x32_azul).getImageSource();
                     }
                     return _embarque_32x32_azul;
                 }
@@ -258,7 +258,7 @@ namespace DLM.painel
                 {
                     if (_engenharia_32x32_azul == null)
                     {
-                        _engenharia_32x32_azul = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.engenharia_32x32_azul);
+                        _engenharia_32x32_azul = nameof(DLM.sapgui.Properties.Resources.engenharia_32x32_azul).getImageSource();
                     }
                     return _engenharia_32x32_azul;
                 }
@@ -272,7 +272,7 @@ namespace DLM.painel
                 {
                     if (_fabrica_32x32_azul == null)
                     {
-                        _fabrica_32x32_azul = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.fabrica_32x32_azul);
+                        _fabrica_32x32_azul = nameof(DLM.sapgui.Properties.Resources.fabrica_32x32_azul).getImageSource();
                     }
                     return _fabrica_32x32_azul;
                 }
@@ -286,7 +286,7 @@ namespace DLM.painel
                 {
                     if (_montagem_32x32_azul == null)
                     {
-                        _montagem_32x32_azul = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.montagem_32x32_azul);
+                        _montagem_32x32_azul = Conexoes.Utilz.getImageSource(nameof(DLM.sapgui.Properties.Resources.montagem_32x32_azul));
                     }
                     return _montagem_32x32_azul;
                 }
@@ -302,7 +302,7 @@ namespace DLM.painel
                 {
                     if (_embarque_32x32 == null)
                     {
-                        _embarque_32x32 = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.embarque_32x32);
+                        _embarque_32x32 = nameof(DLM.sapgui.Properties.Resources.embarque_32x32).getImageSource();
                     }
                     return _embarque_32x32;
                 }
@@ -315,7 +315,7 @@ namespace DLM.painel
                 {
                     if (_engenharia_32x32 == null)
                     {
-                        _engenharia_32x32 = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.engenharia_32x32);
+                        _engenharia_32x32 = nameof(DLM.sapgui.Properties.Resources.engenharia_32x32).getImageSource();
                     }
                     return _engenharia_32x32;
                 }
@@ -329,7 +329,7 @@ namespace DLM.painel
                 {
                     if (_fabrica_32x32 == null)
                     {
-                        _fabrica_32x32 = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.fabrica_32x32);
+                        _fabrica_32x32 = nameof(DLM.sapgui.Properties.Resources.fabrica_32x32).getImageSource();
                     }
                     return _fabrica_32x32;
                 }
@@ -343,7 +343,7 @@ namespace DLM.painel
                 {
                     if (_montagem_32x32 == null)
                     {
-                        _montagem_32x32 = Conexoes.Utilz.getImageSource(DLM.sapgui.Properties.Resources.montagem_32x32);
+                        _montagem_32x32 = DLM.sapgui.Properties.Resources.montagem_32x32.getImageSource();
                     }
                     return _montagem_32x32;
                 }
