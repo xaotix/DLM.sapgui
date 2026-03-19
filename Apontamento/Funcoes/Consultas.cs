@@ -674,7 +674,7 @@ namespace DLM.painel
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
-                    var tabela = st_base["pep", etapa.PEP.ToUpper().Replace(".P00", "")];
+                    var tabela = st_base["pep", etapa.PEP.Upper().Replace(".P00", "")];
                     if (tabela.Count > 0)
                     {
                         etapa.SetBase(tabela[0]);
@@ -739,7 +739,7 @@ namespace DLM.painel
             {
                 Tarefas.Add(Task.Factory.StartNew(() =>
                 {
-                    var igual = st_base["pep", subetapa.PEP.ToUpper().Replace(".P00", "")];
+                    var igual = st_base["pep", subetapa.PEP.Upper().Replace(".P00", "")];
                     if (igual.Count > 0)
                     {
                         subetapa.SetBase(igual[0]);
@@ -979,7 +979,7 @@ namespace DLM.painel
         public static bool MatarExcel(bool confirmar = false)
         {
             var t = Process.GetProcessesByName("EXCEL").ToList();
-            t.AddRange(Process.GetProcesses().ToList().FindAll(x => x.ProcessName.ToUpper().Contem("SOFFICE")));
+            t.AddRange(Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Upper().Contem("SOFFICE")));
             if (t.Count > 0)
             {
                 bool matar = false;

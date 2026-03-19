@@ -146,7 +146,7 @@ namespace DLM.sapgui
         {
            if(this._filhos!=null)
             {
-                return this._filhos.Find(x => x.Nome.ToUpper().EndsW(fim.ToUpper()));
+                return this._filhos.Find(x => x.Nome.Upper().EndsW(fim.Upper()));
             }
             return null;
         }
@@ -169,8 +169,8 @@ namespace DLM.sapgui
         {
             
             var fls = this.Getfilhos(true);
-            var pep = this.Nome + "." + nome.ToUpper();
-            if(this.GetRaiz().nos.Find(x=> x.Nome.ToUpper() == pep.ToUpper())==null)
+            var pep = this.Nome + "." + nome.Upper();
+            if(this.GetRaiz().nos.Find(x=> x.Nome.Upper() == pep.Upper())==null)
             {
                 this.SetNo();
                 var ss = this.SAP.CJ20N_CriarEtapa(this.Nome + "." + nome, descricao, planejado, contabil, faturamento, empresa, centro, divisao, true);

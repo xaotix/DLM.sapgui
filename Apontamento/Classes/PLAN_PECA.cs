@@ -37,7 +37,7 @@ namespace DLM.painel
 
             }
 
-            this.qtd_embarcada = lista_fim.FindAll(x => x["St_Conf_"].Valor.ToUpper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x["qtd_embarque"].Double());
+            this.qtd_embarcada = lista_fim.FindAll(x => x["St_Conf_"].Valor.Upper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x["qtd_embarque"].Double());
             var marca = lista_fim.Select(x => x["Tamanho_dimensao"].Valor).Distinct().ToList().FindAll(x => x.Replace(" ", "") != "");
 
             if (marca.Count > 0)
@@ -67,8 +67,8 @@ namespace DLM.painel
             {
                 var DUMMY = new SAP_ESQ_PIN() { ESQUEMA_DESCR = "", PINTURA = this.TIPO_DE_PINTURA };
                 if (
-                    this.TIPO_DE_PINTURA.ToUpper().StartsW("SEM") |
-                    this.TIPO_DE_PINTURA.ToUpper().Contem("GALVANIZADO") |
+                    this.TIPO_DE_PINTURA.Upper().StartsW("SEM") |
+                    this.TIPO_DE_PINTURA.Upper().Contem("GALVANIZADO") |
                     this.esq_de_pintura.Replace("0", "") == "" |
                     this.TIPO_DE_PINTURA == ""
                     )

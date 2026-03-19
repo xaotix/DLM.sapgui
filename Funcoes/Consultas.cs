@@ -81,7 +81,7 @@ namespace DLM.sapgui
 
 
                 string connectString = null;
-                if (env.ToUpper().Equals("DEFAULT"))
+                if (env.Upper().Equals("DEFAULT"))
                 {
                     connectString = "1.0 Test ERP (DEFAULT)";
                 }

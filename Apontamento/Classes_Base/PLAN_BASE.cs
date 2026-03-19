@@ -125,7 +125,7 @@ namespace DLM.painel
         public void Set(List<PLAN_PEDIDO> lista)
         {
             this._pedidos = new List<PLAN_PEDIDO>();
-            this._pedidos.AddRange(lista.FindAll(x => x.PEP.ToUpper().Contem(this.PEP)));
+            this._pedidos.AddRange(lista.FindAll(x => x.PEP.Upper().Contem(this.PEP)));
         }
         public void Set(List<PLAN_PECA> lista)
         {
@@ -171,7 +171,7 @@ namespace DLM.painel
         public void Set(List<PLAN_ETAPA> lista)
         {
             this._etapas = new List<PLAN_ETAPA>();
-            this._etapas.AddRange(lista.FindAll(x => x.PEP.ToUpper().StartsW(this.PEP)));
+            this._etapas.AddRange(lista.FindAll(x => x.PEP.Upper().StartsW(this.PEP)));
         }
         public void Set(List<PLAN_PEP> lista)
         {

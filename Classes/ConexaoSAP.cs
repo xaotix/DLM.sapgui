@@ -25,7 +25,7 @@ namespace DLM.sapgui
 
         public CN47N GETPEPENG(string PEPFABRICA)
         {
-            var T = this.CN47N.Find(x => x.PEP == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".EN").ToUpper());
+            var T = this.CN47N.Find(x => x.PEP == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".EN").Upper());
             if (T != null)
             {
                 return T;
@@ -34,7 +34,7 @@ namespace DLM.sapgui
         }
         public CN47N GETPEPMONT(string PEPFABRICA)
         {
-            var lista = this.CN47N.Find(x => x.PEP == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".MO").ToUpper());
+            var lista = this.CN47N.Find(x => x.PEP == (Conexoes.Utilz.PEP.Get.Subetapa(PEPFABRICA, true) + ".MO").Upper());
             if (lista != null)
             {
                 return lista;

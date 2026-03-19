@@ -136,7 +136,7 @@ namespace DLM.painel
                 //    this.resumo_pecas.Fim = D1.Last();
                 //}
 
-                var apontamentos = this.subetapas.FindAll(x => x.update_montagem != "").Distinct().ToList().Select(x => x.update_montagem.ToUpper().Replace(" ", "").Replace("MONTAGEM:", "").Data());
+                var apontamentos = this.subetapas.FindAll(x => x.update_montagem != "").Distinct().ToList().Select(x => x.update_montagem.Upper().Replace(" ", "").Replace("MONTAGEM:", "").Data());
                 if (apontamentos.Count() > 0)
                 {
                     this.update_montagem = apontamentos.Max().ToShortDateString();

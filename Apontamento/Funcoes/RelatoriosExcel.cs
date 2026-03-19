@@ -215,7 +215,7 @@ namespace DLM.painel
                                 subetapas_aba_excel.Cells[l0 + l, c0 + 21].Value = t.engenharia_liberacao > mindia ? t.engenharia_liberacao : null;
                                 //subetapas_aba_excel.Cells[l0 + l, c0 + 22].Value = t.resumo_pecas.Inicio > mindia ? t.resumo_pecas.Inicio : null;
                                 //subetapas_aba_excel.Cells[l0 + l, c0 + 23].Value = t.resumo_pecas.Fim > mindia ? t.resumo_pecas.Fim : null;
-                                subetapas_aba_excel.Cells[l0 + l, c0 + 24].Value = t.update_montagem.ToUpper().Replace("MONTAGEM: ", "");
+                                subetapas_aba_excel.Cells[l0 + l, c0 + 24].Value = t.update_montagem.Upper().Replace("MONTAGEM: ", "");
                                 //subetapas_aba_excel.Cells[l0 + l, c0 + 25].Value = t.engenharia_projetista;
                                 //subetapas_aba_excel.Cells[l0 + l, c0 + 26].Value = t.engenharia_calculista;
                                 //subetapas_aba_excel.Cells[l0 + l, c0 + 27].Value = t.engenharia_responsavel;
@@ -832,7 +832,7 @@ namespace DLM.painel
                                     excel_sub.Cells[$"Y{L1}"].Value = sub.Real.ultima_consulta_sap > mindia ? sub.Real.ultima_consulta_sap : null;
                                     //excel_sub.Cells[$"Z{L1}"].Value = sub.Real.resumo_pecas.Inicio > mindia ? sub.Real.resumo_pecas.Inicio : null;
                                     //excel_sub.Cells[$"AA{L1}"].Value = sub.Real.resumo_pecas.Fim > mindia ? sub.Real.resumo_pecas.Fim : null;
-                                    excel_sub.Cells[$"AB{L1}"].Value = sub.Real.update_montagem.ToUpper().Replace(" ", "").Replace("MONTAGEM:", "");
+                                    excel_sub.Cells[$"AB{L1}"].Value = sub.Real.update_montagem.Upper().Replace(" ", "").Replace("MONTAGEM:", "");
                                     excel_sub.Cells[$"AC{L1}"].Value = sub.Real.montagem_engenheiro;
                                 }
                                 catch (Exception)

@@ -230,7 +230,7 @@ namespace DLM.painel
                 this.update_montagem = "Montagem: " + mont.ToShortDateString();
             }
 
-            this.finalizado = linha["finalizado"].Valor.ToUpper() == "X";
+            this.finalizado = linha["finalizado"].Valor.Upper() == "X";
 
 
             if (this.descricao.LenghtStr() == 0)
