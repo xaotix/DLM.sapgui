@@ -293,35 +293,35 @@ namespace DLM.painel
             {
                 //if (this.resumo_pecas.etapa_bloqueada | this.status_montagem == "TRANCADA")
                 //{
-                //    return BufferImagem._lock;
+                //    return BufferImagem.GetIconeResource("_lock");
                 //}
                 if (this is PLAN_OBRAS)
                 {
-                    return BufferImagem.folder_new;
+                    return BufferImagem.GetIconeResource("folder_new");
                 }
                 else if (this is PLAN_OBRA)
                 {
-                    return BufferImagem.folder_red;
+                    return BufferImagem.GetIconeResource("folder_red");
                 }
                 else if (this is PLAN_PEDIDO)
                 {
-                    return BufferImagem.folder_green;
+                    return BufferImagem.GetIconeResource("folder_green");
                 }
                 else if (this is PLAN_ETAPA)
                 {
-                    return BufferImagem.folder;
+                    return BufferImagem.GetIconeResource("folder");
                 }
                 else if (this is PLAN_ETAPA)
                 {
-                    return BufferImagem.folder_txt;
+                    return BufferImagem.GetIconeResource("folder_txt");
                 }
                 else if (this is PLAN_SUB_ETAPA)
                 {
-                    return BufferImagem.folder_bookmark;
+                    return BufferImagem.GetIconeResource("folder_bookmark");
 
                 }
 
-                return BufferImagem.circulo_16x16;
+                return BufferImagem.GetIconeResource("circulo_16x16");
 
             }
         }
