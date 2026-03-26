@@ -343,7 +343,7 @@ namespace DLM.painel
                 {
                     if (_montagem_32x32 == null)
                     {
-                        _montagem_32x32 = DLM.sapgui.Properties.Resources.montagem_32x32.getImageSource();
+                        _montagem_32x32 = nameof(DLM.sapgui.Properties.Resources.montagem_32x32).getImageSource();
                     }
                     return _montagem_32x32;
                 }
