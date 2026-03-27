@@ -32,19 +32,19 @@ namespace DLM.sapgui
                 switch (this.tipo)
                 {
                     case CJ20N_Tipo.Pedido:
-                return BufferImagem.GetIconeResource("folder_green");
+                return BufferImagem.GetIcone("folder_green");
                     case CJ20N_Tipo.Etapa:
-                        return BufferImagem.GetIconeResource("folder");
+                        return BufferImagem.GetIcone("folder");
                     case CJ20N_Tipo.SubEtapa:
-                        return BufferImagem.GetIconeResource("folder_txt");
+                        return BufferImagem.GetIcone("folder_txt");
                     case CJ20N_Tipo.PEP:
-                        return BufferImagem.GetIconeResource("folder_downloads");
+                        return BufferImagem.GetIcone("folder_downloads");
                     case CJ20N_Tipo.Tarefa:
-                        return BufferImagem.GetIconeResource("circulo_verde_16x16");
+                        return BufferImagem.GetIcone("circulo_verde_16x16");
                     case CJ20N_Tipo.Desconhecido:
-                        return BufferImagem.GetIconeResource("circulo_16x16_laranja");
+                        return BufferImagem.GetIcone("circulo_16x16_laranja");
                 }
-                return BufferImagem.GetIconeResource("circulo_16x16");
+                return BufferImagem.GetIcone("circulo_16x16");
             }
         }
 

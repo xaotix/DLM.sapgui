@@ -297,31 +297,31 @@ namespace DLM.painel
                 //}
                 if (this is PLAN_OBRAS)
                 {
-                    return BufferImagem.GetIconeResource("folder_new");
+                    return BufferImagem.GetIcone("folder_new");
                 }
                 else if (this is PLAN_OBRA)
                 {
-                    return BufferImagem.GetIconeResource("folder_red");
+                    return BufferImagem.GetIcone("folder_red");
                 }
                 else if (this is PLAN_PEDIDO)
                 {
-                    return BufferImagem.GetIconeResource("folder_green");
+                    return BufferImagem.GetIcone("folder_green");
                 }
                 else if (this is PLAN_ETAPA)
                 {
-                    return BufferImagem.GetIconeResource("folder");
+                    return BufferImagem.GetIcone("folder");
                 }
                 else if (this is PLAN_ETAPA)
                 {
-                    return BufferImagem.GetIconeResource("folder_txt");
+                    return BufferImagem.GetIcone("folder_txt");
                 }
                 else if (this is PLAN_SUB_ETAPA)
                 {
-                    return BufferImagem.GetIconeResource("folder_bookmark");
+                    return BufferImagem.GetIcone("folder_bookmark");
 
                 }
 
-                return BufferImagem.GetIconeResource("circulo_16x16");
+                return BufferImagem.GetIcone("circulo_16x16");
 
             }
         }
