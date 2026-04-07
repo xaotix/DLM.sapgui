@@ -130,7 +130,7 @@ namespace DLM.painel
             retorno.AddRange(valores);
             retorno.Add("material", this.material);
             retorno.Add("pep", this.PEP);
-            return retorno.Celulas;
+            return retorno.ToList();
         }
 
         public string DENOMINDSTAND { get; private set; } = "";

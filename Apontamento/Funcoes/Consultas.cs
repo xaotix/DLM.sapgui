@@ -834,7 +834,7 @@ namespace DLM.painel
             {
                 if (pecas[i].PEP.LenghtStr() > 0 && pecas[i].material != "")
                 {
-                    var logs = retorno.ToList().FindAll(x => x.pep == pecas[i].PEP && x.material == pecas[i].material);
+                    var logs = retorno.FindAll(x => x.pep == pecas[i].PEP && x.material == pecas[i].material);
                     pecas[i].SetLogistica(logs);
                 }
             }
