@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace DLM.painel
 {
-    public class PLAN_BASE
+    public class PLAN_BASE:NotificarL
     {
         public void SetBase(DLM.db.Linha linha)
         {
@@ -284,8 +284,7 @@ namespace DLM.painel
             return _Grupos_Mercadoria;
         }
 
-        [Browsable(false)]
-        public Linha Linha { get; set; } = new Linha();
+
 
         public ImageSource imagem
         {
@@ -297,31 +296,31 @@ namespace DLM.painel
                 //}
                 if (this is PLAN_OBRAS)
                 {
-                    return BufferImagem.GetIcone("folder_new");
+                    return "folder_new".GetIcone();
                 }
                 else if (this is PLAN_OBRA)
                 {
-                    return BufferImagem.GetIcone("folder_red");
+                    return "folder_red".GetIcone();
                 }
                 else if (this is PLAN_PEDIDO)
                 {
-                    return BufferImagem.GetIcone("folder_green");
+                    return "folder_green".GetIcone();
                 }
                 else if (this is PLAN_ETAPA)
                 {
-                    return BufferImagem.GetIcone("folder");
+                    return "folder".GetIcone();
                 }
                 else if (this is PLAN_ETAPA)
                 {
-                    return BufferImagem.GetIcone("folder_txt");
+                    return "folder_txt".GetIcone();
                 }
                 else if (this is PLAN_SUB_ETAPA)
                 {
-                    return BufferImagem.GetIcone("folder_bookmark");
+                    return "folder_bookmark".GetIcone();
 
                 }
 
-                return BufferImagem.GetIcone("circulo_16x16");
+                return DLM.Icones.Cinza;
 
             }
         }

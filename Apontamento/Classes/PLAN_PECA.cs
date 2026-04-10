@@ -97,22 +97,22 @@ namespace DLM.painel
                 {
                     if (Tipo == Tipo_Material.Real)
                     {
-                        _imagem = BufferImagem.GetIcone("R_AZUL");
+                        _imagem = "R_AZUL".GetIcone();
                     }
                     else if (Tipo == Tipo_Material.Consolidado)
                     {
 
-                        _imagem = BufferImagem.GetIcone("C_VERDE");
+                        _imagem = "C_VERDE".GetIcone();
                     }
                     else if (Tipo == Tipo_Material.Orçamento)
                     {
 
-                        _imagem = BufferImagem.GetIcone("O_VERDE");
+                        _imagem = "O_VERDE".GetIcone();
                     }
                     else
                     {
 
-                        _imagem = BufferImagem.GetIcone("dialog_error");
+                        _imagem = "dialog_error".GetIcone();
                     }
 
                 }

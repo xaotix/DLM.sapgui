@@ -176,14 +176,12 @@ namespace DLM.painel
         }
     }
 
-    public class ZPP0100_Resumo
+    public class ZPP0100_Resumo : NotificarL
     {
         public override string ToString()
         {
             return this.PEP;
         }
-        [Browsable(false)]
-        public Linha Linha { get; private set; } = new Linha();
         public string PEP { get; set; } = "";
         public double Necessario { get; set; } = 0;
         public double Embarcado { get; set; } = 0;
@@ -461,7 +459,7 @@ namespace DLM.painel
         }
     }
 
-    public class Resumo_Pecas
+    public class Resumo_Pecas :NotificarL
     {
         public bool etapa_bloqueada { get; set; } = false;
         public string status_sistema_pep { get; set; } = "";
@@ -480,8 +478,7 @@ namespace DLM.painel
         {
             return pep + " - peso: " + peso_necessario + " - qtd: " + qtd_necessaria + " - prod: " + qtd_produzida + " - emb: " + qtd_embarcada;
         }
-        [Browsable(false)]
-        public Linha Linha { get; set; } = new Linha();
+
         public string pep { get; set; } = "";
         public double peso_necessario { get; set; } = 0;
         public double qtd_necessaria { get; set; } = 0;
