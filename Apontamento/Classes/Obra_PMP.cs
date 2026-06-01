@@ -119,6 +119,14 @@ namespace DLM.painel
             }
             this.Obra = obra;
 
+            if (consolidada != null)
+            {
+                this.Consolidada = consolidada;
+                this.Material_CONS = true;
+                this.PEP = consolidada.PEP;
+                this.Descricao = consolidada.descricao;
+            }
+
             if (real != null)
             {
                 this.Real = real;

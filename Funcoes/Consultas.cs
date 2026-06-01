@@ -1076,7 +1076,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    ex.Alerta();
+                    ex.Show();
                 }
                 else
                 {
@@ -1143,7 +1143,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    ex.Alerta();
+                    ex.Show();
                 }
                 else
                 {
@@ -1203,7 +1203,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    ex.Alerta();
+                    ex.Show();
                 }
                 else
                 {
@@ -1264,7 +1264,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    ex.Alerta();
+                    ex.Show();
                 }
                 else
                 {
@@ -1399,7 +1399,7 @@ namespace DLM.sapgui
                 catch (Exception ex)
                 {
 
-                    ex.Alerta();
+                    ex.Show();
 
                 }
                 this.Desbloqueia_Secao();
@@ -1466,7 +1466,7 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                ex.Alerta();
+                ex.Show();
             }
             return retorno;
         }
@@ -1519,7 +1519,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    ex.Alerta();
+                    ex.Show();
                 }
                 else
                 {
@@ -1583,7 +1583,7 @@ namespace DLM.sapgui
                 if (msgs)
                 {
 
-                    ex.Alerta();
+                    ex.Show();
                 }
                 else
                 {
@@ -1693,7 +1693,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    ex.Alerta();
+                    ex.Show();
                 }
                 else
                 {
@@ -2051,7 +2051,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    ex.Alerta();
+                    ex.Show();
                 }
                 else
                 {
@@ -2127,7 +2127,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    ex.Alerta();
+                    ex.Show();
                 }
                 else
                 {

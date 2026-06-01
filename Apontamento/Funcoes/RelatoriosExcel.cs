@@ -455,7 +455,7 @@ namespace DLM.painel
             {
                 if (abrir)
                 {
-                    ex.Alerta();
+                    ex.Show();
                 }
             }
 
@@ -667,7 +667,7 @@ namespace DLM.painel
             {
                 if (abrir)
                 {
-                    ex.Alerta();
+                    ex.Show();
                 }
                 return false;
             }
@@ -982,7 +982,7 @@ namespace DLM.painel
             {
                 if (abrir)
                 {
-                    ex.Alerta();
+                    ex.Show();
                 }
             }
             return true;

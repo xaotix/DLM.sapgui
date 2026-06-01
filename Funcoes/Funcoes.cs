@@ -42,7 +42,7 @@ namespace DLM.sapgui
                 }
                 catch (Exception ex)
                 {
-                    ex.Alerta();
+                    ex.Show();
                     return;
                 }
             }

@@ -408,14 +408,19 @@ namespace DLM.painel
 
                 foreach (var obra in _obras)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() =>
+                    var igual = st_base["pep", obra.PEP];
+                    if (igual.Count > 0)
                     {
-                        var igual = st_base["pep", obra.PEP];
-                        if (igual.Count > 0)
-                        {
-                            obra.SetBase(igual[0]);
-                        }
-                    }));
+                        obra.SetBase(igual[0]);
+                    }
+                    //Tarefas.Add(Task.Factory.StartNew(() =>
+                    //{
+                    //    var igual = st_base["pep", obra.PEP];
+                    //    if (igual.Count > 0)
+                    //    {
+                    //        obra.SetBase(igual[0]);
+                    //    }
+                    //}));
                 }
                 Task.WaitAll(Tarefas.ToArray());
             }
@@ -595,12 +600,10 @@ namespace DLM.painel
 
                 consulta = DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pedidos_copia);
 
-                var Tarefas = new List<Task>();
                 foreach (var linha in consulta)
                 {
                     lista.Add(new PLAN_PEDIDO(linha, new PLAN_OBRA()));
                 }
-                Task.WaitAll(Tarefas.ToArray());
                 _pedidos.AddRange(lista);
                 _pedidos = _pedidos.OrderBy(x => x.pedido).ToList();
 
@@ -614,16 +617,12 @@ namespace DLM.painel
 
                 foreach (var t in _pedidos)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() =>
+                    var igual = st_base["pep", t.PEP];
+                    if (igual.Count > 0)
                     {
-                        var igual = st_base["pep", t.PEP];
-                        if (igual.Count > 0)
-                        {
-                            t.SetBase(igual[0]);
-                        }
-                    }));
+                        t.SetBase(igual[0]);
+                    }
                 }
-                Task.WaitAll(Tarefas.ToArray());
             }
 
 
@@ -655,16 +654,11 @@ namespace DLM.painel
         {
             var _etapas = new ConcurrentBag<PLAN_ETAPA>();
             var subetapas = GetSubEtapas(pedidos);
-            List<Task> Tarefas = new List<Task>();
 
             foreach (var et in subetapas.Select(x => x.etapa).OrderBy(x => x).Distinct().ToList())
             {
-                Tarefas.Add(Task.Factory.StartNew(() =>
-                {
-                    _etapas.Add(new PLAN_ETAPA(subetapas.FindAll(x => x.etapa == et)));
-                }));
+                _etapas.Add(new PLAN_ETAPA(subetapas.FindAll(x => x.etapa == et)));
             }
-            Task.WaitAll(Tarefas.ToArray());
 
             var st_base = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_02_etapa);
 
@@ -672,28 +666,20 @@ namespace DLM.painel
 
             foreach (var etapa in etapa_list)
             {
-                Tarefas.Add(Task.Factory.StartNew(() =>
+                var tabela = st_base["pep", etapa.PEP.Upper().Replace(".P00", "")];
+                if (tabela.Count > 0)
                 {
-                    var tabela = st_base["pep", etapa.PEP.Upper().Replace(".P00", "")];
-                    if (tabela.Count > 0)
-                    {
-                        etapa.SetBase(tabela[0]);
-                    }
-                }));
+                    etapa.SetBase(tabela[0]);
+                }
             }
-            Task.WaitAll(Tarefas.ToArray());
 
 
             if (_pedidos != null)
             {
                 foreach (var p in _pedidos)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() =>
-                    {
-                        p.Set(etapa_list);
-                    }));
+                    p.Set(etapa_list);
                 }
-                Task.WaitAll(Tarefas.ToArray());
             }
 
             return etapa_list;
@@ -737,14 +723,11 @@ namespace DLM.painel
 
             foreach (var subetapa in _subetapas)
             {
-                Tarefas.Add(Task.Factory.StartNew(() =>
+                var igual = st_base["pep", subetapa.PEP.Upper().Replace(".P00", "")];
+                if (igual.Count > 0)
                 {
-                    var igual = st_base["pep", subetapa.PEP.Upper().Replace(".P00", "")];
-                    if (igual.Count > 0)
-                    {
-                        subetapa.SetBase(igual[0]);
-                    }
-                }));
+                    subetapa.SetBase(igual[0]);
+                }
             }
             Task.WaitAll(Tarefas.ToArray());
 
@@ -798,16 +781,12 @@ namespace DLM.painel
             var consulta2 = DBases.GetDB().Consulta(Cfg.Init.db_comum, Cfg.Init.tb_cbase_00_pep);
             foreach (var ret in retorno)
             {
-                Tarefas.Add(Task.Factory.StartNew(() =>
+                var igual = consulta2["pep", ret.PEP];
+                if (igual.Count > 0)
                 {
-                    var igual = consulta2["pep", ret.PEP];
-                    if (igual.Count > 0)
-                    {
-                        ret.SetBase(igual[0]);
-                    }
-                }));
+                    ret.SetBase(igual[0]);
+                }
             }
-            Task.WaitAll(Tarefas.ToArray());
 
 
             return retorno;
