@@ -113,7 +113,7 @@ namespace DLM.painel
         }
         public List<PLAN_PECA> GetPecas(bool reset = false)
         {
-            if ((_pecas.Count == 0 | reset) && this.PEP.LenghtStr() > 3)
+            if ((_pecas.Count == 0 || reset) && this.PEP.LenghtStr() > 3)
             {
                 _pecas = Consultas.GetPecasReal(new List<string> { this.PEP });
             }
@@ -676,7 +676,7 @@ namespace DLM.painel
         {
             get
             {
-                if ((status_montagem == "CONCLUÍDA" | status_montagem == "ENTREGUE") && this is PLAN_PEDIDO)
+                if ((status_montagem == "CONCLUÍDA" || status_montagem == "ENTREGUE") && this is PLAN_PEDIDO)
                 {
                     return 100;
                 }

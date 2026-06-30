@@ -34,7 +34,7 @@ namespace DLM.painel
                 {
                     var real = reais.Find(x => x.pedido == ct);
                     var con = cons.Find(x => x.PEP == ct);
-                    if (real != null |  con != null)
+                    if (real != null ||  con != null)
                     {
                         pmps.Add(new Pedido_PMP(real, null, con));
                     }
@@ -79,9 +79,9 @@ namespace DLM.painel
         }
 
 
-        public static List<ORC_PED> Obras_PGO_Consolidadas(bool recarregar = false)
+        public static List<ORC_PED> Obras_PGO_Consolidadas(bool update = false)
         {
-            if (_Obras_PGO_Consolidadas == null | recarregar)
+            if (_Obras_PGO_Consolidadas == null || update)
             {
                 _Obras_PGO_Consolidadas = new List<ORC_PED>();
                 _Obras_PGO_Consolidadas = Consultas.GetObrasPGO();

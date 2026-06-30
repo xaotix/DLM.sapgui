@@ -43,7 +43,7 @@ namespace DLM.painel
             if (marca.Count > 0)
             {
                 var mm = marca[0];
-                if (this.material.ToString() == this.desenho | this.desenho == "")
+                if (this.material.ToString() == this.desenho || this.desenho == "")
                 {
                     this.desenho = mm;
                 }
@@ -402,7 +402,7 @@ namespace DLM.painel
                 this.tipo_aco = linha["tipo_aco"].Valor;
                 this.codigo_materia_prima_sap = linha["codigo_materia_prima_sap"].Valor;
 
-                if (this.desenho == "" | this.desenho == this.material)
+                if (this.desenho == "" || this.desenho == this.material)
                 {
                     this.desenho = linha["marca"].Valor;
                 }

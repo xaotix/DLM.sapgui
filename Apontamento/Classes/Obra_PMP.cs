@@ -380,7 +380,7 @@ namespace DLM.painel
 
 
 
-            if (Descricao == "" | Descricao == PEP)
+            if (Descricao == "" || Descricao == PEP)
             {
                 if (this.Contrato.ESoNumero())
                 {
@@ -462,7 +462,7 @@ namespace DLM.painel
                         var real = reais.Find(x => x.PEP == s);
                         var con = cons.Find(x => x.PEP == s);
                         var emb = embs.Find(x => x.PEP == s);
-                        if (real != null | con != null)
+                        if (real != null || con != null)
                         {
                             _peps.Add(new PEP_PMP(ped, real, null, con, emb));
                         }
@@ -504,7 +504,7 @@ namespace DLM.painel
                         var real = reais.Find(x => x.PEP == s);
                         var con = cons.Find(x => x.PEP == s);
                         var emb = embs.Find(x => x.PEP == s);
-                        if (real != null | con != null)
+                        if (real != null || con != null)
                         {
                             var nnn = new SubEtapa_PMP(pedido, real, null, con, emb);
                             _subetapas.Add(nnn);
@@ -536,7 +536,7 @@ namespace DLM.painel
                     {
                         var real = reais.Find(x => x.PEP == s);
                         var con = cons.Find(x => x.PEP == s);
-                        if (real != null | con != null)
+                        if (real != null || con != null)
                         {
                             _etapas.Add(new Etapa_PMP(pedido, real, null, con));
                         }

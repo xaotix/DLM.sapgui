@@ -400,7 +400,7 @@ namespace DLM.sapgui
                 pep = tt.GetItemText(key, "TECH_KEY");
 
                 CJ20N_No Raiz = new CJ20N_No(pep, desc, key, chave_pep, tt, this);
-                if (Raiz.tipo == CJ20N_Tipo.Desconhecido | Raiz.tipo == CJ20N_Tipo.Tarefa)
+                if (Raiz.tipo == CJ20N_Tipo.Desconhecido || Raiz.tipo == CJ20N_Tipo.Tarefa)
                 {
                     try
                     {

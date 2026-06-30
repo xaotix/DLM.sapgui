@@ -390,10 +390,10 @@ namespace DLM.painel
 
 
 
-        private static List<PLAN_OBRA> GetObras(bool reset = false)
+        private static List<PLAN_OBRA> GetObras(bool update = false)
         {
 
-            if (_obras == null | reset)
+            if (_obras == null || update)
             {
                 _obras = new List<PLAN_OBRA>();
                 var consulta = DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_obras_copia);
@@ -590,9 +590,9 @@ namespace DLM.painel
             return ldb;
         }
 
-        public static List<PLAN_PEDIDO> GetPedidos(bool reset = false)
+        public static List<PLAN_PEDIDO> GetPedidos(bool update = false)
         {
-            if (_pedidos == null | reset)
+            if (_pedidos == null || update)
             {
                 _pedidos = new List<PLAN_PEDIDO>();
                 var consulta = new DLM.db.Tabela();
@@ -932,7 +932,7 @@ namespace DLM.painel
         public static List<string> GetPedidosClean(List<string> contratos, bool update)
         {
 
-            if (_pedidos_clean == null | update)
+            if (_pedidos_clean == null || update)
             {
                 _pedidos_clean = new List<string>();
 

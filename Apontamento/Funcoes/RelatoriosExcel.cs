@@ -44,7 +44,7 @@ namespace DLM.painel
                 return false;
             }
 
-            if (destino == "" | destino == null)
+            if (destino == "" || destino == null)
             {
                 destino = "xlsx".SalvarArquivo();
 

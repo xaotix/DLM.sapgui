@@ -243,7 +243,7 @@ namespace DLM.sapgui
 
 
                     CJ20N_No no = new CJ20N_No(pep, desc, key, chave_pep, arvore, this.SAP);
-                    if (no.tipo == CJ20N_Tipo.Desconhecido | no.tipo == CJ20N_Tipo.Tarefa)
+                    if (no.tipo == CJ20N_Tipo.Desconhecido || no.tipo == CJ20N_Tipo.Tarefa)
                     {
                         try
                         {
@@ -281,13 +281,13 @@ namespace DLM.sapgui
         public string chave_pep { get; set; } = "";
         public string descricao { get; set; } = "";
         private List<CJ20N_No> _filhos { get; set; } = new List<CJ20N_No>();
-        public List<CJ20N_No> Getfilhos(bool reset = false)
+        public List<CJ20N_No> Getfilhos(bool update = false)
         {
             if(this.tipo == CJ20N_Tipo.Desconhecido| this.tipo == CJ20N_Tipo.Tarefa)
             {
                 return new List<CJ20N_No>();
             }
-            if((_filhos.Count==0 | reset) && this.arvore!=null)
+            if((_filhos.Count==0 || update) && this.arvore!=null)
             {
                 _filhos = new List<CJ20N_No>();
                 this.SetNo();
