@@ -359,7 +359,7 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                DLM.log.Log(ex);
+                ex.Log();
                 //throw;
             }
         }
@@ -1080,7 +1080,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    DLM.log.Log(ex);
+                    ex.Log();
                 }
                 Retornar();
                 return false;
@@ -1147,7 +1147,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    DLM.log.Log(ex);
+                    ex.Log();
                 }
                 return false;
             }
@@ -1207,7 +1207,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    DLM.log.Log(ex);
+                    ex.Log();
                 }
                 return false;
             }
@@ -1268,7 +1268,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    DLM.log.Log(ex);
+                    ex.Log();
                 }
 
                 return false;
@@ -1311,7 +1311,7 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                DLM.log.Log(ex);
+                ex.Log();
                 //MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return false;
             }
@@ -1523,7 +1523,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    DLM.log.Log(ex);
+                    ex.Log();
                 }
                 return false;
             }
@@ -1587,7 +1587,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    DLM.log.Log(ex);
+                    ex.Log();
                 }
                 return false;
             }
@@ -1637,7 +1637,7 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                DLM.log.Log(ex);
+                ex.Log();
                 //MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return false;
             }
@@ -1697,7 +1697,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    DLM.log.Log(ex);
+                    ex.Log();
                 }
                 return false;
             }
@@ -1733,7 +1733,7 @@ namespace DLM.sapgui
                     }
                     catch (Exception ex)
                     {
-                        DLM.log.Log(ex);
+                        ex.Log();
                     }
 
                     ((GuiCTextField)this.SessaoSAP.FindById("wnd[1]/usr/tabsTAB_STRIP/tabpSIVA/ssubSCREEN_HEADER:SAPLALDB:3010/tblSAPLALDBSINGLE/ctxtRSCSEL_255-SLOW_I[1,0]")).Text = "*FM*";
@@ -1755,8 +1755,7 @@ namespace DLM.sapgui
                     }
                     catch (Exception ex)
                     {
-
-                        DLM.log.Log(ex);
+                        ex.Log();
                     }
 
 
@@ -1783,7 +1782,7 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                DLM.log.Log(ex);
+                ex.Log();
                 //MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return false;
             }
@@ -1985,7 +1984,7 @@ namespace DLM.sapgui
             }
             catch (Exception ex)
             {
-                DLM.log.Log(ex);
+                ex.Log();
                 //MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return false;
             }
@@ -2055,7 +2054,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    DLM.log.Log(ex);
+                    ex.Log();
                 }
                 return false;
             }
@@ -2131,7 +2130,7 @@ namespace DLM.sapgui
                 }
                 else
                 {
-                    DLM.log.Log(ex);
+                    ex.Log();
                 }
                 return false;
             }
