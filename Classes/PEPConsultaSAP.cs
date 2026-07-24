@@ -180,151 +180,24 @@ namespace DLM.sapgui
             }
         }
 
-        private DateTime _Engenharia_Cronograma { get; set; } = Cfg.Init.DataDummy;
 
-        public DateTime Engenharia_Cronograma
-        {
-            get
-            {
-                return _Engenharia_Cronograma;
-            }
-            set
-            {
-                _Engenharia_Cronograma = value;
-                NotifyPropertyChanged("Engenharia_Cronograma");
-            }
-        }
-
-        private DateTime _Engenharia_Cronograma_Inicio { get; set; } = Cfg.Init.DataDummy;
-
-        public DateTime Engenharia_Cronograma_Inicio
-        {
-            get
-            {
-                return _Engenharia_Cronograma_Inicio;
-            }
-            set
-            {
-                _Engenharia_Cronograma_Inicio = value;
-                NotifyPropertyChanged("Engenharia_Cronograma_Inicio");
-            }
-        }
-
-        private DateTime _Engenharia_Liberacao { get; set; } = Cfg.Init.DataDummy;
-
-        public DateTime Engenharia_Liberacao
-        {
-            get
-            {
-                return _Engenharia_Liberacao;
-            }
-            set
-            {
-                _Engenharia_Liberacao = value;
-                NotifyPropertyChanged("Engenharia_Liberacao");
-            }
-        }
-
-        private DateTime _Fabrica_Cronograma { get; set; } = Cfg.Init.DataDummy;
-
-        public DateTime Fabrica_Cronograma
-        {
-            get
-            {
-                return _Fabrica_Cronograma;
-            }
-            set
-            {
-                _Fabrica_Cronograma = value;
-                NotifyPropertyChanged("Fabrica_Cronograma");
-            }
-        }
-
-        private DateTime _Fabrica_Cronograma_Inicio { get; set; } = Cfg.Init.DataDummy;
-
-        public DateTime Fabrica_Cronograma_Inicio
-        {
-            get
-            {
-                return _Fabrica_Cronograma_Inicio;
-            }
-            set
-            {
-                _Fabrica_Cronograma_Inicio = value;
-                NotifyPropertyChanged("Fabrica_Cronograma_Inicio");
-            }
-        }
-
-        private DateTime _Logistica_Cronograma { get; set; } = Cfg.Init.DataDummy;
-
-        public DateTime Logistica_Cronograma
-        {
-            get
-            {
-                return _Logistica_Cronograma;
-            }
-            set
-            {
-                _Logistica_Cronograma = value;
-                NotifyPropertyChanged("Logistica_Cronograma");
-            }
-        }
-
-        private DateTime _Logistica_Cronograma_Inicio { get; set; } = Cfg.Init.DataDummy;
-
-        public DateTime Logistica_Cronograma_Inicio
-        {
-            get
-            {
-                return _Logistica_Cronograma_Inicio;
-            }
-            set
-            {
-                _Logistica_Cronograma_Inicio = value;
-                NotifyPropertyChanged("Logistica_Cronograma_Inicio");
-            }
-        }
-
-        private DateTime _Montagem_Cronograma { get; set; } = Cfg.Init.DataDummy;
-
-        public DateTime Montagem_Cronograma
-        {
-            get
-            {
-                return _Montagem_Cronograma;
-            }
-            set
-            {
-                _Montagem_Cronograma = value;
-                NotifyPropertyChanged("Montagem_Cronograma");
-            }
-        }
-
-        private DateTime _Montagem_Cronograma_Inicio { get; set; } = Cfg.Init.DataDummy;
-
-        public DateTime Montagem_Cronograma_Inicio
-        {
-            get
-            {
-                return _Montagem_Cronograma_Inicio;
-            }
-            set
-            {
-                _Montagem_Cronograma_Inicio = value;
-                NotifyPropertyChanged("Montagem_Cronograma_Inicio");
-            }
-        }
-
-
-        public DateTime eng_base_ini { get; set; } = Cfg.Init.DataDummy;
-        public DateTime fab_base_ini { get; set; } = Cfg.Init.DataDummy;
-        public DateTime log_base_ini { get; set; } = Cfg.Init.DataDummy;
-        public DateTime mon_base_ini { get; set; } = Cfg.Init.DataDummy;
-
-        public DateTime eng_base_fim { get; set; } = Cfg.Init.DataDummy;
-        public DateTime fab_base_fim { get; set; } = Cfg.Init.DataDummy;
-        public DateTime log_base_fim { get; set; } = Cfg.Init.DataDummy;
-        public DateTime mon_base_fim { get; set; } = Cfg.Init.DataDummy;
+        public DateTime? Engenharia_Cronograma { get; set; }
+        public DateTime? Engenharia_Cronograma_Inicio { get; set; }
+        public DateTime? Engenharia_Liberacao { get; set; }
+        public DateTime? Fabrica_Cronograma { get; set; }
+        public DateTime? Fabrica_Cronograma_Inicio { get; set; }
+        public DateTime? Logistica_Cronograma { get; set; }
+        public DateTime? Logistica_Cronograma_Inicio { get; set; }
+        public DateTime? Montagem_Cronograma { get; set; }
+        public DateTime? Montagem_Cronograma_Inicio { get; set; }
+        public DateTime? eng_base_ini { get; set; }
+        public DateTime? fab_base_ini { get; set; }
+        public DateTime? log_base_ini { get; set; }
+        public DateTime? mon_base_ini { get; set; }
+        public DateTime? eng_base_fim { get; set; }
+        public DateTime? fab_base_fim { get; set; }
+        public DateTime? log_base_fim { get; set; }
+        public DateTime? mon_base_fim { get; set; }
 
 
         private double _Produzido { get; set; } = 0;
