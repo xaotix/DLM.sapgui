@@ -79,7 +79,7 @@ namespace DLM.sapgui
             if(avanco)
             {
                 this.POSNR = l["ELPEP"].Long();
-                this.PEP = Conexoes.Utilz.PEP.Ajustar(l["POSID"].Valor);
+                this.PEP = l["POSID"].Valor.ToPEP();
                 this.Material = l["MATNR"].Valor;
                 this.Marca = l["GROES"].Valor;
 

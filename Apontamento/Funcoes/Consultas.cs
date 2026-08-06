@@ -333,7 +333,7 @@ namespace DLM.painel
             DLM.SAP.ZGWBS_UPDATE(pedido, DLM.sap.SAP_Acao.Nada, DLM.sap.SAP_Acao.Sim);
         }
 
-        public static void SincronizarTitulosContratos(List<string> contratos)
+        public static void SincronizarTitulosContratos(List<int> contratos)
         {
             var contratos_sap = DLM.SAP.GetContratos();
             foreach (var contrato in contratos)
@@ -451,7 +451,7 @@ namespace DLM.painel
         public static void SincronizarPedidos(List<string> pedidos)
         {
             var w = Conexoes.Utilz.Wait(pedidos.Count, "Rodando Pedidos...");
-            var contratos = pedidos.Select(x => Conexoes.Utilz.PEP.Get.Contrato(x)).Distinct().ToList();
+            var contratos = pedidos.Select(x => Conexoes.Utilz.PEP.Get.Contrato(x).Int()).Distinct().ToList();
             Consultas.SincronizarTitulosContratos(contratos);
 
             var conexaoSAP2 = new ConexaoSAP("");

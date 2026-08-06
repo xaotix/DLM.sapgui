@@ -368,7 +368,7 @@ namespace DLM.painel
                 this.PEP = linha["pep"].Valor;
                 if (!this.PEP.Contem("."))
                 {
-                    this.PEP = Conexoes.Utilz.PEP.Ajustar(this.PEP);
+                    this.PEP = this.PEP.ToPEP();
                 }
 
                 this.texto_breve = linha["texto_breve"].Valor;
