@@ -37,7 +37,7 @@ namespace DLM.painel
 
             }
 
-            this.qtd_embarcada = lista_fim.FindAll(x => x["St_Conf_"].Valor.Upper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x["qtd_embarque"].Double());
+            this.qtd_embarcada = lista_fim.FindAll(x => x["St_Conf_"].Upper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA).Sum(x => x["qtd_embarque"].Double());
             var marca = lista_fim.Select(x => x["Tamanho_dimensao"].Valor).Distinct().ToList().FindAll(x => x.Replace(" ", "") != "");
 
             if (marca.Count > 0)

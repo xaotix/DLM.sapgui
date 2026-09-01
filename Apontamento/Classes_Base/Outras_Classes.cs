@@ -310,14 +310,14 @@ namespace DLM.painel
         private void GetDados_0100(DLM.db.Linha linha)
         {
             this.descricao =          linha["descricao"].Valor;
-            this.carga_confirmada =   linha["st_conf_"].Valor.Upper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA;
+            this.carga_confirmada =   linha["st_conf_"].Upper() == Cfg.Init.ZPP0100_CARGA_CONFIRMADA;
             this.num_carga = "RN" +   linha["nro_carga"].Valor/*.PadLeft(5,'0')*/;
             this.pack_list = "PL" +   linha["ordem_embarque"].Valor.PadLeft(5, '0');
             this.pep =                linha["elemento_pep"].Valor;
             this.material =           linha["Material"].Valor;
             this.desenho =            linha["Tamanho_dimensao"].Valor;
             this.etiqueta =           linha["etiqueta"].Valor;
-            this.etiqueta_impressa =  linha["etiqueta_impressa"].Valor.Upper() == "TRUE";
+            this.etiqueta_impressa =  linha["etiqueta_impressa"].Boolean();
             this.centro =             linha["centro"].Valor;
             this.quantidade =         linha["qtd_embarque"].Double();
 
