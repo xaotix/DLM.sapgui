@@ -15,7 +15,6 @@ namespace DLM.painel
     {
         private static List<PLAN_OBRA> _obras { get; set; }
         private static List<PLAN_PEDIDO> _pedidos { get; set; }
-        private static List<string> _pedidos_clean { get; set; }
         private static List<Plan_Ped_Contrato> _titulos_obras { get; set; }
 
 
@@ -47,7 +46,6 @@ namespace DLM.painel
             }
             return retorno;
         }
-
         public static List<PLAN_PECA> GetPecasPMP(List<Pedido_PMP> pedidos)
         {
             var retorno = new List<PLAN_PECA>();
@@ -153,7 +151,6 @@ namespace DLM.painel
             }
             return retorno;
         }
-
         public static List<ORC_ETP> GetEtapasPGO(List<string> pedidos, bool consolidada = false)
         {
 
@@ -188,8 +185,6 @@ namespace DLM.painel
             }
             return retorno;
         }
-
-
         public static List<ZPP0100_Resumo> GetResumoEmbarquesPEP(List<string> peps, int coluna = 24)
         {
             var retorno = new List<ZPP0100_Resumo>();
@@ -448,8 +443,10 @@ namespace DLM.painel
 
             return retorno;
         }
-        public static void SincronizarPedidos(List<string> pedidos)
+        public static void SincronizarPedidos(List<string> pedidos, bool resultado = true, bool criar_cache = true, bool enviar_email = true)
         {
+            pedidos = pedidos.Distinct().ToList();
+
             var w = Conexoes.Utilz.Wait(pedidos.Count, "Rodando Pedidos...");
             var contratos = pedidos.Select(x => Conexoes.Utilz.PEP.Get.Contrato(x).Int()).Distinct().ToList();
             Consultas.SincronizarTitulosContratos(contratos);
@@ -470,16 +467,17 @@ namespace DLM.painel
                     var consultaContrato = new ConexaoSAP(pedido);
                     obrasSAP.Add(consultaContrato);
                     /*como o consultasap carrega todas as datas, eu salvo as datas de cronograma no sistema.*/
-                    if (consultaContrato.ConsultaSAP())
-                    {
-                        Consultas.CriarCache(pedido.Replace("*", "").Replace("%", ""));
-                    }
+                    consultaContrato.ConsultaSAP(resultado, criar_cache);
                     c++;
                 }
             }
             w.Close();
-            Conexoes.Email.Enviar(new List<string> { "daniel.maciel@medabil.com.br" }, $"Sincronização ZPAINEL {pedidos.Count} pedidos - {DateTime.Now.ToString()}",
-                $"<html>{string.Join("\n<br>", pedidos)}</html>");
+            if (enviar_email)
+            {
+                Conexoes.Email.Enviar(new List<string> { "daniel.maciel@medabil.com.br" }, $"Sincronização ZPAINEL {pedidos.Count} pedidos - {DateTime.Now.ToString()}",
+    $"<html>{string.Join("\n<br>", pedidos)}</html>");
+            }
+
         }
         public static void CriarCache(string contrato)
         {
@@ -630,8 +628,6 @@ namespace DLM.painel
 
             return _pedidos;
         }
-
-
         public static List<PLAN_PEDIDO> GetPedidos(List<string> contrato)
         {
 
@@ -844,115 +840,57 @@ namespace DLM.painel
 
         public static List<PLAN_PECA> GetPecasReal(List<string> lista_pedidos, int max_pacote = 10)
         {
-            lista_pedidos = lista_pedidos.FindAll(x => x.LenghtStr() > 5).Distinct().ToList();
-            lista_pedidos = lista_pedidos.Select(x => x.Replace("*", "").Replace(" ", "")).ToList().FindAll(x => x != "").OrderBy(x => x).ToList();
+            // 1. Limpeza unificada e em única iteração
+            var pedidosValidos = lista_pedidos
+                .Where(x => !string.IsNullOrWhiteSpace(x) && x.LenghtStr() > 5)
+                .Select(x => x.Replace("*", "").Replace(" ", ""))
+                .Distinct()
+                .OrderBy(x => x)
+                .ToList();
 
-            if (lista_pedidos.Count == 0) { return new List<PLAN_PECA>(); }
-            var retorno = new List<PLAN_PECA>();
+            if (pedidosValidos.Count == 0) return new List<PLAN_PECA>();
 
-            var tabelas_pecas = new List<DLM.db.Tabela>();
-            var tabelas_embarques = new List<DLM.db.Tabela>();
-            foreach (var pedido in lista_pedidos)
+            var retorno = new ConcurrentBag<PLAN_PECA>();
+
+            // 2. Processamento em lote utilizando o 'max_pacote' (que estava inutilizado)
+            // Isso evita travar o banco com muitas chamadas simultâneas, mas paraleliza o processamento
+            Parallel.ForEach(pedidosValidos, new ParallelOptions { MaxDegreeOfParallelism = max_pacote }, pedido =>
             {
-                var lista_pecas = DBases.GetDB().Consulta($"call {Cfg.Init.db_comum}.getpecas('{pedido}')");
-                var lista_embarques = DBases.GetDB().Consulta($"call {Cfg.Init.db_comum}.getPecasEmbarques('{pedido}')");
-                tabelas_pecas.Add(lista_pecas);
-                tabelas_embarques.Add(lista_embarques);
-            }
+                var db = DBases.GetDB();
+                var lista_pecas = db.Consulta($"call {Cfg.Init.db_comum}.getpecas('{pedido}')");
+                var lista_embarques = db.Consulta($"call {Cfg.Init.db_comum}.getPecasEmbarques('{pedido}')");
 
-            for (int i = 0; i < tabelas_pecas.Count; i++)
-            {
-                var lista_pecas = tabelas_pecas[i];
-                var lista_embarques = tabelas_embarques[i];
-                var _pecas = new ConcurrentBag<PLAN_PECA>();
-                var Tarefas = new List<Task>();
-                foreach (var linha in lista_pecas)
+                // 3. Remoção do "Task.Factory.StartNew" por linha
+                // Instanciar objetos é rápido. Criar Tasks para cada linha adicionava um overhead gigantesco.
+                var plan_pecas = lista_pecas.Select(linha => new PLAN_PECA(linha)).ToList();
+
+                // 4. Criação de Lookups (Busca em O(1) ao invés de FindAll que é O(N))
+                var pecasPorSubetapa = plan_pecas.ToLookup(x => Conexoes.Utilz.PEP.Get.Subetapa(x.PEP, true));
+                var embarquesAgrupados = lista_embarques.GroupBy(x => Conexoes.Utilz.PEP.Get.Subetapa(x["Elemento_PEP"].Valor, true));
+
+                // 5. Cruzamento de dados otimizado
+                foreach (var pep in embarquesAgrupados)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() =>
+                    var statusZpp = pep.ToList();
+
+                    // pecasPorSubetapa[pep.Key] acha as peças instantaneamente sem precisar varrer a lista
+                    foreach (var peca in pecasPorSubetapa[pep.Key])
                     {
-                        _pecas.Add(new PLAN_PECA(linha));
-                    }));
+                        peca.SetStatusByZPP0100(statusZpp);
+                    }
                 }
-                Task.WaitAll(Tarefas.ToArray());
 
-                var plan_pecas = new List<PLAN_PECA>();
-                plan_pecas.AddRange(_pecas);
-
-                var peps_chaves = lista_embarques.GroupBy(x => Conexoes.Utilz.PEP.Get.Subetapa(x["Elemento_PEP"].Valor, true)).ToList();
-                foreach (var pep in peps_chaves)
+                // Armazena de forma thread-safe na coleção de retorno
+                foreach (var peca in plan_pecas)
                 {
-                    Tarefas.Add(Task.Factory.StartNew(() =>
-                    {
-                        var pecas_pep = plan_pecas.FindAll(x => Conexoes.Utilz.PEP.Get.Subetapa(x.PEP, true) == pep.Key);
-                        foreach (var peca in pecas_pep)
-                        {
-                            peca.SetStatusByZPP0100(pep.ToList());
-                        }
-                    }));
+                    retorno.Add(peca);
                 }
-                Task.WaitAll(Tarefas.ToArray());
+            });
 
-                retorno.AddRange(plan_pecas);
-            }
-            return retorno;
+            return retorno.ToList();
         }
 
-        public static SolidColorBrush getCor(double previsto, double realizado, double opacidade = 1)
-        {
-            if (realizado >= 100)
-            {
-                return new SolidColorBrush(Colors.DarkGreen) { Opacity = opacidade };
-            }
-            else if (realizado == 0 && previsto == 0)
-            {
-                return new SolidColorBrush(Colors.DarkGray) { Opacity = opacidade };
-            }
-            var t = previsto - realizado;
-            if (t >= 40)
-            {
-                return new SolidColorBrush(Colors.Red) { Opacity = opacidade };
-            }
-            else if (t >= 20)
-            {
-                return new SolidColorBrush(Colors.OrangeRed) { Opacity = opacidade };
-            }
-            else if (t >= 10)
-            {
-                return new SolidColorBrush(Colors.Yellow) { Opacity = opacidade };
-            }
-            else if (t >= 5)
-            {
-                return new SolidColorBrush(Colors.LightYellow) { Opacity = opacidade };
-            }
 
-
-            return new SolidColorBrush(Colors.LightBlue) { Opacity = opacidade };
-        }
-
-        public static List<string> GetPedidosClean(List<string> contratos, bool update)
-        {
-
-            if (_pedidos_clean == null || update)
-            {
-                _pedidos_clean = new List<string>();
-
-                _pedidos_clean.AddRange(DBases.GetDB().Consulta(Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_pedidos_copia).Select(x => x["pedido"].Valor).Distinct().ToList());
-                _pedidos_clean = _pedidos_clean.Distinct().ToList().FindAll(x => x.LenghtStr() > 3);
-            }
-            if (contratos != null)
-            {
-                var _retorno = new List<string>();
-                foreach (var contrato in contratos.Distinct().ToList().FindAll(x => x.LenghtStr() > 5))
-                {
-                    _retorno.AddRange(_pedidos_clean.FindAll(x => x.Contem(contrato)));
-                }
-                _retorno = _retorno.Distinct().ToList();
-                return _retorno;
-            }
-
-            return _pedidos_clean;
-
-        }
 
 
         public static bool MatarExcel(bool confirmar = false)

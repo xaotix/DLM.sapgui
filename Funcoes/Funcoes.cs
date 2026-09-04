@@ -50,7 +50,7 @@ namespace DLM.sapgui
 
         public static List<PLAN_PEP> converter(List<PEP_Planejamento> origem/*, bool consultar_existentes = false*/)
         {
-            var PEPS_DUMP = origem.Select(x =>
+            var peps_dump = origem.Select(x =>
             new PLAN_PEP()
             {
                 //banco = DBases.GetDBMySQL(),
@@ -85,12 +85,12 @@ namespace DLM.sapgui
                 /*14/11/18*/
 
             }).ToList();
-            var RETORNO = new List<PLAN_PEP>();
-            RETORNO.AddRange(PEPS_DUMP);
+            var retorno = new List<PLAN_PEP>();
+            retorno.AddRange(peps_dump);
 
             
 
-            return RETORNO;
+            return retorno;
         }
 
         public static List<DLM.sapgui.Lancamento> Agrupar(List<DLM.sapgui.Lancamento> lancamentos, bool separar_por_tipo = true)

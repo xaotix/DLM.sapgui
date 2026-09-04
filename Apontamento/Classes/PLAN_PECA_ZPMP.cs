@@ -12,7 +12,6 @@
             this.Marca = linha["tamanho_dimensao"].Valor;
             this.Material = linha["material"].Valor;
             this.Grupo_Mercadoria = linha["grupo_mercadoria"].Valor;
-
         }
     }
 }

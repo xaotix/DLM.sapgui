@@ -29,21 +29,6 @@ namespace DLM.sapgui
             return PEP;
         }
         public string PEP { get; set; } = "";
-        //public PEP_Planejamento PEP
-        //{
-        //    get
-        //    {
-        //        if(_PEP==null)
-        //        {
-        //            _PEP = new PEP_Planejamento();
-        //        }
-        //        return _PEP;
-        //    }
-        //    set
-        //    {
-        //        _PEP = value;
-        //    }
-        //}
 
         public string Status { get; set; } = "";
         public string Texto_Operacao { get; set; } = "";

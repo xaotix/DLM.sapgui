@@ -93,7 +93,7 @@ namespace DLM.painel
 
             this.status_montagem = "EM ANDAMENTO";
 
-            if(nome!="")
+            if (nome != "")
             {
                 this.descricao = nome;
             }
@@ -104,13 +104,7 @@ namespace DLM.painel
         private List<Conexoes.MSAP_PEP> _peps_eng { get; set; }
         private List<Conexoes.MSAP_Pedido> _Pedidos_Eng { get; set; }
 
-        public ImageSource Imagem
-        {
-            get
-            {
-                return imagem;
-            }
-        }
+        public new ImageSource Imagem => imagem;
         public PLAN_OBRA Clonar()
         {
             return new PLAN_OBRA(this.Linha);
@@ -119,7 +113,7 @@ namespace DLM.painel
 
         public string chave_pedido { get; private set; } = "";
         public long id_montagem { get; set; } = 0;
-    
+
 
 
         public Telerik.Windows.Controls.Map.Location Location
@@ -181,7 +175,7 @@ namespace DLM.painel
         {
             this.Linha = linha;
             string pedido_principal = linha["pedido_principal"].Valor;
-            this.PEP = pedido_principal.Replace(".C00", ".P").Replace(".P00","").Replace(".G00","");
+            this.PEP = pedido_principal.Replace(".C00", ".P").Replace(".P00", "").Replace(".G00", "");
             this.descricao = linha["nome"].Valor;
             this.chave_pedido = pedido_principal.Replace(".C00", ".P").Replace(".P00", ".P").Replace(".G00", ".G");
             this.engenharia_cronograma = linha["engenharia_cronograma"].DataNull();
