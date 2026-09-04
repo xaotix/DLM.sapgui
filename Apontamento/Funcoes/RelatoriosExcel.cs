@@ -38,8 +38,7 @@ namespace DLM.painel
             {
                 if (abrir)
                 {
-                    MessageBox.Show(Vars.TEMPLATE_SAIDA_PECAS_RESUMO + "\n template não encontrado.");
-
+                    $"{Vars.TEMPLATE_SAIDA_PECAS_RESUMO}\n template não encontrado.".Alerta();
                 }
                 return false;
             }
@@ -59,12 +58,11 @@ namespace DLM.painel
                 ;
                 File.Copy(Vars.TEMPLATE_SAIDA_PECAS_RESUMO, destino);
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
                 if (abrir)
                 {
-                    MessageBox.Show(EX.Message);
-
+                    ex.Alerta();
                 }
                 return false;
             }
@@ -474,8 +472,7 @@ namespace DLM.painel
             {
                 if (abrir)
                 {
-                    MessageBox.Show(Vars.TEMPLATE_EMBARQUES + "\n template não encontrado.");
-
+                    $"template não encontrado: {Vars.TEMPLATE_EMBARQUES}".Alerta();
                 }
                 return false;
             }
@@ -499,12 +496,11 @@ namespace DLM.painel
                 ;
                 File.Copy(Vars.TEMPLATE_EMBARQUES, Destino);
             }
-            catch (Exception EX)
+            catch (Exception ex)
             {
                 if (abrir)
                 {
-                    MessageBox.Show(EX.Message);
-
+                    ex.Alerta();
                 }
                 return false;
             }
@@ -619,8 +615,7 @@ namespace DLM.painel
             {
                 if (abrir)
                 {
-
-                    MessageBox.Show(ex.Message);
+                    ex.Alerta();
                 }
             }
 
@@ -647,7 +642,7 @@ namespace DLM.painel
             {
                 if (abrir)
                 {
-                    MessageBox.Show(template + "\n template não encontrado.");
+                    $"template não encontrado: {template}".Alerta();
                 }
                 return false;
             }

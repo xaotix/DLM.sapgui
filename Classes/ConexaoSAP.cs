@@ -2,13 +2,17 @@
 using DLM.painel;
 using DLM.sap;
 using DLM.vars;
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 
 namespace DLM.sapgui
 {
-    public class ConexaoSAP
+    public class ConexaoSAP : IDisposable
     {
+        private bool _disposed = false;
+
         public string Contrato
         {
             get
@@ -73,19 +77,25 @@ namespace DLM.sapgui
             this.ZPMP = new List<ZPMP>();
             this.PEP_PLanejamento = new List<PEP_Planejamento>();
 
+            Consultas.AddMensagemStatus(this.Pedido, $"Consulta SAP Pedido -> {Pedido}");
             var ped = DLM.SAP.GetPedido(this.Pedido);
             if (ped == null)
             {
                 return false;
             }
-
-            this.Avanco = DLM.SAP.ZGPP_GET_AVANCO(this.Pedido, true, true, true, false, true, true, resultado, resultado);
+            Consultas.AddMensagemStatus(this.Pedido, $"Consulta SAP Encontrada -> {ped.ToString()}, iniciando a consulta do avanço...");
+            if (this.Avanco == null)
+                this.Avanco = DLM.SAP.ZGPP_GET_AVANCO(this.Pedido, true, true, true, false, true, true, resultado, resultado);
 
             if (sincronizar)
             {
                 if (resultado)
+                {
+                    Consultas.AddMensagemStatus(this.Pedido, $"Consultando resultado da obra...");
                     this.Avanco.GetTabelasResultado();
+                }
 
+                Consultas.AddMensagemStatus(this.Pedido, $"Consultando peps cadastrados...");
                 var peps_ped = ped.GetPeps();
                 if (peps_ped?.Count > 0)
                 {
@@ -103,6 +113,8 @@ namespace DLM.sapgui
                         });
                     }
 
+
+                    Consultas.AddMensagemStatus(this.Pedido, $"Vinculando cargas com peças...");
                     if (this.Avanco[ZGPP_GET_AVANCO_TABS.PECAS].Count > 0)
                     {
                         this.ZPMP = Avanco[ZGPP_GET_AVANCO_TABS.PECAS].Select(x => new sapgui.ZPMP(x, true)).ToList();
@@ -156,6 +168,7 @@ namespace DLM.sapgui
                 var db = DBases.GetDB();
                 var dbComum = Cfg.Init.db_comum;
 
+                Consultas.AddMensagemStatus(this.Pedido, $"Apagando dados existentes...");
                 db.Apagar("pep", $"%{Pedido}%", dbComum, Cfg.Init.tb_pep_planejamento);
                 db.Apagar("pep", $"%{Pedido}%", dbComum, Cfg.Init.tb_zpmp_producao);
                 db.Apagar("Elemento_PEP", $"%{Pedido}%", dbComum, Cfg.Init.tb_zpp0100_embarques);
@@ -163,6 +176,7 @@ namespace DLM.sapgui
 
                 if (this.PEP_PLanejamento.Count > 0)
                 {
+                    Consultas.AddMensagemStatus(this.Pedido, $"Cadastrando [db={dbComum}]...");
                     var peps = Funcoes.converter(this.PEP_PLanejamento);
                     db.Cadastro(peps.Select(x => x.GetLinha()).ToList(), dbComum, Cfg.Init.tb_pep_planejamento);
 
@@ -178,12 +192,43 @@ namespace DLM.sapgui
 
                 if (this.PEP_PLanejamento.Count > 0 && criar_cache)
                 {
-                    // Process the planned PEPs
+                    Consultas.AddMensagemStatus(this.Pedido, $"Criando cache...");
                     Consultas.CriarCache(this.Pedido.Replace("*", "").Replace("%", ""));
                 }
             }
+            Consultas.AddMensagemStatus(this.Pedido, $"Finalizado.");
 
             return this.Avanco.etapas > 0;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    this.ZPP0100?.Clear();
+                    this.ZPP0100 = null;
+
+                    this.ZPMP?.Clear();
+                    this.ZPMP = null;
+
+                    this.CN47N?.Clear();
+                    this.CN47N = null;
+
+                    this.PEP_PLanejamento?.Clear();
+                    this.PEP_PLanejamento = null;
+
+                    this.Avanco = null;
+                }
+                _disposed = true;
+            }
         }
     }
 }

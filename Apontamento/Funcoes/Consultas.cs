@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Conexoes;
+using DLM.db;
+using DLM.sapgui;
+using DLM.vars;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using Conexoes;
-using DLM.sapgui;
-using DLM.vars;
 
 namespace DLM.painel
 {
@@ -335,7 +336,7 @@ namespace DLM.painel
             {
                 if (contrato.LenghtStr() == 6)
                 {
-                    if (contrato.Int() > 100000)
+                    if (contrato > 100000)
                     {
                         var contrato_sap = contratos_sap.Find(x => x.Contrato == contrato);
 
@@ -443,12 +444,23 @@ namespace DLM.painel
 
             return retorno;
         }
+
+        public static void AddMensagemStatus(string pep, string mensagem)
+        {
+            var linha = new DLM.db.Linha("pep", pep, "mensagem", mensagem);
+            linha.Add("data", DateTime.Now);
+            Conexoes.DBases.GetDB().Cadastro(linha, Cfg.Init.db_comum, Cfg.Init.tb_status_sincronizacao);
+        }
+
         public static void SincronizarPedidos(List<string> pedidos, bool resultado = true, bool criar_cache = true, bool enviar_email = true)
         {
+    
+            AddMensagemStatus("0", "Iniciando sincronização...");
             pedidos = pedidos.Distinct().ToList();
 
             var w = Conexoes.Utilz.Wait(pedidos.Count, "Rodando Pedidos...");
             var contratos = pedidos.Select(x => Conexoes.Utilz.PEP.Get.Contrato(x).Int()).Distinct().ToList();
+            AddMensagemStatus("0", "Sincronizando títulos de contratos...");
             Consultas.SincronizarTitulosContratos(contratos);
 
             var conexaoSAP2 = new ConexaoSAP("");
@@ -457,21 +469,29 @@ namespace DLM.painel
             var Tarefas = new List<Task>();
             int m = pedidos.Count;
             int c = 1;
+            AddMensagemStatus("0", $"Iniciando consulta de {m} pedidos...");
+
             foreach (var pacote in pack_pedidos)
             {
-                var obrasSAP = new List<ConexaoSAP>();
                 foreach (var pedido in pacote)
                 {
+                    AddMensagemStatus(null, $"{c}/{m} - {pedido}");
+
                     w.somaProgresso($"{c}/{m} - {pedido}");
 
-                    var consultaContrato = new ConexaoSAP(pedido);
-                    obrasSAP.Add(consultaContrato);
                     /*como o consultasap carrega todas as datas, eu salvo as datas de cronograma no sistema.*/
-                    consultaContrato.ConsultaSAP(resultado, criar_cache);
+                    using (var conexaoSap = new ConexaoSAP(pedido))
+                    {
+                        conexaoSap.ConsultaSAP(resultado, criar_cache);
+                    }
+
                     c++;
                 }
             }
             w.Close();
+
+            AddMensagemStatus("0", "Pedidos Finalizados.");
+
             if (enviar_email)
             {
                 Conexoes.Email.Enviar(new List<string> { "daniel.maciel@medabil.com.br" }, $"Sincronização ZPAINEL {pedidos.Count} pedidos - {DateTime.Now.ToString()}",
@@ -479,6 +499,16 @@ namespace DLM.painel
             }
 
         }
+
+        public static void ClearMensagemStatus(DateTime? data = null)
+        {
+            if(data == null)
+            {
+                data = DateTime.Now;
+            }
+            Conexoes.DBases.GetDB().Apagar(new Linha(new Celula("data", data)), Cfg.Init.db_comum, Cfg.Init.tb_status_sincronizacao);
+        }
+
         public static void CriarCache(string contrato)
         {
             if (contrato.LenghtStr() < 4) { return; }

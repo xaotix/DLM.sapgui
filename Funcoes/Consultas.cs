@@ -197,7 +197,7 @@ namespace DLM.sapgui
                 {
                     if (msgs)
                     {
-                        MessageBox.Show("Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        "Não foi possível criar o arquivo\nNão foi possível carregar o SAP. Verifique se está logado.".Alerta();
                     }
                     return false;
                 }
@@ -206,7 +206,7 @@ namespace DLM.sapgui
             {
                 if (msgs)
                 {
-                    MessageBox.Show("Não foi possível criar o arquivo\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    $"Não foi possível criar o arquivo\n{ex.Message}".Alerta();
                 }
                 return false;
             }
