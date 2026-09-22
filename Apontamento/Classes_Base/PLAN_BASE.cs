@@ -179,77 +179,17 @@ namespace DLM.painel
             this._peps.AddRange(lista.FindAll(x => x.PEP.StartsW(this.PEP)));
         }
 
-        public bool carregou_etapas
-        {
-            get
-            {
-                return _etapas.Count > 0;
-            }
-        }
-        public bool carregou_peps
-        {
-            get
-            {
-                return _peps.Count > 0;
-            }
-        }
-        public bool carregou_pedidos
-        {
-            get
-            {
-                return _pedidos.Count > 0;
-            }
-        }
-        public bool carregou_sub_etapas
-        {
-            get
-            {
-                return _subetapas.Count > 0;
-            }
-        }
-        public bool carregou_pecas
-        {
-            get
-            {
-                return this._pecas.Count > 0;
-            }
-        }
+        public bool carregou_etapas => _etapas.Count > 0;
+        public bool carregou_peps => _peps.Count > 0;
+        public bool carregou_pedidos => _pedidos?.Count > 0;
+        public bool carregou_sub_etapas => _subetapas?.Count > 0;
+        public bool carregou_pecas => this._pecas.Count > 0;
 
-        public string setor_atividade
-        {
-            get
-            {
-                return Conexoes.Utilz.PEP.Get.Setor_Atividade(this.PEP);
-            }
-        }
-        public string etapa
-        {
-            get
-            {
-                return Conexoes.Utilz.PEP.Get.Etapa(this.PEP, true);
-            }
-        }
-        public string subetapa
-        {
-            get
-            {
-                return Conexoes.Utilz.PEP.Get.Subetapa(this.PEP, true);
-            }
-        }
-        public string contrato
-        {
-            get
-            {
-                return Conexoes.Utilz.PEP.Get.Contrato(this.PEP);
-            }
-        }
-        public string pedido
-        {
-            get
-            {
-                return Conexoes.Utilz.PEP.Get.Pedido(this.PEP, true);
-            }
-        }
+        public string setor_atividade => Conexoes.Utilz.PEP.Get.Setor_Atividade(this.PEP);
+        public string etapa => Conexoes.Utilz.PEP.Get.Etapa(this.PEP, true);
+        public string subetapa => Conexoes.Utilz.PEP.Get.Subetapa(this.PEP, true);
+        public string contrato => Conexoes.Utilz.PEP.Get.Contrato(this.PEP);
+        public string pedido => Conexoes.Utilz.PEP.Get.Pedido(this.PEP, true);
         public DateTime? ultima_edicao { get; set; }
         public DateTime? criado { get; set; }
         public DateTime? engenharia_liberacao { get; set; }

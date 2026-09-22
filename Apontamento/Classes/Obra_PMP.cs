@@ -164,24 +164,24 @@ namespace DLM.painel
     }
     public class SubEtapa_PMP : Base_PMP
     {
-        public DateTime? ei => Real?.engenharia_cronograma_inicio;
-        public DateTime? ef => Real?.engenharia_cronograma;
-        public DateTime? fi => Real?.fabrica_cronograma_inicio;
-        public DateTime? ff => Real?.fabrica_cronograma;
-        public DateTime? li => Real?.logistica_cronograma_inicio;
-        public DateTime? lf => Real?.logistica_cronograma;
-        public DateTime? mi => Real?.montagem_cronograma_inicio;
+        public DateTime? ei => this.Real?.engenharia_cronograma_inicio;
+        public DateTime? ef => this.Real?.engenharia_cronograma;
+        public DateTime? fi => this.Real?.fabrica_cronograma_inicio;
+        public DateTime? ff => this.Real?.fabrica_cronograma;
+        public DateTime? li => this.Real?.logistica_cronograma_inicio;
+        public DateTime? lf => this.Real?.logistica_cronograma;
+        public DateTime? mi => this.Real?.montagem_cronograma_inicio;
         /// <summary>
         /// LOB
         /// </summary>
-        public DateTime? mi_s => Real?.mi_s;
+        public DateTime? mi_s => this.Real?.mi_s;
         /// <summary>
         /// LOB
         /// </summary>
-        public DateTime? mf_s => Real?.mf_s;
-        public DateTime? mf => Real?.montagem_cronograma;
-        public double? total_embarcado => Real?.total_embarcado;
-        public double? liberado_engenharia => Real?.liberado_engenharia;
+        public DateTime? mf_s => this.Real?.mf_s;
+        public DateTime? mf => this.Real?.montagem_cronograma;
+        public double? total_embarcado => this.Real?.total_embarcado;
+        public double? liberado_engenharia => this.Real?.liberado_engenharia;
         public double? total_fabricado => this.Real?.total_fabricado;
 
         public double peso => Getpeps().Sum(x => x.Peso).Round(2);
