@@ -647,16 +647,17 @@ namespace DLM.painel
                 return false;
             }
 
-            var Destino = "xlsx".SalvarArquivo();
-            if (Destino == "")
+            var destino = "xlsx".SalvarArquivo();
+            if (destino.IsNullOrEmpty())
             {
                 return false;
             }
+
             try
             {
-                if (Destino.Exists()) { Destino.Delete(); }
-                ;
-                File.Copy(template, Destino);
+                if (destino.Exists()) { destino.Delete(); }
+
+                File.Copy(template, destino);
             }
             catch (Exception ex)
             {
@@ -681,7 +682,7 @@ namespace DLM.painel
             {
                 using (var pck = new OfficeOpenXml.ExcelPackage())
                 {
-                    using (Stream stream = new FileStream(Destino,
+                    using (Stream stream = new FileStream(destino,
                                      FileMode.Open,
                                      FileAccess.Read,
                                      FileShare.ReadWrite))
@@ -964,11 +965,11 @@ namespace DLM.painel
 
                     w.Close();
 
-                    pck.SaveAs(new FileInfo(Destino));
+                    pck.SaveAs(new FileInfo(destino));
                     if (abrir)
                     {
 
-                        Process.Start(Destino);
+                        Process.Start(destino);
                     }
                 }
 
