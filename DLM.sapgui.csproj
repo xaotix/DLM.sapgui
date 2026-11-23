@@ -218,6 +218,10 @@
       <Project>{def82547-9fab-457e-89bf-c10ed1dd9162}</Project>
       <Name>DLM</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DLM.Icones\DLM.Icones.csproj">
+      <Project>{9e62f7c1-7d84-4b2a-9a3f-1c4f0d8a5e21}</Project>
+      <Name>DLM.Icones</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
