@@ -452,7 +452,7 @@ namespace DLM.painel
             Conexoes.DBases.GetDB().Cadastro(linha, Cfg.Init.db_comum, Cfg.Init.tb_status_sincronizacao);
         }
 
-        public static void SincronizarPedidos(List<string> pedidos, bool resultado = true, bool criar_cache = true, bool enviar_email = true)
+        public static void SincronizarPedidos(List<string> pedidos, bool resultado = true, bool criar_cache = true, bool enviar_email = true, Action<string> aoLogar = null)
         {
     
             AddMensagemStatus("0", "Iniciando sincronização...");
@@ -461,7 +461,9 @@ namespace DLM.painel
             var w = Conexoes.Utilz.Wait(pedidos.Count, "Rodando Pedidos...");
             var contratos = pedidos.Select(x => Conexoes.Utilz.PEP.Get.Contrato(x).Int()).Distinct().ToList();
             AddMensagemStatus("0", "Sincronizando títulos de contratos...");
+            aoLogar?.Invoke($"SincronizarTitulosContratos: {contratos.Count} contratos...");
             Consultas.SincronizarTitulosContratos(contratos);
+            aoLogar?.Invoke("SincronizarTitulosContratos concluido.");
 
             var conexaoSAP2 = new ConexaoSAP("");
             var pack_pedidos = pedidos.Quebrar(3);
@@ -478,6 +480,7 @@ namespace DLM.painel
                     AddMensagemStatus(null, $"{c}/{m} - {pedido}");
 
                     w.somaProgresso($"{c}/{m} - {pedido}");
+                    aoLogar?.Invoke($"{c}/{m} - Iniciando ConsultaSAP: {pedido}");
 
                     try
                     {
@@ -485,12 +488,14 @@ namespace DLM.painel
                         using (var conexaoSap = new ConexaoSAP(pedido))
                         {
                             conexaoSap.ConsultaSAP(resultado, criar_cache);
+                            aoLogar?.Invoke($"{c}/{m} - Concluido ConsultaSAP: {pedido}");
                         }
                     }
                     catch (Exception ex)
                     {
                         ex.Log(null, "SincronizarPedidos", pedido);
                         AddMensagemStatus(pedido, $"Erro ao sincronizar: {ex.Message}");
+                        aoLogar?.Invoke($"{c}/{m} - ERRO ConsultaSAP {pedido}: {ex.GetType().Name}: {ex.Message}");
                     }
 
                     c++;
