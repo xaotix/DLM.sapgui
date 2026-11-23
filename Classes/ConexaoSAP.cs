@@ -1,4 +1,4 @@
-ï»¿using Conexoes;
+using Conexoes;
 using DLM.painel;
 using DLM.sap;
 using DLM.vars;
@@ -83,7 +83,7 @@ namespace DLM.sapgui
             {
                 return false;
             }
-            Consultas.AddMensagemStatus(this.Pedido, $"Consulta SAP Encontrada -> {ped.ToString()}, iniciando a consulta do avanÃ§o...");
+            Consultas.AddMensagemStatus(this.Pedido, $"Consulta SAP Encontrada -> {ped.ToString()}, iniciando a consulta do avanço...");
             if (this.Avanco == null)
                 this.Avanco = DLM.SAP.ZGPP_GET_AVANCO(this.Pedido, true, true, true, false, true, true, resultado, resultado);
 
@@ -112,9 +112,11 @@ namespace DLM.sapgui
                             PEP = pep.PEP
                         });
                     }
+                    // Libera os dados pesados retidos na lista estatica DLM.SAP._pedidos
+                    ped.LimparCachePeps();
 
 
-                    Consultas.AddMensagemStatus(this.Pedido, $"Vinculando cargas com peÃ§as...");
+                    Consultas.AddMensagemStatus(this.Pedido, $"Vinculando cargas com peças...");
                     if (this.Avanco[ZGPP_GET_AVANCO_TABS.PECAS].Count > 0)
                     {
                         this.ZPMP = Avanco[ZGPP_GET_AVANCO_TABS.PECAS].Select(x => new sapgui.ZPMP(x, true)).ToList();
@@ -137,7 +139,7 @@ namespace DLM.sapgui
                             int registrosRemovidos = this.ZPP0100.RemoveAll(x => x.PEP.LenghtStr() == 0);
                             if (registrosRemovidos > 0)
                             {
-                                DLM.log.Log($"{this.Pedido} -> ContÃ©m {registrosRemovidos} registros sem PEP respectivo de ZPMP", "Painel de Obras.Log");
+                                DLM.log.Log($"{this.Pedido} -> Contém {registrosRemovidos} registros sem PEP respectivo de ZPMP", "Painel de Obras.Log");
                             }
                         }
                     }
@@ -225,6 +227,7 @@ namespace DLM.sapgui
                     this.PEP_PLanejamento?.Clear();
                     this.PEP_PLanejamento = null;
 
+                    if (this.Avanco != null) { this.Avanco.Tabelas = null; }
                     this.Avanco = null;
                 }
                 _disposed = true;

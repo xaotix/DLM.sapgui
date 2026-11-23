@@ -340,7 +340,7 @@ namespace DLM.painel
                     {
                         var contrato_sap = contratos_sap.Find(x => x.Contrato == contrato);
 
-                        if (contratos_sap != null)
+                        if (contrato_sap != null)
                         {
                             Conexoes.DBases.GetDB().Apagar("contrato", $"%{contrato}%", Cfg.Init.db_painel_de_obras2, Cfg.Init.tb_contratos_copia);
 
