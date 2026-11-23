@@ -1,4 +1,4 @@
-Ôªøusing Conexoes;
+using Conexoes;
 using DLM.db;
 using DLM.sapgui;
 using DLM.vars;
@@ -53,7 +53,7 @@ namespace DLM.painel
             var pedidos_real = pedidos.FindAll(x => x.Material_REAL).Select(x => x.PEP).Distinct().ToList();
             var pedidos_consolidados = pedidos.FindAll(x => x.Material_CONS).Select(x => x.PEP).Distinct().ToList();
 
-            var w = Conexoes.Utilz.Wait(pedidos_real.Count * 4 + 3, $"Mapeando pe√ßas...{pedidos.Count} pedidos...");
+            var w = Conexoes.Utilz.Wait(pedidos_real.Count * 4 + 3, $"Mapeando peÁas...{pedidos.Count} pedidos...");
 
             int tam_pacote = 20;
 
@@ -102,7 +102,7 @@ namespace DLM.painel
             }
             var retorno = new List<PLAN_PECA>();
             var sub_lista = pedidos.Quebrar(max_pacote);
-            var w = Conexoes.Utilz.Wait(sub_lista.Count, "Procurando Pe√ßas ..." + (consolidada ? "(2/3 - Consolidadas)" : "(3/3 - Orcamentos)"));
+            var w = Conexoes.Utilz.Wait(sub_lista.Count, "Procurando PeÁas ..." + (consolidada ? "(2/3 - Consolidadas)" : "(3/3 - Orcamentos)"));
             foreach (var s in sub_lista)
             {
                 retorno.AddRange(GetPecasPGOF(s, consolidada));
@@ -455,12 +455,12 @@ namespace DLM.painel
         public static void SincronizarPedidos(List<string> pedidos, bool resultado = true, bool criar_cache = true, bool enviar_email = true)
         {
     
-            AddMensagemStatus("0", "Iniciando sincroniza√ß√£o...");
+            AddMensagemStatus("0", "Iniciando sincronizaÁ„o...");
             pedidos = pedidos.Distinct().ToList();
 
             var w = Conexoes.Utilz.Wait(pedidos.Count, "Rodando Pedidos...");
             var contratos = pedidos.Select(x => Conexoes.Utilz.PEP.Get.Contrato(x).Int()).Distinct().ToList();
-            AddMensagemStatus("0", "Sincronizando t√≠tulos de contratos...");
+            AddMensagemStatus("0", "Sincronizando tÌtulos de contratos...");
             Consultas.SincronizarTitulosContratos(contratos);
 
             var conexaoSAP2 = new ConexaoSAP("");
@@ -479,10 +479,18 @@ namespace DLM.painel
 
                     w.somaProgresso($"{c}/{m} - {pedido}");
 
-                    /*como o consultasap carrega todas as datas, eu salvo as datas de cronograma no sistema.*/
-                    using (var conexaoSap = new ConexaoSAP(pedido))
+                    try
                     {
-                        conexaoSap.ConsultaSAP(resultado, criar_cache);
+                        /*como o consultasap carrega todas as datas, eu salvo as datas de cronograma no sistema.*/
+                        using (var conexaoSap = new ConexaoSAP(pedido))
+                        {
+                            conexaoSap.ConsultaSAP(resultado, criar_cache);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.Log(null, "SincronizarPedidos", pedido);
+                        AddMensagemStatus(pedido, $"Erro ao sincronizar: {ex.Message}");
                     }
 
                     c++;
@@ -494,7 +502,7 @@ namespace DLM.painel
 
             if (enviar_email)
             {
-                Conexoes.Email.Enviar(new List<string> { "daniel.maciel@medabil.com.br" }, $"Sincroniza√ß√£o ZPAINEL {pedidos.Count} pedidos - {DateTime.Now.ToString()}",
+                Conexoes.Email.Enviar(new List<string> { "daniel.maciel@medabil.com.br" }, $"SincronizaÁ„o ZPAINEL {pedidos.Count} pedidos - {DateTime.Now.ToString()}",
     $"<html>{string.Join("\n<br>", pedidos)}</html>");
             }
 
@@ -870,7 +878,7 @@ namespace DLM.painel
 
         public static List<PLAN_PECA> GetPecasReal(List<string> lista_pedidos, int max_pacote = 10)
         {
-            // 1. Limpeza unificada e em √∫nica itera√ß√£o
+            // 1. Limpeza unificada e em ˙nica iteraÁ„o
             var pedidosValidos = lista_pedidos
                 .Where(x => !string.IsNullOrWhiteSpace(x) && x.LenghtStr() > 5)
                 .Select(x => x.Replace("*", "").Replace(" ", ""))
@@ -882,40 +890,42 @@ namespace DLM.painel
 
             var retorno = new ConcurrentBag<PLAN_PECA>();
 
-            // 2. Processamento em lote utilizando o 'max_pacote' (que estava inutilizado)
-            // Isso evita travar o banco com muitas chamadas simult√¢neas, mas paraleliza o processamento
-            Parallel.ForEach(pedidosValidos, new ParallelOptions { MaxDegreeOfParallelism = max_pacote }, pedido =>
+            Action<string> processarPedido = pedido =>
             {
                 var db = DBases.GetDB();
                 var lista_pecas = db.Consulta($"call {Cfg.Init.db_comum}.getpecas('{pedido}')");
                 var lista_embarques = db.Consulta($"call {Cfg.Init.db_comum}.getPecasEmbarques('{pedido}')");
 
-                // 3. Remo√ß√£o do "Task.Factory.StartNew" por linha
-                // Instanciar objetos √© r√°pido. Criar Tasks para cada linha adicionava um overhead gigantesco.
                 var plan_pecas = lista_pecas.Select(linha => new PLAN_PECA(linha)).ToList();
 
-                // 4. Cria√ß√£o de Lookups (Busca em O(1) ao inv√©s de FindAll que √© O(N))
                 var pecasPorSubetapa = plan_pecas.ToLookup(x => Conexoes.Utilz.PEP.Get.Subetapa(x.PEP, true));
                 var embarquesAgrupados = lista_embarques.GroupBy(x => Conexoes.Utilz.PEP.Get.Subetapa(x["Elemento_PEP"].Valor, true));
 
-                // 5. Cruzamento de dados otimizado
                 foreach (var pep in embarquesAgrupados)
                 {
                     var statusZpp = pep.ToList();
 
-                    // pecasPorSubetapa[pep.Key] acha as pe√ßas instantaneamente sem precisar varrer a lista
                     foreach (var peca in pecasPorSubetapa[pep.Key])
                     {
                         peca.SetStatusByZPP0100(statusZpp);
                     }
                 }
 
-                // Armazena de forma thread-safe na cole√ß√£o de retorno
                 foreach (var peca in plan_pecas)
                 {
                     retorno.Add(peca);
                 }
-            });
+            };
+
+            // Quando ha apenas 1 pedido, executa direto na thread atual sem overhead de Parallel.ForEach
+            if (pedidosValidos.Count == 1)
+            {
+                processarPedido(pedidosValidos[0]);
+            }
+            else
+            {
+                Parallel.ForEach(pedidosValidos, new ParallelOptions { MaxDegreeOfParallelism = max_pacote }, processarPedido);
+            }
 
             return retorno.ToList();
         }
@@ -932,7 +942,7 @@ namespace DLM.painel
                 bool matar = false;
                 if (confirmar)
                 {
-                    matar = "H√° janelas do excel abertas. Para poder continuar, √© necess√°rio fecha-las. Se clicar em sim, o sistema fechar√° todas as janelas. Se deseja salvar algo, fa√ßa antes de confirmar essa tela. Se clicar em n√£o, a opera√ß√£o ser√° abortada.".Pergunta();
+                    matar = "H· janelas do excel abertas. Para poder continuar, È necess·rio fecha-las. Se clicar em sim, o sistema fechar· todas as janelas. Se deseja salvar algo, faÁa antes de confirmar essa tela. Se clicar em n„o, a operaÁ„o ser· abortada.".Pergunta();
                 }
                 else
                 {
